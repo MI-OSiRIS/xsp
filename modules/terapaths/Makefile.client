@@ -1,0 +1,20 @@
+CC= gcc
+INCLUDES= -I. -I../../libgsoap
+LIBS= -lssl -lcrypto ../../libgsoap/libgsoap.a
+LDFLAGS=
+CFLAGS= -DWITH_NONAMESPACES -DWITH_OPENSSL
+
+ALL= tp_client
+SRC= envC.c tpsClientLib.c terapaths.c tp_client.c
+OBJS= ${SRC:.c=.o}
+
+all: $(OBJS) $(ALL)
+
+clean:
+	rm -f $(ALL) $(OBJS) *.o
+
+tp_client: $(OBJS)
+	$(CC) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
+
+.c.o:
+	$(CC) $(CFLAGS) $(INCLUDES) -c $^

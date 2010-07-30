@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:tpsAPI/wsdl" xmlns:ns2="urn:tpsAPI/types" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="tpsAPI" targetNamespace="urn:tpsAPI/wsdl">
+  <types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:tpsAPI/types" xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" targetNamespace="urn:tpsAPI/types">
+      <complexType name="getAllReservationsForClass">
+        <sequence>
+          <element name="ReservationData_1" type="tns:ReservationData" nillable="true"/></sequence></complexType>
+      <complexType name="ReservationData">
+        <sequence>
+          <element name="DTMinus" type="long"/>
+          <element name="DTPlus" type="long"/>
+          <element name="bandwidth" type="tns:Bandwidth" nillable="true"/>
+          <element name="destIp" type="string" nillable="true"/>
+          <element name="destMapping" type="string" nillable="true"/>
+          <element name="destName" type="string" nillable="true"/>
+          <element name="destPortMax" type="string" nillable="true"/>
+          <element name="destPortMin" type="string" nillable="true"/>
+          <element name="destPorts" type="string" nillable="true"/>
+          <element name="direction" type="string" nillable="true"/>
+          <element name="duration" type="long"/>
+          <element name="id" type="string" nillable="true"/>
+          <element name="mapping" type="string" nillable="true"/>
+          <element name="modifyReservation" type="int"/>
+          <element name="protocol" type="string" nillable="true"/>
+          <element name="relatedReservationIds" type="string" nillable="true"/>
+          <element name="srcIp" type="string" nillable="true"/>
+          <element name="srcMapping" type="string" nillable="true"/>
+          <element name="srcName" type="string" nillable="true"/>
+          <element name="srcPortMax" type="string" nillable="true"/>
+          <element name="srcPortMin" type="string" nillable="true"/>
+          <element name="srcPorts" type="string" nillable="true"/>
+          <element name="startTime" type="long"/>
+          <element name="startTimeMax" type="long"/>
+          <element name="startTimeMin" type="long"/>
+          <element name="status" type="string" nillable="true"/>
+          <element name="timeout" type="long"/>
+          <element name="userName" type="string" nillable="true"/>
+          <element name="who" type="tns:Who" nillable="true"/></sequence></complexType>
+      <complexType name="Bandwidth">
+        <sequence>
+          <element name="bandwidth" type="long"/>
+          <element name="className" type="string" nillable="true"/></sequence></complexType>
+      <complexType name="Who">
+        <sequence>
+          <element name="CA" type="string" nillable="true"/>
+          <element name="DN" type="string" nillable="true"/>
+          <element name="name" type="string" nillable="true"/></sequence></complexType>
+      <complexType name="getAllReservationsForClassResponse">
+        <sequence>
+          <element name="result" type="tns:ReservationData" nillable="true" minOccurs="0" maxOccurs="unbounded"/></sequence></complexType>
+      <complexType name="tpsAPI_LocalCancel">
+        <sequence>
+          <element name="String_1" type="string" nillable="true"/>
+          <element name="String_2" type="string" nillable="true"/>
+          <element name="String_3" type="string" nillable="true"/></sequence></complexType>
+      <complexType name="tpsAPI_LocalCancelResponse">
+        <sequence>
+          <element name="result" type="boolean"/></sequence></complexType>
+      <complexType name="tpsAPI_LocalCommit">
+        <sequence>
+          <element name="String_1" type="string" nillable="true"/>
+          <element name="String_2" type="string" nillable="true"/>
+          <element name="String_3" type="string" nillable="true"/></sequence></complexType>
+      <complexType name="tpsAPI_LocalCommitResponse">
+        <sequence>
+          <element name="result" type="boolean"/></sequence></complexType>
+      <complexType name="tpsAPI_LocalRemove">
+        <sequence>
+          <element name="String_1" type="string" nillable="true"/>
+          <element name="String_2" type="string" nillable="true"/>
+          <element name="String_3" type="string" nillable="true"/></sequence></complexType>
+      <complexType name="tpsAPI_LocalRemoveResponse">
+        <sequence>
+          <element name="result" type="boolean"/></sequence></complexType>
+      <complexType name="tpsAPI_LocalReserve">
+        <sequence>
+          <element name="ReservationData_1" type="tns:ReservationData" nillable="true"/></sequence></complexType>
+      <complexType name="tpsAPI_LocalReserveResponse">
+        <sequence>
+          <element name="result" type="tns:ReservationData" nillable="true"/></sequence></complexType>
+      <complexType name="tpsAPI_LocalStart">
+        <sequence>
+          <element name="String_1" type="string" nillable="true"/>
+          <element name="String_2" type="string" nillable="true"/>
+          <element name="String_3" type="string" nillable="true"/></sequence></complexType>
+      <complexType name="tpsAPI_LocalStartResponse">
+        <sequence>
+          <element name="result" type="boolean"/></sequence></complexType>
+      <complexType name="tpsAPI_addRelatedReservationId">
+        <sequence>
+          <element name="String_1" type="string" nillable="true"/>
+          <element name="String_2" type="string" nillable="true"/>
+          <element name="boolean_3" type="boolean"/></sequence></complexType>
+      <complexType name="tpsAPI_addRelatedReservationIdResponse">
+        <sequence>
+          <element name="result" type="boolean"/></sequence></complexType>
+      <complexType name="tpsAPI_cancel">
+        <sequence>
+          <element name="ReservationData_1" type="tns:ReservationData" nillable="true"/></sequence></complexType>
+      <complexType name="tpsAPI_cancelResponse">
+        <sequence>
+          <element name="result" type="boolean"/></sequence></complexType>
+      <complexType name="tpsAPI_commit">
+        <sequence>
+          <element name="ReservationData_1" type="tns:ReservationData" nillable="true"/></sequence></complexType>
+      <complexType name="tpsAPI_commitResponse">
+        <sequence>
+          <element name="result" type="boolean"/></sequence></complexType>
+      <complexType name="tpsAPI_getBandwidths">
+        <sequence>
+          <element name="String_1" type="string" nillable="true"/>
+          <element name="String_2" type="string" nillable="true"/></sequence></complexType>
+      <complexType name="tpsAPI_getBandwidthsResponse">
+        <sequence>
+          <element name="result" type="tns:Bandwidths" nillable="true" minOccurs="0" maxOccurs="unbounded"/></sequence></complexType>
+      <complexType name="Bandwidths">
+        <sequence>
+          <element name="bw" type="tns:Bandwidth" nillable="true" minOccurs="0" maxOccurs="unbounded"/></sequence></complexType>
+      <complexType name="tpsAPI_getLocalBandwidths">
+        <sequence/></complexType>
+      <complexType name="tpsAPI_getLocalBandwidthsResponse">
+        <sequence>
+          <element name="result" type="tns:Bandwidth" nillable="true" minOccurs="0" maxOccurs="unbounded"/></sequence></complexType>
+      <complexType name="tpsAPI_getPath">
+        <sequence>
+          <element name="String_1" type="string" nillable="true"/>
+          <element name="String_2" type="string" nillable="true"/></sequence></complexType>
+      <complexType name="tpsAPI_getPathResponse">
+        <sequence>
+          <element name="result" type="string" nillable="true" minOccurs="0" maxOccurs="unbounded"/></sequence></complexType>
+      <complexType name="tpsAPI_getRelatedReservationIds">
+        <sequence>
+          <element name="String_1" type="string" nillable="true"/></sequence></complexType>
+      <complexType name="tpsAPI_getRelatedReservationIdsResponse">
+        <sequence>
+          <element name="result" type="string" nillable="true"/></sequence></complexType>
+      <complexType name="tpsAPI_getReservationData">
+        <sequence>
+          <element name="String_1" type="string" nillable="true"/></sequence></complexType>
+      <complexType name="tpsAPI_getReservationDataResponse">
+        <sequence>
+          <element name="result" type="tns:ReservationData" nillable="true"/></sequence></complexType>
+      <complexType name="tpsAPI_lookupUser">
+        <sequence>
+          <element name="String_1" type="string" nillable="true"/>
+          <element name="String_2" type="string" nillable="true"/></sequence></complexType>
+      <complexType name="tpsAPI_lookupUserResponse">
+        <sequence>
+          <element name="result" type="tns:UserData" nillable="true"/></sequence></complexType>
+      <complexType name="UserData">
+        <sequence>
+          <element name="id" type="long"/>
+          <element name="info" type="string" nillable="true"/>
+          <element name="passWord" type="string" nillable="true"/>
+          <element name="type" type="string" nillable="true"/>
+          <element name="userName" type="string" nillable="true"/></sequence></complexType>
+      <complexType name="tpsAPI_reserve">
+        <sequence>
+          <element name="ReservationData_1" type="tns:ReservationData" nillable="true"/></sequence></complexType>
+      <complexType name="tpsAPI_reserveResponse">
+        <sequence>
+          <element name="result" type="tns:ReservationData" nillable="true"/></sequence></complexType>
+      <element name="getAllReservationsForClass" type="tns:getAllReservationsForClass"/>
+      <element name="getAllReservationsForClassResponse" type="tns:getAllReservationsForClassResponse"/>
+      <element name="tpsAPI_LocalCancel" type="tns:tpsAPI_LocalCancel"/>
+      <element name="tpsAPI_LocalCancelResponse" type="tns:tpsAPI_LocalCancelResponse"/>
+      <element name="tpsAPI_LocalCommit" type="tns:tpsAPI_LocalCommit"/>
+      <element name="tpsAPI_LocalCommitResponse" type="tns:tpsAPI_LocalCommitResponse"/>
+      <element name="tpsAPI_LocalRemove" type="tns:tpsAPI_LocalRemove"/>
+      <element name="tpsAPI_LocalRemoveResponse" type="tns:tpsAPI_LocalRemoveResponse"/>
+      <element name="tpsAPI_LocalReserve" type="tns:tpsAPI_LocalReserve"/>
+      <element name="tpsAPI_LocalReserveResponse" type="tns:tpsAPI_LocalReserveResponse"/>
+      <element name="tpsAPI_LocalStart" type="tns:tpsAPI_LocalStart"/>
+      <element name="tpsAPI_LocalStartResponse" type="tns:tpsAPI_LocalStartResponse"/>
+      <element name="tpsAPI_addRelatedReservationId" type="tns:tpsAPI_addRelatedReservationId"/>
+      <element name="tpsAPI_addRelatedReservationIdResponse" type="tns:tpsAPI_addRelatedReservationIdResponse"/>
+      <element name="tpsAPI_cancel" type="tns:tpsAPI_cancel"/>
+      <element name="tpsAPI_cancelResponse" type="tns:tpsAPI_cancelResponse"/>
+      <element name="tpsAPI_commit" type="tns:tpsAPI_commit"/>
+      <element name="tpsAPI_commitResponse" type="tns:tpsAPI_commitResponse"/>
+      <element name="tpsAPI_getBandwidths" type="tns:tpsAPI_getBandwidths"/>
+      <element name="tpsAPI_getBandwidthsResponse" type="tns:tpsAPI_getBandwidthsResponse"/>
+      <element name="tpsAPI_getLocalBandwidths" type="tns:tpsAPI_getLocalBandwidths"/>
+      <element name="tpsAPI_getLocalBandwidthsResponse" type="tns:tpsAPI_getLocalBandwidthsResponse"/>
+      <element name="tpsAPI_getPath" type="tns:tpsAPI_getPath"/>
+      <element name="tpsAPI_getPathResponse" type="tns:tpsAPI_getPathResponse"/>
+      <element name="tpsAPI_getRelatedReservationIds" type="tns:tpsAPI_getRelatedReservationIds"/>
+      <element name="tpsAPI_getRelatedReservationIdsResponse" type="tns:tpsAPI_getRelatedReservationIdsResponse"/>
+      <element name="tpsAPI_getReservationData" type="tns:tpsAPI_getReservationData"/>
+      <element name="tpsAPI_getReservationDataResponse" type="tns:tpsAPI_getReservationDataResponse"/>
+      <element name="tpsAPI_lookupUser" type="tns:tpsAPI_lookupUser"/>
+      <element name="tpsAPI_lookupUserResponse" type="tns:tpsAPI_lookupUserResponse"/>
+      <element name="tpsAPI_reserve" type="tns:tpsAPI_reserve"/>
+      <element name="tpsAPI_reserveResponse" type="tns:tpsAPI_reserveResponse"/></schema></types>
+  <message name="tpsAPISEI_getAllReservationsForClass">
+    <part name="parameters" element="ns2:getAllReservationsForClass"/></message>
+  <message name="tpsAPISEI_getAllReservationsForClassResponse">
+    <part name="result" element="ns2:getAllReservationsForClassResponse"/></message>
+  <message name="tpsAPISEI_tpsAPI_LocalCancel">
+    <part name="parameters" element="ns2:tpsAPI_LocalCancel"/></message>
+  <message name="tpsAPISEI_tpsAPI_LocalCancelResponse">
+    <part name="result" element="ns2:tpsAPI_LocalCancelResponse"/></message>
+  <message name="tpsAPISEI_tpsAPI_LocalCommit">
+    <part name="parameters" element="ns2:tpsAPI_LocalCommit"/></message>
+  <message name="tpsAPISEI_tpsAPI_LocalCommitResponse">
+    <part name="result" element="ns2:tpsAPI_LocalCommitResponse"/></message>
+  <message name="tpsAPISEI_tpsAPI_LocalRemove">
+    <part name="parameters" element="ns2:tpsAPI_LocalRemove"/></message>
+  <message name="tpsAPISEI_tpsAPI_LocalRemoveResponse">
+    <part name="result" element="ns2:tpsAPI_LocalRemoveResponse"/></message>
+  <message name="tpsAPISEI_tpsAPI_LocalReserve">
+    <part name="parameters" element="ns2:tpsAPI_LocalReserve"/></message>
+  <message name="tpsAPISEI_tpsAPI_LocalReserveResponse">
+    <part name="result" element="ns2:tpsAPI_LocalReserveResponse"/></message>
+  <message name="tpsAPISEI_tpsAPI_LocalStart">
+    <part name="parameters" element="ns2:tpsAPI_LocalStart"/></message>
+  <message name="tpsAPISEI_tpsAPI_LocalStartResponse">
+    <part name="result" element="ns2:tpsAPI_LocalStartResponse"/></message>
+  <message name="tpsAPISEI_tpsAPI_addRelatedReservationId">
+    <part name="parameters" element="ns2:tpsAPI_addRelatedReservationId"/></message>
+  <message name="tpsAPISEI_tpsAPI_addRelatedReservationIdResponse">
+    <part name="result" element="ns2:tpsAPI_addRelatedReservationIdResponse"/></message>
+  <message name="tpsAPISEI_tpsAPI_cancel">
+    <part name="parameters" element="ns2:tpsAPI_cancel"/></message>
+  <message name="tpsAPISEI_tpsAPI_cancelResponse">
+    <part name="result" element="ns2:tpsAPI_cancelResponse"/></message>
+  <message name="tpsAPISEI_tpsAPI_commit">
+    <part name="parameters" element="ns2:tpsAPI_commit"/></message>
+  <message name="tpsAPISEI_tpsAPI_commitResponse">
+    <part name="result" element="ns2:tpsAPI_commitResponse"/></message>
+  <message name="tpsAPISEI_tpsAPI_getBandwidths">
+    <part name="parameters" element="ns2:tpsAPI_getBandwidths"/></message>
+  <message name="tpsAPISEI_tpsAPI_getBandwidthsResponse">
+    <part name="result" element="ns2:tpsAPI_getBandwidthsResponse"/></message>
+  <message name="tpsAPISEI_tpsAPI_getLocalBandwidths">
+    <part name="parameters" element="ns2:tpsAPI_getLocalBandwidths"/></message>
+  <message name="tpsAPISEI_tpsAPI_getLocalBandwidthsResponse">
+    <part name="result" element="ns2:tpsAPI_getLocalBandwidthsResponse"/></message>
+  <message name="tpsAPISEI_tpsAPI_getPath">
+    <part name="parameters" element="ns2:tpsAPI_getPath"/></message>
+  <message name="tpsAPISEI_tpsAPI_getPathResponse">
+    <part name="result" element="ns2:tpsAPI_getPathResponse"/></message>
+  <message name="tpsAPISEI_tpsAPI_getRelatedReservationIds">
+    <part name="parameters" element="ns2:tpsAPI_getRelatedReservationIds"/></message>
+  <message name="tpsAPISEI_tpsAPI_getRelatedReservationIdsResponse">
+    <part name="result" element="ns2:tpsAPI_getRelatedReservationIdsResponse"/></message>
+  <message name="tpsAPISEI_tpsAPI_getReservationData">
+    <part name="parameters" element="ns2:tpsAPI_getReservationData"/></message>
+  <message name="tpsAPISEI_tpsAPI_getReservationDataResponse">
+    <part name="result" element="ns2:tpsAPI_getReservationDataResponse"/></message>
+  <message name="tpsAPISEI_tpsAPI_lookupUser">
+    <part name="parameters" element="ns2:tpsAPI_lookupUser"/></message>
+  <message name="tpsAPISEI_tpsAPI_lookupUserResponse">
+    <part name="result" element="ns2:tpsAPI_lookupUserResponse"/></message>
+  <message name="tpsAPISEI_tpsAPI_reserve">
+    <part name="parameters" element="ns2:tpsAPI_reserve"/></message>
+  <message name="tpsAPISEI_tpsAPI_reserveResponse">
+    <part name="result" element="ns2:tpsAPI_reserveResponse"/></message>
+  <portType name="tpsAPISEI">
+    <operation name="getAllReservationsForClass">
+      <input message="tns:tpsAPISEI_getAllReservationsForClass"/>
+      <output message="tns:tpsAPISEI_getAllReservationsForClassResponse"/></operation>
+    <operation name="tpsAPI_LocalCancel">
+      <input message="tns:tpsAPISEI_tpsAPI_LocalCancel"/>
+      <output message="tns:tpsAPISEI_tpsAPI_LocalCancelResponse"/></operation>
+    <operation name="tpsAPI_LocalCommit">
+      <input message="tns:tpsAPISEI_tpsAPI_LocalCommit"/>
+      <output message="tns:tpsAPISEI_tpsAPI_LocalCommitResponse"/></operation>
+    <operation name="tpsAPI_LocalRemove">
+      <input message="tns:tpsAPISEI_tpsAPI_LocalRemove"/>
+      <output message="tns:tpsAPISEI_tpsAPI_LocalRemoveResponse"/></operation>
+    <operation name="tpsAPI_LocalReserve">
+      <input message="tns:tpsAPISEI_tpsAPI_LocalReserve"/>
+      <output message="tns:tpsAPISEI_tpsAPI_LocalReserveResponse"/></operation>
+    <operation name="tpsAPI_LocalStart">
+      <input message="tns:tpsAPISEI_tpsAPI_LocalStart"/>
+      <output message="tns:tpsAPISEI_tpsAPI_LocalStartResponse"/></operation>
+    <operation name="tpsAPI_addRelatedReservationId">
+      <input message="tns:tpsAPISEI_tpsAPI_addRelatedReservationId"/>
+      <output message="tns:tpsAPISEI_tpsAPI_addRelatedReservationIdResponse"/></operation>
+    <operation name="tpsAPI_cancel">
+      <input message="tns:tpsAPISEI_tpsAPI_cancel"/>
+      <output message="tns:tpsAPISEI_tpsAPI_cancelResponse"/></operation>
+    <operation name="tpsAPI_commit">
+      <input message="tns:tpsAPISEI_tpsAPI_commit"/>
+      <output message="tns:tpsAPISEI_tpsAPI_commitResponse"/></operation>
+    <operation name="tpsAPI_getBandwidths">
+      <input message="tns:tpsAPISEI_tpsAPI_getBandwidths"/>
+      <output message="tns:tpsAPISEI_tpsAPI_getBandwidthsResponse"/></operation>
+    <operation name="tpsAPI_getLocalBandwidths">
+      <input message="tns:tpsAPISEI_tpsAPI_getLocalBandwidths"/>
+      <output message="tns:tpsAPISEI_tpsAPI_getLocalBandwidthsResponse"/></operation>
+    <operation name="tpsAPI_getPath">
+      <input message="tns:tpsAPISEI_tpsAPI_getPath"/>
+      <output message="tns:tpsAPISEI_tpsAPI_getPathResponse"/></operation>
+    <operation name="tpsAPI_getRelatedReservationIds">
+      <input message="tns:tpsAPISEI_tpsAPI_getRelatedReservationIds"/>
+      <output message="tns:tpsAPISEI_tpsAPI_getRelatedReservationIdsResponse"/></operation>
+    <operation name="tpsAPI_getReservationData">
+      <input message="tns:tpsAPISEI_tpsAPI_getReservationData"/>
+      <output message="tns:tpsAPISEI_tpsAPI_getReservationDataResponse"/></operation>
+    <operation name="tpsAPI_lookupUser">
+      <input message="tns:tpsAPISEI_tpsAPI_lookupUser"/>
+      <output message="tns:tpsAPISEI_tpsAPI_lookupUserResponse"/></operation>
+    <operation name="tpsAPI_reserve">
+      <input message="tns:tpsAPISEI_tpsAPI_reserve"/>
+      <output message="tns:tpsAPISEI_tpsAPI_reserveResponse"/></operation></portType>
+  <binding name="tpsAPISEIBinding" type="tns:tpsAPISEI">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    <operation name="getAllReservationsForClass">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/></input>
+      <output>
+        <soap:body use="literal"/></output></operation>
+    <operation name="tpsAPI_LocalCancel">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/></input>
+      <output>
+        <soap:body use="literal"/></output></operation>
+    <operation name="tpsAPI_LocalCommit">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/></input>
+      <output>
+        <soap:body use="literal"/></output></operation>
+    <operation name="tpsAPI_LocalRemove">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/></input>
+      <output>
+        <soap:body use="literal"/></output></operation>
+    <operation name="tpsAPI_LocalReserve">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/></input>
+      <output>
+        <soap:body use="literal"/></output></operation>
+    <operation name="tpsAPI_LocalStart">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/></input>
+      <output>
+        <soap:body use="literal"/></output></operation>
+    <operation name="tpsAPI_addRelatedReservationId">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/></input>
+      <output>
+        <soap:body use="literal"/></output></operation>
+    <operation name="tpsAPI_cancel">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/></input>
+      <output>
+        <soap:body use="literal"/></output></operation>
+    <operation name="tpsAPI_commit">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/></input>
+      <output>
+        <soap:body use="literal"/></output></operation>
+    <operation name="tpsAPI_getBandwidths">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/></input>
+      <output>
+        <soap:body use="literal"/></output></operation>
+    <operation name="tpsAPI_getLocalBandwidths">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/></input>
+      <output>
+        <soap:body use="literal"/></output></operation>
+    <operation name="tpsAPI_getPath">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/></input>
+      <output>
+        <soap:body use="literal"/></output></operation>
+    <operation name="tpsAPI_getRelatedReservationIds">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/></input>
+      <output>
+        <soap:body use="literal"/></output></operation>
+    <operation name="tpsAPI_getReservationData">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/></input>
+      <output>
+        <soap:body use="literal"/></output></operation>
+    <operation name="tpsAPI_lookupUser">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/></input>
+      <output>
+        <soap:body use="literal"/></output></operation>
+    <operation name="tpsAPI_reserve">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/></input>
+      <output>
+        <soap:body use="literal"/></output></operation></binding>
+  <service name="TpsAPI">
+    <port name="tpsAPISEIPort" binding="tns:tpsAPISEIBinding">
+      <soap:address location="http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"/></port></service></definitions>
