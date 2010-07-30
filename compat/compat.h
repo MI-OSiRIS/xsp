@@ -1,0 +1,76 @@
+#ifndef COMPAT_H
+#define COMPAT_H
+
+#include "config.h"
+
+#include <netdb.h>
+#include <sys/types.h>
+#include <sys/time.h>
+
+#define TRUE 1
+#define FALSE 0
+
+#ifndef HAVE_STRTOUL
+unsigned long strtoul (const char *nptr, char **endptr, int base);
+#endif
+
+#ifndef HAVE_ATOLL
+long long atoll (const char *str);
+#endif
+
+#ifndef HAVE_STRLCPY
+size_t	strlcpy (char *dst, const char *src, size_t siz);
+#endif
+
+#ifndef HAVE_STRLCAT
+size_t	strlcat (char *dst, const char *src, size_t siz);
+#endif
+
+char *bin2hex(const char *src, char *dst, int size);
+char *hex2bin(const char *src, char *dst, int size);
+char **split(const char *string, char *delimiters, int *count);
+char **split_inline(char *string, char *delimiters, int skip_empty, int *count);
+double difftv(struct timeval *start, struct timeval *end);
+char *lookup_servername();
+char *get_fqdn(struct hostent *he);
+int daemonize();
+int strlist_add(const char *str, char ***list, int *list_length);
+void strlist_free(char **list, int list_length);
+int get_addrs(char ***addrs, int *addr_count);
+int *listen_port(int protocol, int family, int port, int *length, struct addrinfo **ret_addrs);
+int *listen_port_iface(char **interfaces, int interface_count, int protocol, int port, int *length);
+
+#if !defined(HAVE_OPENSSL) || defined(USE_COMPAT_SHA)
+
+#define SHA_DIGEST_LENGTH		20
+
+// Signed variables are for wimps 
+#define uchar unsigned char 
+#define uint unsigned int 
+#define u_char unsigned char
+#define u_int unsigned int
+
+typedef struct { 
+   uchar data[64]; 
+   uint datalen; 
+   uint bitlen[2]; 
+   uint state[5]; 
+   uint k[4]; 
+} SHA1_CTX; 
+
+void sha1_init(SHA1_CTX *ctx);
+void sha1_update(SHA1_CTX *ctx, const uchar data[], uint len);
+void sha1_final(SHA1_CTX *ctx, uchar hash[]);
+void SHA1(const uchar *buf, unsigned long int, uchar *hash);
+
+#endif
+
+#ifndef htonll
+uint64_t htonll(uint64_t val);
+uint64_t ntohll(uint64_t val);
+#endif
+
+int send_email(const char *sendmail_binary, const char *email_address, const char *subject, const char *body);
+int get_ips(char ***ret_ips, int *ret_ip_count);
+int strlfcat(char *buf, int buflen, const char *fmt, ...);
+#endif
