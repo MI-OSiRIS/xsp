@@ -9,8 +9,8 @@ int main()
   struct soap soap;
   xspdSoapContext mntr;
 
-  //char *endpoint = "http://blackseal.damsl.cis.udel.edu:8000/my-soap-service/?service";
-  char *endpoint = "http://192.168.1.20:8000/my-soap-service/?service";	
+  char *endpoint = "http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/?service";
+  //char *endpoint = "http://192.168.1.20:8000/monitor-service/?service";	
 
   uint64_t start_time = 1234567890;
   uint64_t duration = 600;
@@ -20,7 +20,7 @@ int main()
   soap_set_namespaces(&soap, mntr_namespaces);
 
   mntr.soap=&soap;
-  mntr.soap_endpoint=NULL;
+  mntr.soap_endpoint=endpoint;
   mntr.soap_action=NULL;
   
   printf("Signaling for new path reservation\n");
