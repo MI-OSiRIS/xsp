@@ -1,0 +1,2 @@
+wsdl2h -c -z -o mntr.h http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/?wsdl
+soapcpp2 -c -C -x -n -pmntr mntr.h

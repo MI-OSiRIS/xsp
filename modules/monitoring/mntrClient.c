@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-SOAP_SOURCE_STAMP("@(#) mntrClient.c ver 2.7.9l 2010-06-17 01:50:01 GMT")
+SOAP_SOURCE_STAMP("@(#) mntrClient.c ver 2.7.9l 2010-08-12 18:24:08 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__new_USCOREpath(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns1__new_USCOREpath *ns1__new_USCOREpath, struct ns1__new_USCOREpathResponse *ns1__new_USCOREpathResponse)
