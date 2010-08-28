@@ -34,7 +34,7 @@
 //} xspdTERAPATHStimeoutArgs;
 
 int xspd_terapaths_init();
-void *xspd_terapaths_wait_path(void *args);
+void *xspd_terapaths_monitor_path(void *args);
 int xspd_terapaths_update_path_status(xspdTERAPATHSPath *pi, xspdSoapContext *msc, xspdSoapContext *tsc, char **status);
 
 // need to figure out where we get parameters from (protocol, settings, combination?
@@ -382,24 +382,8 @@ static int __xspd_terapaths_new_channel(xspdPath *path, uint32_t size, xspdChann
 		pi->start_time = stime;
 		pi->status = TPS_UP;
 
-		// now signal our monitoring frontend and start path monitoring thread
-		if (pi->msc.soap_endpoint) {
-			if(xspd_start_soap(&(pi->msc)) == 0) {
-				if (monitoring_notify(&(pi->msc), reservation_id, pi->src, pi->dst, pi->src_ports, pi->dst_ports,
-						      pi->vlan_tag, pi->direction, pi->start_time/(uint64_t)1000,
-						      pi->duration, pi->bw, pi->bw_class, "pending") == 0)
-					xspd_info(0, "%s: registered path at %s", path->description, pi->msc.soap_endpoint);
-				else
-					xspd_err(0, "%s: path notification failed!\n", path->description);
-
-				xspd_stop_soap(&(pi->msc));
-			}
-			else
-				xspd_err(0, "couldn't start monitoring SOAP context, no path notification sent!");
-		}
-		
 		xspd_info(0, "%s: starting path monitoring thread", path->description);
-		xspd_tpool_exec(xspd_terapaths_wait_path, path);
+		xspd_tpool_exec(xspd_terapaths_monitor_path, path);
 		
 		pthread_cond_signal(&(path->timeout_cond));
 	}
@@ -584,11 +568,12 @@ static void xspd_terapaths_reset_path_info(xspdTERAPATHSPath *pi) {
         pi->status = TPS_DOWN;
 }
 
-void *xspd_terapaths_wait_path(void *args) {
+void *xspd_terapaths_monitor_path(void *args) {
 	xspdPath *path = (xspdPath *)args;
 	xspdTERAPATHSPath *pi = path->path_private;
 	uint64_t rtime, ctime, etime, stime;
 	
+	int monitor=0;
 	char *status;
 
 	xspdSoapContext msc;
@@ -607,6 +592,19 @@ void *xspd_terapaths_wait_path(void *args) {
                 return;
         }
 	
+        // now signal our monitoring frontend and start path monitoring thread
+	do {
+        	if (monitoring_notify(&msc, pi->reservation_id, pi->src, pi->dst, pi->src_ports, pi->dst_ports,
+                             		pi->vlan_tag, pi->direction, pi->start_time/(uint64_t)1000,
+                             		pi->duration, pi->bw, pi->bw_class, "pending") == 0) {
+        		xspd_info(0, "%s: registered path (%s) at %s", path->description, pi->reservation_id, msc.soap_endpoint);
+			monitor=1;
+		}
+        	else {
+         		xspd_err(0, "%s: path notification failed!\n", path->description);
+			sleep(5);
+		}
+	} while (!monitor);
 	
 	// wait until the reservation is supposed to be active
 	ctime = (uint64_t)time(NULL);
@@ -700,17 +698,17 @@ int xspd_terapaths_update_path_status(xspdTERAPATHSPath *pi, xspdSoapContext *ms
 	if (terapaths_get_reservation_status(tsc, pi->reservation_id, &status) == 0) {
 		
 		if (monitoring_set_status(msc, pi->reservation_id, status) != 0) {
-			xspd_err(5, "couldn't set monitoring status");
+			xspd_err(5, "(%s) couldn't set path status", pi->reservation_id);
 		}
 		else {
-			xspd_info(8, "set path status to: %s", status);
+			xspd_info(8, "(%s) set path status to: %s", pi->reservation_id, status);
 		}
 		
 		*ret_status = status;
 	}
 	
 	else {
-		xspd_err(5, "could not get TERAPATHS reservation status");
+		xspd_err(5, "(%s) could not get TERAPATHS reservation status", pi->reservation_id);
 		*ret_status = NULL;
 		return -1;
 	}
