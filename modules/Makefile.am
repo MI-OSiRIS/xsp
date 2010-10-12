@@ -24,19 +24,19 @@ modules_LTLIBRARIES += logger_syslog.la
 logger_syslog_la_SOURCES = xspd_logger_syslog.c
 logger_syslog_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
 
-#if ENABLE_TERAPATHS
+if ENABLE_TERAPATHS
 modules_LTLIBRARIES += terapaths.la
 terapaths_la_SOURCES = xspd_terapaths_basic.c xspd_terapaths_basic.h
 terapaths_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
 terapaths_la_LIBADD = terapaths/libterapaths.a monitoring/libmntr.a ../libgsoap/libgsoap.a
 INCLUDES += -I./terapaths -I./monitoring -I../libgsoap
-#endif
+endif
 
-#if ENABLE_OSCARS
+if ENABLE_OSCARS
 modules_LTLIBRARIES += oscars.la
 oscars_la_SOURCES = xspd_oscars_basic.c oscars.c oscars.h
 oscars_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
-#endif
+endif
 
 if HAVE_WEB100
 modules_LTLIBRARIES += tcp.la

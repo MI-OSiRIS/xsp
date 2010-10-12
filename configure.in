@@ -58,10 +58,31 @@ AC_ARG_ENABLE(globus,
         [  --enable-globus     turn on globus],
         [CFLAGS="-DHAVE_GLOBUS ${CFLAGS}"])		
 
+AC_ARG_ENABLE(client,
+        AC_HELP_STRING([--enable-client], [enable xsp client [default=no]]),
+        [AM_PATH_XML2(2.0.0, enable_client=yes, enable_client=no)],
+        [enable_client=no])
+
+AM_CONDITIONAL(ENABLE_CLIENT, test x$enable_client = xyes)
+
+AC_ARG_ENABLE(terapaths,
+        AC_HELP_STRING([--enable-terapaths], [enable terapaths support [default=no]]),
+        [AM_PATH_XML2(2.0.0, enable_terapaths=yes, enable_terapaths=no)],
+        [enable_terapaths=no])
+
+AM_CONDITIONAL(ENABLE_TERAPATHS, test x$enable_terapaths = xyes)
+
+AC_ARG_ENABLE(oscars,
+        AC_HELP_STRING([--enable-oscars], [enable oscars support [default=no]]),
+        [AM_PATH_XML2(2.0.0, enable_oscars=yes, enable_oscars=no)],
+        [enable_oscars=no])
+
+AM_CONDITIONAL(ENABLE_OSCARS, test x$enable_oscars = xyes)
+
 AC_ARG_ENABLE(dragon,
-	AC_HELP_STRING([--enable-dragon], [enable dragon support [default=no]]),
-	[AM_PATH_XML2(2.0.0, enable_dragon=yes, enable_dragon=no)],
-	enable_dragon=no)
+        AC_HELP_STRING([--enable-dragon], [enable dragon support [default=no]]),
+        [AM_PATH_XML2(2.0.0, enable_dragon=yes, enable_dragon=no)],
+        [enable_dragon=no])
 
 AM_CONDITIONAL(ENABLE_DRAGON, test x$enable_dragon = xyes)
 
