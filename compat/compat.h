@@ -36,7 +36,9 @@ char *get_fqdn(struct hostent *he);
 int daemonize();
 int strlist_add(const char *str, char ***list, int *list_length);
 void strlist_free(char **list, int list_length);
+#ifndef JUNOS
 int get_addrs(char ***addrs, int *addr_count);
+#endif
 int *listen_port(int protocol, int family, int port, int *length, struct addrinfo **ret_addrs);
 int *listen_port_iface(char **interfaces, int interface_count, int protocol, int port, int *length);
 

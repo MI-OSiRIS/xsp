@@ -1,0 +1,21 @@
+#
+# $Id: Makefile 366965 2010-03-09 15:13:36Z taoliu $
+#
+# Copyright (c) 2006-2008, Juniper Networks, Inc.
+# All rights reserved.
+#
+
+# define the subdirectories to be built
+
+.if ${MACHINE} == "xlr"
+
+SUBDIR = \
+
+.else
+
+SUBDIR = \
+	xspd
+
+.endif
+
+.include <bsd.subdir.mk>

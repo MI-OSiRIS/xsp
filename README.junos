@@ -1,0 +1,2 @@
+
+need to run the do-links.sh script in xspd to link all the files into one directory.  the LDADD directive in the Makefile.junos might make this unnecessary.

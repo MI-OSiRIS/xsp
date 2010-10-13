@@ -43,7 +43,9 @@
 #include <ctype.h>
 #include <errno.h>
 #include <ifaddrs.h>
+#ifndef JUNOS
 #include <net/if.h>
+#endif
 #include <netinet/in.h>
 #include <signal.h>
 #include <stdio.h>
@@ -677,6 +679,7 @@ void SHA1(const uchar *buf, unsigned long length, uchar *hash) {
 
 #endif
 
+#ifndef JUNOS
 int get_addrs(char ***addrs, int *addr_count) {
         struct ifaddrs *if_info;
         struct ifaddrs *curr_if;
@@ -742,6 +745,7 @@ error_exit2:
 error_exit:
         return -1;
 }
+#endif JUNOS
 
 int *listen_port_iface(char **interfaces, int interface_count, int protocol, int port, int *length) {
 	int *sd_list;

@@ -1,6 +1,9 @@
 #include "config.h"
 #include "compat.h"
-#include "libconfig.h"
+
+#ifdef JUNOS
+#include <stdio.h>
+#endif
 
 #include <signal.h>
 #include <string.h>
