@@ -1,0 +1,74 @@
+#
+# SDK application 
+#
+#
+# Copyright (c) 2006-2008, Juniper Networks, Inc.
+# All rights reserved.
+#
+
+PROG = xspd
+
+SRCS = \
+	xspd.c \
+	hashtable.c \
+	compat.c \
+	xspd_frontend_default.c \
+	xspd_path.c \
+	xspd_channel.c \
+	xspd_listener.c \
+	xspd_path_handler.c \
+	xspd_common.c \
+	xspd_listener_handler.c \
+	xspd_protocols.c \
+	xspd_config.c \
+	xspd_logger.c \
+	xspd_session.c \
+	xspd_conn.c \
+	xspd_main_settings.c \
+	xspd_settings.c \
+	xspd_default_settings.c \
+	xspd_modules.c \
+	xspd_tpool.c \
+	libxsp.c \
+	libxsp_proto.c \
+	libxsp_session.c \
+	libxsp_hop.c \
+	libxsp_proto_binary.c \
+	libxsp_path.c \
+	libxsp_protocol_settings.c \
+	grammar.c \
+	libconfig.c \
+	scanner.c 
+
+
+#WARNINGS_SET = HIGH
+WARNINGS_SET = LOW
+
+# Leave out -Waggregate-return as some eventlib calls return structs.
+W_aggregate-return =
+W_cast-align_mips =
+
+DPLIBS += \
+	${LIBISC} \
+	${LIBCONN} \
+	${LIBJIPC} \
+	${LIBSSD} \
+	${LIBUTIL} \
+	${LIBJUNIPER} \
+	${LIBM} \
+	${LIBTHR} \
+	${LIBC} \
+	${LIBIF}
+
+#LDADD += -L/home/mzhang/xsp/trunk/libconfig -lconfig
+LDFLAGS += -export-dynamic 
+
+CFLAGS += \
+	-DJUNOS \
+	-I/home/mzhang/sandboxes/test/src/sbin/include \
+	-I/home/mzhang/sandboxes/test/src/sbin/compat \
+	-I/home/mzhang/sandboxes/test/src/sbin/libxsp \
+	-I/home/mzhang/xsp/trunk/libconfig 
+
+.include <version.mk>
+.include <bsd.prog.mk>
