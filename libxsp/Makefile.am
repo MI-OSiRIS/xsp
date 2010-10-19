@@ -5,4 +5,4 @@ libxsp_a_SOURCES = libxsp.c libxsp_hop.c libxsp_hop.h libxsp_path.c libxsp_path.
 AM_CFLAGS = -fPIC
 
 
-INCLUDES = -I../../../src/sbin/libxsp -I../../../src/sbin/include -I../../../src/sbin/compat -I../../../src/sbin/libconfig
+INCLUDES = -I@top_srcdir@/libxsp -I@top_srcdir@/include -I@top_srcdir@/compat -I@top_srcdir@/libconfig
