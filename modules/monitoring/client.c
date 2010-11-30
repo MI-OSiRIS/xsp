@@ -9,8 +9,8 @@ int main()
   struct soap soap;
   xspdSoapContext mntr;
 
-  //char *endpoint = "http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/?service";
-  char *endpoint = "http://192.168.1.20:8000/monitor-service/?service";	
+  char *endpoint = "http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/?service";
+  //char *endpoint = "http://192.168.1.20:8000/monitor-service/?service";	
 
   uint64_t start_time = 1234567890;
   uint64_t duration = 600;
