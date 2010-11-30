@@ -128,3 +128,59 @@ int monitoring_set_status(xspdSoapContext *mntr, const char *res_id, const char 
     }
   return 0;
 }
+
+int monitoring_update_path(xspdSoapContext *mntr, const char *res_id, const char *src,
+			   const char *dst, const char *src_port_range, const char *dst_port_range,
+			   const char *vlan_id, const char *direction, uint64_t start_time,
+			   uint64_t duration, uint64_t bw, const char *bw_class, const char *status)
+{
+	struct ns1__status_USCOREpath status_req;
+	struct ns1__status_USCOREpathResponse status_res;
+	struct ns1__PathData pathdata;
+
+	bzero(&status_req, sizeof(struct ns1__status_USCOREpath));
+	bzero(&status_res, sizeof(struct ns1__status_USCOREpathResponse));
+	bzero(&pathdata, sizeof(struct ns1__PathData));
+
+	if (res_id)
+		pathdata.path_USCOREid = (char*)res_id;
+	else
+		return -1;
+
+	pathdata.bandwidth = (int*)&bw;
+	pathdata.start_USCOREtime = (int*)&start_time;
+	pathdata.duration = (int*)&duration;
+
+	if (status)
+		pathdata.status = (char*)status;
+	if (src)
+		pathdata.src = (char*)src;
+	if (dst)
+		pathdata.dst = (char*)dst;
+	if (src_port_range)
+		pathdata.src_USCOREport_USCORErange = (char*)src_port_range;
+	if (dst_port_range)
+		pathdata.dst_USCOREport_USCORErange = (char*)dst_port_range;
+	if(vlan_id)
+		pathdata.vlan_USCOREid = (char *)vlan_id;
+	if(bw_class)
+		pathdata.bw_USCOREclass = (char *)bw_class;
+
+	status_req.path = &pathdata;
+
+	if (soap_call___ns1__status_USCOREpath((struct soap *)mntr->soap,
+					       mntr->soap_endpoint,
+					       mntr->soap_action,
+					       &status_req, &status_res
+					       ) == SOAP_OK)
+		{
+			if (!(status_res.status_USCOREpathResult))
+				return -1;
+		}
+	else
+		{
+			soap_print_fault((struct soap *)mntr->soap, stderr);
+			return -1;
+		}
+	return 0;
+}
