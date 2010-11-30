@@ -161,10 +161,12 @@ int monitoring_update_path(xspdSoapContext *mntr, const char *res_id, const char
 		pathdata.src_USCOREport_USCORErange = (char*)src_port_range;
 	if (dst_port_range)
 		pathdata.dst_USCOREport_USCORErange = (char*)dst_port_range;
-	if(vlan_id)
+	if (vlan_id)
 		pathdata.vlan_USCOREid = (char *)vlan_id;
-	if(bw_class)
+	if (bw_class)
 		pathdata.bw_USCOREclass = (char *)bw_class;
+	if (direction)
+		pathdata.direction = (char *)direction;
 
 	status_req.path = &pathdata;
 
