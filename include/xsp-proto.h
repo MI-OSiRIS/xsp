@@ -5,7 +5,9 @@
 #ifndef __XSP_PROTO_H
 #define __XSP_PROTO_H
 
+#ifndef PACKAGE
 #include "config.h"
+#endif
 
 #include <sys/types.h>
 

@@ -1,7 +1,9 @@
 #ifndef LIBXSP_HOP_H
 #define LIBXSP_HOP_H
 
+#ifndef PACKAGE
 #include "config.h"
+#endif
 
 #ifdef HAVE_INTTYPES_H
 #include <inttypes.h>
