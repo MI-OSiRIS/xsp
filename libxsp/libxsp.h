@@ -44,6 +44,7 @@
 #define XSP_MSG_DATA_CLOSE              14
 #define XSP_MSG_PATH_OPEN               15
 #define XSP_MSG_PATH_CLOSE              16
+#define XSP_MSG_SLAB_INFO               17
 
 /* XSP Objects */
 
@@ -72,6 +73,19 @@ typedef struct xsp_data_open_header_t {
 	char hop_id[XSP_HOPID_LEN];
 	uint16_t flags;
 } xspDataOpenHeader;
+
+typedef struct slab_record_t {
+        char sess_id[XSP_SESSIONID_LEN * 2 + 1];
+        uint32_t offset;
+        uint32_t length;
+        uint32_t crc;
+} xspSlabRec;
+
+typedef struct slabs_info_t {
+        uint32_t length;
+        uint32_t rec_count;
+        xspSlabRec **entries;
+} xspSlabInfo;
 
 /* XSP Functions */
 int xsp_init();

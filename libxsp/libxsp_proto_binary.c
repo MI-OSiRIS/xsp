@@ -9,7 +9,7 @@
 
 #define LIBXSP_PROTO_BINARY_ID		0
 
-#define LIBXSP_PROTO_BINARY_MAX 	XSP_MSG_PATH_CLOSE
+#define LIBXSP_PROTO_BINARY_MAX 	XSP_MSG_SLAB_INFO
 
 xspProtoHandler bin_handler;
 
@@ -36,6 +36,7 @@ int libxsp_proto_binary_init() {
 	bin_handler.parse[XSP_MSG_DATA_CLOSE] = NULL;
 	bin_handler.parse[XSP_MSG_PATH_OPEN] = xsp_parse_block_header_msg;
 	bin_handler.parse[XSP_MSG_PATH_CLOSE] = NULL;
+	bin_handler.parse[XSP_MSG_SLAB_INFO] = xsp_parse_slab_info;
 
 	bin_handler.writeout[XSP_MSG_INVALID] = NULL;
 	bin_handler.writeout[XSP_MSG_SESS_OPEN] = xsp_writeout_sess_open_msg;
@@ -51,6 +52,7 @@ int libxsp_proto_binary_init() {
 	bin_handler.writeout[XSP_MSG_DATA_CLOSE] = NULL;
 	bin_handler.writeout[XSP_MSG_PATH_OPEN] = xsp_writeout_block_header_msg;
 	bin_handler.writeout[XSP_MSG_PATH_CLOSE] = NULL;
+	bin_handler.writeout[XSP_MSG_SLAB_INFO] = xsp_writeout_slab_info;
 
 	bin_handler.max_msg_type = LIBXSP_PROTO_BINARY_MAX;
 
@@ -545,4 +547,139 @@ int xsp_writeout_data_open_msg(void *arg, char *buf, int remainder) {
 	remainder -= sizeof(xspDataOpen_HDR);
 	
 	return sizeof(xspDataOpen_HDR);
+}
+
+// some slabs additions
+
+int xsp_parse_slab_info(const char *buf, int remainder, void **msg_body) {
+        xspSlabInfo *new_info;
+        xspSlabInfo_HDR *in;
+        int i;
+        int rec_size = 0;
+
+        if (remainder < sizeof(xspSlabInfo_HDR)) {
+                return -1;
+        }
+
+        new_info = malloc(sizeof(xspSlabInfo));
+        if (!new_info)
+                return -1;
+        bzero(new_info, sizeof(xspSlabInfo));
+
+        in = (xspSlabInfo_HDR *) buf;
+
+        new_info->length = ntohl(in->length);
+        new_info->rec_count = ntohl(in->rec_count);
+
+        buf += sizeof(xspSlabInfo_HDR);
+
+        if (!new_info->rec_count) {
+                new_info->entries = NULL;
+        }
+        else {
+                new_info->entries = (xspSlabRec **) malloc(new_info->rec_count * sizeof(xspSlabRec*));
+                if (!new_info->entries)
+                        return -1;
+
+                for (i=0; i<new_info->rec_count; i++) {
+                        new_info->entries[i] = xsp_parse_slab_record(buf, remainder, &rec_size);
+                        if (!new_info->entries[i])
+                                return -1;
+
+                        buf += rec_size;
+                        remainder -= rec_size;
+                }
+        }
+
+        *msg_body = new_info;
+
+        return 0;
+}
+
+xspSlabRec *xsp_parse_slab_record(const char *buf, int remainder, int *size) {
+        xspSlabRec *new_rec;
+        xspSlabRec_HDR *in;
+        int orig_remainder;
+
+        orig_remainder = remainder;
+
+        new_rec = malloc(sizeof(xspSlabRec));
+        if (!new_rec)
+                return NULL;
+        bzero(new_rec, sizeof(xspSlabRec));
+
+        in = (xspSlabRec_HDR *) buf;
+
+        bin2hex(in->sess_id, new_rec->sess_id, XSP_SESSIONID_LEN);
+
+        new_rec->offset = ntohl(in->offset);
+        new_rec->length = ntohl(in->length);
+        new_rec->crc = ntohl(in->crc);
+
+        buf += sizeof(xspSlabRec_HDR);
+        remainder -= sizeof(xspSlabRec_HDR);
+
+        *size = orig_remainder - remainder;
+
+        return new_rec;
+}
+
+int xsp_writeout_slab_info(void *arg, char *buf, int remainder) {
+        int orig_remainder;
+        xspSlabInfo *info = (xspSlabInfo*) arg;
+        xspSlabInfo_HDR *out;
+        int i;
+        int rec_size;
+
+        orig_remainder = remainder;
+
+        if (remainder < sizeof(xspSlabInfo_HDR)) {
+                return -1;
+        }
+
+        out = (xspSlabInfo_HDR *) buf;
+
+        out->length = htonl(info->length);
+        out->rec_count = htonl(info->rec_count);
+
+        remainder -= sizeof(xspSlabInfo_HDR);
+        buf += sizeof(xspSlabInfo_HDR);
+
+        for (i=0; i<info->rec_count; i++) {
+
+                rec_size = xsp_writeout_slab_record(info->entries[i], buf, remainder);
+                if (rec_size < 0)
+                        return -1;
+
+                buf += rec_size;
+                remainder -= rec_size;
+        }
+
+        return orig_remainder - remainder;
+}
+
+int xsp_writeout_slab_record(xspSlabRec *rec, char *buf, int remainder) {
+        int i;
+        int orig_remainder;
+        xspSlabRec_HDR *out;
+        int rec_size;
+
+        if (remainder < sizeof(xspSlabRec_HDR)) {
+                return -1;
+        }
+
+        orig_remainder = remainder;
+
+        out = (xspSlabRec_HDR *) buf;
+
+        hex2bin(rec->sess_id, out->sess_id, 2*XSP_SESSIONID_LEN);
+
+        out->offset = htonl(rec->offset);
+        out->length = htonl(rec->length);
+        out->crc = htonl(rec->crc);
+
+        buf += sizeof(xspSlabRec_HDR);
+        remainder -= sizeof(xspSlabRec_HDR);
+
+        return orig_remainder - remainder;
 }

@@ -14,6 +14,8 @@ int xsp_parse_auth_type_msg(const char *buf, int remainder, void **msg_body);
 int xsp_parse_block_header_msg(const char *buf, int remainder, void **msg_body);
 int xsp_parse_nack_msg(const char *buf, int remainder, void **msg_body);
 int xsp_parse_data_open_msg(const char *buf, int remainder, void **msg_body);
+int xsp_parse_slab_info(const char *buf, int remainder, void **msg_body);
+xspSlabRec *xsp_parse_slab_record(const char *buf, int remainder, int *size);
 
 int xsp_writeout_sess_open_msg(void *hop, char *buf, int remainder);
 int xsp_writeouthop(xspHop *hop, char *buf, int remainder);
@@ -22,6 +24,9 @@ int xsp_writeout_auth_type_msg(void *arg, char *buf, int remainder);
 int xsp_writeout_block_header_msg(void *arg, char *buf, int remainder);
 int xsp_writeout_nack_msg(void *arg, char *buf, int remainder);
 int xsp_writeout_data_open_msg(void *arg, char *buf, int remainder);
+int xsp_writeout_slab_info(void *arg, char *buf, int remainder);
+int xsp_writeout_slab_record(xspSlabRec *rec, char *buf, int remainder);
+
 
 typedef struct xsp_msg_data_open_hdr_t {
 	char hop_id[XSP_HOPID_LEN];
@@ -58,5 +63,16 @@ typedef struct xsp_msg_sess_nack_hdr_t {
 	uint32_t length;
 } xspSessNack_HDR;
 
+typedef struct slab_record_hdr_t {
+        char sess_id[XSP_SESSIONID_LEN];
+        uint32_t offset;
+        uint32_t length;
+        uint32_t crc;
+} xspSlabRec_HDR;
+
+typedef struct slabs_info_hdr_t {
+        uint32_t length;
+        uint32_t rec_count;
+} xspSlabInfo_HDR;
 
 #endif
