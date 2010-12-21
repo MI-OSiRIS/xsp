@@ -472,12 +472,12 @@ int connect(int sockfd, const struct sockaddr *serv_addr, SOCKLEN_T addrlen) {
 		return retval;
 	}
 
+#ifndef HAVE_PHOEBUS
 	// just do a regular connect now that the session is configured
 	return std_connect(sockfd, serv_addr, addrlen);
-	
-	/*
+#else
+	// let the app use the new session sock
 	new_sock = xsp_get_session_socket(sess);	
-	
 	if (new_sock >= 0) {
 		int n;
 		d_printf("connect(): replacing old socket %d with newly allocated socket %d\n", sockfd, new_sock);
@@ -499,7 +499,7 @@ int connect(int sockfd, const struct sockaddr *serv_addr, SOCKLEN_T addrlen) {
 	sess->end_host_addrlen = addrlen;
 
 	return retval;
-	*/
+#endif
 }
 
 #if 0 // SOLARIS
