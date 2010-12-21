@@ -1119,8 +1119,8 @@ int xsp_shutdown(libxspSess *sess, int how) {
 }
 
 int xsp_set_session_socket(libxspSess *sess, int new_sd) {
-	if (sess->data_connected) {
-		sess->data_sock = new_sd;
+	if (sess->connected) {
+		sess->sock = new_sd;
 		return 0;
 	} else {
 		return -1;
@@ -1128,8 +1128,8 @@ int xsp_set_session_socket(libxspSess *sess, int new_sd) {
 }
 
 int xsp_get_session_socket(libxspSess *sess) {
-	if (sess->data_connected) {
-		return sess->data_sock;
+	if (sess->connected) {
+		return sess->sock;
 	} else {
 		return -1;
 	}
