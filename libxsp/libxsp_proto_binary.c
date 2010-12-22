@@ -78,7 +78,7 @@ int xsp_parse_sess_open_msg(const char *buf, int length, void **msg_body) {
 	if (remainder < sizeof(xspSess_HDR))
 		goto parse_error;
 
-	bin2hex(hdr->sess_id, ret_sess->sess_id, 2*XSP_SESSIONID_LEN);
+	bin2hex(hdr->sess_id, ret_sess->sess_id, XSP_SESSIONID_LEN);
 	bcopy(hdr->src_id, ret_sess->src_id, XSP_HOPID_LEN);
 	ret_sess->src_id[XSP_HOPID_LEN] = '\0';
 
