@@ -29,8 +29,9 @@ int xsp_writeout_slab_record(xspSlabRec *rec, char *buf, int remainder);
 
 
 typedef struct xsp_msg_data_open_hdr_t {
-	char hop_id[XSP_HOPID_LEN];
 	uint32_t flags;
+	char hop_id[XSP_HOPID_LEN];
+	char proto[XSP_PROTO_NAME_LEN];
 } xspDataOpen_HDR;
 
 typedef struct xsp_hop_hdr_t {
@@ -56,6 +57,8 @@ typedef struct xsp_msg_auth_info_hdr_t {
 } xspAuthType_HDR;
 
 typedef struct xsp_block_header_hdr_t {
+	uint16_t type;
+	uint16_t sport;
 	uint32_t length;
 } xspBlockHeader_HDR;
 

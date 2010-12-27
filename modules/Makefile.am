@@ -38,6 +38,13 @@ oscars_la_SOURCES = xspd_oscars_basic.c oscars.c oscars.h
 oscars_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
 endif
 
+if ENABLE_PHOTON
+modules_LTLIBRARIES += photon.la
+photon_la_SOURCES = xspd_proto_photon.c xspd_proto_photon.h
+photon_la_LDFLAGS = -no-undefined -module -avoid-version -L/work/kissel/photon/libphoton -lphoton_debug
+photon_la_CFLAGS = $(AM_CFLAGS) $(PHOTON_CFLAGS) -I/work/kissel/photon/libphoton/include
+endif
+
 if HAVE_WEB100
 modules_LTLIBRARIES += tcp.la
 tcp_la_SOURCES = xspd_conn_tcp.c xspd_conn_tcp.h xspd_proto_tcp.c xspd_web100.c xspd_web100.h

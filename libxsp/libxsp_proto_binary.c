@@ -36,6 +36,7 @@ int libxsp_proto_binary_init() {
 	bin_handler.parse[XSP_MSG_DATA_CLOSE] = NULL;
 	bin_handler.parse[XSP_MSG_PATH_OPEN] = xsp_parse_block_header_msg;
 	bin_handler.parse[XSP_MSG_PATH_CLOSE] = NULL;
+	bin_handler.parse[XSP_MSG_APP_DATA] = xsp_parse_block_header_msg;
 	bin_handler.parse[XSP_MSG_SLAB_INFO] = xsp_parse_slab_info;
 
 	bin_handler.writeout[XSP_MSG_INVALID] = NULL;
@@ -52,6 +53,7 @@ int libxsp_proto_binary_init() {
 	bin_handler.writeout[XSP_MSG_DATA_CLOSE] = NULL;
 	bin_handler.writeout[XSP_MSG_PATH_OPEN] = xsp_writeout_block_header_msg;
 	bin_handler.writeout[XSP_MSG_PATH_CLOSE] = NULL;
+	bin_handler.writeout[XSP_MSG_APP_DATA] = xsp_writeout_block_header_msg;
 	bin_handler.writeout[XSP_MSG_SLAB_INFO] = xsp_writeout_slab_info;
 
 	bin_handler.max_msg_type = LIBXSP_PROTO_BINARY_MAX;
@@ -288,6 +290,8 @@ int xsp_parse_block_header_msg(const char *buf, int remainder, void **msg_body) 
 
 	hdr = (xspBlockHeader_HDR *) buf;
 
+	new_header->type = ntohl(hdr->type);
+	new_header->sport = ntohl(hdr->sport);
 	new_header->length = ntohl(hdr->length);
 
 	remainder -= sizeof(xspBlockHeader_HDR);
@@ -494,6 +498,8 @@ int xsp_writeout_block_header_msg(void *arg, char *buf, int remainder) {
 	hdr = (xspBlockHeader_HDR *) buf;
 
 	// writeout the block header structure in network byte order
+	hdr->type = htonl(block->type);
+	hdr->sport = htonl(block->sport);
 	hdr->length = htonl(block->length);
 
 	remainder -= sizeof(xspBlockHeader_HDR);
@@ -532,7 +538,7 @@ int xsp_writeout_nack_msg(void *arg, char *buf, int remainder) {
 }
 
 int xsp_writeout_data_open_msg(void *arg, char *buf, int remainder) {
-	const char *hop_id = arg;
+	xspDataOpenHeader *dopen = arg;
 	xspDataOpen_HDR *hdr;
 
 	if (remainder < sizeof(xspDataOpen_HDR)) {
@@ -541,8 +547,9 @@ int xsp_writeout_data_open_msg(void *arg, char *buf, int remainder) {
 	       
 	hdr = (xspDataOpen_HDR *) buf;
 	
-	strlcpy(hdr->hop_id, hop_id, XSP_HOPID_LEN);
-	hdr->flags = htons(0x0);
+	hdr->flags = htons(dopen->flags);
+	strlcpy(hdr->hop_id, dopen->hop_id, XSP_HOPID_LEN);
+	strlcpy(hdr->proto, dopen->proto, XSP_PROTO_NAME_LEN);
 	
 	remainder -= sizeof(xspDataOpen_HDR);
 	

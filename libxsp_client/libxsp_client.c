@@ -692,6 +692,58 @@ int xsp_data_connect(libxspSess *sess) {
         return 0;
 }
 
+int xsp_send_msg(libxspSess *sess, const void *buf, size_t len, int opt_type, int sport) {
+	xspBlockHeader block;
+	int ret;
+
+	block.type = opt_type;
+	block.sport = sport;
+	block.length = len;
+	block.blob = buf;
+
+	if ((ret = xsp_put_msg(sess, 0, XSP_MSG_APP_DATA, sess->sess_id, &block)) < 0) {
+		d_printf("xsp_send_msg(): error: failed to send message\n");
+		goto error_exit;
+	}
+
+	return ret;
+
+ error_exit:
+	return 0;
+}
+
+int xsp_recv_msg(libxspSess *sess, void *ret_buf, size_t *ret_len, int *ret_type, int *ret_sport) {
+	xspMsg *msg;
+	xspBlockHeader *block;
+
+	msg = xsp_get_msg(sess, 0);
+	
+	if (!msg) {
+		d_printf("xsp_recv_msg(): error: did not receive message\n");
+		goto error_exit;
+	}
+	if (msg->type != XSP_MSG_APP_DATA) {
+		d_printf("xsp_recv_msg(): error: did not receive XSP_MSG_APP_DATA message\n");
+		goto error_exit;
+	}
+	
+	block = (xspBlockHeader *) msg->msg_body;
+	if (block->blob)
+		ret_buf = block->blob;
+	else {
+		d_printf("xsp_recv_msg(): error: no block data!\n");
+		goto error_exit;
+	}
+	*ret_type = block->type;
+	*ret_sport = block->sport;
+	*ret_len = block->length;
+
+	return *ret_len;
+
+ error_exit:
+	return 0;
+}
+
 int xsp_signal_path(libxspSess *sess, char *path_type) {
 	xspMsg *msg;
 	xspBlockHeader block;
@@ -701,6 +753,8 @@ int xsp_signal_path(libxspSess *sess, char *path_type) {
 	    !strcmp(path_type, "OSCARS")) {
 		
 		path = strdup(path_type);
+		block.type = 0;
+		block.sport = 0;
 		block.length = strlen(path) + 1;
 		block.blob = path;
 
