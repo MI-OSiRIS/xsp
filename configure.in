@@ -72,6 +72,13 @@ AC_ARG_ENABLE(terapaths,
 
 AM_CONDITIONAL(ENABLE_TERAPATHS, test x$enable_terapaths = xyes)
 
+AC_ARG_ENABLE(photon,
+        AC_HELP_STRING([--enable-photon], [enable photon support [default=no]]),
+        [AM_PATH_XML2(2.0.0, enable_photon=yes, enable_photon=no)],
+        [enable_photon=no])
+
+AM_CONDITIONAL(ENABLE_PHOTON, test x$enable_photon = xyes)
+
 AC_ARG_ENABLE(oscars,
         AC_HELP_STRING([--enable-oscars], [enable oscars support [default=no]]),
         [AM_PATH_XML2(2.0.0, enable_oscars=yes, enable_oscars=no)],
@@ -360,4 +367,4 @@ AC_SUBST(NL_LIBS)
 
 AC_CONFIG_SUBDIRS(libconfig)
 
-AC_OUTPUT(Makefile libradix/Makefile libxsp/Makefile libgsoap/Makefile xspd/Makefile modules/Makefile modules/terapaths/Makefile libxsp_client/Makefile modules/monitoring/Makefile)
+AC_OUTPUT(Makefile libradix/Makefile libxsp/Makefile libgsoap/Makefile xspd/Makefile modules/Makefile modules/terapaths/Makefile libxsp_client/Makefile modules/monitoring/Makefile test/Makefile)

@@ -13,6 +13,9 @@ typedef struct xspd_module_t {
 	char *dependencies;
 
 	int (*init)();
+	int (*opt_handler)();
 } xspdModule;
+
+xspdModule *xspd_find_module(char *module_name);
 
 #endif

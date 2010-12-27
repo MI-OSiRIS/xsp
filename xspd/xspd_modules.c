@@ -199,3 +199,12 @@ int xspd_load_modules() {
 
 	return 0;
 }
+
+xspdModule *xspd_find_module(char *module_name) {
+	xspdModule *module;
+	
+	if ((module = (xspdModule*) hashtable_search(table, module_name)) != NULL)
+		return module;
+	
+	return NULL;
+}

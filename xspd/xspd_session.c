@@ -7,8 +7,11 @@
 
 #include "queue.h"
 
+#include "hashtable.h"
 #include "compat.h"
+#include "option_types.h"
 
+#include "xspd_modules.h"
 #include "xspd_session.h"
 #include "xspd_conn.h"
 #include "xspd_protocols.h"
@@ -425,13 +428,17 @@ error_exit_settings:
 	return -1;
 }
 
-int xspd_session_setup_path(xspdSess *sess, const char *path_type, char **error_msgs) {
+int xspd_session_setup_path(xspdSess *sess, const void *msg, char **error_msgs) {
 	char *error_msg;
 	uint32_t bandwidth;
 	xspdPath *path;
 	xspdChannel *channel;
 	xspdSettings *settings = NULL;
 	xspdConn *parent_conn;
+	
+	xspBlockHeader *block = (xspBlockHeader *)msg;
+	char *path_type = malloc(block->length*sizeof(char));
+	strncpy(path_type, block->blob, block->length);
 
 	parent_conn = LIST_FIRST(&sess->parent_conns);
 
@@ -467,3 +474,65 @@ int xspd_session_setup_path(xspdSess *sess, const char *path_type, char **error_
 	return -1;
 }
 
+int xspd_session_data_open(xspdSess *sess, const void *msg, char **error_msgs) {
+        char *error_msg;
+        xspdSettings *settings = NULL;
+        xspdConn *parent_conn;
+        xspDataOpenHeader *dopen = (xspDataOpenHeader *)msg;
+	
+        parent_conn = LIST_FIRST(&sess->parent_conns);
+
+        xspd_info(0, "Setting up data proto %s for SRC=%s to DST=%s\n",
+		  dopen->proto, parent_conn->description, xsp_hop_getid(sess->child[0]));
+	
+	// explicitly open a data connection
+}
+
+// handle any generic APP_DATA option blocks
+// registered option ranges are included in include/option_types.h for now
+int xspd_session_app_data(xspdSess *sess, const void *msg, char **error_msgs) {
+	char *error_msg;
+        xspdSettings *settings = NULL;
+        xspdConn *parent_conn;
+	xspdModule *module;
+
+        xspBlockHeader *block;
+
+	void *ret_blob = NULL;
+	int ret_type;
+	int ret_len;
+
+	parent_conn = LIST_FIRST(&sess->parent_conns);
+
+	block = (xspBlockHeader *)msg;
+	
+	// each module should register some range of option blocks
+	// then the module option handler (callback) should get invoked based on the type
+	// we'll switch on the defined option types for now...
+	if (block->type >= PHOTON_MIN && 
+	    block->type <= PHOTON_MAX) {
+		if ((module = xspd_find_module("photon")) != NULL)
+			module->opt_handler(block->blob, block->type, ret_blob, &ret_type, &ret_len);
+		else {
+			
+			xspd_err(0, "module not loaded!");
+			goto error_exit;
+		}
+	}
+	
+	// send back a response if necessary
+	if (ret_blob) {
+		xspBlockHeader block;
+		block.type = ret_type;
+		block.sport = 0;
+		block.length = ret_len;
+		block.blob = ret_blob;
+		xspd_conn_send_msg(parent_conn, XSP_MSG_APP_DATA, &block);
+	}
+	
+	return 0;
+	
+ error_exit:
+	*error_msgs = error_msg;
+	return -1;
+}

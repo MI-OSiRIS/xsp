@@ -44,7 +44,9 @@
 #define XSP_MSG_DATA_CLOSE              14
 #define XSP_MSG_PATH_OPEN               15
 #define XSP_MSG_PATH_CLOSE              16
-#define XSP_MSG_SLAB_INFO               17
+#define XSP_MSG_APP_DATA                17
+#define XSP_MSG_SLAB_INFO               18
+
 
 /* XSP Objects */
 
@@ -65,13 +67,16 @@ typedef struct xsp_auth_token_t {
 } xspAuthToken;
 
 typedef struct xsp_block_header_t {
+	uint16_t type;
+	uint16_t sport;
 	uint32_t length;
 	void *blob;
 } xspBlockHeader;
 
 typedef struct xsp_data_open_header_t {
-	char hop_id[XSP_HOPID_LEN];
 	uint16_t flags;
+	char hop_id[XSP_HOPID_LEN];
+	char proto[XSP_PROTO_NAME_LEN];
 } xspDataOpenHeader;
 
 typedef struct slab_record_t {
