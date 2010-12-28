@@ -34,7 +34,7 @@ int xsp_set_session_socket(libxspSess *sess, int new_sd);
 int xsp_set_session_connected(libxspSess *sess);
 int xsp_send_ping(libxspSess *sess);
 int xsp_recv_ping(libxspSess *sess);
-int xsp_send_msg(libxspSess *sess, const void *buf, size_t len, int opt_type, int sport);
-int xsp_recv_msg(libxspSess *sess, void *ret_buf, size_t *ret_len, int *ret_type, int *ret_sport);
+int xsp_send_msg(libxspSess *sess, const void *buf, size_t len, int opt_type);
+int xsp_recv_msg(libxspSess *sess, void **ret_buf, size_t *ret_len, int *ret_type);
 
 #endif

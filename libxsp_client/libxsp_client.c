@@ -692,12 +692,12 @@ int xsp_data_connect(libxspSess *sess) {
         return 0;
 }
 
-int xsp_send_msg(libxspSess *sess, const void *buf, size_t len, int opt_type, int sport) {
+int xsp_send_msg(libxspSess *sess, const void *buf, size_t len, int opt_type) {
 	xspBlockHeader block;
 	int ret;
 
 	block.type = opt_type;
-	block.sport = sport;
+	block.sport = 0;
 	block.length = len;
 	block.blob = buf;
 
@@ -712,7 +712,7 @@ int xsp_send_msg(libxspSess *sess, const void *buf, size_t len, int opt_type, in
 	return 0;
 }
 
-int xsp_recv_msg(libxspSess *sess, void *ret_buf, size_t *ret_len, int *ret_type, int *ret_sport) {
+int xsp_recv_msg(libxspSess *sess, void **ret_buf, size_t *ret_len, int *ret_type) {
 	xspMsg *msg;
 	xspBlockHeader *block;
 
@@ -728,14 +728,15 @@ int xsp_recv_msg(libxspSess *sess, void *ret_buf, size_t *ret_len, int *ret_type
 	}
 	
 	block = (xspBlockHeader *) msg->msg_body;
+
 	if (block->blob)
-		ret_buf = block->blob;
+		*ret_buf = block->blob;
 	else {
 		d_printf("xsp_recv_msg(): error: no block data!\n");
 		goto error_exit;
 	}
+
 	*ret_type = block->type;
-	*ret_sport = block->sport;
 	*ret_len = block->length;
 
 	return *ret_len;

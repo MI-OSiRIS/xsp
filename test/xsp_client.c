@@ -41,8 +41,15 @@ int main(int argc, char *argv[])
 	}
 
 	char buf[20] = "this is my ledger";
+	char *buf2;
+	int ret_len;
+	int ret_type;
 
-	xsp_send_msg(sess, buf, strlen(buf)+1, PHOTON_DAPL, 0);
+	xsp_send_msg(sess, buf, strlen(buf)+1, PHOTON_DAPL);
+
+	xsp_recv_msg(sess, &buf2, &ret_len, &ret_type);
+
+	printf("got message: %s\n", buf2);
 
 	xsp_close(sess);
 

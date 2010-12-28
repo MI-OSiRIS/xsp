@@ -475,8 +475,8 @@ int xspd_session_setup_path(xspdSess *sess, const void *msg, char **error_msgs) 
 }
 
 int xspd_session_data_open(xspdSess *sess, const void *msg, char **error_msgs) {
-        char *error_msg;
-        xspdSettings *settings = NULL;
+        //char *error_msg;
+        //xspdSettings *settings = NULL;
         xspdConn *parent_conn;
         xspDataOpenHeader *dopen = (xspDataOpenHeader *)msg;
 	
@@ -486,21 +486,19 @@ int xspd_session_data_open(xspdSess *sess, const void *msg, char **error_msgs) {
 		  dopen->proto, parent_conn->description, xsp_hop_getid(sess->child[0]));
 	
 	// explicitly open a data connection
+
+	return 0;
 }
 
 // handle any generic APP_DATA option blocks
 // registered option ranges are included in include/option_types.h for now
 int xspd_session_app_data(xspdSess *sess, const void *msg, char **error_msgs) {
-	char *error_msg;
-        xspdSettings *settings = NULL;
+	char *error_msg = NULL;
         xspdConn *parent_conn;
 	xspdModule *module;
 
         xspBlockHeader *block;
-
-	void *ret_blob = NULL;
-	int ret_type;
-	int ret_len;
+	xspBlockHeader *ret_block;
 
 	parent_conn = LIST_FIRST(&sess->parent_conns);
 
@@ -512,7 +510,7 @@ int xspd_session_app_data(xspdSess *sess, const void *msg, char **error_msgs) {
 	if (block->type >= PHOTON_MIN && 
 	    block->type <= PHOTON_MAX) {
 		if ((module = xspd_find_module("photon")) != NULL)
-			module->opt_handler(block->blob, block->type, ret_blob, &ret_type, &ret_len);
+			module->opt_handler(block, &ret_block);
 		else {
 			
 			xspd_err(0, "module not loaded!");
@@ -521,13 +519,8 @@ int xspd_session_app_data(xspdSess *sess, const void *msg, char **error_msgs) {
 	}
 	
 	// send back a response if necessary
-	if (ret_blob) {
-		xspBlockHeader block;
-		block.type = ret_type;
-		block.sport = 0;
-		block.length = ret_len;
-		block.blob = ret_blob;
-		xspd_conn_send_msg(parent_conn, XSP_MSG_APP_DATA, &block);
+	if (ret_block) {
+		xspd_conn_send_msg(parent_conn, XSP_MSG_APP_DATA, ret_block);
 	}
 	
 	return 0;
