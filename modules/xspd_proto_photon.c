@@ -20,10 +20,11 @@
 
 #include "photon.h"
 
+#include "option_types.h"
 #include "compat.h"
 
 int xspd_proto_photon_init();
-int xspd_proto_photon_opt_handler(void *opt_data, int opt_type, void *ret_data, int *ret_type, int *ret_len);
+int xspd_proto_photon_opt_handler(xspBlockHeader *block, xspBlockHeader **ret_block);
 
 static xspdConn *xspd_proto_photon_connect(const char *hop_id, xspdSettings *settings);
 static xspdListener *xspd_proto_photon_setup_listener(const char *listener_id, xspdSettings *settings, int one_shot, listener_cb callback, void *arg);
@@ -55,14 +56,18 @@ int xspd_proto_photon_init() {
 	//}
 
 	return 0;
-
-error_exit:
-	return -1;
 }
 
-int xspd_proto_photon_opt_handler(void *opt_data, int opt_type, void *ret_data, int *ret_type, int *ret_len) {
+int xspd_proto_photon_opt_handler(xspBlockHeader *block, xspBlockHeader **ret_block) {
 
-	xspd_info(0, "handling photon message!: %s", opt_data);
+	xspd_info(0, "handling photon message!: %s", (char*)block->blob);
+
+	*ret_block = (xspBlockHeader*)malloc(sizeof(xspBlockHeader));
+	(*ret_block)->blob = "blah";
+	(*ret_block)->length = 6;
+	(*ret_block)->type = PHOTON_DAPL;
+	(*ret_block)->sport = 0;
+
 	return 0;
 }
 
