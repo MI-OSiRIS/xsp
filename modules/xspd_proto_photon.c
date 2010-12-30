@@ -110,15 +110,15 @@ int xspd_proto_photon_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBloc
 
 			ci = (PhotonConnectInfo*) block->blob;
 			
-			// does not currently check for duplicate registrations
-			// duplicate messages, etc.
-			if (dapl_xsp_register_session((xspSess*)sess) != 0) {
-				xspd_err(0, "could not register session with libphoton");
-				goto error_exit;
-			}
-			
 			pthread_mutex_lock(&ci_lock);
 			{
+				// does not currently check for duplicate registrations
+				// duplicate messages, etc.
+				if (dapl_xsp_register_session((xspSess*)sess) != 0) {
+					xspd_err(0, "could not register session with libphoton");
+					goto error_exit;
+				}
+				
 				if (dapl_xsp_set_ci((xspSess*)sess, ci, &ret_ci) != 0) {
 					xspd_err(0, "could not set photon connect info");
 					goto error_exit;
