@@ -135,11 +135,16 @@ int xspd_proto_photon_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBloc
 			// so ugly to do this here
 			xspd_conn_send_msg(parent_conn, XSP_MSG_APP_DATA, *ret_block);
 			
-			// but it's better to wait for the dapl connection right away
-			if (dapl_xsp_wait_connect((xspSess*)sess) != 0) {
-				xspd_err(0, "could not complete dapl connections");
-				goto error_exit;
+			pthread_mutex_lock(&ci_lock);
+			{
+				// but it's better to wait for the dapl connection right away
+				if (dapl_xsp_wait_connect((xspSess*)sess) != 0) {
+					xspd_err(0, "could not complete dapl connections");
+					goto error_exit;
+				}
 			}
+			pthread_mutex_unlock(&ci_lock);
+
 			// we already sent our PHOTON_CI message back
 			*ret_block = NULL;
 		}
