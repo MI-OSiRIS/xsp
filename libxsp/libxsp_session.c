@@ -6,6 +6,10 @@
 #include "libxsp_session.h"
 #include "libxsp_path.h"
 
+int xsp_sesscmp(xspSess *s1, xspSess *s2) {
+	return memcmp(s1->sess_id, s2->sess_id, XSP_SESSIONID_LEN * 2 + 1);
+}
+
 xspSess *xsp_alloc_sess() {
 	xspSess *new_sess;
 

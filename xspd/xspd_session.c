@@ -510,7 +510,7 @@ int xspd_session_app_data(xspdSess *sess, const void *msg, char **error_msgs) {
 	if (block->type >= PHOTON_MIN && 
 	    block->type <= PHOTON_MAX) {
 		if ((module = xspd_find_module("photon")) != NULL)
-			module->opt_handler(block, &ret_block);
+			module->opt_handler(sess, block, &ret_block);
 		else {
 			
 			xspd_err(0, "module not loaded!");
@@ -521,6 +521,7 @@ int xspd_session_app_data(xspdSess *sess, const void *msg, char **error_msgs) {
 	// send back a response if necessary
 	if (ret_block) {
 		xspd_conn_send_msg(parent_conn, XSP_MSG_APP_DATA, ret_block);
+		free(ret_block);
 	}
 	
 	return 0;

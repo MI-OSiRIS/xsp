@@ -696,7 +696,7 @@ int xsp_send_msg(libxspSess *sess, const void *buf, size_t len, int opt_type) {
 	xspBlockHeader block;
 	int ret;
 
-	block.type = opt_type;
+	block.type = (uint16_t)opt_type;
 	block.sport = 0;
 	block.length = len;
 	block.blob = buf;

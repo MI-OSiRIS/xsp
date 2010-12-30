@@ -41,8 +41,9 @@ endif
 if ENABLE_PHOTON
 modules_LTLIBRARIES += photon.la
 photon_la_SOURCES = xspd_proto_photon.c xspd_proto_photon.h
-photon_la_LDFLAGS = -no-undefined -module -avoid-version -L/work/kissel/photon/libphoton -lphoton_debug
-photon_la_CFLAGS = $(AM_CFLAGS) $(PHOTON_CFLAGS) -I/work/kissel/photon/libphoton/include
+photon_la_LDFLAGS = -no-undefined -module -avoid-version -L/work/kissel/photon/libphoton -lphoton_xsp
+photon_la_LIBADD = -L/work/kissel/photon/libphoton/libphoton_xsp.a -ldat2
+photon_la_CFLAGS = $(AM_CFLAGS) $(PHOTON_CFLAGS) -I/work/kissel/photon/libphoton/include -DWITH_XSP
 endif
 
 if HAVE_WEB100

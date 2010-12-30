@@ -290,7 +290,7 @@ int xsp_parse_block_header_msg(const char *buf, int remainder, void **msg_body) 
 
 	hdr = (xspBlockHeader_HDR *) buf;
 
-	new_header->type = ntohl(hdr->type);
+	new_header->type = ntohs(hdr->type);
 	new_header->sport = ntohl(hdr->sport);
 	new_header->length = ntohl(hdr->length);
 
@@ -498,7 +498,7 @@ int xsp_writeout_block_header_msg(void *arg, char *buf, int remainder) {
 	hdr = (xspBlockHeader_HDR *) buf;
 
 	// writeout the block header structure in network byte order
-	hdr->type = htonl(block->type);
+	hdr->type = htons(block->type);
 	hdr->sport = htonl(block->sport);
 	hdr->length = htonl(block->length);
 
