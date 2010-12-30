@@ -7,7 +7,7 @@ libxsp_client_a_SOURCES = libxsp_client.c ../compat/compat.c ../compat/compat.h
 libxsp_wrapper_la_SOURCES = libxsp_client.c libxsp_wrapper.c libxsp_wrapper_route.c libxsp_wrapper_route.h ../compat/compat.c ../compat/compat.h
 libxsp_simplewrapper_la_SOURCES = libxsp_client.c libxsp_simplewrapper.c libxsp_wrapper_route.c libxsp_wrapper_route.h ../compat/compat.c ../compat/compat.h
 
-libxsp_client_a_LIBADD = ../libxsp/libxsp.a
+libxsp_client_a_LIBADD = ../libxsp/libxsp.o ../libxsp/libxsp_hop.o ../libxsp/libxsp_path.o ../libxsp/libxsp_session.o ../libxsp/libxsp_protocol_settings.o ../libxsp/libxsp_proto.o ../libxsp/libxsp_proto_binary.o ../libxsp/compat.o
 libxsp_wrapper_la_LIBADD = ../libxsp/libxsp.a ../libradix/libradix.a
 libxsp_simplewrapper_la_LIBADD = ../libxsp/libxsp.a ../libradix/libradix.a
 

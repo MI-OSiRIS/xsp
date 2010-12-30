@@ -21,5 +21,6 @@ xspSess *xsp_alloc_sess();
 void xsp_free_sess(xspSess *sess);
 int xsp_sess_addhop(xspSess *sess, xspHop *hop);
 char *xsp_sessid2str(const char *sess_id, char *output_buf, int size);
+int xsp_sesscmp(xspSess *s1, xspSess *s2);
 
 #endif
