@@ -20,10 +20,13 @@
 #include "xspd_session.h"
 #include "xspd_conn.h"
 
-#include "photon.h"
+#include "photon_xsp.h"
 
 #include "option_types.h"
 #include "compat.h"
+
+/* XXX: Is there a way to forward declare MPI_Aint and MPI_Datatype? */
+#include <mpi.h>
 
 ///////////////////
 // phorwarder libphoton util
@@ -36,7 +39,11 @@ int dapl_xsp_get_ri(xspSess *sess, PhotonRIInfo *ri);
 int dapl_xsp_set_ri(xspSess *sess, PhotonRIInfo *ri, PhotonRIInfo **ret_ri);
 int dapl_xsp_get_fi(xspSess *sess, PhotonFINInfo *fi);
 int dapl_xsp_set_fi(xspSess *sess, PhotonFINInfo *fi, PhotonFINInfo **ret_fi);
+int dapl_xsp_set_io(xspSess *sess, PhotonIOInfo *io);
 
+int dapl_xsp_do_io(xspSess *sess);
+
+/* XXX: I don't think we will need these for now */
 int dapl_xsp_post_recv(xspSess* sess, char *ptr, uint32_t size, uint32_t *request);
 int dapl_xsp_post_send(xspSess* sess, char *ptr, uint32_t size, uint32_t *request);
 int dapl_xsp_post_recv_buffer_rdma(xspSess* sess, char *ptr, uint32_t size, int tag, uint32_t *request);
@@ -46,9 +53,11 @@ int dapl_xsp_wait_recv_buffer_rdma(xspSess* sess, int tag);
 int dapl_xsp_post_os_put(xspSess* sess, char *ptr, uint32_t size, int tag, uint32_t remote_offset, uint32_t *request);
 int dapl_xsp_post_os_get(xspSess *sess, char *ptr, uint32_t size, int tag, uint32_t remote_offset, uint32_t *request);
 
+
 int xspd_proto_photon_init();
 int xspd_proto_photon_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBlockHeader **ret_block);
 
+static PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg);
 static xspdConn *xspd_proto_photon_connect(const char *hop_id, xspdSettings *settings);
 static xspdListener *xspd_proto_photon_setup_listener(const char *listener_id, xspdSettings *settings, int one_shot, listener_cb callback, void *arg);
 
@@ -196,6 +205,29 @@ int xspd_proto_photon_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBloc
 		break;
 	case PHOTON_IO:
 		{
+		    PhotonIOInfo *io = xspd_proto_photon_parse_io_msg(block->blob);
+		    if(io == NULL)
+		        goto error_exit;
+
+		    /* XXX: AFAIK the I/O info is session specific, so no need for locks */
+            if (dapl_xsp_set_io((xspSess*)sess, io) != 0) {
+                xspd_err(0, "could not set photon I/O info");
+                goto error_exit;
+            }
+
+            /*
+             * TODO: From here the phorwarder needs to start the I/O transfer
+             *   process. The following method is will block for io->niter RDMA
+             *   transfers. Does this method (opt_handler) need to return immediately?
+             *   What is the best way to run the I/O method? Create a new thread?
+             *   I think there is no problem with the session being unresponsive
+             *   until the I/O finishes.
+             */
+            if (dapl_xsp_do_io((xspSess*)sess) != 0) {
+                xspd_err(0, "I/O processing failed");
+                goto error_exit;
+            }
+
 			*ret_block = NULL;
 		}
 		break;
@@ -221,4 +253,52 @@ static xspdConn *xspd_proto_photon_connect(const char *hostname, xspdSettings *s
 static xspdListener *xspd_proto_photon_setup_listener(const char *listener_id, xspdSettings *settings, int one_shot, listener_cb callback, void *arg) {
 	
 	return NULL;
+}
+
+PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg) {
+    int fileURI_size;
+    PhotonIOInfo *io = malloc(sizeof(PhotonIOInfo));
+    void *msg_ptr = msg;
+
+    /* TODO: Assumes block->blob will be freed by xspd. True? */
+    fileURI_size = *((int *)msg);
+    io->fileURI = strdup((char*)(msg+sizeof(int)));
+    if (fileURI_size != strlen(io->fileURI) + 1) {
+        xspd_err(0, "xspd_proto_photon_parse_io_msg: fileURI size mismatch");
+        return -1;
+    }
+    msg_ptr = msg + sizeof(int) + fileURI_size;
+
+    io->amode = *((int *)msg_ptr);
+    io->niter = *((int *)(msg_ptr+sizeof(int)));
+    io->view.combiner = *((int *)(msg_ptr+sizeof(int)*2));
+    msg_ptr += sizeof(int)*3;
+
+    io->view.nints = *((int *)msg_ptr);
+    io->view.integers = malloc(io->view.nints*sizeof(int));
+    if(io->view.integers == NULL) {
+        xspd_err(0, "xspd_proto_photon_parse_io_msg: out of memory");
+        return -1;
+    }
+    memcpy(io->view.integers, msg_ptr+sizeof(int), io->view.nints*sizeof(int));
+    msg_ptr += sizeof(int) + io->view.nints*sizeof(int);
+
+    io->view.naddrs = *((int *)msg_ptr);
+    io->view.addresses = malloc(io->view.naddrs*sizeof(MPI_Aint));
+    if(io->view.addresses == NULL) {
+        xspd_err(0, "xspd_proto_photon_parse_io_msg: out of memory");
+        return -1;
+    }
+    memcpy(io->view.addresses, msg_ptr+sizeof(int), io->view.naddrs*sizeof(MPI_Aint));
+    msg_ptr += sizeof(int) + io->view.naddrs*sizeof(MPI_Aint);
+
+    io->view.ndatatypes = *((int *)msg_ptr);
+    io->view.datatypes = malloc(io->view.ndatatypes*sizeof(int));
+    if(io->view.datatypes == NULL) {
+        xspd_err(0, "xspd_proto_photon_parse_io_msg: out of memory");
+        return -1;
+    }
+    memcpy(io->view.datatypes, msg_ptr+sizeof(int), io->view.ndatatypes*sizeof(MPI_Datatype));
+
+    return io;
 }
