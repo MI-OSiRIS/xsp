@@ -712,7 +712,7 @@ int xsp_send_msg(libxspSess *sess, const void *buf, size_t len, int opt_type) {
 	return 0;
 }
 
-int xsp_recv_msg(libxspSess *sess, void **ret_buf, size_t *ret_len, int *ret_type) {
+int xsp_recv_msg(libxspSess *sess, void *ret_buf, size_t len, int *ret_type) {
 	xspMsg *msg;
 	xspBlockHeader *block;
 
@@ -730,16 +730,15 @@ int xsp_recv_msg(libxspSess *sess, void **ret_buf, size_t *ret_len, int *ret_typ
 	block = (xspBlockHeader *) msg->msg_body;
 
 	if (block->blob)
-		*ret_buf = block->blob;
+		bcopy(block->blob, ret_buf, len);
 	else {
 		d_printf("xsp_recv_msg(): error: no block data!\n");
 		goto error_exit;
 	}
 
 	*ret_type = block->type;
-	*ret_len = block->length;
-
-	return *ret_len;
+	
+	return block->length;
 
  error_exit:
 	return 0;

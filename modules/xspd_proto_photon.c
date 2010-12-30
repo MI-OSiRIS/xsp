@@ -53,6 +53,7 @@ static xspdConn *xspd_proto_photon_connect(const char *hop_id, xspdSettings *set
 static xspdListener *xspd_proto_photon_setup_listener(const char *listener_id, xspdSettings *settings, int one_shot, listener_cb callback, void *arg);
 
 pthread_mutex_t ci_lock;
+pthread_mutex_t rfi_lock;
 
 // maybe we eventually want this to be a generic protocal handler
 static xspdProtocolHandler xspd_photon_handler = {
@@ -87,7 +88,8 @@ int xspd_proto_photon_init() {
 	}
 
 	pthread_mutex_init(&ci_lock, NULL);
-
+	pthread_mutex_init(&rfi_lock, NULL);
+	
 	return 0;
 
  error_exit:
@@ -123,20 +125,17 @@ int xspd_proto_photon_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBloc
 					xspd_err(0, "could not set photon connect info");
 					goto error_exit;
 				}
-			}
-			pthread_mutex_unlock(&ci_lock);
-
-			*ret_block = (xspBlockHeader*)malloc(sizeof(xspBlockHeader));
-			(*ret_block)->blob = ret_ci;
-			(*ret_block)->length = sizeof(PhotonConnectInfo);
-			(*ret_block)->type = block->type;
-			(*ret_block)->sport = 0;
-			
-			// so ugly to do this here
-			xspd_conn_send_msg(parent_conn, XSP_MSG_APP_DATA, *ret_block);
-			
-			pthread_mutex_lock(&ci_lock);
-			{
+				
+				
+				*ret_block = (xspBlockHeader*)malloc(sizeof(xspBlockHeader));
+				(*ret_block)->blob = ret_ci;
+				(*ret_block)->length = sizeof(PhotonConnectInfo);
+				(*ret_block)->type = block->type;
+				(*ret_block)->sport = 0;
+				
+				// so ugly to do this here
+				xspd_conn_send_msg(parent_conn, XSP_MSG_APP_DATA, *ret_block);
+				
 				// but it's better to wait for the dapl connection right away
 				if (dapl_xsp_wait_connect((xspSess*)sess) != 0) {
 					xspd_err(0, "could not complete dapl connections");
@@ -155,11 +154,15 @@ int xspd_proto_photon_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBloc
                         PhotonRIInfo *ret_ri = malloc(sizeof(PhotonRIInfo));
 			
 			ri = (PhotonRIInfo*) block->blob;
-
-			if (dapl_xsp_set_ri((xspSess*)sess, ri, &ret_ri) != 0) {
-				xspd_err(0, "could not set photon snd/rcv ledgers");
-				goto error_exit;
+			
+			pthread_mutex_lock(&rfi_lock);
+			{
+				if (dapl_xsp_set_ri((xspSess*)sess, ri, &ret_ri) != 0) {
+					xspd_err(0, "could not set photon snd/rcv ledgers");
+					goto error_exit;
+				}
 			}
+			pthread_mutex_unlock(&rfi_lock);
 			
 			*ret_block = (xspBlockHeader*)malloc(sizeof(xspBlockHeader));
                         (*ret_block)->blob = ret_ri;
@@ -172,13 +175,17 @@ int xspd_proto_photon_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBloc
 		{
 			PhotonFINInfo *fi;
                         PhotonFINInfo *ret_fi = malloc(sizeof(PhotonFINInfo));
-
+			
                         fi = (PhotonFINInfo*) block->blob;
 
-                        if (dapl_xsp_set_fi((xspSess*)sess, fi, &ret_fi) != 0) {
-                                xspd_err(0, "could not set photon FIN ledger");
-                                goto error_exit;
-                        }
+			pthread_mutex_lock(&rfi_lock);
+			{
+				if (dapl_xsp_set_fi((xspSess*)sess, fi, &ret_fi) != 0) {
+					xspd_err(0, "could not set photon FIN ledger");
+					goto error_exit;
+				}
+			}
+			pthread_mutex_unlock(&rfi_lock);
 
                         *ret_block = (xspBlockHeader*)malloc(sizeof(xspBlockHeader));
                         (*ret_block)->blob = ret_fi;
