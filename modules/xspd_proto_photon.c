@@ -42,6 +42,7 @@ int dapl_xsp_set_fi(xspSess *sess, PhotonFINInfo *fi, PhotonFINInfo **ret_fi);
 int dapl_xsp_set_io(xspSess *sess, PhotonIOInfo *io);
 
 int dapl_xsp_do_io(xspSess *sess);
+void print_photon_io_info(PhotonIOInfo *io);
 
 /* XXX: I don't think we will need these for now */
 int dapl_xsp_post_recv(xspSess* sess, char *ptr, uint32_t size, uint32_t *request);
@@ -298,7 +299,9 @@ PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg) {
         xspd_err(0, "xspd_proto_photon_parse_io_msg: out of memory");
         return NULL;
     }
-    memcpy(io->view.datatypes, msg_ptr+sizeof(int), io->view.ndatatypes*sizeof(MPI_Datatype));
+    memcpy(io->view.datatypes, msg_ptr+sizeof(int), io->view.ndatatypes*sizeof(int));
+
+    print_photon_io_info(&io);
 
     return io;
 }
