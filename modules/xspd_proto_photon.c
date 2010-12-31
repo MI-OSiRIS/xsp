@@ -235,7 +235,7 @@ int xspd_proto_photon_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBloc
 		break;
 		
 	}
-       
+
 
 	return 0;
 
@@ -265,7 +265,7 @@ PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg) {
     io->fileURI = strdup((char*)(msg+sizeof(int)));
     if (fileURI_size != strlen(io->fileURI) + 1) {
         xspd_err(0, "xspd_proto_photon_parse_io_msg: fileURI size mismatch");
-        return -1;
+        return NULL;
     }
     msg_ptr = msg + sizeof(int) + fileURI_size;
 
@@ -278,7 +278,7 @@ PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg) {
     io->view.integers = malloc(io->view.nints*sizeof(int));
     if(io->view.integers == NULL) {
         xspd_err(0, "xspd_proto_photon_parse_io_msg: out of memory");
-        return -1;
+        return NULL;
     }
     memcpy(io->view.integers, msg_ptr+sizeof(int), io->view.nints*sizeof(int));
     msg_ptr += sizeof(int) + io->view.nints*sizeof(int);
@@ -287,7 +287,7 @@ PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg) {
     io->view.addresses = malloc(io->view.naddrs*sizeof(MPI_Aint));
     if(io->view.addresses == NULL) {
         xspd_err(0, "xspd_proto_photon_parse_io_msg: out of memory");
-        return -1;
+        return NULL;
     }
     memcpy(io->view.addresses, msg_ptr+sizeof(int), io->view.naddrs*sizeof(MPI_Aint));
     msg_ptr += sizeof(int) + io->view.naddrs*sizeof(MPI_Aint);
@@ -296,7 +296,7 @@ PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg) {
     io->view.datatypes = malloc(io->view.ndatatypes*sizeof(int));
     if(io->view.datatypes == NULL) {
         xspd_err(0, "xspd_proto_photon_parse_io_msg: out of memory");
-        return -1;
+        return NULL;
     }
     memcpy(io->view.datatypes, msg_ptr+sizeof(int), io->view.ndatatypes*sizeof(MPI_Datatype));
 
