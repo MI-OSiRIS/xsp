@@ -1150,7 +1150,7 @@ ssize_t xsp_recv(libxspSess *sess, void *buf, size_t len, int flags) {
 		return -1;
 	}
 
-	return std_recv(sess->data_sock, buf, len, flags);
+	return std_recv(sess->sock, buf, len, flags);
 }
 
 ssize_t xsp_send(libxspSess *sess, const void *buf, size_t len, int flags) {
@@ -1160,7 +1160,7 @@ ssize_t xsp_send(libxspSess *sess, const void *buf, size_t len, int flags) {
 		return -1;
 	}
 
-	return std_send(sess->data_sock, buf, len, flags);
+	return std_send(sess->sock, buf, len, flags);
 }
 
 int xsp_shutdown(libxspSess *sess, int how) {
