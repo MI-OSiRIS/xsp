@@ -517,13 +517,24 @@ int xspd_session_app_data(xspdSess *sess, const void *msg, char **error_msgs) {
 			goto error_exit;
 		}
 	}
-	
+
+	if (block->type >= NLMI_MIN &&
+            block->type <= NLMI_MAX) {
+		if ((module = xspd_find_module("nlmi")) != NULL)
+                        module->opt_handler(sess, block, &ret_block);
+                else {
+			
+                        xspd_err(0, "module not loaded!");
+                        goto error_exit;
+                }
+	}
+
 	// send back a response if necessary
 	if (ret_block) {
 		xspd_conn_send_msg(parent_conn, XSP_MSG_APP_DATA, ret_block);
 		free(ret_block);
 	}
-	
+
 	return 0;
 	
  error_exit:
