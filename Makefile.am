@@ -12,6 +12,10 @@ if ENABLE_CLIENT
 libdirs += libradix libxsp_client
 endif
 
+if ENABLE_NLMI
+libdirs += modules/libbson
+endif
+
 bindirs += modules
 
 SUBDIRS = $(libdirs) $(bindirs)

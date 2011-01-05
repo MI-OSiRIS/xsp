@@ -8,8 +8,12 @@
 #define PHOTON_MIN    PHOTON_CI
 #define PHOTON_MAX    PHOTON_IO
 
-#define SLAB_INFO	0x04
+#define SLAB_INFO	0x10
 #define SLAB_MIN        SLAB_INFO
 #define SLAB_MAX        SLAB_INFO
+
+#define NLMI_BSON	0x20
+#define NLMI_MIN	NLMI_BSON
+#define NLMI_MAX	NLMI_BSON
 
 #endif

@@ -114,6 +114,12 @@ void xsp_free_msg(xspMsg *msg) {
 				xsp_free_sess((xspSess *) msg->msg_body);
 				break;
 
+		        case XSP_MSG_APP_DATA:
+				if (((xspBlockHeader *) msg->msg_body)->blob)
+					free(((xspBlockHeader *) msg->msg_body)->blob);
+				free(msg->msg_body);
+				break;
+
 			case XSP_MSG_SESS_ACK:
 			case XSP_MSG_SESS_CLOSE:
 			case XSP_MSG_INVALID:

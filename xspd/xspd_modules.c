@@ -148,18 +148,20 @@ int xspd_load_module(char *module_name) {
 		dependencies = split(module->dependencies, " ", &dependencies_count);
 
 		for(i = 0; i < dependencies_count; i++) {
-			if (xspd_load_module(dependencies[i])) {
-				int j;
-
-				xspd_err(0, "module %s couldn't load %s", module_name, dependencies[i]);
-
-				for(j = i; j < dependencies_count; j++)
-					free(dependencies[j]);
-				free(dependencies);
-
-				goto error_exit3;
+			if (!xspd_find_module(dependencies[i])) {
+				
+				if (xspd_load_module(dependencies[i])) {
+					int j;
+					
+					xspd_err(0, "module %s couldn't load %s", module_name, dependencies[i]);
+					
+					for(j = i; j < dependencies_count; j++)
+						free(dependencies[j]);
+					free(dependencies);
+					
+					goto error_exit3;
+				}
 			}
-
 			free(dependencies[i]);
 			dependencies[i] = NULL;
 		}

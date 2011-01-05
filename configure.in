@@ -72,6 +72,13 @@ AC_ARG_ENABLE(terapaths,
 
 AM_CONDITIONAL(ENABLE_TERAPATHS, test x$enable_terapaths = xyes)
 
+AC_ARG_ENABLE(nlmi,
+        AC_HELP_STRING([--enable-nlmi], [enable NLMI support [default=no]]),
+        [AM_PATH_XML2(2.0.0, enable_nlmi=yes, enable_nlmi=no)],
+        [enable_nlmi=no])
+
+AM_CONDITIONAL(ENABLE_NLMI, test x$enable_nlmi = xyes)
+
 AC_ARG_ENABLE(photon,
         AC_HELP_STRING([--enable-photon], [enable photon support [default=no]]),
         [AM_PATH_XML2(2.0.0, enable_photon=yes, enable_photon=no)],
@@ -367,4 +374,4 @@ AC_SUBST(NL_LIBS)
 
 AC_CONFIG_SUBDIRS(libconfig)
 
-AC_OUTPUT(Makefile libradix/Makefile libxsp/Makefile libgsoap/Makefile xspd/Makefile modules/Makefile modules/terapaths/Makefile libxsp_client/Makefile modules/monitoring/Makefile test/Makefile)
+AC_OUTPUT(Makefile libradix/Makefile libxsp/Makefile libgsoap/Makefile xspd/Makefile modules/Makefile modules/terapaths/Makefile libxsp_client/Makefile modules/monitoring/Makefile modules/libbson/Makefile test/Makefile)

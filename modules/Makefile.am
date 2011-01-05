@@ -24,6 +24,14 @@ modules_LTLIBRARIES += logger_syslog.la
 logger_syslog_la_SOURCES = xspd_logger_syslog.c
 logger_syslog_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
 
+if ENABLE_NLMI
+modules_LTLIBRARIES += nlmi.la
+nlmi_la_SOURCES = xspd_nlmi.c
+nlmi_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+nlmi_la_LIBADD = libbson/libbson.a
+nlmi_la_CFLAGS = -DMONGO_HAVE_STDINT -I./libbson
+endif
+
 if ENABLE_TERAPATHS
 modules_LTLIBRARIES += terapaths.la
 terapaths_la_SOURCES = xspd_terapaths_basic.c xspd_terapaths_basic.h

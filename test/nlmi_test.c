@@ -11,8 +11,9 @@
 #include <sys/time.h>
 
 #include "option_types.h"
-
 #include "libxsp_client.h"
+
+#include "bson.h"
 
 struct sockaddr_in *nameport2sa(const char *name_port);
 
@@ -20,6 +21,10 @@ int main(int argc, char *argv[])
 {
 	int i;
 	libxspSess *sess;
+
+	int bsz;
+	bson_buffer bb;
+	bson b;
 
 	if (libxsp_init() < 0) {
 		perror("libxsp_init(): failed");
@@ -40,18 +45,26 @@ int main(int argc, char *argv[])
 		exit(errno);
 	}
 
-	char buf[20] = "this is my ledger";
-	char *buf2;
-	int ret_len;
-	int ret_type;
+	bson_buffer_init(&bb);
+	bson_ensure_space(&bb, 131072);
+	
+	bson_append_start_object(&bb, "subject");
+	bson_append_start_array(&bb, "host");
 
-	xsp_send_msg(sess, buf, strlen(buf)+1, 0);
+	for(i=0; i <= 5; i++) {
+		bson_append_string(&bb, "", "test");
+	}
+	bson_append_finish_object(&bb); /* [host] */
+	bson_append_finish_object(&bb); /* {subject} */
 
-	xsp_recv_msg(sess, &buf2, &ret_len, &ret_type);
+	bson_from_buffer(&b, &bb);
+	bsz = bson_size(&b);
 
-	printf("got message: %s\n", buf2);
+	bson_print(&b);
 
-	xsp_close(sess);
+	xsp_send_msg(sess, b.data, bsz, NLMI_BSON);	
+	
+	xsp_close2(sess);
 
 	return 0;
 }

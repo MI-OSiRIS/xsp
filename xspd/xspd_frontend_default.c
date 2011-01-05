@@ -207,6 +207,7 @@ void *xspd_default_handle_conn(void *arg) {
 				if (xspd_session_setup_path(sess, msg->msg_body, error_msgs) < 0)
 					goto error_exit1;
 				xspd_conn_send_msg(new_conn, XSP_MSG_SESS_ACK, NULL);
+				xsp_free_msg(msg);
 			}
 			break;
 		case XSP_MSG_DATA_OPEN:
@@ -214,12 +215,14 @@ void *xspd_default_handle_conn(void *arg) {
 				if (xspd_session_data_open(sess, msg->msg_body, error_msgs) < 0)
 					goto error_exit1;
 				//xspd_conn_send_msg(new_conn, XSP_MSG_SESS_ACK, NULL);
+				xsp_free_msg(msg);
 			}
 			break;
 		case XSP_MSG_APP_DATA:
 			{
 				if (xspd_session_app_data(sess, msg->msg_body, error_msgs) < 0)
 					goto error_exit1;
+				xsp_free_msg(msg);
 			}
 			break;
 		default:

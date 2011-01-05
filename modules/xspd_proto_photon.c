@@ -209,35 +209,34 @@ int xspd_proto_photon_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBloc
 		    PhotonIOInfo *io = xspd_proto_photon_parse_io_msg(block->blob);
 		    if(io == NULL)
 		        goto error_exit;
-
+		    
 		    /* XXX: AFAIK the I/O info is session specific, so no need for locks */
-            if (dapl_xsp_set_io((xspSess*)sess, io) != 0) {
-                xspd_err(0, "could not set photon I/O info");
-                goto error_exit;
-            }
-
-            /*
-             * TODO: From here the phorwarder needs to start the I/O transfer
-             *   process. The following method is will block for io->niter RDMA
-             *   transfers. Does this method (opt_handler) need to return immediately?
-             *   What is the best way to run the I/O method? Create a new thread?
-             *   I think there is no problem with the session being unresponsive
-             *   until the I/O finishes.
-             */
-            if (dapl_xsp_do_io((xspSess*)sess) != 0) {
-                xspd_err(0, "I/O processing failed");
-                goto error_exit;
-            }
-
-			*ret_block = NULL;
+		    if (dapl_xsp_set_io((xspSess*)sess, io) != 0) {
+			    xspd_err(0, "could not set photon I/O info");
+			    goto error_exit;
+		    }
+		    
+		    /*
+		     * TODO: From here the phorwarder needs to start the I/O transfer
+		     *   process. The following method is will block for io->niter RDMA
+		     *   transfers. Does this method (opt_handler) need to return immediately?
+		     *   What is the best way to run the I/O method? Create a new thread?
+		     *   I think there is no problem with the session being unresponsive
+		     *   until the I/O finishes.
+		     */
+		    if (dapl_xsp_do_io((xspSess*)sess) != 0) {
+			    xspd_err(0, "I/O processing failed");
+			    goto error_exit;
+		    }
+		    
+		    *ret_block = NULL;
 		}
 		break;
 	default:
 		break;
 		
 	}
-
-
+	
 	return 0;
 
  error_exit:
