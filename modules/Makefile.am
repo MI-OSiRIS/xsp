@@ -29,15 +29,15 @@ modules_LTLIBRARIES += nlmi.la
 nlmi_la_SOURCES = xspd_nlmi.c
 nlmi_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
 nlmi_la_LIBADD = libbson/libbson.a
-nlmi_la_CFLAGS = -DMONGO_HAVE_STDINT -I./libbson
+nlmi_la_CFLAGS = -DMONGO_HAVE_STDINT -I$(srcdir)/libbson
 endif
 
 if ENABLE_TERAPATHS
 modules_LTLIBRARIES += terapaths.la
 terapaths_la_SOURCES = xspd_terapaths_basic.c xspd_terapaths_basic.h
 terapaths_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
-terapaths_la_LIBADD = terapaths/libterapaths.a monitoring/libmntr.a ../libgsoap/libgsoap.a
-INCLUDES += -I./terapaths -I./monitoring -I../libgsoap
+terapaths_la_LIBADD = terapaths/libterapaths.a monitoring/libmntr.a $(top_builddir)/libgsoap/libgsoap.a
+INCLUDES += -I$(srcdir)/terapaths -I$(srcdir)/monitoring -I$(top_srcdir)/libgsoap
 endif
 
 if ENABLE_OSCARS
