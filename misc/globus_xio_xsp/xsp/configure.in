@@ -1,0 +1,48 @@
+dnl
+
+AC_REVISION($Revision: 1.1 $)
+AC_INIT(Makefile.am)
+
+GLOBUS_INIT
+
+AM_PROG_LIBTOOL
+
+dnl config header goes here
+
+dnl Initialize the automake rules the last argument
+AM_INIT_AUTOMAKE($GPT_NAME, $GPT_VERSION)
+
+LAC_DOXYGEN("../")
+
+AC_MSG_CHECKING(for XSP)
+AC_ARG_WITH( xsp-path,
+[  --with-xsp-path=DIR    location of phoebus ],
+    CONFIG_XSP_PATH="${withval}", )
+
+if test "X${CONFIG_XSP_PATH}" = "X"; then
+  if test -f xsp*.tar.gz; then
+    tar xfz xsp*.tar.gz
+    cd xsp
+    make >build.log 2>&1
+    cd ..
+    CONFIG_PHOEBUS_PATH="xsp"
+    AC_MSG_RESULT(XSP package found and built)
+  else
+    AC_MSG_ERROR(XSP package not found and XSP path not set)
+  fi
+else
+  AC_MSG_RESULT(${CONFIG_XSP_PATH})
+fi
+
+XSP_PATH=${CONFIG_XSP_PATH}
+
+AC_SUBST(XSP_PATH)
+
+GLOBUS_FINALIZE
+
+AC_OUTPUT(
+	Makefile
+	pkgdata/Makefile
+	pkgdata/pkg_data_src.gpt
+        version.h
+)
