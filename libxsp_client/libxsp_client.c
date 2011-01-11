@@ -76,12 +76,13 @@ int libxsp_init() {
 	const char *error;
 	long int seed;
 
+	d_printf(" > libxsp_init()\n");
+
 	seed = gen_rand_seed();
 
 	d_printf("libxsp_init(): seeding RNG with %li\n", seed);
 
 	srand48(seed);
-
 
 #ifdef __APPLE__
 	// open up the standard library
@@ -149,11 +150,13 @@ int libxsp_init() {
 		d_printf("libxsp_init(): error loading close symbol: %s\n", error);
 		goto error_exit2;
 	}
-
+	
 	if (xsp_init() < 0) {
 		d_printf("libxsp_init(): error initializing protocol handler\n");
 		goto error_exit2;
 	}
+	
+	d_printf(" < leaving libxsp_init()\n");
 
 	return 0;
 

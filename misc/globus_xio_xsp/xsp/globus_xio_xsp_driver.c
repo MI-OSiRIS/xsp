@@ -37,6 +37,11 @@ GlobusXIODeclareDriver(xsp);
         GLOBUS_XIO_XSP_DEBUG_TRACE,                              \
         ("[%s] Exiting\n", _xio_name))
 
+#define GlobusXIOXSPDebugExitWithError()                         \
+	GlobusXIOXSPDebugPrintf(                                 \
+        GLOBUS_XIO_XSP_DEBUG_TRACE,                              \
+	("[%s] Exiting with error\n", _xio_name))
+
 typedef enum
 {
     GLOBUS_XIO_XSP_DEBUG_ERROR = 1,
@@ -206,23 +211,30 @@ globus_l_xio_xsp_activate(void)
 {
     int                                 rc;
 
+    GlobusXIOName(globus_l_xio_xsp_activate);
+
     GlobusDebugInit(GLOBUS_XIO_XSP, TRACE);
+    GlobusXIOXSPDebugEnter();
 
     rc = globus_module_activate(GLOBUS_XIO_MODULE);
-    if(rc == GLOBUS_SUCCESS)
+    if(rc != GLOBUS_SUCCESS)
     {
-	    GlobusXIORegisterDriver(xsp);
-    }
-
-    rc = libxsp_init();
-    if (rc < 0) {
 	    goto error_xio_system_activate;
     }
 
-    return rc;
+    rc = libxsp_init();
+    if (rc != 0) 
+    {
+	    goto error_xio_system_activate;
+    }
+    
+    GlobusXIORegisterDriver(xsp);
+
+    GlobusXIOXSPDebugExit();
+    return GLOBUS_SUCCESS;
 
  error_xio_system_activate:
-    GlobusXIONetloggerDebugExitWithError();
+    GlobusXIOXSPDebugExitWithError();
     GlobusDebugDestroy(GLOBUS_XIO_XSP);
     return rc;
 }
