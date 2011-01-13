@@ -500,6 +500,8 @@ int xspd_session_app_data(xspdSess *sess, const void *msg, char **error_msgs) {
         xspBlockHeader *block;
 	xspBlockHeader *ret_block;
 
+	char *mstring = NULL;
+
 	parent_conn = LIST_FIRST(&sess->parent_conns);
 
 	block = (xspBlockHeader *)msg;
@@ -509,26 +511,32 @@ int xspd_session_app_data(xspdSess *sess, const void *msg, char **error_msgs) {
 	// we'll switch on the defined option types for now...
 	if (block->type >= PHOTON_MIN && 
 	    block->type <= PHOTON_MAX) {
-		if ((module = xspd_find_module("photon")) != NULL)
-			module->opt_handler(sess, block, &ret_block);
-		else {
-			
-			xspd_err(0, "module not loaded!");
-			goto error_exit;
-		}
+		mstring = "photon";
 	}
 
 	if (block->type >= NLMI_MIN &&
             block->type <= NLMI_MAX) {
-		if ((module = xspd_find_module("nlmi")) != NULL)
-                        module->opt_handler(sess, block, &ret_block);
-                else {
-			
-                        xspd_err(0, "module not loaded!");
-                        goto error_exit;
-                }
+		mstring = "nlmi";
 	}
 
+	if (block->type >= GLOBUS_XIO_MIN &&
+            block->type <= GLOBUS_XIO_MAX) {
+		mstring = "globus_xio";
+        }
+
+	if (!mstring) {
+		xspd_err(0, "unrecognized option block type\n");
+		goto error_exit;
+	}
+
+	if ((module = xspd_find_module(mstring)) != NULL)
+		module->opt_handler(sess, block, &ret_block);
+	else {
+		
+		xspd_err(0, "module not loaded: %s", mstring);
+		goto error_exit;
+	}
+	
 	// send back a response if necessary
 	if (ret_block) {
 		xspd_conn_send_msg(parent_conn, XSP_MSG_APP_DATA, ret_block);
