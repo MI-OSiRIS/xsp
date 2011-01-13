@@ -32,6 +32,12 @@ nlmi_la_LIBADD = libbson/libbson.a
 nlmi_la_CFLAGS = -DMONGO_HAVE_STDINT -I$(srcdir)/libbson
 endif
 
+if ENABLE_GLOBUS_XIO
+modules_LTLIBRARIES += globus_xio.la
+globus_xio_la_SOURCES = xspd_globus_xio.c
+globus_xio_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+endif
+
 if ENABLE_TERAPATHS
 modules_LTLIBRARIES += terapaths.la
 terapaths_la_SOURCES = xspd_terapaths_basic.c xspd_terapaths_basic.h

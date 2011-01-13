@@ -37,7 +37,7 @@ typedef struct xsp_msg_data_open_hdr_t {
 typedef struct xsp_hop_hdr_t {
 	char id[XSP_HOPID_LEN];
 	char protocol[XSP_PROTO_NAME_LEN];
-	uint32_t flags;
+    	uint32_t flags;
 	uint16_t child_count;
 } xspHop_HDR;
 
