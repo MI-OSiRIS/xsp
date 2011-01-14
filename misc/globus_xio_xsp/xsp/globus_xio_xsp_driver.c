@@ -65,6 +65,10 @@ static globus_xio_string_cntl_table_t  xsp_l_string_opts_table[] =
 
 typedef struct xio_l_xsp_handle_s
 {
+    int                                 xsp_connected;
+    int                                 hashed;
+    char *                              hash_str;
+
     libxspSess *                        sess;
     char *                              xsp_hop;
     int                                 streams;
@@ -75,6 +79,9 @@ typedef struct xio_l_xsp_handle_s
 
 static xio_l_xsp_handle_t               globus_l_xio_xsp_handle_default =
 {
+    GLOBUS_FALSE,                       /* xsp_connected */
+    GLOBUS_FALSE,                       /* hashed */
+    GLOBUS_NULL,                        /* hash_str */
     GLOBUS_NULL,                        /* sess */
     GLOBUS_NULL,                        /* xsp_hop */
     GLOBUS_NULL,                        /* local_contact */
@@ -82,6 +89,9 @@ static xio_l_xsp_handle_t               globus_l_xio_xsp_handle_default =
     0,                                  /* streams */
     GLOBUS_NULL                         /* xio_driver_handle */
 };
+
+static globus_hashtable_t               xsp_l_handle_table;
+static globus_mutex_t                   xio_l_xsp_mutex;
 
 // Forward declarations and module definition
 static
@@ -111,17 +121,136 @@ GlobusXIODefineModule(xsp) =
 
 // Define our driver methods
 static
-xio_l_xsp_handle_t *
-xio_l_xsp_create_handle(
+globus_result_t
+globus_l_xio_xsp_send_new_xfer(xio_l_xsp_handle_t * handle)
+{
+    globus_result_t                     res;
+    char *                              local_string;
+    char *                              remote_string;
+    char *                              xsp_string;
+
+    globus_xio_contact_info_to_string(handle->local_contact, &local_string);
+    if (local_string) {
+	printf("NEW LOCAL CONTACT INFO: %s\n", local_string);
+    }
+    
+    globus_xio_contact_info_to_string(handle->remote_contact, &remote_string);
+    if (remote_string) {
+	printf("NEW REMOTE CONTACT INFO: %s\n", remote_string);
+    }
+
+    xsp_string = (char *)globus_malloc((strlen(local_string)+
+					strlen(remote_string)+2)*
+				       sizeof(char));
+
+    sprintf(xsp_string, "%s/%s", local_string, remote_string);
+
+    res = xsp_send_msg(handle->sess, xsp_string, strlen(xsp_string), GLOBUS_XIO_NEW_XFER);
+    if (res <= 0)
+    {
+	res = -1;
+    }
+    else
+    {
+	res = GLOBUS_SUCCESS;
+    }
+    
+    globus_free(local_string);
+    globus_free(remote_string);
+    globus_free(xsp_string);
+
+    return res;
+}
+
+static
+globus_result_t
+globus_l_xio_xsp_send_end_xfer(xio_l_xsp_handle_t * handle)
+{
+    globus_result_t                     res;
+    char *                              local_string;
+    char *                              remote_string;
+    char *                              xsp_string;
+
+    globus_xio_contact_info_to_string(handle->local_contact, &local_string);
+    if (local_string) {
+        printf("END LOCAL CONTACT INFO: %s\n", local_string);
+    }
+
+    globus_xio_contact_info_to_string(handle->remote_contact, &remote_string);
+    if (remote_string) {
+        printf("END REMOTE CONTACT INFO: %s\n", remote_string);
+    }
+
+    xsp_string = (char *)globus_malloc((strlen(local_string)+
+                                        strlen(remote_string)+2)*
+                                       sizeof(char));
+
+    sprintf(xsp_string, "%s/%s", local_string, remote_string);
+    
+    res = xsp_send_msg(handle->sess, xsp_string, strlen(xsp_string), GLOBUS_XIO_END_XFER);
+    if (res <= 0)
+    {
+	res = -1;
+    }
+    else
+    {
+	res = GLOBUS_SUCCESS;
+    }
+
+    globus_free(local_string);
+    globus_free(remote_string);
+    globus_free(xsp_string);
+
+    return res;
+}
+
+static
+globus_result_t
+globus_l_xio_xsp_connect_handle(
     xio_l_xsp_handle_t *                handle)
 {
-    GlobusXIOName(xio_l_xsp_create_handle);
+    globus_result_t                     ret;
+
+    GlobusXIOName(xio_l_xsp_connect_handle);
     GlobusXIOXSPDebugEnter();
     
-    
+    if (handle->xsp_hop)
+    {
+	handle->sess = xsp_session();
+	if (!handle->sess)
+	{
+	    ret = -1;
+	    goto error;
+	}
+	
+	ret = xsp_sess_appendchild(handle->sess, handle->xsp_hop, XSP_HOP_NATIVE);
+	if (ret != 0)
+	{
+	    goto error_sess;
+	}
+
+	ret = xsp_connect(handle->sess);
+	if (ret != 0)
+	{
+	    goto error_sess;
+	}
+	
+	handle->xsp_connected = GLOBUS_TRUE;
+    }
+    else
+    {
+	ret = -1;
+	goto error;
+    }
 
     GlobusXIOXSPDebugExit();
-    return NULL;
+
+    return GLOBUS_SUCCESS;
+
+ error_sess:
+    free(handle->sess);
+ error:
+    return ret;
 }
 
 static
@@ -145,8 +274,7 @@ globus_l_xio_xsp_attr_init(
 static
 globus_result_t
 globus_l_xio_xsp_attr_copy(
-    void **                             dst,
-    void *                              src)
+    void **                             dst,    void *                              src)
 {
     xio_l_xsp_handle_t *                dst_attr;
     xio_l_xsp_handle_t *                src_attr;
@@ -233,6 +361,10 @@ globus_l_xio_xsp_handle_destroy(
     {
 	globus_xio_contact_destroy(handle->remote_contact);
     }
+    if (handle->hash_str != NULL)
+    {
+	globus_free(handle->hash_str);
+    }
     if (handle->sess != NULL)
     {
 	globus_free(handle->sess);
@@ -296,7 +428,6 @@ globus_l_xio_xsp_accept_cb(
     handle = (xio_l_xsp_handle_t *) user_arg;
     
     
-    
     globus_xio_driver_finished_accept(op, user_arg, result);
     GlobusXIOXSPDebugExit();
     return;
@@ -327,7 +458,6 @@ globus_l_xio_xsp_accept(
     }
     
     globus_l_xio_xsp_attr_copy((void **)&handle, (void *)cpy_handle);
-    xio_l_xsp_create_handle(handle);
 
     handle->xio_driver_handle = globus_xio_operation_get_driver_handle(op);
     
@@ -355,7 +485,6 @@ globus_l_xio_xsp_open_cb(
 {
     xio_l_xsp_handle_t *                handle;
     globus_result_t                     res;
-    char *                              contact_string;
 
     GlobusXIOName(globus_l_xio_xsp_open_cb);
     GlobusXIOXSPDebugEnter();
@@ -371,23 +500,48 @@ globus_l_xio_xsp_open_cb(
     }
 
     res = globus_l_xio_xsp_setup_contact_info(handle);
-    if (res == GLOBUS_SUCCESS)
+    if (res != GLOBUS_SUCCESS)
     {
-	globus_xio_contact_info_to_string(handle->local_contact, &contact_string);
-	if (contact_string) {
-	    printf("OPEN_CB LOCAL CONTACT INFO: %s\n", contact_string);
-	}
-	globus_free(contact_string);
-
-	globus_xio_contact_info_to_string(handle->remote_contact, &contact_string);
-        if (contact_string) {
-            printf("OPEN_CB REMOTE CONTACT INFO: %s\n", contact_string);
-        }
-	globus_free(contact_string);
+	goto error_return;
     }
 
-    globus_xio_driver_finished_open(NULL, op, result);
+    /* this handle has been allocated and placed in hashtable */
+    if (handle->hashed)
+    {	
+	handle->streams++;
 
+	if (handle->xsp_connected == GLOBUS_FALSE)
+	{
+	    res = globus_l_xio_xsp_connect_handle(handle);
+	    if (res != GLOBUS_SUCCESS)
+	    {
+		res = GlobusXIOErrorWrapFailedWithMessage(res,
+		    "The XSP XIO driver failed to establish a connection%s",
+		    " to XSPD.");
+		goto error_return;
+		// this will try again for subsequent streams, if any
+	    }
+	    
+	    res = globus_l_xio_xsp_send_new_xfer(handle);
+	    if (res != GLOBUS_SUCCESS)
+	    {
+		res = GlobusXIOErrorWrapFailedWithMessage(res,
+		    "The XSP XIO driver failed to send new xfer message to%s",
+		    " XSPD");
+		goto error_return;
+	    }
+
+	    handle->xsp_connected = GLOBUS_TRUE;
+	}
+	else
+	{
+	    // maybe we send a notification that another stream
+	    // was opened for this transfer...
+	}
+    }
+
+ error_return:
+    globus_xio_driver_finished_open(user_arg, op, result);
     GlobusXIOXSPDebugExit();
 
     return;
@@ -408,28 +562,46 @@ globus_l_xio_xsp_open(
     globus_xio_operation_t              op)
 {
     xio_l_xsp_handle_t *                cpy_handle;
-    xio_l_xsp_handle_t *                handle;
+    xio_l_xsp_handle_t *                handle = NULL;
     globus_result_t                     res;
+    char *                              cstring;
 
-    /* first copy attr if we have it */
-    if(driver_attr != NULL)
+    /* see if there's already a handle for this contact string */
+    globus_xio_contact_info_to_string(contact_info, &cstring);
+    if (cstring != NULL)
     {
-	cpy_handle = (xio_l_xsp_handle_t *) driver_attr;
+	handle = (xio_l_xsp_handle_t *) globus_hashtable_lookup(
+		      &xsp_l_handle_table, cstring);
     }
-    if (driver_link != NULL)
+
+    if (handle == NULL)
     {
-	cpy_handle = (xio_l_xsp_handle_t *) driver_link;
+        /* first copy attr if we have it */
+	if(driver_attr != NULL)
+	    {
+		cpy_handle = (xio_l_xsp_handle_t *) driver_attr;
+	    }
+	if (driver_link != NULL)
+	    {
+		cpy_handle = (xio_l_xsp_handle_t *) driver_link;
+	    }
+	/* else copy the default attr */
+	else
+	    {
+		cpy_handle = &globus_l_xio_xsp_handle_default;
+	    }
+	globus_l_xio_xsp_attr_copy((void **)&handle, (void *)cpy_handle);
+	
+	/* get handle for drivers below us */
+	handle->xio_driver_handle = globus_xio_operation_get_driver_handle(op);
+	
+	if (cstring != NULL)
+	{
+	    globus_hashtable_insert(&xsp_l_handle_table, cstring, handle);
+	    handle->hashed = GLOBUS_TRUE;
+	    handle->hash_str = cstring;
+	}
     }
-    /* else copy the default attr */
-    else
-    {
-	cpy_handle = &globus_l_xio_xsp_handle_default;
-    }
-    
-    globus_l_xio_xsp_attr_copy((void **)&handle, (void *)cpy_handle);
-    xio_l_xsp_create_handle(handle);
-    
-    handle->xio_driver_handle = globus_xio_operation_get_driver_handle(op);
     
     res = globus_xio_driver_pass_open(
 	   op, contact_info, globus_l_xio_xsp_open_cb, handle);
@@ -443,7 +615,40 @@ globus_l_xio_xsp_close_cb(
     globus_result_t                     result,
     void *                              user_arg)
 {
+    xio_l_xsp_handle_t *                handle;
+    globus_result_t                     res;
+
+    GlobusXIOName(globus_l_xio_xsp_close_cb);
+    GlobusXIOXSPDebugEnter();
+    
+    handle = (xio_l_xsp_handle_t *)user_arg;
+
+    handle->streams--;
+
+    if (handle->streams == 0)
+    {
+	if (handle->xsp_connected)
+	{
+	    res = globus_l_xio_xsp_send_end_xfer(handle);
+	    if (res != GLOBUS_SUCCESS)
+	    {
+		res = GlobusXIOErrorWrapFailedWithMessage(res,
+		    "The XSP XIO driver failed to send end xfer msg%s",
+		    " to XSPD.");
+	    }
+	    xsp_close2(handle->sess);
+	}
+
+	if (handle->hashed)
+	{
+	    globus_hashtable_remove(&xsp_l_handle_table,
+				    handle->hash_str);
+	}
+    }
+	
     globus_xio_driver_finished_close(op, result);
+
+    GlobusXIOXSPDebugExit();
 }
 
 static
@@ -453,9 +658,13 @@ globus_l_xio_xsp_close(
     void *                              attr,
     globus_xio_operation_t              op)
 {
-    globus_result_t                     res;
+    xio_l_xsp_handle_t *                handle;
+    globus_result_t                     res;    
+
+    handle = (xio_l_xsp_handle_t *)driver_specific_handle;
+    
     res = globus_xio_driver_pass_close(
-        op, globus_l_xio_xsp_close_cb, NULL);
+        op, globus_l_xio_xsp_close_cb, handle);
     return res;
 }
 
@@ -480,12 +689,35 @@ globus_l_xio_xsp_read(
 {
     globus_size_t                       wait_for;
     globus_result_t                     res;
+    xio_l_xsp_handle_t *                handle;
+
+    handle = (xio_l_xsp_handle_t *)driver_specific_handle;
 
     wait_for = globus_xio_operation_get_wait_for(op);
     res = globus_xio_driver_pass_read(
         op, (globus_xio_iovec_t *)iovec, iovec_count, wait_for,
-        globus_l_xio_xsp_read_cb, NULL);
+        globus_l_xio_xsp_read_cb, handle);
+
     return res;
+}
+
+static
+void
+globus_l_xio_xsp_write_cb(
+    globus_xio_operation_t              op,
+    globus_result_t                     result,
+    globus_size_t                       nbytes,
+    void *                              user_arg)
+{
+    xio_l_xsp_handle_t *                handle;
+
+    GlobusXIOName(globus_l_xio_xsp_write_cb);
+    GlobusXIOXSPDebugEnter();
+
+    handle = (xio_l_xsp_handle_t *) user_arg;
+
+    globus_xio_driver_finished_write(op, result, nbytes);
+    GlobusXIOXSPDebugExit();
 }
 
 static
@@ -498,11 +730,15 @@ globus_l_xio_xsp_write(
 {
     globus_result_t                     res;
     globus_size_t                       wait_for;
+    xio_l_xsp_handle_t *                handle;
+
+    handle = (xio_l_xsp_handle_t *)driver_specific_handle;
+
 
     wait_for = globus_xio_operation_get_wait_for(op);
     res = globus_xio_driver_pass_write(
-        op, (globus_xio_iovec_t *)iovec, iovec_count, wait_for,
-        NULL, NULL);
+	op, (globus_xio_iovec_t *)iovec, iovec_count, wait_for,
+        globus_l_xio_xsp_write_cb, handle);
 
     return res;
 }
@@ -603,6 +839,13 @@ globus_l_xio_xsp_activate(void)
 	    goto error_xio_system_activate;
     }
     
+    globus_mutex_init(&xio_l_xsp_mutex, NULL);
+    globus_hashtable_init(
+	&xsp_l_handle_table,
+	128,
+	globus_hashtable_string_hash,
+	globus_hashtable_string_keyeq);
+
     GlobusXIORegisterDriver(xsp);
 
     GlobusXIOXSPDebugExit();
