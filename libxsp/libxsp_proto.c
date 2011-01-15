@@ -82,10 +82,10 @@ int xsp_parse_msgbody(const xspMsg *hdr, const char *buf, int length, void **msg
 	int retval;
 
 	if (proto_list[hdr->version] == NULL || proto_list[hdr->version]->max_msg_type < hdr->type) {
-		d_printf("bad message type\n");
+	    d_printf("bad message type: %d\n", hdr->type);
 		retval = -1;
 	} else if (proto_list[hdr->version]->parse[hdr->type] == NULL) {
-		d_printf("msg contains no message body\n");
+	        d_printf("msg of type [%d] contains no message body\n", hdr->type);
 		retval = 0;
 	} else {
 		retval = proto_list[hdr->version]->parse[hdr->type](buf, length, msg_body);

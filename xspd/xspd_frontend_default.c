@@ -210,6 +210,13 @@ void *xspd_default_handle_conn(void *arg) {
 				xsp_free_msg(msg);
 			}
 			break;
+                case XSP_MSG_PING:
+		        {
+			        xspd_info(10, "PING/PONG");
+				xsp_free_msg(msg);
+				xspd_conn_send_msg(new_conn, XSP_MSG_PONG, NULL);
+			}
+			break;
 		case XSP_MSG_DATA_OPEN:
 			{
 				if (xspd_session_data_open(sess, msg->msg_body, error_msgs) < 0)
