@@ -715,7 +715,7 @@ int xsp_send_msg(libxspSess *sess, const void *buf, size_t len, int opt_type) {
 	return 0;
 }
 
-int xsp_recv_msg(libxspSess *sess, void *ret_buf, size_t len, int *ret_type) {
+int xsp_recv_msg(libxspSess *sess, void **ret_buf, int *len, int *ret_type) {
 	xspMsg *msg;
 	xspBlockHeader *block;
 
@@ -732,18 +732,25 @@ int xsp_recv_msg(libxspSess *sess, void *ret_buf, size_t len, int *ret_type) {
 	
 	block = (xspBlockHeader *) msg->msg_body;
 
-	if (block->blob)
-		bcopy(block->blob, ret_buf, len);
-	else {
-		d_printf("xsp_recv_msg(): error: no block data!\n");
-		goto error_exit;
+	if (block->length <=0 ) {
+	    d_printf("xsp_recv_msg(): error: no block data!\n");
+	    goto error_exit;
 	}
 
+	*ret_buf = (void*)malloc(sizeof(char) * block->length);
+	if (!ret_buf) {
+	    d_printf("xsp_recv_msg(): could not allocate memory for return buffer!\n");
+	    goto error_exit;
+	}
+	    
+	bcopy(block->blob, *ret_buf, block->length);
+	
 	*ret_type = block->type;
 	
 	return block->length;
 
  error_exit:
+	*ret_buf = NULL;
 	return 0;
 }
 

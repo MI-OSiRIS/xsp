@@ -59,7 +59,12 @@ int xspd_globus_xio_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBlockH
 		    tmp[block->length] = '\0';
 		    xspd_info(0, "NEW XFER: %s\n", tmp);
 		    free(tmp);
-		    *ret_block = NULL;
+
+		    *ret_block = (xspBlockHeader*)malloc(sizeof(xspBlockHeader));
+		    (*ret_block)->blob = "This is my response";
+		    (*ret_block)->length = strlen((*ret_block)->blob);
+		    (*ret_block)->type = block->type;
+		    (*ret_block)->sport = 0;
 		}
 		break;
 	case GLOBUS_XIO_END_XFER:

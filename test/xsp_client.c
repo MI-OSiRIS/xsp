@@ -40,18 +40,19 @@ int main(int argc, char *argv[])
 		exit(errno);
 	}
 
-	char buf[20] = "this is my ledger";
-	char *buf2;
+	char buf[20] = "This is a test";
+	char *ret_buf;
 	int ret_len;
 	int ret_type;
 
-	xsp_send_msg(sess, buf, strlen(buf)+1, 0);
+	xsp_send_msg(sess, buf, strlen(buf)+1, 0x30);
+	xsp_recv_msg(sess, &ret_buf, &ret_len, &ret_type);
 
-	xsp_recv_msg(sess, &buf2, &ret_len, &ret_type);
+	printf("got message[%d]: %s\n", ret_type, ret_buf);
 
-	printf("got message: %s\n", buf2);
+	free(ret_buf);
 
-	xsp_close(sess);
+	xsp_close2(sess);
 
 	return 0;
 }
