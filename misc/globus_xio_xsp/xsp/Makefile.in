@@ -59,7 +59,7 @@ am__installdirs = "$(DESTDIR)$(libdir)" \
 libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libglobus_xio_xsp_driver___GLOBUS_FLAVOR_NAME__la_DEPENDENCIES =  \
-	$(XSP_PATH)/lib/libxsp_client.so
+	$(XSP_PATH)/lib/libxsp_client.so $(BSON_PATH)/libbson.a
 am_libglobus_xio_xsp_driver___GLOBUS_FLAVOR_NAME__la_OBJECTS =  \
 	globus_xio_xsp_driver.lo
 libglobus_xio_xsp_driver___GLOBUS_FLAVOR_NAME__la_OBJECTS = $(am_libglobus_xio_xsp_driver___GLOBUS_FLAVOR_NAME__la_OBJECTS)
@@ -117,7 +117,7 @@ AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
 CC = @CC@
-CFLAGS = @CFLAGS@
+CFLAGS = -DMONGO_HAVE_STDINT
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CROSS = @CROSS@
@@ -257,10 +257,11 @@ SUBDIRS = \
 flavorinclude_HEADERS = \
     globus_xio_xsp_driver.h
 
-INCLUDES = $(GPT_INCLUDES) -I$(XSP_PATH)/include
+BSON_PATH = ../../../libbson
+INCLUDES = $(GPT_INCLUDES) -I$(XSP_PATH)/include -I$(BSON_PATH)
 lib_LTLIBRARIES = libglobus_xio_xsp_driver_$(GLOBUS_FLAVOR_NAME).la
 libglobus_xio_xsp_driver___GLOBUS_FLAVOR_NAME__la_LIBADD = \
-	@GPT_LIB_LINKS@ $(XSP_PATH)/lib/libxsp_client.so
+	@GPT_LIB_LINKS@ $(XSP_PATH)/lib/libxsp_client.so $(BSON_PATH)/libbson.a
 
 libglobus_xio_xsp_driver___GLOBUS_FLAVOR_NAME__la_SOURCES = \
 	globus_xio_xsp_driver.c

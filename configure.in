@@ -381,4 +381,4 @@ AC_SUBST(NL_LIBS)
 
 AC_CONFIG_SUBDIRS(libconfig)
 
-AC_OUTPUT(Makefile libradix/Makefile libxsp/Makefile libgsoap/Makefile xspd/Makefile modules/Makefile modules/terapaths/Makefile libxsp_client/Makefile modules/monitoring/Makefile modules/libbson/Makefile test/Makefile)
+AC_OUTPUT(Makefile libradix/Makefile libbson/Makefile libxsp/Makefile libgsoap/Makefile xspd/Makefile modules/Makefile modules/terapaths/Makefile libxsp_client/Makefile modules/monitoring/Makefile test/Makefile)
