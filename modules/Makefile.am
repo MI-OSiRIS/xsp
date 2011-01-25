@@ -28,8 +28,8 @@ if ENABLE_NLMI
 modules_LTLIBRARIES += nlmi.la
 nlmi_la_SOURCES = xspd_nlmi.c
 nlmi_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
-nlmi_la_LIBADD = libbson/libbson.a
-nlmi_la_CFLAGS = -DMONGO_HAVE_STDINT -I$(srcdir)/libbson
+nlmi_la_LIBADD = $(top_builddir)/libbson/libbson.a
+nlmi_la_CFLAGS = -DMONGO_HAVE_STDINT -I$(top_srcdir)/libbson
 endif
 
 if ENABLE_GLOBUS_XIO

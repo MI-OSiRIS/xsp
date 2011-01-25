@@ -20,6 +20,7 @@
 #include "globus_xio_xsp_driver.h"
 #include "version.h"
 
+#include "bson.h"
 #include "libxsp_client.h"
 
 #define GLOBUS_XIO_NEW_XFER          0x30

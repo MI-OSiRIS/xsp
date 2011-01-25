@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = foreign
 
-libdirs = libxsp libconfig
+libdirs = libxsp libconfig libbson
 bindirs = xspd
 
 if ENABLE_TERAPATHS
@@ -10,10 +10,6 @@ endif
 
 if ENABLE_CLIENT
 libdirs += libradix libxsp_client
-endif
-
-if ENABLE_NLMI
-libdirs += modules/libbson
 endif
 
 bindirs += modules
