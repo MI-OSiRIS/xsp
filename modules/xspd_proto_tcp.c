@@ -479,8 +479,9 @@ static void *xspd_tcp_accept_handler(void *v) {
 			if (tcp_args->sockets[i] > high)
 				high = tcp_args->sockets[i];
 			//xspd_info(1, "Adding %d to socket queue", tcp_args->sockets[i]);
-			
+#ifndef __APPLE__
 			fcntl(tcp_args->sockets[i], F_SETFL, O_NONBLOCK);
+#endif
 		}
 		
 		//xspd_info(1, "Going into select");
@@ -501,7 +502,8 @@ static void *xspd_tcp_accept_handler(void *v) {
 					xspd_err(1, "accept failed: %s", strerror(errno));
 				continue;
 			}
-			xspd_info(0,"xspd_conn_tcp_alloc is called");
+
+			//xspd_info(0,"xspd_conn_tcp_alloc is called");
 			new_conn = xspd_conn_tcp_alloc(sd, use_web100);
 			if (!new_conn) {
 				xspd_err(1, "xspd_conn_alloc_socket() failed: %s", strerror(errno));

@@ -14,20 +14,20 @@ AM_CFLAGS = @CFLAGS@ -DWITH_OPENSSL -DMODULE_DIR=\"$(moduledir)\" -DCONFIG_FILE=
 
 modules_LTLIBRARIES += logger_stdout.la
 logger_stdout_la_SOURCES = xspd_logger_stdout.c
-logger_stdout_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+logger_stdout_la_LDFLAGS = -module -avoid-version -export-dynamic
 
 modules_LTLIBRARIES += logger_file.la
 logger_file_la_SOURCES = xspd_logger_file.c
-logger_file_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+logger_file_la_LDFLAGS = -module -avoid-version -export-dynamic
 
 modules_LTLIBRARIES += logger_syslog.la
 logger_syslog_la_SOURCES = xspd_logger_syslog.c
-logger_syslog_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+logger_syslog_la_LDFLAGS = -module -avoid-version -export-dynamic
 
 if ENABLE_NLMI
 modules_LTLIBRARIES += nlmi.la
 nlmi_la_SOURCES = xspd_nlmi.c
-nlmi_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+nlmi_la_LDFLAGS = -module -avoid-version -export-dynamic
 nlmi_la_LIBADD = $(top_builddir)/libbson/libbson.a
 nlmi_la_CFLAGS = -DMONGO_HAVE_STDINT -I$(top_srcdir)/libbson
 endif
@@ -35,7 +35,7 @@ endif
 if ENABLE_GLOBUS_XIO
 modules_LTLIBRARIES += globus_xio.la
 globus_xio_la_SOURCES = xspd_globus_xio.c
-globus_xio_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+globus_xio_la_LDFLAGS = -module -avoid-version -export-dynamic
 endif
 
 if ENABLE_TERAPATHS
@@ -68,7 +68,7 @@ tcp_la_CFLAGS = @WEB100_CFLAGS@ -DHAVE_WEB100 $(AM_CFLAGS)
 else
 modules_LTLIBRARIES += tcp.la
 tcp_la_SOURCES = xspd_conn_tcp.c xspd_conn_tcp.h xspd_proto_tcp.c
-tcp_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+tcp_la_LDFLAGS = -module -avoid-version -export-dynamic
 tcp_la_CFLAGS = $(AM_CFLAGS)
 endif
 

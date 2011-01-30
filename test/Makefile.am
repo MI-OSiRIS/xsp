@@ -12,6 +12,6 @@ bin_PROGRAMS += nlmi_test
 
 nlmi_test_SOURCES = nlmi_test.c
 nlmi_test_CFLAGS = -DMONGO_HAVE_STDINT
-LDADD += $(top_builddir)/modules/libbson/libbson.a
-INCLUDES += -I$(top_srcdir)/modules/libbson
+LDADD += $(top_builddir)/libbson/libbson.a
+INCLUDES += -I$(top_srcdir)/libbson
 endif

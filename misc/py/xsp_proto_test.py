@@ -57,6 +57,10 @@ class xspSess:
         xsp_hdr = self.s.recv(XSP_MSG_HDR_SIZE)
         hdr = struct.unpack('!hBB16s', xsp_hdr)
         
+        if (hdr[3] != XSP_MSG_APP_DATA):
+            self.s.recv(hdr[0])
+            return hdr[0], 0, None
+
         block_msg = self.s.recv(hdr[0])
         fmt = '!hhi' + str(hdr[0] - XSP_MSG_BLOCK_SIZE) + 's'
         block = struct.unpack(fmt, block_msg)
@@ -72,7 +76,11 @@ class xspSess:
                                 XSP_MSG_PING, binascii.a2b_hex(self.id))
         self.s.send(ping_msg)
         xsp_hdr = self.s.recv(XSP_MSG_HDR_SIZE)
-        hdr = struct.unpack('!hBB16s', xsp_hdr)
+
+        if (len(xsp_hdr) > 0):
+            hdr = struct.unpack('!hBB16s', xsp_hdr)
+        else:
+            return -1
 
         if (hdr[2] == XSP_MSG_PONG):
             return 0
@@ -90,7 +98,7 @@ def main():
     sess.connect('localhost', 5006)
     
     my_msg = "This is a test"
-    my_type = 0x30
+    my_type = 0x34
     print '\nSending message [%d,%d]: %s' % (my_type, len(my_msg), my_msg)
     sess.send_msg(my_msg, len(my_msg), my_type)
 
