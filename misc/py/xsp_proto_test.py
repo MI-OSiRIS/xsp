@@ -57,7 +57,7 @@ class xspSess:
         xsp_hdr = self.s.recv(XSP_MSG_HDR_SIZE)
         hdr = struct.unpack('!hBB16s', xsp_hdr)
         
-        if (hdr[3] != XSP_MSG_APP_DATA):
+        if (hdr[2] != XSP_MSG_APP_DATA):
             self.s.recv(hdr[0])
             return hdr[0], 0, None
 
@@ -98,7 +98,7 @@ def main():
     sess.connect('localhost', 5006)
     
     my_msg = "This is a test"
-    my_type = 0x34
+    my_type = 0x30
     print '\nSending message [%d,%d]: %s' % (my_type, len(my_msg), my_msg)
     sess.send_msg(my_msg, len(my_msg), my_type)
 

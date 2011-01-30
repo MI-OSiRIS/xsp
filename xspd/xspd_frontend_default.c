@@ -187,7 +187,7 @@ void *xspd_default_handle_conn(void *arg) {
 	
 	// now start another protocol loop
 	do {
-	        msg = xspd_conn_get_msg(new_conn, 0);
+		msg = xspd_conn_get_msg(new_conn, 0);
                 if (!msg) {
                         xspd_err(5, "Did not receive properly formed message.");
                         goto error_exit;
