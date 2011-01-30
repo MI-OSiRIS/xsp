@@ -169,7 +169,11 @@ xspMsg *xspd_conn_default_get_msg(xspdConn *conn, unsigned int flags) {
 
        // read the header in
        amt_read = xspd_conn_read(conn, hdr_buf, sizeof(xspMsgHdr), MSG_WAITALL);
+
        if (amt_read < sizeof(xspMsgHdr)) {
+               if (amt_read < 0) {
+		       perror("error:");
+	       }
                goto error_exit;
        }
 
