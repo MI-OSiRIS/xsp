@@ -59,8 +59,13 @@ typedef enum
 
 static globus_xio_string_cntl_table_t  xsp_l_string_opts_table[] =
 {
-    {"xsp_hop",
-     GLOBUS_XIO_XSP_CNTL_SET_HOP, globus_xio_string_cntl_string},
+    {"xsp_hop", GLOBUS_XIO_XSP_CNTL_SET_HOP, globus_xio_string_cntl_string},
+    {"user", GLOBUS_XIO_XSP_CNTL_SET_USER, globus_xio_string_cntl_string},
+    {"task_id", GLOBUS_XIO_XSP_CNTL_SET_TASK, globus_xio_string_cntl_string},
+    {"sport", GLOBUS_XIO_XSP_CNTL_SET_SPORT, globus_xio_string_cntl_int},
+    {"dport", GLOBUS_XIO_XSP_CNTL_SET_DPORT, globus_xio_string_cntl_int},
+    {"resource", GLOBUS_XIO_XSP_CNTL_SET_RESOURCE, globus_xio_string_cntl_string},
+    {"size", GLOBUS_XIO_XSP_CNTL_SET_SIZE, globus_xio_string_cntl_int},
     {NULL, 0, NULL}
 };
 
@@ -76,6 +81,13 @@ typedef struct xio_l_xsp_handle_s
     globus_xio_contact_t *              local_contact;
     globus_xio_contact_t *              remote_contact;
     globus_xio_driver_handle_t          xio_driver_handle;
+
+    char *                              user;
+    char *                              task_id;
+    int                                 sport;
+    int                                 dport;
+    char *                              resource;
+    int                                 size;
 } xio_l_xsp_handle_t;
 
 static xio_l_xsp_handle_t               globus_l_xio_xsp_handle_default =
@@ -85,10 +97,16 @@ static xio_l_xsp_handle_t               globus_l_xio_xsp_handle_default =
     GLOBUS_NULL,                        /* hash_str */
     GLOBUS_NULL,                        /* sess */
     GLOBUS_NULL,                        /* xsp_hop */
+    0,                                  /* streams */
     GLOBUS_NULL,                        /* local_contact */
     GLOBUS_NULL,                        /* remote_contact */
-    0,                                  /* streams */
-    GLOBUS_NULL                         /* xio_driver_handle */
+    GLOBUS_NULL,                        /* xio_driver_handle */
+    GLOBUS_NULL,                        /* user */
+    GLOBUS_NULL,                        /* task_id */
+    0,                                  /* sport */
+    0,                                  /* dport */
+    GLOBUS_NULL,                        /* resource */
+    0                                   /* size */
 };
 
 static globus_hashtable_t               xsp_l_handle_table;
@@ -128,7 +146,7 @@ globus_l_xio_xsp_send_new_xfer(xio_l_xsp_handle_t * handle)
     globus_result_t                     res;
     char *                              local_string;
     char *                              remote_string;
-    char *                              xsp_string;
+    char                                xsp_string[256];
 
     globus_xio_contact_info_to_string(handle->local_contact, &local_string);
     if (local_string) {
@@ -140,11 +158,9 @@ globus_l_xio_xsp_send_new_xfer(xio_l_xsp_handle_t * handle)
 	printf("NEW REMOTE CONTACT INFO: %s\n", remote_string);
     }
 
-    xsp_string = (char *)globus_malloc((strlen(local_string)+
-					strlen(remote_string)+2)*
-				       sizeof(char));
-
-    sprintf(xsp_string, "%s/%s", local_string, remote_string);
+    sprintf(xsp_string, "user=%s,task_id=%s,sport=%d,dport=%d,resource=%s,size=%d,%s/%s",
+	    handle->user, handle->task_id, handle->sport, handle->dport, handle->resource,
+	    handle->size, local_string, remote_string);
 
     res = xsp_send_msg(handle->sess, xsp_string, strlen(xsp_string), GLOBUS_XIO_NEW_XFER);
     if (res <= 0)
@@ -158,7 +174,7 @@ globus_l_xio_xsp_send_new_xfer(xio_l_xsp_handle_t * handle)
     
     globus_free(local_string);
     globus_free(remote_string);
-    globus_free(xsp_string);
+    //globus_free(xsp_string);
 
     return res;
 }
@@ -170,7 +186,7 @@ globus_l_xio_xsp_send_end_xfer(xio_l_xsp_handle_t * handle)
     globus_result_t                     res;
     char *                              local_string;
     char *                              remote_string;
-    char *                              xsp_string;
+    char                                xsp_string[256];
 
     globus_xio_contact_info_to_string(handle->local_contact, &local_string);
     if (local_string) {
@@ -182,11 +198,9 @@ globus_l_xio_xsp_send_end_xfer(xio_l_xsp_handle_t * handle)
         printf("END REMOTE CONTACT INFO: %s\n", remote_string);
     }
 
-    xsp_string = (char *)globus_malloc((strlen(local_string)+
-                                        strlen(remote_string)+2)*
-                                       sizeof(char));
-
-    sprintf(xsp_string, "%s/%s", local_string, remote_string);
+    sprintf(xsp_string, "user=%s,task_id=%s,sport=%d,dport=%d,resource=%s,size=%d,%s/%s",
+	    handle->user, handle->task_id, handle->sport, handle->dport, handle->resource,
+	    handle->size, local_string, remote_string);
     
     res = xsp_send_msg(handle->sess, xsp_string, strlen(xsp_string), GLOBUS_XIO_END_XFER);
     if (res <= 0)
@@ -200,7 +214,7 @@ globus_l_xio_xsp_send_end_xfer(xio_l_xsp_handle_t * handle)
 
     globus_free(local_string);
     globus_free(remote_string);
-    globus_free(xsp_string);
+    //globus_free(xsp_string);
 
     return res;
 }
@@ -266,6 +280,12 @@ globus_l_xio_xsp_attr_init(
         globus_calloc(1, sizeof(xio_l_xsp_handle_t));
 
     attr->sess = NULL;
+    attr->user = NULL;
+    attr->task_id = NULL;
+    attr->sport = 0;
+    attr->dport = 0;
+    attr->resource = NULL;
+    attr->size = 0;
 
     *out_attr = attr;
 
@@ -275,7 +295,8 @@ globus_l_xio_xsp_attr_init(
 static
 globus_result_t
 globus_l_xio_xsp_attr_copy(
-    void **                             dst,    void *                              src)
+    void **                             dst,    
+    void *                              src)
 {
     xio_l_xsp_handle_t *                dst_attr;
     xio_l_xsp_handle_t *                src_attr;
@@ -288,6 +309,14 @@ globus_l_xio_xsp_attr_copy(
     {
 	dst_attr->xsp_hop = strdup(src_attr->xsp_hop);
     }
+    else if (globus_l_xio_xsp_handle_default.xsp_hop)
+    {
+	dst_attr->xsp_hop = strdup(globus_l_xio_xsp_handle_default.xsp_hop);
+    }
+    else 
+    {
+	dst_attr->xsp_hop = NULL;
+    }
 
     if (src_attr->local_contact)
     {
@@ -299,9 +328,27 @@ globus_l_xio_xsp_attr_copy(
 	globus_xio_contact_copy(dst_attr->remote_contact, src_attr->remote_contact);
     }
 
+    if (src_attr->user)
+    {
+	dst_attr->user = strdup(src_attr->user);
+    }
+
+    if (src_attr->task_id)
+    {
+	dst_attr->task_id = strdup(src_attr->task_id);
+    }
+    
+    if (src_attr->resource)
+    {
+	dst_attr->resource = strdup(src_attr->resource);
+    }
+
     // only pointer to same session
     dst_attr->sess = src_attr->sess;
     dst_attr->streams = src_attr->streams;
+    dst_attr->sport = src_attr->sport;
+    dst_attr->dport = src_attr->dport;
+    dst_attr->size = src_attr->size;
 
     *dst = dst_attr;
 
@@ -330,6 +377,27 @@ globus_l_xio_xsp_cntl(
 	  str= va_arg(ap, char *);
 	  attr->xsp_hop = strdup(str);
 	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_USER:
+	  str = va_arg(ap, char *);
+	  attr->user = strdup(str);
+	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_TASK:
+	  str = va_arg(ap, char *);
+	  attr->task_id = strdup(str);
+	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_SPORT:
+	  attr->sport = va_arg(ap, int);;
+	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_DPORT:
+	  attr->dport = va_arg(ap, int);;
+	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_RESOURCE:
+	  str = va_arg(ap, char *);
+	  attr->resource = strdup(str);
+	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_SIZE:
+	  attr->size = va_arg(ap, int);;
+	  break;
     }
 	
     GlobusXIOXSPDebugExit();
@@ -344,9 +412,9 @@ globus_l_xio_xsp_handle_destroy(
     xio_l_xsp_handle_t *                handle;
 
     if(driver_handle == NULL)
-	{
-	    return GLOBUS_SUCCESS;
-	}
+    {
+	return GLOBUS_SUCCESS;
+    }
 
     handle = (xio_l_xsp_handle_t *) driver_handle;
 
@@ -369,6 +437,18 @@ globus_l_xio_xsp_handle_destroy(
     if (handle->sess != NULL)
     {
 	globus_free(handle->sess);
+    }
+    if (handle->user != NULL)
+    {
+	globus_free(handle->user);
+    }
+    if (handle->task_id != NULL)
+    {
+	globus_free(handle->task_id);
+    }
+    if (handle->resource != NULL)
+    {
+	globus_free(handle->resource);
     }
 
     globus_free(handle);
@@ -447,17 +527,7 @@ globus_l_xio_xsp_accept(
     GlobusXIOName(globus_l_xio_xsp_accept);
     GlobusXIOXSPDebugEnter();
 
-    /* first copy attr if we have it */
-    if(driver_server != NULL)
-    {
-	cpy_handle = (xio_l_xsp_handle_t *) driver_server;
-    }
-    /* else copy the default attr */
-    else
-    {
-	cpy_handle = &globus_l_xio_xsp_handle_default;
-    }
-    
+    cpy_handle = (xio_l_xsp_handle_t *)driver_server;    
     globus_l_xio_xsp_attr_copy((void **)&handle, (void *)cpy_handle);
 
     handle->xio_driver_handle = globus_xio_operation_get_driver_handle(op);
@@ -522,7 +592,7 @@ globus_l_xio_xsp_open_cb(
 		goto error_return;
 		// this will try again for subsequent streams, if any
 	    }
-	    
+
 	    res = globus_l_xio_xsp_send_new_xfer(handle);
 	    if (res != GLOBUS_SUCCESS)
 	    {
@@ -577,20 +647,23 @@ globus_l_xio_xsp_open(
 
     if (handle == NULL)
     {
+	cpy_handle = (xio_l_xsp_handle_t *) driver_attr;
+
         /* first copy attr if we have it */
 	if(driver_attr != NULL)
-	    {
-		cpy_handle = (xio_l_xsp_handle_t *) driver_attr;
-	    }
-	if (driver_link != NULL)
-	    {
-		cpy_handle = (xio_l_xsp_handle_t *) driver_link;
-	    }
+	{
+	    cpy_handle = (xio_l_xsp_handle_t *) driver_attr;
+	}
+	else if (driver_link != NULL)
+	{
+	    cpy_handle = (xio_l_xsp_handle_t *) driver_link;
+	}
 	/* else copy the default attr */
 	else
-	    {
-		cpy_handle = &globus_l_xio_xsp_handle_default;
-	    }
+	{
+	    cpy_handle = &globus_l_xio_xsp_handle_default;
+	}
+
 	globus_l_xio_xsp_attr_copy((void **)&handle, (void *)cpy_handle);
 	
 	/* get handle for drivers below us */
