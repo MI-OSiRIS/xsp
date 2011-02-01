@@ -31,6 +31,12 @@ typedef struct globus_xio_xsp_update_msg_s
 typedef enum globus_xio_xsp_cntl_e
 {
 	GLOBUS_XIO_XSP_CNTL_SET_HOP = 1,
+	GLOBUS_XIO_XSP_CNTL_SET_USER,
+	GLOBUS_XIO_XSP_CNTL_SET_TASK,
+	GLOBUS_XIO_XSP_CNTL_SET_SPORT,
+	GLOBUS_XIO_XSP_CNTL_SET_DPORT,
+	GLOBUS_XIO_XSP_CNTL_SET_RESOURCE,
+	GLOBUS_XIO_XSP_CNTL_SET_SIZE
 } globus_xio_xsp_cntl_t;
 
 #endif
