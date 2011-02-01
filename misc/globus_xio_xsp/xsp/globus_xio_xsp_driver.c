@@ -59,18 +59,23 @@ typedef enum
 
 static globus_xio_string_cntl_table_t  xsp_l_string_opts_table[] =
 {
+    {"stack", GLOBUS_XIO_XSP_CNTL_SET_STACK, globus_xio_string_cntl_string},
     {"xsp_hop", GLOBUS_XIO_XSP_CNTL_SET_HOP, globus_xio_string_cntl_string},
     {"user", GLOBUS_XIO_XSP_CNTL_SET_USER, globus_xio_string_cntl_string},
     {"task_id", GLOBUS_XIO_XSP_CNTL_SET_TASK, globus_xio_string_cntl_string},
+    {"src", GLOBUS_XIO_XSP_CNTL_SET_SRC, globus_xio_string_cntl_string},
+    {"dst", GLOBUS_XIO_XSP_CNTL_SET_DST, globus_xio_string_cntl_string},
     {"sport", GLOBUS_XIO_XSP_CNTL_SET_SPORT, globus_xio_string_cntl_int},
     {"dport", GLOBUS_XIO_XSP_CNTL_SET_DPORT, globus_xio_string_cntl_int},
     {"resource", GLOBUS_XIO_XSP_CNTL_SET_RESOURCE, globus_xio_string_cntl_string},
     {"size", GLOBUS_XIO_XSP_CNTL_SET_SIZE, globus_xio_string_cntl_int},
+    {"mask", GLOBUS_XIO_XSP_CNTL_SET_MASK, globus_xio_string_cntl_int},
     {NULL, 0, NULL}
 };
 
 typedef struct xio_l_xsp_handle_s
 {
+    int                                 stack;
     int                                 xsp_connected;
     int                                 hashed;
     char *                              hash_str;
@@ -84,14 +89,19 @@ typedef struct xio_l_xsp_handle_s
 
     char *                              user;
     char *                              task_id;
+    char *                              src;
+    char *                              dst;
     int                                 sport;
     int                                 dport;
     char *                              resource;
     int                                 size;
+
+    int                                 log_flag;
 } xio_l_xsp_handle_t;
 
 static xio_l_xsp_handle_t               globus_l_xio_xsp_handle_default =
 {
+    GLOBUS_XIO_XSP_NETSTACK,            /* stack */
     GLOBUS_FALSE,                       /* xsp_connected */
     GLOBUS_FALSE,                       /* hashed */
     GLOBUS_NULL,                        /* hash_str */
@@ -103,10 +113,13 @@ static xio_l_xsp_handle_t               globus_l_xio_xsp_handle_default =
     GLOBUS_NULL,                        /* xio_driver_handle */
     GLOBUS_NULL,                        /* user */
     GLOBUS_NULL,                        /* task_id */
+    GLOBUS_NULL,                        /* src */
+    GLOBUS_NULL,                        /* dst */
     0,                                  /* sport */
     0,                                  /* dport */
     GLOBUS_NULL,                        /* resource */
-    0                                   /* size */
+    0,                                  /* size */
+    0                                   /* log_flag, default does not NL log anything */
 };
 
 static globus_hashtable_t               xsp_l_handle_table;
@@ -148,14 +161,21 @@ globus_l_xio_xsp_send_new_xfer(xio_l_xsp_handle_t * handle)
     char *                              remote_string;
     char                                xsp_string[256];
 
-    globus_xio_contact_info_to_string(handle->local_contact, &local_string);
-    if (local_string) {
-	printf("NEW LOCAL CONTACT INFO: %s\n", local_string);
+
+    if (handle->stack == GLOBUS_XIO_XSP_NETSTACK)
+    {
+	globus_xio_contact_info_to_string(handle->local_contact, &local_string);
+	if (local_string) {
+	    printf("NEW LOCAL CONTACT INFO: %s\n", local_string);
+	}
+	
+	globus_xio_contact_info_to_string(handle->remote_contact, &remote_string);
+	if (remote_string) {
+	    printf("NEW REMOTE CONTACT INFO: %s\n", remote_string);
+	}
     }
-    
-    globus_xio_contact_info_to_string(handle->remote_contact, &remote_string);
-    if (remote_string) {
-	printf("NEW REMOTE CONTACT INFO: %s\n", remote_string);
+    else {
+	local_string = remote_string = "file";
     }
 
     sprintf(xsp_string, "user=%s,task_id=%s,sport=%d,dport=%d,resource=%s,size=%d,%s/%s",
@@ -171,10 +191,12 @@ globus_l_xio_xsp_send_new_xfer(xio_l_xsp_handle_t * handle)
     {
 	res = GLOBUS_SUCCESS;
     }
-    
-    globus_free(local_string);
-    globus_free(remote_string);
-    //globus_free(xsp_string);
+
+    if (handle->stack = GLOBUS_XIO_XSP_NETSTACK)
+    {
+	globus_free(local_string);
+	globus_free(remote_string);
+    }
 
     return res;
 }
@@ -188,14 +210,20 @@ globus_l_xio_xsp_send_end_xfer(xio_l_xsp_handle_t * handle)
     char *                              remote_string;
     char                                xsp_string[256];
 
-    globus_xio_contact_info_to_string(handle->local_contact, &local_string);
-    if (local_string) {
-        printf("END LOCAL CONTACT INFO: %s\n", local_string);
-    }
+    if (handle->stack == GLOBUS_XIO_XSP_NETSTACK)
+	{
+	    globus_xio_contact_info_to_string(handle->local_contact, &local_string);
+	    if (local_string) {
+		printf("END LOCAL CONTACT INFO: %s\n", local_string);
+	    }
 
-    globus_xio_contact_info_to_string(handle->remote_contact, &remote_string);
-    if (remote_string) {
-        printf("END REMOTE CONTACT INFO: %s\n", remote_string);
+	    globus_xio_contact_info_to_string(handle->remote_contact, &remote_string);
+	    if (remote_string) {
+		printf("END REMOTE CONTACT INFO: %s\n", remote_string);
+	    }
+	}
+    else {
+        local_string = remote_string = "file";
     }
 
     sprintf(xsp_string, "user=%s,task_id=%s,sport=%d,dport=%d,resource=%s,size=%d,%s/%s",
@@ -212,9 +240,11 @@ globus_l_xio_xsp_send_end_xfer(xio_l_xsp_handle_t * handle)
 	res = GLOBUS_SUCCESS;
     }
 
-    globus_free(local_string);
-    globus_free(remote_string);
-    //globus_free(xsp_string);
+    if (handle->stack = GLOBUS_XIO_XSP_NETSTACK)
+    {
+	globus_free(local_string);
+	globus_free(remote_string);
+    }
 
     return res;
 }
@@ -337,6 +367,16 @@ globus_l_xio_xsp_attr_copy(
     {
 	dst_attr->task_id = strdup(src_attr->task_id);
     }
+
+    if (src_attr->src)
+    {
+	dst_attr->src = strdup(src_attr->src);
+    }
+    
+    if (src_attr->dst)
+    {
+	dst_attr->dst = strdup(src_attr->dst);
+    }
     
     if (src_attr->resource)
     {
@@ -349,6 +389,8 @@ globus_l_xio_xsp_attr_copy(
     dst_attr->sport = src_attr->sport;
     dst_attr->dport = src_attr->dport;
     dst_attr->size = src_attr->size;
+    dst_attr->stack = src_attr->stack;
+    dst_attr->log_flag = src_attr->log_flag;
 
     *dst = dst_attr;
 
@@ -373,6 +415,14 @@ globus_l_xio_xsp_cntl(
 
     switch (cmd)
     {
+      case GLOBUS_XIO_XSP_CNTL_SET_STACK:
+	str= va_arg(ap, char *);
+
+	printf("SETTING STACK: %s\n", str);
+	// the default is NETSTACK
+	if (!strcmp(str, "fs"))
+	    attr->stack = GLOBUS_XIO_XSP_FSSTACK;
+	break;
       case GLOBUS_XIO_XSP_CNTL_SET_HOP:
 	  str= va_arg(ap, char *);
 	  attr->xsp_hop = strdup(str);
@@ -384,6 +434,14 @@ globus_l_xio_xsp_cntl(
       case GLOBUS_XIO_XSP_CNTL_SET_TASK:
 	  str = va_arg(ap, char *);
 	  attr->task_id = strdup(str);
+	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_SRC:
+	  str = va_arg(ap, char *);
+	  attr->src = strdup(str);
+	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_DST:
+	  str = va_arg(ap, char *);
+	  attr->dst = strdup(str);
 	  break;
       case GLOBUS_XIO_XSP_CNTL_SET_SPORT:
 	  attr->sport = va_arg(ap, int);;
@@ -397,6 +455,9 @@ globus_l_xio_xsp_cntl(
 	  break;
       case GLOBUS_XIO_XSP_CNTL_SET_SIZE:
 	  attr->size = va_arg(ap, int);;
+	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_MASK:
+	  attr->log_flag = va_arg(ap, int);;
 	  break;
     }
 	
@@ -445,6 +506,14 @@ globus_l_xio_xsp_handle_destroy(
     if (handle->task_id != NULL)
     {
 	globus_free(handle->task_id);
+    }
+    if (handle->src != NULL)
+    {
+	globus_free(handle->src);
+    }
+    if (handle->dst != NULL)
+    {
+	globus_free(handle->dst);
     }
     if (handle->resource != NULL)
     {
@@ -570,10 +639,16 @@ globus_l_xio_xsp_open_cb(
 	goto error_destroy_handle;
     }
 
-    res = globus_l_xio_xsp_setup_contact_info(handle);
-    if (res != GLOBUS_SUCCESS)
+    // we only get contact info if we're on the netstack
+    // there has to be a way to ask XIO about what stack this driver is on...
+    if (handle->stack == GLOBUS_XIO_XSP_NETSTACK)
     {
-	goto error_return;
+	res = globus_l_xio_xsp_setup_contact_info(handle);
+	if (res != GLOBUS_SUCCESS)
+	    {
+		result = GlobusXIOErrorWrapFailed("Could not get contact info for handle.", res);
+		goto error_return;
+	    }
     }
 
     /* this handle has been allocated and placed in hashtable */
@@ -961,7 +1036,7 @@ globus_l_xio_xsp_set_ci(
     if(res != GLOBUS_SUCCESS)
     {
 	res = GlobusXIOErrorWrapFailed(
-	    "globus_xio_driver_handle_cntl failed to query remote contact",
+	    "globus_xio_driver_handle_cntl query remote contact",
 	    res);
 	goto error;
     }
@@ -969,7 +1044,7 @@ globus_l_xio_xsp_set_ci(
     contact_info = calloc(1, sizeof(globus_xio_contact_t));
     
     res = globus_xio_contact_parse(contact_info, contact_string);
-    globus_free(contact_string);
+
     if(res != GLOBUS_SUCCESS)
     {
 	res = GlobusXIOErrorWrapFailed(
@@ -978,7 +1053,8 @@ globus_l_xio_xsp_set_ci(
     }
     
     *ci = contact_info;
-
+    globus_free(contact_string);
+    
     GlobusXIOXSPDebugExit();
     return GLOBUS_SUCCESS;
 
