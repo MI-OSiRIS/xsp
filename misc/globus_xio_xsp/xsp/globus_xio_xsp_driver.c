@@ -202,7 +202,7 @@ globus_l_xio_xsp_send_message(
 	if (args && (args->length > 0))
         {
 	    res = xsp_send_msg(args->xfer->sess, args->data,
-	    args->length, args->msg_type);
+			       args->length, args->msg_type);
 	    
 	    globus_free(args->data);
 	    globus_free(args);
@@ -230,6 +230,8 @@ globus_l_xio_xsp_do_nl_summary(
     {
 	return -1;
     }
+
+    netlogger_calipers_calc(handle->w_caliper);
 
     log_event = netlogger_calipers_log(c, event);
     if (log_event == NULL)
@@ -264,6 +266,8 @@ globus_l_xio_xsp_do_nl_summary(
     printf("    usec per begin/end pair: %lf\n", d / c->count * 1e6);
     printf("    %%overhead: %lf\n", d / c->dur * 100.);
 #endif
+
+    netlogger_calipers_clear(c);
 
     globus_free(log_event);
     
