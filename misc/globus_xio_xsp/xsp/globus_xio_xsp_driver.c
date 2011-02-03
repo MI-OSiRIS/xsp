@@ -192,7 +192,6 @@ globus_l_xio_xsp_send_message(
     globus_result_t                     res;
 
     args = (xio_l_xsp_send_args_t *) user_arg;
-    printf("SENDING\n");
     
     globus_mutex_lock(&xio_l_xsp_mutex);
     {
