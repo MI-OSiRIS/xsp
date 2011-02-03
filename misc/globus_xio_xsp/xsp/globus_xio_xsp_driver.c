@@ -160,6 +160,10 @@ static globus_mutex_t                   xio_l_xsp_mutex;
 // Forward declarations and module definition
 static
 globus_result_t
+globus_l_xio_xsp_fileh_query(globus_xio_driver_handle_t driver, int *, int);
+
+static
+globus_result_t
 globus_l_xio_xsp_setup_contact_info(xio_l_xsp_handle_t * handle);
 
 static
@@ -195,11 +199,11 @@ globus_l_xio_xsp_send_message(
     
     globus_mutex_lock(&xio_l_xsp_mutex);
     {
-	if (args->length > 0)
+	if (args && (args->length > 0))
         {
 	    res = xsp_send_msg(args->xfer->sess, args->data,
-			       args->length, args->msg_type);
-
+	    args->length, args->msg_type);
+	    
 	    globus_free(args->data);
 	    globus_free(args);
 	}
@@ -222,28 +226,33 @@ globus_l_xio_xsp_do_nl_summary(
     
     GlobusTimeReltimeSet(cb_time, 0, 0);
 
+    if (handle->xfer->xsp_connected == GLOBUS_FALSE)
+    {
+	return -1;
+    }
+
     log_event = netlogger_calipers_log(c, event);
     if (log_event == NULL)
     {
 	return -1;
     }
 
-    // handle->stack determines if we're on the NETSTACK (0) or FSSTACK (1)
+    /// handle->stack determines if we're on the NETSTACK (0) or FSSTACK (1)
     // see do_xfer_notify() for other metadata in handle
 
-    args = (xio_l_xsp_send_args_t *) globus_calloc(1, sizeof(xio_l_xsp_send_args_t));
+    args = (xio_l_xsp_send_args_t *) globus_malloc(sizeof(xio_l_xsp_send_args_t));
     args->data = globus_malloc(1024*sizeof(char));
     sprintf(args->data, "%s id=%d type=%d", log_event, (int)handle, handle->stack);
     args->length = strlen(args->data);
     args->msg_type = GLOBUS_XIO_XSP_UPDATE_XFER;
     args->xfer = handle->xfer;
-    
+
     globus_callback_register_oneshot(
 	GLOBUS_NULL,
 	&cb_time,
 	globus_l_xio_xsp_send_message,
 	(void*)args);
-    
+
 #if 0
     printf("Value:\n");
     printf("    sum=%lf mean=%lf\n", c->sum, c->mean);
@@ -286,13 +295,13 @@ globus_l_xio_xsp_do_xfer_notify(
     }
 
     args = (xio_l_xsp_send_args_t *) globus_calloc(1, sizeof(xio_l_xsp_send_args_t));
-    args->data = globus_malloc(512*sizeof(char));
+    args->data = globus_malloc(1024*sizeof(char));
     args->msg_type = notify_type;
     args->xfer = handle->xfer;
-    
+
     sprintf(args->data, "user=%s,task_id=%s,sport=%d,dport=%d,resource=%s,size=%d,%s/%s",
 	    handle->user, handle->task_id, handle->sport, handle->dport, handle->resource,
-	    handle->size, local_string, remote_string);
+    	    handle->size, local_string, remote_string);
     
     args->length = strlen(args->data);
 
@@ -518,7 +527,7 @@ globus_l_xio_xsp_cntl(
 	    attr->stack = GLOBUS_XIO_XSP_FSSTACK;
 	break;
       case GLOBUS_XIO_XSP_CNTL_SET_HOP:
-	  str= va_arg(ap, char *);
+	  str = va_arg(ap, char *);
 	  attr->xsp_hop = strdup(str);
 	  break;
       case GLOBUS_XIO_XSP_CNTL_SET_USER:
@@ -781,10 +790,34 @@ globus_l_xio_xsp_open_cb(
     {
 	res = globus_l_xio_xsp_setup_contact_info(handle);
 	if (res != GLOBUS_SUCCESS)
-	    {
-		result = GlobusXIOErrorWrapFailed("Could not get contact info for handle.", res);
-		goto error_return;
-	    }
+	{
+	    result = GlobusXIOErrorWrapFailed("Could not get contact info for handle.", res);
+	    goto error_return;
+	}
+    }
+    else if (handle->stack == GLOBUS_XIO_XSP_FSSTACK)
+    {
+	int fd;
+	struct stat buf;
+
+	// GLOBUS_XIO_FILE_GET_HANDLE == 0x7
+	res = globus_l_xio_xsp_fileh_query(handle->xio_driver_handle,
+					   &fd,
+					   0x7);
+	if (res != GLOBUS_SUCCESS)
+        {
+	    result = GlobusXIOErrorWrapFailed("Could not get fd from file handle.", res);
+	}
+					   
+	res = fstat(fd, &buf);
+	if (res != GLOBUS_SUCCESS)
+	{
+	    result = GlobusXIOErrorWrapFailed("Could not stat fd.", res);
+	}
+	else
+	{
+	    handle->size = buf.st_size;
+	}
     }
 
     /* establish session and send transfer notice if not already done */
@@ -920,7 +953,8 @@ globus_l_xio_xsp_close_cb(
     {
 	handle->xfer->streams--;
 
-	if (handle->xfer->streams == 0)
+	if ((handle->xfer->streams == 0) &&
+	    handle->xfer->xsp_connected)
 	{
 	    res = globus_l_xio_xsp_do_xfer_notify(handle, GLOBUS_XIO_XSP_END_XFER);
 	    if (res != GLOBUS_SUCCESS)
@@ -957,10 +991,14 @@ globus_l_xio_xsp_close_cb(
 		&xsp_msg_done_mutex,
 		&wait_time);
 	} while (save_errno != ETIMEDOUT);
-
-	xsp_close2(handle->xfer->sess);
-	globus_hashtable_remove(&xsp_l_xfer_table, handle->xfer->hash_str);
-	globus_l_xio_xsp_xfer_destroy(handle->xfer);
+	
+	globus_mutex_lock(&xio_l_xsp_mutex);
+	{
+	    globus_hashtable_remove(&xsp_l_xfer_table, handle->xfer->hash_str);
+	    xsp_close2(handle->xfer->sess);
+	    globus_l_xio_xsp_xfer_destroy(handle->xfer);
+	}
+	globus_mutex_unlock(&xio_l_xsp_mutex);
     }
 
     globus_xio_driver_finished_close(op, result);
@@ -983,18 +1021,20 @@ globus_l_xio_xsp_close(
     /* do a final summary before closing */
     if (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_READ)
     {
-	globus_l_xio_xsp_do_nl_summary(handle,
-				       handle->r_caliper,
-				       "read.summary");
+	if (handle->r_caliper->count > 0)
+	    globus_l_xio_xsp_do_nl_summary(handle,
+					   handle->r_caliper,
+					   "read.summary");
     }
-
+    
     if (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_WRITE)
     {
-	globus_l_xio_xsp_do_nl_summary(handle,
-				       handle->w_caliper,
-				       "write.summary");
+	if (handle->w_caliper->count > 0)
+	    globus_l_xio_xsp_do_nl_summary(handle,
+					   handle->w_caliper,
+					   "write.summary");
     }
-
+    
     res = globus_xio_driver_pass_close(
         op, globus_l_xio_xsp_close_cb, handle);
     return res;
@@ -1248,6 +1288,45 @@ globus_l_xio_xsp_deactivate(void)
     GlobusXIOUnRegisterDriver(xsp);
     return globus_module_deactivate(GLOBUS_XIO_MODULE);
 }
+
+
+static
+globus_result_t
+globus_l_xio_xsp_fileh_query(
+    globus_xio_driver_handle_t          d_handle,
+    int *                               fd,
+    int                                 cmd)
+{
+    int                                 ret_fd;
+    globus_result_t                     res;
+
+    GlobusXIOName(globus_l_xio_xsp_driver_query);
+    GlobusXIOXSPDebugEnter();
+    
+    res = globus_xio_driver_handle_cntl(
+	      d_handle,
+	      GLOBUS_XIO_QUERY,
+	      cmd,
+	      &ret_fd);
+
+    if(res != GLOBUS_SUCCESS)
+    {
+	res = GlobusXIOErrorWrapFailed(
+		  "globus_xio_driver_handle_cntl query remote contact",
+		  res);
+	goto error;
+    }
+
+    *fd = ret_fd;
+
+    GlobusXIOXSPDebugExit();
+    return GLOBUS_SUCCESS;
+
+ error:
+    GlobusXIOXSPDebugExitWithError();
+    return res;
+}
+    
 
 static
 globus_result_t
