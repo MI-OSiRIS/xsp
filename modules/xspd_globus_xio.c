@@ -47,17 +47,17 @@ int xspd_globus_xio_init() {
 
 int xspd_globus_xio_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBlockHeader **ret_block) {
 
-	xspd_info(0, "handling globus_xio message of type: %d", block->type);
+	xspd_info(8, "handling globus_xio message of type: %d", block->type);
 	// block->blob has the data of length block->length
 
 	switch(block->type) {
 
 	case GLOBUS_XIO_NEW_XFER:
 		{
-		    char *tmp = malloc(block->length*sizeof(char));
+		    char *tmp = malloc(block->length*sizeof(char)+1);
 		    memcpy(tmp, block->blob, block->length);
 		    tmp[block->length] = '\0';
-		    xspd_info(0, "NEW XFER: %s\n", tmp);
+		    xspd_info(10, "NEW XFER: %s\n", tmp);
 		    free(tmp);
 		    
 		    *ret_block = (xspBlockHeader*)malloc(sizeof(xspBlockHeader));
@@ -70,16 +70,21 @@ int xspd_globus_xio_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBlockH
 		break;
 	case GLOBUS_XIO_END_XFER:
 	        {
-		    char *tmp = malloc(block->length*sizeof(char));
+		    char *tmp = malloc(block->length*sizeof(char)+1);
 		    memcpy(tmp, block->blob, block->length);
 		    tmp[block->length] = '\0';
-		    xspd_info(0, "END XFER: %s\n", tmp);
+		    xspd_info(10, "END XFER: %s\n", tmp);
 		    free(tmp);
 		    *ret_block = NULL;
 		}
 		break;
 	case GLOBUS_XIO_UPDATE_XFER:
-		{
+	        {
+		    char *tmp = malloc(block->length*sizeof(char)+1);
+		    memcpy(tmp, block->blob, block->length);
+		    tmp[block->length] = '\0';
+		    xspd_info(10, "NL UPDATE: %s\n", tmp);
+		    free(tmp);
 		    *ret_block = NULL;
 		}
 		break;
