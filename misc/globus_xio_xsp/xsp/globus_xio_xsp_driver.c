@@ -192,6 +192,7 @@ globus_l_xio_xsp_send_message(
     globus_result_t                     res;
 
     args = (xio_l_xsp_send_args_t *) user_arg;
+    printf("SENDING\n");
     
     globus_mutex_lock(&xio_l_xsp_mutex);
     {
@@ -223,7 +224,7 @@ globus_l_xio_xsp_do_nl_summary(
     GlobusTimeReltimeSet(cb_time, 0, 0);
 
     log_event = netlogger_calipers_log(c, event);
-    if (!log_event)
+    if (log_event == NULL)
     {
 	return -1;
     }
@@ -232,7 +233,7 @@ globus_l_xio_xsp_do_nl_summary(
     // see do_xfer_notify() for other metadata in handle
 
     args = (xio_l_xsp_send_args_t *) globus_calloc(1, sizeof(xio_l_xsp_send_args_t));
-    args->data = globus_malloc(512*sizeof(char));
+    args->data = globus_malloc(1024*sizeof(char));
     sprintf(args->data, "%s id=%d type=%d", log_event, (int)handle, handle->stack);
     args->length = strlen(args->data);
     args->msg_type = GLOBUS_XIO_XSP_UPDATE_XFER;
@@ -244,7 +245,6 @@ globus_l_xio_xsp_do_nl_summary(
 	globus_l_xio_xsp_send_message,
 	(void*)args);
     
-
 #if 0
     printf("Value:\n");
     printf("    sum=%lf mean=%lf\n", c->sum, c->mean);
@@ -910,7 +910,7 @@ globus_l_xio_xsp_close_cb(
     globus_abstime_t                    wait_time;
     int                                 done;
 
-    done = 0;
+    done = GLOBUS_FALSE;
 
     GlobusXIOName(globus_l_xio_xsp_close_cb);
     GlobusXIOXSPDebugEnter();
@@ -930,7 +930,7 @@ globus_l_xio_xsp_close_cb(
 		     "The XSP XIO driver failed to send end xfer msg%s",
 		     " to XSPd.");
 	    }
-	    done = 1;
+	    done = GLOBUS_TRUE;
 	}
 	else
 	{
@@ -980,6 +980,21 @@ globus_l_xio_xsp_close(
     globus_result_t                     res;    
 
     handle = (xio_l_xsp_handle_t *) driver_specific_handle;
+
+    /* do a final summary before closing */
+    if (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_READ)
+    {
+	globus_l_xio_xsp_do_nl_summary(handle,
+				       handle->r_caliper,
+				       "read.summary");
+    }
+
+    if (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_WRITE)
+    {
+	globus_l_xio_xsp_do_nl_summary(handle,
+				       handle->w_caliper,
+				       "write.summary");
+    }
 
     res = globus_xio_driver_pass_close(
         op, globus_l_xio_xsp_close_cb, handle);
