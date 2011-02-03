@@ -72,6 +72,7 @@ static globus_xio_string_cntl_table_t  xsp_l_string_opts_table[] =
     {"resource", GLOBUS_XIO_XSP_CNTL_SET_RESOURCE, globus_xio_string_cntl_string},
     {"size", GLOBUS_XIO_XSP_CNTL_SET_SIZE, globus_xio_string_cntl_int},
     {"mask", GLOBUS_XIO_XSP_CNTL_SET_MASK, globus_xio_string_cntl_int},
+    {"interval", GLOBUS_XIO_XSP_CNTL_SET_INTERVAL, globus_xio_string_cntl_int},
     {NULL, 0, NULL}
 };
 
@@ -486,6 +487,7 @@ globus_l_xio_xsp_attr_copy(
     dst_attr->size = src_attr->size;
     dst_attr->stack = src_attr->stack;
     dst_attr->log_flag = src_attr->log_flag;
+    dst_attr->interval = src_attr->interval;
 
     *dst = dst_attr;
 
@@ -551,6 +553,9 @@ globus_l_xio_xsp_cntl(
 	  break;
       case GLOBUS_XIO_XSP_CNTL_SET_MASK:
 	  attr->log_flag = va_arg(ap, int);;
+	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_INTERVAL:
+	  attr->interval = va_arg(ap, int);;
 	  break;
     }
 	
