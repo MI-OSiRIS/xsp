@@ -51,7 +51,8 @@ typedef enum globus_xio_xsp_cntl_e
     GLOBUS_XIO_XSP_CNTL_SET_DPORT,
     GLOBUS_XIO_XSP_CNTL_SET_RESOURCE,
     GLOBUS_XIO_XSP_CNTL_SET_SIZE,
-    GLOBUS_XIO_XSP_CNTL_SET_MASK
+    GLOBUS_XIO_XSP_CNTL_SET_MASK,
+    GLOBUS_XIO_XSP_CNTL_SET_INTERVAL
 } globus_xio_xsp_cntl_t;
 
 #endif
