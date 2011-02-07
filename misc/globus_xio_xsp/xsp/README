@@ -1,0 +1,123 @@
+Existing message types to XSPd globus-xio:
+
+	 GLOBUS_XIO_XSP_NEW_XFER
+	 GLOBUS_XIO_XSP_END_XFER
+	 GLOBUS_XIO_XSP_UPDATE_XFER
+
+The xsp driver can be loaded on either the disk or network stacks.
+Each stack reports new transfers and updates (per gridftp transfer) on
+a separate session.  Because each stack is independent, the user has
+to specify some 'task_id' as a driver option to tie together the disk
+and network sessions.  You also have to explicitly tell the xsp disk
+stack driver that it's on the disk stack because there does not appear
+to be a way to programmatically determine this.  The default is
+assuming the driver is on the network stack.
+
+A typical guc command line:
+
+globus-url-copy -p 4 -vb
+-fsstack file,xsp:'xsp_hop=localhost/5006;stack=fs;mask=12;task_id=XXX'
+-dcstack tcp,xsp:'xsp_hop=localhost/5006;mask=12;task_id=XXX'
+ftp://localhost:2811/dev/zero ftp://localhost:2811/dev/null
+
+Other optional driver options:
+
+'xsp_hop=;user=;src=;dst=;sport=;dport=;resource=;size=;interval='
+
+
+=== Disk stack behavior:
+
+1. NEW_XFER sent with metadata for the disk transfer:
+   
+{
+   'meta': [{'_id': 'c2d870d2-32fd-11e0-b554-002511ccae1a',
+	     'event_type': 'xfer.xsp.xio',
+	     'params': {},
+	     'subject': {'task_id': 'XXX',
+			 'type': 'disk',
+			 'resource': '/dev/zero',
+			 'size': 0,
+			 'u_user': '...',
+			 'u_src': '...',
+			 'u_resource': '...',
+			 ... }}],
+   'data': [],
+   'version': '0.1'
+}
+
+2. Based on the 'interval=' option (default 5s), an initial
+UPDATE_XFER message will arrive after some time.  The first
+message contains metadata about the caliper with a parent mid
+to the transfer sent above.
+
+{
+   'meta': [{'_id': 'c2d86f56-32fd-11e0-b554-002511ccae1a',
+	     '_pid': 'c2d870d2-32fd-11e0-b554-002511ccae1a',
+             'event_type': 'nl.read.summary',
+             'params': {'dt': 5.0000, 'ts': 1297112631.706690},
+             'subject': {} }],
+   'data': [{'_id': '4d505d2d0e644d0200000024',
+             '_mid': 'c2d86f56-32fd-11e0-b554-002511ccae1a',
+             'event_type': 'nl.read.summary',
+	     'values': {'_sample': 0,
+	     	        'sum.v': 2707947520.000000,
+			'min.v': 262144.000000,
+			... }}],
+   'version': '0.1'
+}
+
+3. Subsequent UPDATE_XFER messages will not contain the metadata and
+will increment '_sample'.
+
+4. When gridftp transfer ends, an END_XFER message is sent with the
+same xfer metadata as in the NEW_XFER message.
+
+
+=== Network stack behavior:
+
+1. NEW_XFER sent with metadata for the network transfer:
+
+{
+   'meta': [{'_id': 'c2d870ef-32fd-11e0-b554-002511ccae1a',
+             'event_type': 'xfer.xsp.xio',
+             'params': {},
+             'subject': {'task_id': 'XXX',
+                         'type': 'network',
+			 'src': '127.0.0.1',
+			 'dst': '127.0.0.1',
+			 'sport': '34566',
+			 'dport': '23456'
+                         'u_user': '...',
+                         'u_src': '...',
+                         'u_resource': '...',
+                         ... }}],
+   'data': [],
+   'version': '0.1'
+}
+
+2. NL calipers are created for each stream in the transfer, 4 streams
+in the example above.  The contact info for each transfer is hashed so
+only one NEW_XFER message is sent per network stack transfer.
+
+3. Each stream reports its caliper RW summaries in UPDATE_XFER messages.
+Each stream gets its own 'stream_id'.
+
+{
+   'meta': [{'_id': 'c2d86f34-32fd-11e0-b554-002511ccae1a',
+             '_pid': 'c2d870ef-32fd-11e0-b554-002511ccae1a',
+             'event_type': 'nl.read.summary',
+             'params': {'dt': 5.0000, 'ts': 1297112631.706690},
+             'subject': {'stream_id': 1234567} }],
+   'data': [{'_id': '4d505d2d0e644d0200000036',
+             '_mid': 'c2d86f34-32fd-11e0-b554-002511ccae1a',
+             'event_type': 'nl.read.summary',
+             'values': {'_sample': 0,
+       	     'sum.v': 2707947520.000000,
+	     'min.v': 262144.000000,
+	     ... }}],
+   'version': '0.1'
+}
+
+4. Updates continue the same as in the disk stack case.
+
+

@@ -55,6 +55,7 @@ int xspd_globus_xio_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBlockH
 
 	case GLOBUS_XIO_NEW_XFER:
 		{
+		    /*
 		    char *tmp = malloc(block->length*sizeof(char)+1);
 		    memcpy(tmp, block->blob, block->length);
 		    tmp[block->length] = '\0';
@@ -66,16 +67,47 @@ int xspd_globus_xio_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBlockH
 		    (*ret_block)->length = strlen((*ret_block)->blob);
 		    (*ret_block)->type = block->type;
 		    (*ret_block)->sport = 0;
-		    //*ret_block = NULL;
+		    */
+
+		    bson *bpp;
+                    char *data;
+
+                    data = (char *)malloc(block->length);
+                    memcpy(data, block->blob, block->length);
+
+                    bpp = (bson *)malloc(sizeof(bson));
+                    bson_init(bpp, data, 1);
+
+                    bson_print(bpp);
+
+                    bson_destroy(bpp);
+		    
+		    *ret_block = NULL;
 		}
 		break;
 	case GLOBUS_XIO_END_XFER:
 	        {
+		    /*
 		    char *tmp = malloc(block->length*sizeof(char)+1);
 		    memcpy(tmp, block->blob, block->length);
 		    tmp[block->length] = '\0';
 		    xspd_info(10, "END XFER: %s\n", tmp);
 		    free(tmp);
+		    */
+
+		    bson *bpp;
+                    char *data;
+
+                    data = (char *)malloc(block->length);
+                    memcpy(data, block->blob, block->length);
+
+                    bpp = (bson *)malloc(sizeof(bson));
+                    bson_init(bpp, data, 1);
+
+                    bson_print(bpp);
+
+                    bson_destroy(bpp);
+
 		    *ret_block = NULL;
 		}
 		break;
