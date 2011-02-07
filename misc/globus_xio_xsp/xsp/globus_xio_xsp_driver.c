@@ -20,7 +20,6 @@
 #include "globus_xio_xsp_driver.h"
 #include "version.h"
 
-#include "bson.h"
 #include "netlogger_calipers.h"
 #include "libxsp_client.h"
 
@@ -28,6 +27,7 @@
 #define GLOBUS_XIO_XSP_END_XFER          0x31
 #define GLOBUS_XIO_XSP_UPDATE_XFER       0x32
 
+#define GLOBUS_XIO_NL_UPDATE_SIZE        65536
 
 GlobusDebugDefine(GLOBUS_XIO_XSP);
 GlobusXIODeclareDriver(xsp);
@@ -78,10 +78,11 @@ static globus_xio_string_cntl_table_t  xsp_l_string_opts_table[] =
 
 typedef struct xio_l_xsp_xfer_s
 {
+    char *                              id;
+    char *                              hash_str;
     int                                 xsp_connected; 
     libxspSess *                        sess;
     int                                 streams;
-    char *                              hash_str;
 } xio_l_xsp_xfer_t;
 
 typedef struct xio_l_xsp_send_args_s
@@ -94,11 +95,14 @@ typedef struct xio_l_xsp_send_args_s
 
 typedef struct xio_l_xsp_handle_s
 {
+    char *                              id;
     xio_l_xsp_xfer_t *                  xfer;
 
     globus_xio_contact_t *              local_contact;
     globus_xio_contact_t *              remote_contact;
     globus_xio_driver_handle_t          xio_driver_handle;
+    
+    long                                filesize;
 
     int                                 stack;
     char *                              xsp_hop;
@@ -129,17 +133,21 @@ typedef struct xio_l_xsp_handle_s
 
 static xio_l_xsp_xfer_t                 globus_l_xio_xsp_xfer_default =
 {
+    GLOBUS_NULL,                        /* id */
+    GLOBUS_NULL,                        /* hash_str */
     GLOBUS_NULL,                        /* sess */
     GLOBUS_FALSE,                       /* xsp_connected */
-    0                                  /* streams */
+    0                                   /* streams */
 };
 
 static xio_l_xsp_handle_t               globus_l_xio_xsp_handle_default =
 {
+    GLOBUS_NULL,                        /* id */
     GLOBUS_NULL,                        /* xfer */
     GLOBUS_NULL,                        /* local_contact */
     GLOBUS_NULL,                        /* remote_contact */
     GLOBUS_NULL,                        /* xio_driver_handle */
+    0,                                  /* filesize */
     GLOBUS_XIO_XSP_NETSTACK,            /* stack */
     GLOBUS_NULL,                        /* xsp_hop */
     GLOBUS_NULL,                        /* user */
@@ -199,7 +207,7 @@ globus_l_xio_xsp_send_message(
     
     globus_mutex_lock(&xio_l_xsp_mutex);
     {
-	if (args && (args->length > 0))
+	if (args->data && (args->length > 0))
         {
 	    res = xsp_send_msg(args->xfer->sess, args->data,
 			       args->length, args->msg_type);
@@ -213,42 +221,161 @@ globus_l_xio_xsp_send_message(
 
 static
 globus_result_t
+globus_l_xio_xsp_append_nl_meta(
+    bson_buffer *                       bb,
+    xio_l_xsp_handle_t *                handle,
+    char *                              ind)
+{
+    globus_abstime_t                    now;
+    double                              ts;
+    int                                 sec, usec;
+
+    GlobusTimeAbstimeGetCurrent(now);
+    GlobusTimeAbstimeGet(now, sec, usec);
+    
+    ts = sec + usec/1e6;
+
+    /* start a meta object at the given index */
+    bson_append_start_object(bb, ind);
+    bson_append_string(bb, "_id", handle->id);
+    bson_append_string(bb, "_pid", handle->xfer->id);
+    bson_append_string(bb, "event_type", "caliper.nl.xsp.xio");
+
+    /* params */
+    bson_append_start_object(bb, "params");
+    bson_append_double(bb, "dt", 0.0);
+    bson_append_double(bb, "ts", ts);
+    bson_append_finish_object(bb);
+    
+    /* subject */
+    bson_append_start_object(bb, "subject");
+    if (handle->stack == GLOBUS_XIO_XSP_NETSTACK)
+    {
+	bson_append_int(bb, "stream_id", (int)handle);
+    }
+    bson_append_finish_object(bb);
+
+    /* finish this meta object */
+    bson_append_finish_object(bb);
+    
+    return GLOBUS_SUCCESS;
+}
+
+
+static
+globus_result_t
+globus_l_xio_xsp_append_xfer_meta(
+    bson_buffer *                       bb,
+    xio_l_xsp_handle_t *                handle,
+    char *                              ind)
+{
+
+    /* start a meta object at the given index */
+    bson_append_start_object(bb, ind);
+    bson_append_string(bb, "_id", handle->xfer->id);
+    bson_append_string(bb, "event_type", "xfer.xsp.xio");
+
+    /* params */
+    bson_append_start_object(bb, "params");
+    bson_append_finish_object(bb);
+    
+    /* subject */
+    bson_append_start_object(bb, "subject");
+    if (handle->task_id != NULL)
+    {
+	bson_append_string(bb, "task_id", handle->task_id);
+    }
+
+    if (handle->stack == GLOBUS_XIO_XSP_NETSTACK)
+    {
+	bson_append_string(bb, "type", "network");
+	bson_append_string(bb, "src", handle->local_contact->host);
+	bson_append_string(bb, "dst", handle->remote_contact->host);
+    }
+    else if (handle->stack == GLOBUS_XIO_XSP_FSSTACK)
+    {
+	bson_append_string(bb, "type", "disk");
+	bson_append_string(bb, "resource", handle->local_contact->resource);
+	bson_append_int(bb, "size", handle->filesize);
+    }
+    bson_append_finish_object(bb);
+
+    /* finish this meta object */
+    bson_append_finish_object(bb);
+
+    return GLOBUS_SUCCESS;
+}
+			     
+
+static
+globus_result_t
 globus_l_xio_xsp_do_nl_summary(
     xio_l_xsp_handle_t *                handle,
     netlogger_calipers_T                c,
     char *                              event)
 {
+    globus_result_t                     result;
     char *                              log_event;
     double                              d;
-
     xio_l_xsp_send_args_t *             args;
     globus_reltime_t                    cb_time;
+    bson_buffer                         bb;
+    bson                                *bp = NULL;
+    int                                 bsz;
+
     
     GlobusTimeReltimeSet(cb_time, 0, 0);
 
     if (handle->xfer->xsp_connected == GLOBUS_FALSE)
     {
-	return -1;
+	result = -1;
+	goto error;
     }
 
-    netlogger_calipers_calc(handle->w_caliper);
-
-    log_event = netlogger_calipers_log(c, event);
-    if (log_event == NULL)
-    {
-	return -1;
-    }
-
-    /// handle->stack determines if we're on the NETSTACK (0) or FSSTACK (1)
-    // see do_xfer_notify() for other metadata in handle
 
     args = (xio_l_xsp_send_args_t *) globus_malloc(sizeof(xio_l_xsp_send_args_t));
-    args->data = globus_malloc(1024*sizeof(char));
-    sprintf(args->data, "%s id=%d type=%d", log_event, (int)handle, handle->stack);
-    args->length = strlen(args->data);
+    if (!args)
+    {
+	result = -1;
+	goto error;
+    }
+    
+    /* get nl caliper data */
+    bp = netlogger_calipers_psdata(c, event, handle->id, 1);
+
+    bson_buffer_init(&bb);
+    bson_ensure_space(&bb, GLOBUS_XIO_NL_UPDATE_SIZE);
+    
+    bson_append_string(&bb, "version", "0.1");
+
+    bson_append_start_array(&bb, "data");
+    bson_append_bson(&bb, "0", bp);
+    bson_append_finish_object(&bb);
+
+    bson_append_start_array(&bb, "meta");
+    globus_l_xio_xsp_append_xfer_meta(&bb, handle, "0");
+    globus_l_xio_xsp_append_nl_meta(&bb, handle, "1");
+    bson_append_finish_object(&bb);
+
+    /* get ready to send the bson */
+    bp = malloc(sizeof(bson));
+    bson_from_buffer(bp, &bb);
+    
+    bson_print(bp);
+
+    bsz = bson_size(bp);
+    args->data = globus_malloc(bsz*sizeof(char));
+    if (!args->data)
+    {
+	result = -1;
+	goto error_bp;
+    }
+
+    memcpy(args->data, bp->data, bsz);
+    args->length = bsz;
     args->msg_type = GLOBUS_XIO_XSP_UPDATE_XFER;
     args->xfer = handle->xfer;
-
+    
     globus_callback_register_oneshot(
 	GLOBUS_NULL,
 	&cb_time,
@@ -256,6 +383,14 @@ globus_l_xio_xsp_do_nl_summary(
 	(void*)args);
 
 #if 0
+
+    log_event = netlogger_calipers_log(c, event);
+    if (log_event == NULL)
+    {
+	result = -1;
+	goto error;
+    }
+
     printf("Value:\n");
     printf("    sum=%lf mean=%lf\n", c->sum, c->mean);
     printf("Log event:\n");
@@ -265,13 +400,27 @@ globus_l_xio_xsp_do_nl_summary(
     printf("    begin/end pairs per sec: %lf\n", c->count / d);
     printf("    usec per begin/end pair: %lf\n", d / c->count * 1e6);
     printf("    %%overhead: %lf\n", d / c->dur * 100.);
+
+    globus_free(log_event);
 #endif
 
     netlogger_calipers_clear(c);
-
-    globus_free(log_event);
     
-    return GLOBUS_SUCCESS;
+    result = GLOBUS_SUCCESS;
+
+ error_bp:
+    if (bp)
+    {
+	bson_destroy(bp);
+	globus_free(bp);
+    }
+    else
+    {
+	bson_buffer_destroy(&bb);
+    }
+    
+ error:
+    return result;
 }
 
 static
@@ -280,33 +429,30 @@ globus_l_xio_xsp_do_xfer_notify(
     xio_l_xsp_handle_t *                handle,
     int                                 notify_type)
 {
-    globus_result_t                     res;
-    char *                              local_string;
-    char *                              remote_string;
-    
+    globus_result_t                     res;    
     xio_l_xsp_send_args_t *             args;
     globus_reltime_t                    cb_time;
 
     GlobusTimeReltimeSet(cb_time, 0, 0);
-
-    if (handle->stack == GLOBUS_XIO_XSP_NETSTACK)
-    {
-	globus_xio_contact_info_to_string(handle->local_contact, &local_string);
-	globus_xio_contact_info_to_string(handle->remote_contact, &remote_string);
-    }
-    else {
-	local_string = remote_string = "file";
-    }
 
     args = (xio_l_xsp_send_args_t *) globus_calloc(1, sizeof(xio_l_xsp_send_args_t));
     args->data = globus_malloc(1024*sizeof(char));
     args->msg_type = notify_type;
     args->xfer = handle->xfer;
 
-    sprintf(args->data, "user=%s,task_id=%s,sport=%d,dport=%d,resource=%s,size=%d,%s/%s",
-	    handle->user, handle->task_id, handle->sport, handle->dport, handle->resource,
-    	    handle->size, local_string, remote_string);
-    
+    if (handle->stack == GLOBUS_XIO_XSP_NETSTACK)
+    {
+	sprintf(args->data, "user=%s,task_id=%s,sport=%d,dport=%d,resource=%s,size=%d,src=%s,dst=%s",
+		handle->user, handle->task_id, handle->sport, handle->dport, handle->resource,
+		handle->size, handle->local_contact->host, handle->remote_contact->host);
+    }
+    else if (handle->stack == GLOBUS_XIO_XSP_FSSTACK)
+    {
+	sprintf(args->data, "user=%s,task_id=%s,sport=%d,dport=%d,resource=%s,size=%d,filename=%s,fsize=%u",
+                handle->user, handle->task_id, handle->sport, handle->dport, handle->resource,
+                handle->size, handle->local_contact->resource, handle->filesize);
+    }
+
     args->length = strlen(args->data);
 
     globus_callback_register_oneshot(
@@ -314,12 +460,6 @@ globus_l_xio_xsp_do_xfer_notify(
 	&cb_time,
 	globus_l_xio_xsp_send_message,
 	(void*)args);
-
-    if (handle->stack == GLOBUS_XIO_XSP_NETSTACK)
-    {
-	globus_free(local_string);
-	globus_free(remote_string);
-    }
 
     return GLOBUS_SUCCESS;
 }
@@ -379,13 +519,26 @@ globus_l_xio_xsp_xfer_init(
     void **                             out_xfer)
 {
     xio_l_xsp_xfer_t *                  xfer;
+    globus_uuid_t                       uuid;
+    int                                 rc;
 
     xfer = (xio_l_xsp_xfer_t *)
 	globus_calloc(1, sizeof(xio_l_xsp_xfer_t));
-    
+
+    xfer->hash_str = NULL;
     xfer->sess = NULL;
     xfer->xsp_connected = GLOBUS_FALSE;
     xfer->streams = 0;
+
+    rc = globus_uuid_create(&uuid);
+    if(rc == 0)
+    {
+	xfer->id = strdup(uuid.text);
+    }
+    else
+    {
+	xfer->id = strdup("default");
+    }
 
     *out_xfer = xfer;
     
@@ -398,11 +551,14 @@ globus_l_xio_xsp_attr_init(
     void **                             out_attr)
 {
     xio_l_xsp_handle_t *                attr;
+    globus_uuid_t                       uuid;
+    int                                 rc;
 
     /* intiialize everything to 0 */
     attr = (xio_l_xsp_handle_t *)
         globus_calloc(1, sizeof(xio_l_xsp_handle_t));
-
+    
+    attr->filesize = 0;
     attr->xfer = NULL;
     attr->stack = GLOBUS_XIO_XSP_NETSTACK;
     attr->user = NULL;
@@ -414,6 +570,19 @@ globus_l_xio_xsp_attr_init(
     attr->log_flag = 0;
     attr->interval = 5;
 
+    attr->local_contact = globus_calloc(1, sizeof(globus_xio_contact_t));
+    attr->remote_contact = globus_calloc(1, sizeof(globus_xio_contact_t));
+
+    rc = globus_uuid_create(&uuid);
+    if(rc == 0)
+    {
+	attr->id = strdup(uuid.text);
+    }
+    else
+    {
+	attr->id = strdup("default");
+    }
+    
     GlobusTimeAbstimeGetCurrent(attr->o_ts);
     GlobusTimeAbstimeGetCurrent(attr->c_ts);
     GlobusTimeAbstimeGetCurrent(attr->r_ts);
@@ -492,8 +661,14 @@ globus_l_xio_xsp_attr_copy(
 	dst_attr->resource = strdup(src_attr->resource);
     }
 
+    if (src_attr->id)
+    {
+	dst_attr->id = strdup(src_attr->id);
+    }
+
     // only pointer to same xfer struct
     dst_attr->xfer = src_attr->xfer;
+    dst_attr->filesize = src_attr->filesize;
     dst_attr->sport = src_attr->sport;
     dst_attr->dport = src_attr->dport;
     dst_attr->size = src_attr->size;
@@ -597,6 +772,10 @@ globus_l_xio_xsp_xfer_destroy(
     {
 	globus_free(handle->hash_str);
     }
+    if (handle->id != NULL)
+    {
+	globus_free(handle->id);
+    }
 
     globus_free(handle);
     
@@ -668,6 +847,10 @@ globus_l_xio_xsp_handle_destroy(
     if (handle->a_caliper != NULL)
     {
 	netlogger_calipers_free(handle->a_caliper);
+    }
+    if (handle->id != NULL)
+    {
+	globus_free(handle->id);
     }
 
     globus_free(handle);
@@ -788,7 +971,7 @@ globus_l_xio_xsp_open_cb(
 	goto error_destroy_handle;
     }
 
-    // we only get contact info if we're on the netstack
+    // we only get remote contact info if we're on the netstack
     // there has to be a way to ask XIO about what stack this driver is on...
     if (handle->stack == GLOBUS_XIO_XSP_NETSTACK)
     {
@@ -820,7 +1003,7 @@ globus_l_xio_xsp_open_cb(
 	}
 	else
 	{
-	    handle->size = buf.st_size;
+	    handle->filesize = buf.st_size;
 	}
     }
 
@@ -905,8 +1088,12 @@ globus_l_xio_xsp_open(
     /* get handle for drivers below us */
     handle->xio_driver_handle = globus_xio_operation_get_driver_handle(op);
 
+    /* save the local contact info */
+    globus_xio_contact_copy(handle->local_contact, contact_info);
+
     /* see if there's already an active xfer for this contact string */
     globus_xio_contact_info_to_string(contact_info, &cstring);
+
     if (cstring != NULL)
     {
 	xfer_handle = (xio_l_xsp_xfer_t *) globus_hashtable_lookup(
@@ -1028,7 +1215,7 @@ globus_l_xio_xsp_close(
 	if (handle->r_caliper->count > 0)
 	    globus_l_xio_xsp_do_nl_summary(handle,
 					   handle->r_caliper,
-					   "read.summary");
+					   "nl.read.summary");
     }
     
     if (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_WRITE)
@@ -1036,7 +1223,7 @@ globus_l_xio_xsp_close(
 	if (handle->w_caliper->count > 0)
 	    globus_l_xio_xsp_do_nl_summary(handle,
 					   handle->w_caliper,
-					   "write.summary");
+					   "nl.write.summary");
     }
     
     res = globus_xio_driver_pass_close(
@@ -1073,7 +1260,7 @@ globus_l_xio_xsp_read_cb(
 	{
 	    globus_l_xio_xsp_do_nl_summary(handle,
 					   handle->r_caliper,
-					   "read.summary");
+					   "nl.read.summary");
 	    GlobusTimeAbstimeGetCurrent(handle->r_ts);
 	}
     }
@@ -1136,7 +1323,7 @@ globus_l_xio_xsp_write_cb(
 	{
 	    globus_l_xio_xsp_do_nl_summary(handle,
 					   handle->w_caliper,
-					   "write.summary");
+					   "nl.write.summary");
 	    GlobusTimeAbstimeGetCurrent(handle->w_ts);
 	}
     }
@@ -1358,10 +1545,8 @@ globus_l_xio_xsp_set_ci(
 	    res);
 	goto error;
     }
-
-    contact_info = calloc(1, sizeof(globus_xio_contact_t));
     
-    res = globus_xio_contact_parse(contact_info, contact_string);
+    res = globus_xio_contact_parse(*ci, contact_string);
 
     if(res != GLOBUS_SUCCESS)
     {
@@ -1370,7 +1555,6 @@ globus_l_xio_xsp_set_ci(
 	goto error;
     }
     
-    *ci = contact_info;
     globus_free(contact_string);
     
     GlobusXIOXSPDebugExit();
