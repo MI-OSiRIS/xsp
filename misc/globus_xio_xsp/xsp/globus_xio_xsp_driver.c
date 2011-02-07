@@ -85,6 +85,13 @@ typedef struct xio_l_xsp_xfer_s
     int                                 streams;
 } xio_l_xsp_xfer_t;
 
+typedef struct xio_l_xsp_caliper_s
+{
+    netlogger_calipers_T                caliper;
+    unsigned long                       s_count;
+    globus_abstime_t                    ts;
+} xio_l_xsp_caliper_t;
+
 typedef struct xio_l_xsp_send_args_s
 {
     xio_l_xsp_xfer_t *                  xfer;
@@ -118,17 +125,11 @@ typedef struct xio_l_xsp_handle_s
     int                                 log_flag;
     int                                 interval;
 
-    globus_abstime_t                    o_ts;
-    globus_abstime_t                    c_ts;
-    globus_abstime_t                    r_ts;
-    globus_abstime_t                    w_ts;
-    globus_abstime_t                    a_ts;
-
-    netlogger_calipers_T                o_caliper;
-    netlogger_calipers_T                c_caliper;
-    netlogger_calipers_T                r_caliper;
-    netlogger_calipers_T                w_caliper;
-    netlogger_calipers_T                a_caliper;
+    xio_l_xsp_caliper_t *               o_caliper;
+    xio_l_xsp_caliper_t *               c_caliper;
+    xio_l_xsp_caliper_t *               r_caliper;
+    xio_l_xsp_caliper_t *               w_caliper;
+    xio_l_xsp_caliper_t *               a_caliper;
 } xio_l_xsp_handle_t;
 
 static xio_l_xsp_xfer_t                 globus_l_xio_xsp_xfer_default =
@@ -159,7 +160,12 @@ static xio_l_xsp_handle_t               globus_l_xio_xsp_handle_default =
     GLOBUS_NULL,                        /* resource */
     0,                                  /* size */
     0,                                  /* log_flag, default does not NL log anything */
-    0                                   /* interval */
+    0,                                  /* interval */
+    GLOBUS_NULL,                        /* o_caliper */
+    GLOBUS_NULL,                        /* c_caliper */
+    GLOBUS_NULL,                        /* r_caliper */
+    GLOBUS_NULL,                        /* w_caliper */
+    GLOBUS_NULL                         /* a_caliper */
 };
 
 static globus_hashtable_t               xsp_l_xfer_table;
@@ -224,6 +230,7 @@ globus_result_t
 globus_l_xio_xsp_append_nl_meta(
     bson_buffer *                       bb,
     xio_l_xsp_handle_t *                handle,
+    char *                              event,
     char *                              ind)
 {
     globus_abstime_t                    now;
@@ -239,11 +246,11 @@ globus_l_xio_xsp_append_nl_meta(
     bson_append_start_object(bb, ind);
     bson_append_string(bb, "_id", handle->id);
     bson_append_string(bb, "_pid", handle->xfer->id);
-    bson_append_string(bb, "event_type", "caliper.nl.xsp.xio");
+    bson_append_string(bb, "event_type", event);
 
     /* params */
     bson_append_start_object(bb, "params");
-    bson_append_double(bb, "dt", 0.0);
+    bson_append_double(bb, "dt", handle->interval);
     bson_append_double(bb, "ts", ts);
     bson_append_finish_object(bb);
     
@@ -311,7 +318,7 @@ static
 globus_result_t
 globus_l_xio_xsp_do_nl_summary(
     xio_l_xsp_handle_t *                handle,
-    netlogger_calipers_T                c,
+    xio_l_xsp_caliper_t *               c,
     char *                              event)
 {
     globus_result_t                     result;
@@ -332,7 +339,6 @@ globus_l_xio_xsp_do_nl_summary(
 	goto error;
     }
 
-
     args = (xio_l_xsp_send_args_t *) globus_malloc(sizeof(xio_l_xsp_send_args_t));
     if (!args)
     {
@@ -341,7 +347,7 @@ globus_l_xio_xsp_do_nl_summary(
     }
     
     /* get nl caliper data */
-    bp = netlogger_calipers_psdata(c, event, handle->id, 1);
+    bp = netlogger_calipers_psdata(c->caliper, event, handle->id, c->s_count);
 
     bson_buffer_init(&bb);
     bson_ensure_space(&bb, GLOBUS_XIO_NL_UPDATE_SIZE);
@@ -353,8 +359,11 @@ globus_l_xio_xsp_do_nl_summary(
     bson_append_finish_object(&bb);
 
     bson_append_start_array(&bb, "meta");
-    globus_l_xio_xsp_append_xfer_meta(&bb, handle, "0");
-    globus_l_xio_xsp_append_nl_meta(&bb, handle, "1");
+    if (c->s_count == 0)
+    {	
+	globus_l_xio_xsp_append_xfer_meta(&bb, handle, "0");
+	globus_l_xio_xsp_append_nl_meta(&bb, handle, event, "1");
+    }
     bson_append_finish_object(&bb);
 
     /* get ready to send the bson */
@@ -384,7 +393,7 @@ globus_l_xio_xsp_do_nl_summary(
 
 #if 0
 
-    log_event = netlogger_calipers_log(c, event);
+    log_event = netlogger_calipers_log(c->caliper, event);
     if (log_event == NULL)
     {
 	result = -1;
@@ -392,20 +401,21 @@ globus_l_xio_xsp_do_nl_summary(
     }
 
     printf("Value:\n");
-    printf("    sum=%lf mean=%lf\n", c->sum, c->mean);
+    printf("    sum=%lf mean=%lf\n", c->caliper->sum, c->caliper->mean);
     printf("Log event:\n");
     printf("    %s id=%d\n", log_event, (int)handle);
     printf("Overhead:\n");
-    d = c->dur - c->dur_sum;
-    printf("    begin/end pairs per sec: %lf\n", c->count / d);
-    printf("    usec per begin/end pair: %lf\n", d / c->count * 1e6);
-    printf("    %%overhead: %lf\n", d / c->dur * 100.);
+    d = c->caliper->dur - c->caliper->dur_sum;
+    printf("    begin/end pairs per sec: %lf\n", c->caliper->count / d);
+    printf("    usec per begin/end pair: %lf\n", d / c->caliper->count * 1e6);
+    printf("    %%overhead: %lf\n", d / c->caliper->dur * 100.);
 
     globus_free(log_event);
 #endif
 
-    netlogger_calipers_clear(c);
-    
+    netlogger_calipers_clear(c->caliper);
+    c->s_count++;
+
     result = GLOBUS_SUCCESS;
 
  error_bp:
@@ -547,6 +557,23 @@ globus_l_xio_xsp_xfer_init(
 
 static
 globus_result_t
+globus_l_xio_xsp_caliper_init(
+    void **                             out_caliper)
+{
+    xio_l_xsp_caliper_t *               cal;
+    
+    cal = (xio_l_xsp_caliper_t *) globus_malloc(sizeof(xio_l_xsp_caliper_t));
+    GlobusTimeAbstimeGetCurrent(cal->ts);
+    cal->caliper = netlogger_calipers_new(1);
+    cal->s_count = 0;
+
+    *out_caliper = cal;
+
+    return GLOBUS_SUCCESS;
+}
+
+static
+globus_result_t
 globus_l_xio_xsp_attr_init(
     void **                             out_attr)
 {
@@ -583,18 +610,6 @@ globus_l_xio_xsp_attr_init(
 	attr->id = strdup("default");
     }
     
-    GlobusTimeAbstimeGetCurrent(attr->o_ts);
-    GlobusTimeAbstimeGetCurrent(attr->c_ts);
-    GlobusTimeAbstimeGetCurrent(attr->r_ts);
-    GlobusTimeAbstimeGetCurrent(attr->w_ts);
-    GlobusTimeAbstimeGetCurrent(attr->a_ts);
-
-    attr->o_caliper = netlogger_calipers_new(1);
-    attr->c_caliper = netlogger_calipers_new(1);
-    attr->r_caliper = netlogger_calipers_new(1);
-    attr->w_caliper = netlogger_calipers_new(1);
-    attr->a_caliper = netlogger_calipers_new(1);
-
     *out_attr = attr;
 
     return GLOBUS_SUCCESS;
@@ -667,7 +682,11 @@ globus_l_xio_xsp_attr_copy(
     }
 
     // only pointer to same xfer struct
-    dst_attr->xfer = src_attr->xfer;
+    if (src_attr->xfer)
+    {
+	dst_attr->xfer = src_attr->xfer;
+    }
+
     dst_attr->filesize = src_attr->filesize;
     dst_attr->sport = src_attr->sport;
     dst_attr->dport = src_attr->dport;
@@ -675,6 +694,17 @@ globus_l_xio_xsp_attr_copy(
     dst_attr->stack = src_attr->stack;
     dst_attr->log_flag = src_attr->log_flag;
     dst_attr->interval = src_attr->interval;
+
+    if (src_attr->o_caliper)
+	dst_attr->o_caliper = src_attr->o_caliper;
+    if (src_attr->c_caliper)
+	dst_attr->c_caliper = src_attr->c_caliper;
+    if (src_attr->r_caliper)
+	dst_attr->r_caliper = src_attr->r_caliper;
+    if (src_attr->w_caliper)
+	dst_attr->w_caliper = src_attr->w_caliper;
+    if (src_attr->a_caliper)
+	dst_attr->a_caliper = src_attr->a_caliper;
 
     *dst = dst_attr;
 
@@ -753,9 +783,9 @@ globus_l_xio_xsp_cntl(
 static
 globus_result_t
 globus_l_xio_xsp_xfer_destroy(
-    xio_l_xsp_xfer_t *                              xfer_handle)
+    void *                             xfer_handle)
 {
-    xio_l_xsp_xfer_t *                  handle;
+    xio_l_xsp_xfer_t *                 handle;
 
     if (xfer_handle == NULL)
     {
@@ -781,7 +811,31 @@ globus_l_xio_xsp_xfer_destroy(
     
     return GLOBUS_SUCCESS;
 }   
+
+static
+globus_result_t
+globus_l_xio_xsp_caliper_destroy(
+    void *                              caliper_handle)
+{
+    xio_l_xsp_caliper_t *               handle;
     
+    if (caliper_handle == NULL)
+    {
+	return GLOBUS_SUCCESS;
+    }
+
+    handle = (xio_l_xsp_caliper_t *) caliper_handle;
+    
+    if (handle->caliper)
+    {
+	netlogger_calipers_free(handle->caliper);
+    }
+
+    globus_free(handle);
+
+    return GLOBUS_SUCCESS;
+}
+
 static
 globus_result_t
 globus_l_xio_xsp_handle_destroy(
@@ -827,26 +881,6 @@ globus_l_xio_xsp_handle_destroy(
     if (handle->resource != NULL)
     {
 	globus_free(handle->resource);
-    }
-    if (handle->o_caliper != NULL)
-    {
-	netlogger_calipers_free(handle->o_caliper);
-    }
-    if (handle->c_caliper != NULL)
-    {
-	netlogger_calipers_free(handle->c_caliper);
-    }
-    if (handle->r_caliper != NULL)
-    {
-	netlogger_calipers_free(handle->r_caliper);
-    }
-    if (handle->w_caliper != NULL)
-    {
-	netlogger_calipers_free(handle->w_caliper);
-    }
-    if (handle->a_caliper != NULL)
-    {
-	netlogger_calipers_free(handle->a_caliper);
     }
     if (handle->id != NULL)
     {
@@ -909,8 +943,7 @@ globus_l_xio_xsp_accept_cb(
     GlobusXIOXSPDebugEnter();
 
     handle = (xio_l_xsp_handle_t *) user_arg;
-    
-    
+        
     globus_xio_driver_finished_accept(op, user_arg, result);
     GlobusXIOXSPDebugExit();
     return;
@@ -1113,6 +1146,13 @@ globus_l_xio_xsp_open(
 	
 	/* each new handle gets a pointer to the xfer handle */
 	handle->xfer = xfer_handle;
+	
+	/* setup the calipers */
+	globus_l_xio_xsp_caliper_init((void**)&(handle->o_caliper));
+	globus_l_xio_xsp_caliper_init((void**)&(handle->c_caliper));
+	globus_l_xio_xsp_caliper_init((void**)&(handle->r_caliper));
+	globus_l_xio_xsp_caliper_init((void**)&(handle->w_caliper));
+	globus_l_xio_xsp_caliper_init((void**)&(handle->a_caliper));
     }
 
     res = globus_xio_driver_pass_open(
@@ -1192,6 +1232,13 @@ globus_l_xio_xsp_close_cb(
 	globus_mutex_unlock(&xio_l_xsp_mutex);
     }
 
+    /* free up the calipers */
+    globus_l_xio_xsp_caliper_destroy(handle->o_caliper);
+    globus_l_xio_xsp_caliper_destroy(handle->c_caliper);
+    globus_l_xio_xsp_caliper_destroy(handle->r_caliper);
+    globus_l_xio_xsp_caliper_destroy(handle->w_caliper);
+    globus_l_xio_xsp_caliper_destroy(handle->a_caliper);
+
     globus_xio_driver_finished_close(op, result);
 
     GlobusXIOXSPDebugExit();
@@ -1212,7 +1259,7 @@ globus_l_xio_xsp_close(
     /* do a final summary before closing */
     if (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_READ)
     {
-	if (handle->r_caliper->count > 0)
+	if (handle->r_caliper->caliper->count > 0)
 	    globus_l_xio_xsp_do_nl_summary(handle,
 					   handle->r_caliper,
 					   "nl.read.summary");
@@ -1220,7 +1267,7 @@ globus_l_xio_xsp_close(
     
     if (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_WRITE)
     {
-	if (handle->w_caliper->count > 0)
+	if (handle->w_caliper->caliper->count > 0)
 	    globus_l_xio_xsp_do_nl_summary(handle,
 					   handle->w_caliper,
 					   "nl.write.summary");
@@ -1250,10 +1297,10 @@ globus_l_xio_xsp_read_cb(
     handle = (xio_l_xsp_handle_t *) user_arg;
     if (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_READ)
     {
-	netlogger_calipers_end(handle->r_caliper, nbytes);
+	netlogger_calipers_end(handle->r_caliper->caliper, nbytes);
 	
 	GlobusTimeAbstimeGetCurrent(curr_time);
-	GlobusTimeAbstimeDiff(diff, handle->r_ts, curr_time);
+	GlobusTimeAbstimeDiff(diff, handle->r_caliper->ts, curr_time);
 	GlobusTimeReltimeGet(diff, sec, usec);
 
 	if (sec >= handle->interval)
@@ -1261,7 +1308,7 @@ globus_l_xio_xsp_read_cb(
 	    globus_l_xio_xsp_do_nl_summary(handle,
 					   handle->r_caliper,
 					   "nl.read.summary");
-	    GlobusTimeAbstimeGetCurrent(handle->r_ts);
+	    GlobusTimeAbstimeGetCurrent(handle->r_caliper->ts);
 	}
     }
     
@@ -1283,7 +1330,7 @@ globus_l_xio_xsp_read(
     handle = (xio_l_xsp_handle_t *)driver_specific_handle;
     if(handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_READ)
     {
-	netlogger_calipers_begin(handle->r_caliper);
+	netlogger_calipers_begin(handle->r_caliper->caliper);
     }
 
     wait_for = globus_xio_operation_get_wait_for(op);
@@ -1313,10 +1360,10 @@ globus_l_xio_xsp_write_cb(
     handle = (xio_l_xsp_handle_t *) user_arg;
     if (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_WRITE)
     {
-	netlogger_calipers_end(handle->w_caliper, nbytes);
+	netlogger_calipers_end(handle->w_caliper->caliper, nbytes);
 	
 	GlobusTimeAbstimeGetCurrent(curr_time);
-	GlobusTimeAbstimeDiff(diff, handle->w_ts, curr_time);
+	GlobusTimeAbstimeDiff(diff, handle->w_caliper->ts, curr_time);
 	GlobusTimeReltimeGet(diff, sec, usec);
 	
 	if (sec >= handle->interval)
@@ -1324,7 +1371,7 @@ globus_l_xio_xsp_write_cb(
 	    globus_l_xio_xsp_do_nl_summary(handle,
 					   handle->w_caliper,
 					   "nl.write.summary");
-	    GlobusTimeAbstimeGetCurrent(handle->w_ts);
+	    GlobusTimeAbstimeGetCurrent(handle->w_caliper->ts);
 	}
     }
     
@@ -1347,7 +1394,7 @@ globus_l_xio_xsp_write(
     handle = (xio_l_xsp_handle_t *)driver_specific_handle;
     if (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_WRITE)
     {
-	netlogger_calipers_begin(handle->w_caliper);
+	netlogger_calipers_begin(handle->w_caliper->caliper);
     }
 
     wait_for = globus_xio_operation_get_wait_for(op);
