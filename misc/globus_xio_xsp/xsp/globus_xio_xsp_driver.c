@@ -90,6 +90,7 @@ typedef struct xio_l_xsp_caliper_s
     netlogger_calipers_T                caliper;
     unsigned long                       s_count;
     globus_abstime_t                    ts;
+    char *                              event;
 } xio_l_xsp_caliper_t;
 
 typedef struct xio_l_xsp_send_args_s
@@ -201,6 +202,48 @@ GlobusXIODefineModule(xsp) =
     &local_version
 };
 
+static
+globus_result_t
+globus_l_xio_xsp_send_args_init(
+    void **                            out_arg,
+    void *                             data,
+    int                                len,
+    int                                msg_type,
+    xio_l_xsp_handle_t *               handle)
+{
+    xio_l_xsp_send_args_t *            args;
+    globus_result_t                    result;
+
+    args = (xio_l_xsp_send_args_t *) globus_malloc(sizeof(xio_l_xsp_send_args_t));
+    if (!args)
+    {
+	result = -1;
+	goto error;
+    }
+
+    args->data = globus_malloc(len*sizeof(char));
+    if (!args->data)
+    {
+	result = -1;
+	goto error_args;
+    }
+
+    memcpy(args->data, data, len);
+    args->length = len;
+    args->msg_type = msg_type;
+    args->xfer = handle->xfer;
+    
+    *out_arg = args;
+    
+    return GLOBUS_SUCCESS;
+
+ error_args:
+    globus_free(args);
+ error:
+    *out_arg = NULL;
+    return result;
+}
+
 // Define our driver methods
 void
 globus_l_xio_xsp_send_message(
@@ -298,6 +341,8 @@ globus_l_xio_xsp_append_xfer_meta(
 	bson_append_string(bb, "type", "network");
 	bson_append_string(bb, "src", handle->local_contact->host);
 	bson_append_string(bb, "dst", handle->remote_contact->host);
+	bson_append_string(bb, "sport", handle->local_contact->port);
+	bson_append_string(bb, "dport", handle->remote_contact->port);
     }
     else if (handle->stack == GLOBUS_XIO_XSP_FSSTACK)
     {
@@ -305,6 +350,23 @@ globus_l_xio_xsp_append_xfer_meta(
 	bson_append_string(bb, "resource", handle->local_contact->resource);
 	bson_append_int(bb, "size", handle->filesize);
     }
+    
+    /* add all the other driver opts if given*/
+    if (handle->user)
+	bson_append_string(bb, "u_user", handle->user);
+    if (handle->src)
+        bson_append_string(bb, "u_src", handle->src);
+    if (handle->dst)
+        bson_append_string(bb, "u_dst", handle->dst);
+    if (handle->sport > 0)
+        bson_append_int(bb, "u_sport", handle->sport);
+    if (handle->dport > 0)
+        bson_append_int(bb, "u_dport", handle->dport);
+    if (handle->resource)
+        bson_append_string(bb, "u_resource", handle->resource);
+    if (handle->size > 0)
+        bson_append_int(bb, "u_size", handle->size);
+
     bson_append_finish_object(bb);
 
     /* finish this meta object */
@@ -312,14 +374,12 @@ globus_l_xio_xsp_append_xfer_meta(
 
     return GLOBUS_SUCCESS;
 }
-			     
 
 static
 globus_result_t
 globus_l_xio_xsp_do_nl_summary(
     xio_l_xsp_handle_t *                handle,
-    xio_l_xsp_caliper_t *               c,
-    char *                              event)
+    xio_l_xsp_caliper_t *               c)
 {
     globus_result_t                     result;
     char *                              log_event;
@@ -327,10 +387,9 @@ globus_l_xio_xsp_do_nl_summary(
     xio_l_xsp_send_args_t *             args;
     globus_reltime_t                    cb_time;
     bson_buffer                         bb;
-    bson                                *bp = NULL;
-    int                                 bsz;
+    bson *                              bp = NULL;
+    int                                 bsz;    
 
-    
     GlobusTimeReltimeSet(cb_time, 0, 0);
 
     if (handle->xfer->xsp_connected == GLOBUS_FALSE)
@@ -339,15 +398,8 @@ globus_l_xio_xsp_do_nl_summary(
 	goto error;
     }
 
-    args = (xio_l_xsp_send_args_t *) globus_malloc(sizeof(xio_l_xsp_send_args_t));
-    if (!args)
-    {
-	result = -1;
-	goto error;
-    }
-    
     /* get nl caliper data */
-    bp = netlogger_calipers_psdata(c->caliper, event, handle->id, c->s_count);
+    bp = netlogger_calipers_psdata(c->caliper, c->event, handle->id, c->s_count);
 
     bson_buffer_init(&bb);
     bson_ensure_space(&bb, GLOBUS_XIO_NL_UPDATE_SIZE);
@@ -361,30 +413,27 @@ globus_l_xio_xsp_do_nl_summary(
     bson_append_start_array(&bb, "meta");
     if (c->s_count == 0)
     {	
-	globus_l_xio_xsp_append_xfer_meta(&bb, handle, "0");
-	globus_l_xio_xsp_append_nl_meta(&bb, handle, event, "1");
+	//globus_l_xio_xsp_append_xfer_meta(&bb, handle, "0");
+	globus_l_xio_xsp_append_nl_meta(&bb, handle, c->event, "1");
     }
     bson_append_finish_object(&bb);
 
     /* get ready to send the bson */
     bp = malloc(sizeof(bson));
     bson_from_buffer(bp, &bb);
-    
-    bson_print(bp);
+    bsz = bson_size(bp);    
+    //bson_print(bp);
 
-    bsz = bson_size(bp);
-    args->data = globus_malloc(bsz*sizeof(char));
-    if (!args->data)
+    result = globus_l_xio_xsp_send_args_init((void**)&args,
+					     bp->data,
+					     bsz,
+					     GLOBUS_XIO_XSP_UPDATE_XFER,
+					     handle);
+    if (result != GLOBUS_SUCCESS)
     {
-	result = -1;
 	goto error_bp;
     }
 
-    memcpy(args->data, bp->data, bsz);
-    args->length = bsz;
-    args->msg_type = GLOBUS_XIO_XSP_UPDATE_XFER;
-    args->xfer = handle->xfer;
-    
     globus_callback_register_oneshot(
 	GLOBUS_NULL,
 	&cb_time,
@@ -393,7 +442,7 @@ globus_l_xio_xsp_do_nl_summary(
 
 #if 0
 
-    log_event = netlogger_calipers_log(c->caliper, event);
+    log_event = netlogger_calipers_log(c->caliper, c->event);
     if (log_event == NULL)
     {
 	result = -1;
@@ -439,12 +488,16 @@ globus_l_xio_xsp_do_xfer_notify(
     xio_l_xsp_handle_t *                handle,
     int                                 notify_type)
 {
-    globus_result_t                     res;    
+    globus_result_t                     result;    
     xio_l_xsp_send_args_t *             args;
     globus_reltime_t                    cb_time;
+    bson_buffer                         bb;
+    bson *                              bp = NULL;
+    int                                 bsz;
 
     GlobusTimeReltimeSet(cb_time, 0, 0);
 
+    /*
     args = (xio_l_xsp_send_args_t *) globus_calloc(1, sizeof(xio_l_xsp_send_args_t));
     args->data = globus_malloc(1024*sizeof(char));
     args->msg_type = notify_type;
@@ -464,14 +517,64 @@ globus_l_xio_xsp_do_xfer_notify(
     }
 
     args->length = strlen(args->data);
+    */
 
+    if (handle->xfer->xsp_connected == GLOBUS_FALSE)
+    {
+	result = -1;
+	goto error;
+    }
+
+    bson_buffer_init(&bb);
+    bson_ensure_space(&bb, GLOBUS_XIO_NL_UPDATE_SIZE);
+
+    bson_append_string(&bb, "version", "0.1");
+
+    bson_append_start_array(&bb, "data");
+    bson_append_finish_object(&bb);
+
+    bson_append_start_array(&bb, "meta");
+    globus_l_xio_xsp_append_xfer_meta(&bb, handle, "0");
+    bson_append_finish_object(&bb);
+
+    /* get ready to send the bson */
+    bp = malloc(sizeof(bson));
+    bson_from_buffer(bp, &bb);
+    bsz = bson_size(bp);
+    //bson_print(bp);
+
+    result = globus_l_xio_xsp_send_args_init((void**)&args,
+					     bp->data,
+					     bsz,
+					     notify_type,
+					     handle);
+    if (result != GLOBUS_SUCCESS)
+    {
+	goto error_bp;
+    }
+    
     globus_callback_register_oneshot(
 	GLOBUS_NULL,
 	&cb_time,
 	globus_l_xio_xsp_send_message,
 	(void*)args);
 
-    return GLOBUS_SUCCESS;
+
+    result = GLOBUS_SUCCESS;
+
+ error_bp:
+    if (bp)
+    {
+	bson_destroy(bp);
+	globus_free(bp);
+    }
+    else
+    {
+	bson_buffer_destroy(&bb);
+    }
+    
+ error:
+    return result;
 }
 
 static
@@ -558,7 +661,8 @@ globus_l_xio_xsp_xfer_init(
 static
 globus_result_t
 globus_l_xio_xsp_caliper_init(
-    void **                             out_caliper)
+    void **                             out_caliper,
+    char *                              event)
 {
     xio_l_xsp_caliper_t *               cal;
     
@@ -566,6 +670,7 @@ globus_l_xio_xsp_caliper_init(
     GlobusTimeAbstimeGetCurrent(cal->ts);
     cal->caliper = netlogger_calipers_new(1);
     cal->s_count = 0;
+    cal->event = strdup(event);
 
     *out_caliper = cal;
 
@@ -831,6 +936,11 @@ globus_l_xio_xsp_caliper_destroy(
 	netlogger_calipers_free(handle->caliper);
     }
 
+    if (handle->event)
+    {
+	globus_free(handle->event);
+    }
+
     globus_free(handle);
 
     return GLOBUS_SUCCESS;
@@ -1040,39 +1150,42 @@ globus_l_xio_xsp_open_cb(
 	}
     }
 
-    /* establish session and send transfer notice if not already done */
-    globus_mutex_lock(&xio_l_xsp_mutex);
+    if (handle->xfer)
     {
-	// increment active streams for the overall xfer
-	handle->xfer->streams++;
-
-	if (handle->xfer->xsp_connected == GLOBUS_FALSE)
-	{   
-	    res = globus_l_xio_xsp_connect_handle(handle);
-	    if (res != GLOBUS_SUCCESS)
-	    {
-		res = GlobusXIOErrorWrapFailedWithMessage(res,
-		    "The XSP XIO driver failed to establish a connection%s",
-		    " to XSPd.");
-		goto error_return;
-		// this will try again for subsequent streams, if any
-	    }
-
-            res = globus_l_xio_xsp_do_xfer_notify(handle, GLOBUS_XIO_XSP_NEW_XFER);
-            if (res != GLOBUS_SUCCESS)
-	    {
-		res = GlobusXIOErrorWrapFailedWithMessage(res,
-		    "The XSP XIO driver failed to send new xfer message to%s",
-		    " XSPd");
-		goto error_return;
-	    }
-	}
-	else
+	/* establish session and send transfer notice if not already done */
+	globus_mutex_lock(&xio_l_xsp_mutex);
 	{
-	    // maybe we notify monitoring that another stream has been added?
+	    // increment active streams for the overall xfer
+	    handle->xfer->streams++;
+
+	    if (handle->xfer->xsp_connected == GLOBUS_FALSE)
+	    {   
+		res = globus_l_xio_xsp_connect_handle(handle);
+		if (res != GLOBUS_SUCCESS)
+		{
+		    res = GlobusXIOErrorWrapFailedWithMessage(res,
+		        "The XSP XIO driver failed to establish a connection%s",
+		        " to XSPd.");
+		    goto error_return;
+		    // this will try again for subsequent streams, if any
+		}
+
+		res = globus_l_xio_xsp_do_xfer_notify(handle, GLOBUS_XIO_XSP_NEW_XFER);
+		if (res != GLOBUS_SUCCESS)
+		{
+		    res = GlobusXIOErrorWrapFailedWithMessage(res,
+		        "The XSP XIO driver failed to send new xfer message to%s",
+		        " XSPd");
+		    goto error_return;
+		}
+	    }
+	    else
+	    {
+		// maybe we notify monitoring that another stream has been added?
+	    }
 	}
+	globus_mutex_unlock(&xio_l_xsp_mutex);
     }
-    globus_mutex_unlock(&xio_l_xsp_mutex);
 
  error_return:
     globus_xio_driver_finished_open(user_arg, op, result);
@@ -1099,7 +1212,8 @@ globus_l_xio_xsp_open(
     xio_l_xsp_handle_t *                cpy_handle;
     xio_l_xsp_handle_t *                handle = NULL;
     globus_result_t                     res;
-    char *                              cstring;
+    char                                hstring[1024];
+    int                                 hstrlen;
 
     /* first copy attr if we have it */
     if(driver_attr != NULL)
@@ -1124,19 +1238,37 @@ globus_l_xio_xsp_open(
     /* save the local contact info */
     globus_xio_contact_copy(handle->local_contact, contact_info);
 
-    /* see if there's already an active xfer for this contact string */
-    globus_xio_contact_info_to_string(contact_info, &cstring);
+    if (handle->stack == GLOBUS_XIO_XSP_NETSTACK)
+    {
+	if (contact_info->host && contact_info->port)
+	    sprintf(hstring, "%s:%s", contact_info->host, contact_info->port);
+	else
+	    hstring[0] = '\0';
+    }
+    else if (handle->stack == GLOBUS_XIO_XSP_FSSTACK)
+    {
+	if (contact_info->resource)
+	    sprintf(hstring, "%s:%d", contact_info->resource, (int)handle);
+	else
+	    hstring[0] = '\0';
+    }
+    else
+    {
+	hstring[0] = '\0';
+    }
 
-    if (cstring != NULL)
+    hstrlen = strlen(hstring);
+
+    if (hstrlen > 0)
     {
 	xfer_handle = (xio_l_xsp_xfer_t *) globus_hashtable_lookup(
-		         &xsp_l_xfer_table, cstring);
+		         &xsp_l_xfer_table, hstring);
 
 	if (xfer_handle == NULL)
 	{
 	    globus_l_xio_xsp_xfer_init((void**)&xfer_handle);
-	    xfer_handle->hash_str = cstring;
-	    globus_hashtable_insert(&xsp_l_xfer_table, cstring, xfer_handle);
+	    xfer_handle->hash_str = strdup(hstring);
+	    globus_hashtable_insert(&xsp_l_xfer_table, hstring, xfer_handle);
 	}
 	else
 	{
@@ -1148,11 +1280,15 @@ globus_l_xio_xsp_open(
 	handle->xfer = xfer_handle;
 	
 	/* setup the calipers */
-	globus_l_xio_xsp_caliper_init((void**)&(handle->o_caliper));
-	globus_l_xio_xsp_caliper_init((void**)&(handle->c_caliper));
-	globus_l_xio_xsp_caliper_init((void**)&(handle->r_caliper));
-	globus_l_xio_xsp_caliper_init((void**)&(handle->w_caliper));
-	globus_l_xio_xsp_caliper_init((void**)&(handle->a_caliper));
+	globus_l_xio_xsp_caliper_init((void**)&(handle->o_caliper), "nl.open.summary");
+	globus_l_xio_xsp_caliper_init((void**)&(handle->c_caliper), "nl.close.summary");
+	globus_l_xio_xsp_caliper_init((void**)&(handle->r_caliper), "nl.read.summary");
+	globus_l_xio_xsp_caliper_init((void**)&(handle->w_caliper), "nl.write.summary");
+	globus_l_xio_xsp_caliper_init((void**)&(handle->a_caliper), "nl.accept.summary");
+    }
+    else
+    {
+	handle->xfer = NULL;
     }
 
     res = globus_xio_driver_pass_open(
@@ -1179,29 +1315,39 @@ globus_l_xio_xsp_close_cb(
     GlobusXIOXSPDebugEnter();
     
     handle = (xio_l_xsp_handle_t *)user_arg;
-
-    globus_mutex_lock(&xio_l_xsp_mutex);
+    
+    if (handle->xfer)
     {
-	handle->xfer->streams--;
-
-	if ((handle->xfer->streams == 0) &&
-	    handle->xfer->xsp_connected)
+	globus_mutex_lock(&xio_l_xsp_mutex);
 	{
-	    res = globus_l_xio_xsp_do_xfer_notify(handle, GLOBUS_XIO_XSP_END_XFER);
-	    if (res != GLOBUS_SUCCESS)
+	    handle->xfer->streams--;
+	    
+	    if ((handle->xfer->streams == 0) &&
+		handle->xfer->xsp_connected)
 	    {
-		res = GlobusXIOErrorWrapFailedWithMessage(res,
-		     "The XSP XIO driver failed to send end xfer msg%s",
-		     " to XSPd.");
+		res = globus_l_xio_xsp_do_xfer_notify(handle, GLOBUS_XIO_XSP_END_XFER);
+		if (res != GLOBUS_SUCCESS)
+		{
+		    res = GlobusXIOErrorWrapFailedWithMessage(res,
+			"The XSP XIO driver failed to send end xfer msg%s",
+		        " to XSPd.");
+		}
+		done = GLOBUS_TRUE;
 	    }
-	    done = GLOBUS_TRUE;
+	    else
+	    {
+		// a stream in the active transfer has closed
+	    }
 	}
-	else
-	{
-	    // a stream in the active transfer has closed
-	}
+	globus_mutex_unlock(&xio_l_xsp_mutex);
+
+	/* free up the calipers */
+	globus_l_xio_xsp_caliper_destroy(handle->o_caliper);
+	globus_l_xio_xsp_caliper_destroy(handle->c_caliper);
+	globus_l_xio_xsp_caliper_destroy(handle->r_caliper);
+	globus_l_xio_xsp_caliper_destroy(handle->w_caliper);
+	globus_l_xio_xsp_caliper_destroy(handle->a_caliper);
     }
-    globus_mutex_unlock(&xio_l_xsp_mutex);
 
     /* XXX: need a better way to close the active xfer session */
     /* XXX: this waits a second to flush any pending xsp messages before closing */
@@ -1232,13 +1378,6 @@ globus_l_xio_xsp_close_cb(
 	globus_mutex_unlock(&xio_l_xsp_mutex);
     }
 
-    /* free up the calipers */
-    globus_l_xio_xsp_caliper_destroy(handle->o_caliper);
-    globus_l_xio_xsp_caliper_destroy(handle->c_caliper);
-    globus_l_xio_xsp_caliper_destroy(handle->r_caliper);
-    globus_l_xio_xsp_caliper_destroy(handle->w_caliper);
-    globus_l_xio_xsp_caliper_destroy(handle->a_caliper);
-
     globus_xio_driver_finished_close(op, result);
 
     GlobusXIOXSPDebugExit();
@@ -1257,20 +1396,18 @@ globus_l_xio_xsp_close(
     handle = (xio_l_xsp_handle_t *) driver_specific_handle;
 
     /* do a final summary before closing */
-    if (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_READ)
+    if (handle->xfer && (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_READ))
     {
 	if (handle->r_caliper->caliper->count > 0)
 	    globus_l_xio_xsp_do_nl_summary(handle,
-					   handle->r_caliper,
-					   "nl.read.summary");
+					   handle->r_caliper);
     }
     
-    if (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_WRITE)
+    if (handle->xfer && (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_WRITE))
     {
 	if (handle->w_caliper->caliper->count > 0)
 	    globus_l_xio_xsp_do_nl_summary(handle,
-					   handle->w_caliper,
-					   "nl.write.summary");
+					   handle->w_caliper);
     }
     
     res = globus_xio_driver_pass_close(
@@ -1295,7 +1432,7 @@ globus_l_xio_xsp_read_cb(
     double                              d;
 
     handle = (xio_l_xsp_handle_t *) user_arg;
-    if (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_READ)
+    if (handle->xfer && (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_READ))
     {
 	netlogger_calipers_end(handle->r_caliper->caliper, nbytes);
 	
@@ -1306,8 +1443,7 @@ globus_l_xio_xsp_read_cb(
 	if (sec >= handle->interval)
 	{
 	    globus_l_xio_xsp_do_nl_summary(handle,
-					   handle->r_caliper,
-					   "nl.read.summary");
+					   handle->r_caliper);
 	    GlobusTimeAbstimeGetCurrent(handle->r_caliper->ts);
 	}
     }
@@ -1328,7 +1464,7 @@ globus_l_xio_xsp_read(
     xio_l_xsp_handle_t *                handle;
 
     handle = (xio_l_xsp_handle_t *)driver_specific_handle;
-    if(handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_READ)
+    if(handle->xfer && (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_READ))
     {
 	netlogger_calipers_begin(handle->r_caliper->caliper);
     }
@@ -1358,7 +1494,7 @@ globus_l_xio_xsp_write_cb(
     GlobusXIOXSPDebugEnter();
 
     handle = (xio_l_xsp_handle_t *) user_arg;
-    if (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_WRITE)
+    if (handle->xfer && (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_WRITE))
     {
 	netlogger_calipers_end(handle->w_caliper->caliper, nbytes);
 	
@@ -1369,8 +1505,7 @@ globus_l_xio_xsp_write_cb(
 	if (sec >= handle->interval)
 	{
 	    globus_l_xio_xsp_do_nl_summary(handle,
-					   handle->w_caliper,
-					   "nl.write.summary");
+					   handle->w_caliper);
 	    GlobusTimeAbstimeGetCurrent(handle->w_caliper->ts);
 	}
     }
@@ -1392,7 +1527,7 @@ globus_l_xio_xsp_write(
     xio_l_xsp_handle_t *                handle;
 
     handle = (xio_l_xsp_handle_t *)driver_specific_handle;
-    if (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_WRITE)
+    if (handle->xfer && (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_WRITE))
     {
 	netlogger_calipers_begin(handle->w_caliper->caliper);
     }
