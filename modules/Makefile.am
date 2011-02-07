@@ -27,14 +27,16 @@ logger_syslog_la_LDFLAGS = -module -avoid-version -export-dynamic
 if ENABLE_NLMI
 modules_LTLIBRARIES += nlmi.la
 nlmi_la_SOURCES = xspd_nlmi.c
-nlmi_la_LDFLAGS = -module -avoid-version -export-dynamic
 nlmi_la_LIBADD = $(top_builddir)/libbson/libbson.a
 nlmi_la_CFLAGS = -DMONGO_HAVE_STDINT -I$(top_srcdir)/libbson
+nlmi_la_LDFLAGS = -module -avoid-version -export-dynamic
 endif
 
 if ENABLE_GLOBUS_XIO
 modules_LTLIBRARIES += globus_xio.la
 globus_xio_la_SOURCES = xspd_globus_xio.c
+globus_xio_la_LIBADD = $(top_builddir)/libbson/libbson.a
+globus_xio_la_CFLAGS = -DMONGO_HAVE_STDINT -I$(top_srcdir)/libbson
 globus_xio_la_LDFLAGS = -module -avoid-version -export-dynamic
 endif
 

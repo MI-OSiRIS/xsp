@@ -18,6 +18,7 @@
 #include "xspd_session.h"
 #include "xspd_conn.h"
 
+#include "bson.h"
 #include "option_types.h"
 #include "compat.h"
 
@@ -80,11 +81,27 @@ int xspd_globus_xio_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBlockH
 		break;
 	case GLOBUS_XIO_UPDATE_XFER:
 	        {
+		    /*
 		    char *tmp = malloc(block->length*sizeof(char)+1);
 		    memcpy(tmp, block->blob, block->length);
 		    tmp[block->length] = '\0';
 		    xspd_info(10, "NL UPDATE: %s\n", tmp);
 		    free(tmp);
+		    */
+
+		    bson *bpp;
+		    char *data;
+
+		    data = (char *)malloc(block->length);
+		    memcpy(data, block->blob, block->length);
+
+		    bpp = (bson *)malloc(sizeof(bson));
+		    bson_init(bpp, data, 1);
+		    
+		    bson_print(bpp);
+
+		    bson_destroy(bpp);
+
 		    *ret_block = NULL;
 		}
 		break;
