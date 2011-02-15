@@ -1,0 +1,2 @@
+wsdl2h -t WS-typemap.dat -c -s -o oscarsAPI.h http://192.168.1.20:8080/axis2/services/OSCARS?wsdl
+soapcpp2 -I import/ -t -c -C -x -n oscarsAPI.h
