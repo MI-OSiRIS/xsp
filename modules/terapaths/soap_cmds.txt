@@ -1,0 +1,2 @@
+wsdl2h -z1 -c -o tpsAPI.h tpsAPI.wsdl 
+soapcpp2 -c -C -x -n -ptps tpsAPI.h
