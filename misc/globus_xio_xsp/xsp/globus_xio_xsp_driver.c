@@ -279,6 +279,7 @@ globus_l_xio_xsp_append_nl_meta(
     globus_abstime_t                    now;
     double                              ts;
     int                                 sec, usec;
+    char                                portstr[12];
 
     GlobusTimeAbstimeGetCurrent(now);
     GlobusTimeAbstimeGet(now, sec, usec);
@@ -301,7 +302,10 @@ globus_l_xio_xsp_append_nl_meta(
     bson_append_start_object(bb, "subject");
     if (handle->stack == GLOBUS_XIO_XSP_NETSTACK)
     {
-	bson_append_int(bb, "stream_id", (int)handle);
+      sprintf(portstr, "%s:%s", handle->local_contact->port,
+		handle->remote_contact->port);
+	portstr[strlen(portstr)] = '\0';
+	bson_append_string(bb, "stream_id", portstr);
     }
     bson_append_finish_object(bb);
 
@@ -1098,8 +1102,10 @@ globus_l_xio_xsp_open_cb(
     globus_result_t                     result,
     void *                              user_arg)
 {
+    xio_l_xsp_xfer_t *                  xfer_handle;
     xio_l_xsp_handle_t *                handle;
     globus_result_t                     res;
+    char                                hstring[1024];
 
     GlobusXIOName(globus_l_xio_xsp_open_cb);
     GlobusXIOXSPDebugEnter();
@@ -1123,6 +1129,45 @@ globus_l_xio_xsp_open_cb(
 	{
 	    result = GlobusXIOErrorWrapFailed("Could not get contact info for handle.", res);
 	    goto error_return;
+	}
+
+	//printf("LOCAL CONTACT INFO: %s:%s\n", handle->local_contact->host,
+	//       handle->local_contact->port);
+	//printf("REMOTE CONTACT INFO: %s:%s\n", handle->remote_contact->host,
+	//       handle->remote_contact->port);
+
+	/***
+	   contact info in open() is not always populated on some systems
+	   XXX: why?
+	   so we set things up here after we can get the remote contact info
+	   XXX: refactor so we don't duplicate what happens in open()
+	***/
+	if (handle->xfer == NULL)
+	{
+	  //sprintf(hstring, "%s:%s", handle->remote_contact->host,
+	  //        handle->remote_contact->port);
+	  sprintf(hstring, "%s", handle->remote_contact->host);
+
+	  xfer_handle = (xio_l_xsp_xfer_t *) globus_hashtable_lookup(
+		                               &xsp_l_xfer_table, hstring);
+
+	  if (xfer_handle == NULL)
+	    {
+	      globus_l_xio_xsp_xfer_init((void**)&xfer_handle);
+	      xfer_handle->hash_str = strdup(hstring);
+	      globus_hashtable_insert(&xsp_l_xfer_table, hstring, xfer_handle);
+	    }
+	  else
+	    {
+	    }
+	  
+	  handle->xfer = xfer_handle;
+	  
+	  globus_l_xio_xsp_caliper_init((void**)&(handle->o_caliper), "nl.open.summary");
+	  globus_l_xio_xsp_caliper_init((void**)&(handle->c_caliper), "nl.close.summary");
+	  globus_l_xio_xsp_caliper_init((void**)&(handle->r_caliper), "nl.read.summary");
+	  globus_l_xio_xsp_caliper_init((void**)&(handle->w_caliper), "nl.write.summary");
+	  globus_l_xio_xsp_caliper_init((void**)&(handle->a_caliper), "nl.accept.summary");
 	}
     }
     else if (handle->stack == GLOBUS_XIO_XSP_FSSTACK)
@@ -1241,7 +1286,10 @@ globus_l_xio_xsp_open(
     if (handle->stack == GLOBUS_XIO_XSP_NETSTACK)
     {
 	if (contact_info->host && contact_info->port)
-	    sprintf(hstring, "%s:%s", contact_info->host, contact_info->port);
+	{
+	    //sprintf(hstring, "%s:%s", contact_info->host, contact_info->port);
+	    sprintf(hstring, "%s", contact_info->host);
+	}
 	else
 	    hstring[0] = '\0';
     }
@@ -1258,6 +1306,8 @@ globus_l_xio_xsp_open(
     }
 
     hstrlen = strlen(hstring);
+
+    //printf("CONTACT_INFO: %s [%d]\n", hstring, hstrlen);
 
     if (hstrlen > 0)
     {
@@ -1396,6 +1446,7 @@ globus_l_xio_xsp_close(
     handle = (xio_l_xsp_handle_t *) driver_specific_handle;
 
     /* do a final summary before closing */
+    /*
     if (handle->xfer && (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_READ))
     {
 	if (handle->r_caliper->caliper->count > 0)
@@ -1409,7 +1460,8 @@ globus_l_xio_xsp_close(
 	    globus_l_xio_xsp_do_nl_summary(handle,
 					   handle->w_caliper);
     }
-    
+    */
+
     res = globus_xio_driver_pass_close(
         op, globus_l_xio_xsp_close_cb, handle);
     return res;
