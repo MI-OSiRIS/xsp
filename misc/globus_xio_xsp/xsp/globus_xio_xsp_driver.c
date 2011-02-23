@@ -1147,15 +1147,16 @@ globus_l_xio_xsp_open_cb(
 	  //sprintf(hstring, "%s:%s", handle->remote_contact->host,
 	  //        handle->remote_contact->port);
 	  sprintf(hstring, "%s", handle->remote_contact->host);
+	  hstring[strlen(hstring)] = '\0';
 
 	  xfer_handle = (xio_l_xsp_xfer_t *) globus_hashtable_lookup(
 		                               &xsp_l_xfer_table, hstring);
 
 	  if (xfer_handle == NULL)
-	    {
+	  {
 	      globus_l_xio_xsp_xfer_init((void**)&xfer_handle);
 	      xfer_handle->hash_str = strdup(hstring);
-	      globus_hashtable_insert(&xsp_l_xfer_table, hstring, xfer_handle);
+	      globus_hashtable_insert(&xsp_l_xfer_table, xfer_handle->hash_str, xfer_handle);
 	    }
 	  else
 	    {
@@ -1307,18 +1308,21 @@ globus_l_xio_xsp_open(
 
     hstrlen = strlen(hstring);
 
-    //printf("CONTACT_INFO: %s [%d]\n", hstring, hstrlen);
-
     if (hstrlen > 0)
     {
+        hstring[hstrlen] = '\0';
+	
+	//printf("CONTACT_INFO: %s [%d]\n", hstring, hstrlen);
+
 	xfer_handle = (xio_l_xsp_xfer_t *) globus_hashtable_lookup(
 		         &xsp_l_xfer_table, hstring);
 
 	if (xfer_handle == NULL)
 	{
+	    //printf("NEW XFER HANDLE\n");
 	    globus_l_xio_xsp_xfer_init((void**)&xfer_handle);
 	    xfer_handle->hash_str = strdup(hstring);
-	    globus_hashtable_insert(&xsp_l_xfer_table, hstring, xfer_handle);
+	    globus_hashtable_insert(&xsp_l_xfer_table, xfer_handle->hash_str, xfer_handle);
 	}
 	else
 	{
