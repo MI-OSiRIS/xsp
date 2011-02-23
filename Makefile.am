@@ -16,6 +16,6 @@ if ENABLE_CLIENT
 libdirs += libradix libxsp_client
 endif
 
-bindirs += modules modules/oscars
+bindirs += modules
 
 SUBDIRS = $(libdirs) $(bindirs)
