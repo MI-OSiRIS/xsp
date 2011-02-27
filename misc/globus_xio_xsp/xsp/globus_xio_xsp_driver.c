@@ -113,7 +113,7 @@ typedef struct xio_l_xsp_handle_s
     globus_xio_contact_t *              remote_contact;
     globus_xio_driver_handle_t          xio_driver_handle;
     
-    unsigned int                        filesize;
+    uint64_t                            filesize;
 
     int                                 stack;
     char *                              xsp_hop;
@@ -355,7 +355,7 @@ globus_l_xio_xsp_append_xfer_meta(
     {
 	bson_append_string(bb, "type", "disk");
 	bson_append_string(bb, "resource", handle->local_contact->resource);
-	bson_append_int(bb, "size", handle->filesize);
+	bson_append_long(bb, "size", handle->filesize);
     }
     
     /* add all the other driver opts if given*/
@@ -1196,7 +1196,7 @@ globus_l_xio_xsp_open_cb(
 	}
 	else
 	{
-	    handle->filesize = buf.st_size;
+	  handle->filesize = (uint64_t)buf.st_size;
 	}
     }
 
