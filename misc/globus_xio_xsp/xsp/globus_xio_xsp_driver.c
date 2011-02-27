@@ -50,6 +50,9 @@ GlobusXIODeclareDriver(xsp);
         GLOBUS_XIO_XSP_DEBUG_TRACE,                              \
 	("[%s] Exiting with error\n", _xio_name))
 
+/* convenience macro that computes E - S, where E and S are type struct timeval, in seconds */
+#define SUBTRACT_TV(E,S) (((E).tv_sec - (S).tv_sec) + ((E).tv_usec - (S).tv_usec)/1e6)
+
 typedef enum
 {
     GLOBUS_XIO_XSP_DEBUG_ERROR = 1,
@@ -110,7 +113,7 @@ typedef struct xio_l_xsp_handle_s
     globus_xio_contact_t *              remote_contact;
     globus_xio_driver_handle_t          xio_driver_handle;
     
-    long                                filesize;
+    unsigned int                        filesize;
 
     int                                 stack;
     char *                              xsp_hop;
@@ -398,6 +401,7 @@ globus_l_xio_xsp_do_nl_summary(
 
     if (handle->xfer->xsp_connected == GLOBUS_FALSE)
     {
+        printf("NL_UPDATE: XSP not connected!\n");
 	result = -1;
 	goto error;
     }
@@ -417,8 +421,8 @@ globus_l_xio_xsp_do_nl_summary(
     bson_append_start_array(&bb, "meta");
     if (c->s_count == 0)
     {	
-	//globus_l_xio_xsp_append_xfer_meta(&bb, handle, "0");
-	globus_l_xio_xsp_append_nl_meta(&bb, handle, c->event, "1");
+      	//globus_l_xio_xsp_append_xfer_meta(&bb, handle, "0");
+        globus_l_xio_xsp_append_nl_meta(&bb, handle, c->event, "0");
     }
     bson_append_finish_object(&bb);
 
@@ -445,7 +449,6 @@ globus_l_xio_xsp_do_nl_summary(
 	(void*)args);
 
 #if 0
-
     log_event = netlogger_calipers_log(c->caliper, c->event);
     if (log_event == NULL)
     {
@@ -525,6 +528,7 @@ globus_l_xio_xsp_do_xfer_notify(
 
     if (handle->xfer->xsp_connected == GLOBUS_FALSE)
     {
+        printf("NOTIFY: XSP not connected!\n");
 	result = -1;
 	goto error;
     }
@@ -1379,6 +1383,7 @@ globus_l_xio_xsp_close_cb(
 	    if ((handle->xfer->streams == 0) &&
 		handle->xfer->xsp_connected)
 	    {
+	      /*
 		res = globus_l_xio_xsp_do_xfer_notify(handle, GLOBUS_XIO_XSP_END_XFER);
 		if (res != GLOBUS_SUCCESS)
 		{
@@ -1387,6 +1392,7 @@ globus_l_xio_xsp_close_cb(
 		        " to XSPd.");
 		}
 		done = GLOBUS_TRUE;
+	      */
 	    }
 	    else
 	    {
@@ -1491,12 +1497,15 @@ globus_l_xio_xsp_read_cb(
     if (handle->xfer && (handle->log_flag & GLOBUS_XIO_XSP_NL_LOG_READ))
     {
 	netlogger_calipers_end(handle->r_caliper->caliper, nbytes);
-	
-	GlobusTimeAbstimeGetCurrent(curr_time);
-	GlobusTimeAbstimeDiff(diff, handle->r_caliper->ts, curr_time);
-	GlobusTimeReltimeGet(diff, sec, usec);
 
-	if (sec >= handle->interval)
+	/* we can avoid these Globus macros given the caliper timestamps */
+	//GlobusTimeAbstimeGetCurrent(curr_time);
+	//GlobusTimeAbstimeDiff(diff, handle->r_caliper->ts, curr_time);
+	//GlobusTimeReltimeGet(diff, sec, usec);
+
+	if (SUBTRACT_TV(handle->r_caliper->caliper->end,
+			handle->r_caliper->caliper->first)
+	    >= handle->interval )
 	{
 	    globus_l_xio_xsp_do_nl_summary(handle,
 					   handle->r_caliper);
@@ -1554,11 +1563,14 @@ globus_l_xio_xsp_write_cb(
     {
 	netlogger_calipers_end(handle->w_caliper->caliper, nbytes);
 	
-	GlobusTimeAbstimeGetCurrent(curr_time);
-	GlobusTimeAbstimeDiff(diff, handle->w_caliper->ts, curr_time);
-	GlobusTimeReltimeGet(diff, sec, usec);
+	/* we can avoid these Globus macros given the caliper timestamps */
+	//GlobusTimeAbstimeGetCurrent(curr_time);
+	//GlobusTimeAbstimeDiff(diff, handle->w_caliper->ts, curr_time);
+	//GlobusTimeReltimeGet(diff, sec, usec);
 	
-	if (sec >= handle->interval)
+	if (SUBTRACT_TV(handle->w_caliper->caliper->end,
+			handle->w_caliper->caliper->first)
+	    >= handle->interval )
 	{
 	    globus_l_xio_xsp_do_nl_summary(handle,
 					   handle->w_caliper);
