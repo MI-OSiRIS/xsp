@@ -1509,7 +1509,7 @@ globus_l_xio_xsp_read_cb(
 	{
 	    globus_l_xio_xsp_do_nl_summary(handle,
 					   handle->r_caliper);
-	    GlobusTimeAbstimeGetCurrent(handle->r_caliper->ts);
+	    //GlobusTimeAbstimeGetCurrent(handle->r_caliper->ts);
 	}
     }
     
@@ -1574,7 +1574,7 @@ globus_l_xio_xsp_write_cb(
 	{
 	    globus_l_xio_xsp_do_nl_summary(handle,
 					   handle->w_caliper);
-	    GlobusTimeAbstimeGetCurrent(handle->w_caliper->ts);
+	    //GlobusTimeAbstimeGetCurrent(handle->w_caliper->ts);
 	}
     }
     
