@@ -709,7 +709,8 @@ globus_l_xio_xsp_attr_init(
     attr->size = 0;
     attr->log_flag = 0;
     attr->interval = 5;
-
+    attr->id = NULL;
+    
     attr->local_contact = globus_calloc(1, sizeof(globus_xio_contact_t));
     attr->remote_contact = globus_calloc(1, sizeof(globus_xio_contact_t));
 
@@ -789,10 +790,11 @@ globus_l_xio_xsp_attr_copy(
 	dst_attr->resource = strdup(src_attr->resource);
     }
 
-    if (src_attr->id)
-    {
-	dst_attr->id = strdup(src_attr->id);
-    }
+    /* XXX: don't replace the unique handle ID that was just generated! */
+    //if (src_attr->id)
+    //{
+    //  dst_attr->id = strdup(src_attr->id);
+    //}
 
     // only pointer to same xfer struct
     if (src_attr->xfer)
@@ -1535,6 +1537,7 @@ globus_l_xio_xsp_read(
     }
 
     wait_for = globus_xio_operation_get_wait_for(op);
+    //wait_for = GlobusXIOOperationMinimumRead(op);
     res = globus_xio_driver_pass_read(
         op, (globus_xio_iovec_t *)iovec, iovec_count, wait_for,
         globus_l_xio_xsp_read_cb, handle);
@@ -1601,6 +1604,7 @@ globus_l_xio_xsp_write(
     }
 
     wait_for = globus_xio_operation_get_wait_for(op);
+    //wait_for = GlobusXIOOperationMinimumWrite(op);
     res = globus_xio_driver_pass_write(
 	op, (globus_xio_iovec_t *)iovec, iovec_count, wait_for,
         globus_l_xio_xsp_write_cb, handle);
