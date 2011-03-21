@@ -51,8 +51,22 @@ enum _wsa5__IsReferenceParameter {wsa5__false = 0, wsa5__true = 1};
 typedef enum _wsa5__IsReferenceParameter _wsa5__IsReferenceParameter;
 #endif
 
+#ifndef SOAP_TYPE_wsu__tTimestampFault
+#define SOAP_TYPE_wsu__tTimestampFault (40)
+/* wsu:tTimestampFault */
+enum wsu__tTimestampFault {wsu__MessageExpired = 0};
+typedef enum wsu__tTimestampFault wsu__tTimestampFault;
+#endif
+
+#ifndef SOAP_TYPE_wsse__FaultcodeEnum
+#define SOAP_TYPE_wsse__FaultcodeEnum (42)
+/* wsse:FaultcodeEnum */
+enum wsse__FaultcodeEnum {wsse__UnsupportedSecurityToken = 0, wsse__UnsupportedAlgorithm = 1, wsse__InvalidSecurity = 2, wsse__InvalidSecurityToken = 3, wsse__FailedAuthentication = 4, wsse__FailedCheck = 5, wsse__SecurityTokenUnavailable = 6};
+typedef enum wsse__FaultcodeEnum wsse__FaultcodeEnum;
+#endif
+
 #ifndef SOAP_TYPE_xsd__boolean_
-#define SOAP_TYPE_xsd__boolean_ (40)
+#define SOAP_TYPE_xsd__boolean_ (121)
 /* xsd:boolean */
 enum xsd__boolean_ {_false = 0, _true = 1};
 #endif
@@ -152,13 +166,494 @@ struct SOAP_ENV__Header
 	struct wsa5__EndpointReferenceType *wsa5__FaultTo;	/* mustUnderstand */
 	char *wsa5__To;	/* mustUnderstand */
 	char *wsa5__Action;	/* mustUnderstand */
+	struct _wsse__Security *wsse__Security;	/* mustUnderstand */
 };
 #endif
 
 #endif
 
+#ifndef SOAP_TYPE__wsu__Timestamp
+#define SOAP_TYPE__wsu__Timestamp (41)
+/* wsu:Timestamp */
+struct _wsu__Timestamp
+{
+	char *wsu__Id;	/* optional attribute of type xsd:string */
+	char *Created;	/* optional element of type xsd:string */
+	char *Expires;	/* optional element of type xsd:string */
+};
+typedef struct _wsu__Timestamp _wsu__Timestamp;
+#endif
+
+#ifndef SOAP_TYPE__wsse__UsernameToken
+#define SOAP_TYPE__wsse__UsernameToken (43)
+/* wsse:UsernameToken */
+struct _wsse__UsernameToken
+{
+	char *Username;	/* optional element of type xsd:string */
+	struct _wsse__Password *Password;	/* optional element of type wsse:Password */
+	char *Nonce;	/* optional element of type xsd:string */
+	char *wsu__Created;	/* optional element of type xsd:string */
+	char *wsu__Id;	/* optional attribute of type xsd:string */
+};
+typedef struct _wsse__UsernameToken _wsse__UsernameToken;
+#endif
+
+#ifndef SOAP_TYPE__wsse__BinarySecurityToken
+#define SOAP_TYPE__wsse__BinarySecurityToken (46)
+/* Primitive wsse:BinarySecurityToken schema type: */
+struct _wsse__BinarySecurityToken
+{
+	char *__item;
+	char *wsu__Id;	/* optional attribute of type xsd:string */
+	char *ValueType;	/* optional attribute of type xsd:string */
+	char *EncodingType;	/* optional attribute of type xsd:string */
+};
+typedef struct _wsse__BinarySecurityToken _wsse__BinarySecurityToken;
+#endif
+
+#ifndef SOAP_TYPE__wsse__Reference
+#define SOAP_TYPE__wsse__Reference (47)
+/* wsse:Reference */
+struct _wsse__Reference
+{
+	char *URI;	/* optional attribute of type xsd:string */
+	char *ValueType;	/* optional attribute of type xsd:string */
+};
+typedef struct _wsse__Reference _wsse__Reference;
+#endif
+
+#ifndef SOAP_TYPE__wsse__Embedded
+#define SOAP_TYPE__wsse__Embedded (48)
+/* wsse:Embedded */
+struct _wsse__Embedded
+{
+	char *wsu__Id;	/* optional attribute of type xsd:string */
+	char *ValueType;	/* optional attribute of type xsd:string */
+};
+typedef struct _wsse__Embedded _wsse__Embedded;
+#endif
+
+#ifndef SOAP_TYPE__wsse__KeyIdentifier
+#define SOAP_TYPE__wsse__KeyIdentifier (49)
+/* Primitive wsse:KeyIdentifier schema type: */
+struct _wsse__KeyIdentifier
+{
+	char *__item;
+	char *wsu__Id;	/* optional attribute of type xsd:string */
+	char *ValueType;	/* optional attribute of type xsd:string */
+	char *EncodingType;	/* optional attribute of type xsd:string */
+};
+typedef struct _wsse__KeyIdentifier _wsse__KeyIdentifier;
+#endif
+
+#ifndef SOAP_TYPE__wsse__SecurityTokenReference
+#define SOAP_TYPE__wsse__SecurityTokenReference (50)
+/* wsse:SecurityTokenReference */
+struct _wsse__SecurityTokenReference
+{
+	struct _wsse__Reference *Reference;	/* optional element of type wsse:Reference */
+	struct _wsse__KeyIdentifier *KeyIdentifier;	/* optional element of type wsse:KeyIdentifier */
+	struct _wsse__Embedded *Embedded;	/* optional element of type wsse:Embedded */
+	char *wsu__Id;	/* optional attribute of type xsd:string */
+	char *Usage;	/* optional attribute of type xsd:string */
+};
+typedef struct _wsse__SecurityTokenReference _wsse__SecurityTokenReference;
+#endif
+
+#ifndef SOAP_TYPE_ds__SignatureType
+#define SOAP_TYPE_ds__SignatureType (54)
+/* ds:SignatureType */
+struct ds__SignatureType
+{
+	struct ds__SignedInfoType *SignedInfo;	/* optional element of type ds:SignedInfoType */
+	char *SignatureValue;	/* optional element of type xsd:string */
+	struct ds__KeyInfoType *KeyInfo;	/* optional element of type ds:KeyInfoType */
+	char *Id;	/* optional attribute of type xsd:string */
+};
+typedef struct ds__SignatureType ds__SignatureType;
+#endif
+
+#ifndef SOAP_TYPE__c14n__InclusiveNamespaces
+#define SOAP_TYPE__c14n__InclusiveNamespaces (64)
+/* c14n:InclusiveNamespaces */
+struct _c14n__InclusiveNamespaces
+{
+	char *PrefixList;	/* optional attribute of type xsd:string */
+};
+typedef struct _c14n__InclusiveNamespaces _c14n__InclusiveNamespaces;
+#endif
+
+#ifndef SOAP_TYPE_ds__TransformType
+#define SOAP_TYPE_ds__TransformType (65)
+/* ds:TransformType */
+struct ds__TransformType
+{
+	struct _c14n__InclusiveNamespaces *c14n__InclusiveNamespaces;	/* optional element of type c14n:InclusiveNamespaces */
+	char *__any;
+	char *Algorithm;	/* optional attribute of type xsd:string */
+};
+typedef struct ds__TransformType ds__TransformType;
+#endif
+
+#ifndef SOAP_TYPE_ds__KeyInfoType
+#define SOAP_TYPE_ds__KeyInfoType (57)
+/* ds:KeyInfoType */
+struct ds__KeyInfoType
+{
+	char *KeyName;	/* optional element of type xsd:string */
+	struct ds__KeyValueType *KeyValue;	/* optional element of type ds:KeyValueType */
+	struct ds__RetrievalMethodType *RetrievalMethod;	/* optional element of type ds:RetrievalMethodType */
+	struct ds__X509DataType *X509Data;	/* optional element of type ds:X509DataType */
+	struct _wsse__SecurityTokenReference *wsse__SecurityTokenReference;	/* optional element of type wsse:SecurityTokenReference */
+	char *Id;	/* optional attribute of type xsd:string */
+};
+typedef struct ds__KeyInfoType ds__KeyInfoType;
+#endif
+
+#ifndef SOAP_TYPE_ds__SignedInfoType
+#define SOAP_TYPE_ds__SignedInfoType (55)
+/* ds:SignedInfoType */
+struct ds__SignedInfoType
+{
+	struct ds__CanonicalizationMethodType *CanonicalizationMethod;	/* required element of type ds:CanonicalizationMethodType */
+	struct ds__SignatureMethodType *SignatureMethod;	/* required element of type ds:SignatureMethodType */
+	int __sizeReference;	/* sequence of elements <Reference> */
+	struct ds__ReferenceType **Reference;	/* required element of type ds:ReferenceType */
+	char *Id;	/* optional attribute of type xsd:string */
+};
+typedef struct ds__SignedInfoType ds__SignedInfoType;
+#endif
+
+#ifndef SOAP_TYPE_ds__CanonicalizationMethodType
+#define SOAP_TYPE_ds__CanonicalizationMethodType (60)
+/* ds:CanonicalizationMethodType */
+struct ds__CanonicalizationMethodType
+{
+	char *Algorithm;	/* required attribute of type xsd:string */
+	struct _c14n__InclusiveNamespaces *c14n__InclusiveNamespaces;	/* optional element of type c14n:InclusiveNamespaces */
+};
+typedef struct ds__CanonicalizationMethodType ds__CanonicalizationMethodType;
+#endif
+
+#ifndef SOAP_TYPE_ds__SignatureMethodType
+#define SOAP_TYPE_ds__SignatureMethodType (61)
+/* ds:SignatureMethodType */
+struct ds__SignatureMethodType
+{
+	int *HMACOutputLength;	/* optional element of type xsd:int */
+	char *Algorithm;	/* required attribute of type xsd:string */
+};
+typedef struct ds__SignatureMethodType ds__SignatureMethodType;
+#endif
+
+#ifndef SOAP_TYPE_ds__ReferenceType
+#define SOAP_TYPE_ds__ReferenceType (62)
+/* ds:ReferenceType */
+struct ds__ReferenceType
+{
+	struct ds__TransformsType *Transforms;	/* optional element of type ds:TransformsType */
+	struct ds__DigestMethodType *DigestMethod;	/* required element of type ds:DigestMethodType */
+	char *DigestValue;	/* required element of type xsd:string */
+	char *Id;	/* optional attribute of type xsd:string */
+	char *URI;	/* optional attribute of type xsd:string */
+	char *Type;	/* optional attribute of type xsd:string */
+};
+typedef struct ds__ReferenceType ds__ReferenceType;
+#endif
+
+#ifndef SOAP_TYPE_ds__TransformsType
+#define SOAP_TYPE_ds__TransformsType (63)
+/* ds:TransformsType */
+struct ds__TransformsType
+{
+	int __sizeTransform;	/* sequence of elements <Transform> */
+	struct ds__TransformType *Transform;	/* required element of type ds:TransformType */
+};
+typedef struct ds__TransformsType ds__TransformsType;
+#endif
+
+#ifndef SOAP_TYPE_ds__DigestMethodType
+#define SOAP_TYPE_ds__DigestMethodType (68)
+/* ds:DigestMethodType */
+struct ds__DigestMethodType
+{
+	char *Algorithm;	/* required attribute of type xsd:string */
+};
+typedef struct ds__DigestMethodType ds__DigestMethodType;
+#endif
+
+#ifndef SOAP_TYPE_ds__KeyValueType
+#define SOAP_TYPE_ds__KeyValueType (69)
+/* ds:KeyValueType */
+struct ds__KeyValueType
+{
+	struct ds__DSAKeyValueType *DSAKeyValue;	/* required element of type ds:DSAKeyValueType */
+	struct ds__RSAKeyValueType *RSAKeyValue;	/* required element of type ds:RSAKeyValueType */
+};
+typedef struct ds__KeyValueType ds__KeyValueType;
+#endif
+
+#ifndef SOAP_TYPE_ds__RetrievalMethodType
+#define SOAP_TYPE_ds__RetrievalMethodType (71)
+/* ds:RetrievalMethodType */
+struct ds__RetrievalMethodType
+{
+	struct ds__TransformsType *Transforms;	/* optional element of type ds:TransformsType */
+	char *URI;	/* optional attribute of type xsd:string */
+	char *Type;	/* optional attribute of type xsd:string */
+};
+typedef struct ds__RetrievalMethodType ds__RetrievalMethodType;
+#endif
+
+#ifndef SOAP_TYPE_ds__X509DataType
+#define SOAP_TYPE_ds__X509DataType (73)
+/* ds:X509DataType */
+struct ds__X509DataType
+{
+	struct ds__X509IssuerSerialType *X509IssuerSerial;	/* required element of type ds:X509IssuerSerialType */
+	char *X509SKI;	/* required element of type xsd:string */
+	char *X509SubjectName;	/* required element of type xsd:string */
+	char *X509Certificate;	/* required element of type xsd:string */
+	char *X509CRL;	/* required element of type xsd:string */
+};
+typedef struct ds__X509DataType ds__X509DataType;
+#endif
+
+#ifndef SOAP_TYPE_ds__X509IssuerSerialType
+#define SOAP_TYPE_ds__X509IssuerSerialType (77)
+/* ds:X509IssuerSerialType */
+struct ds__X509IssuerSerialType
+{
+	char *X509IssuerName;	/* required element of type xsd:string */
+	int X509SerialNumber;	/* required element of type xsd:int */
+};
+typedef struct ds__X509IssuerSerialType ds__X509IssuerSerialType;
+#endif
+
+#ifndef SOAP_TYPE_ds__DSAKeyValueType
+#define SOAP_TYPE_ds__DSAKeyValueType (78)
+/* ds:DSAKeyValueType */
+struct ds__DSAKeyValueType
+{
+	char *G;	/* optional element of type xsd:string */
+	char *Y;	/* required element of type xsd:string */
+	char *J;	/* optional element of type xsd:string */
+	char *P;	/* required element of type xsd:string */
+	char *Q;	/* required element of type xsd:string */
+	char *Seed;	/* required element of type xsd:string */
+	char *PgenCounter;	/* required element of type xsd:string */
+};
+typedef struct ds__DSAKeyValueType ds__DSAKeyValueType;
+#endif
+
+#ifndef SOAP_TYPE_ds__RSAKeyValueType
+#define SOAP_TYPE_ds__RSAKeyValueType (79)
+/* ds:RSAKeyValueType */
+struct ds__RSAKeyValueType
+{
+	char *Modulus;	/* required element of type xsd:string */
+	char *Exponent;	/* required element of type xsd:string */
+};
+typedef struct ds__RSAKeyValueType ds__RSAKeyValueType;
+#endif
+
+#ifndef SOAP_TYPE_xenc__EncryptionPropertyType
+#define SOAP_TYPE_xenc__EncryptionPropertyType (101)
+/* xenc:EncryptionPropertyType */
+struct xenc__EncryptionPropertyType
+{
+	char *Target;	/* optional attribute of type xsd:string */
+	char *Id;	/* optional attribute of type xsd:string */
+};
+typedef struct xenc__EncryptionPropertyType xenc__EncryptionPropertyType;
+#endif
+
+#ifndef SOAP_TYPE_xenc__EncryptedType
+#define SOAP_TYPE_xenc__EncryptedType (91)
+/* xenc:EncryptedType */
+struct xenc__EncryptedType
+{
+	struct xenc__EncryptionMethodType *EncryptionMethod;	/* optional element of type xenc:EncryptionMethodType */
+	struct ds__KeyInfoType *ds__KeyInfo;	/* optional element of type ds:KeyInfo */
+	struct xenc__CipherDataType *CipherData;	/* required element of type xenc:CipherDataType */
+	struct xenc__EncryptionPropertiesType *EncryptionProperties;	/* optional element of type xenc:EncryptionPropertiesType */
+	char *Id;	/* optional attribute of type xsd:string */
+	char *Type;	/* optional attribute of type xsd:string */
+	char *MimeType;	/* optional attribute of type xsd:string */
+	char *Encoding;	/* optional attribute of type xsd:string */
+};
+typedef struct xenc__EncryptedType xenc__EncryptedType;
+#endif
+
+#ifndef SOAP_TYPE_xenc__EncryptionMethodType
+#define SOAP_TYPE_xenc__EncryptionMethodType (92)
+/* xenc:EncryptionMethodType */
+struct xenc__EncryptionMethodType
+{
+	int *KeySize;	/* optional element of type xsd:int */
+	char *OAEPparams;	/* optional element of type xsd:string */
+	char *Algorithm;	/* required attribute of type xsd:string */
+	char *__mixed;
+};
+typedef struct xenc__EncryptionMethodType xenc__EncryptionMethodType;
+#endif
+
+#ifndef SOAP_TYPE_xenc__CipherDataType
+#define SOAP_TYPE_xenc__CipherDataType (93)
+/* xenc:CipherDataType */
+struct xenc__CipherDataType
+{
+	char *CipherValue;	/* optional element of type xsd:string */
+	struct xenc__CipherReferenceType *CipherReference;	/* optional element of type xenc:CipherReferenceType */
+};
+typedef struct xenc__CipherDataType xenc__CipherDataType;
+#endif
+
+#ifndef SOAP_TYPE_xenc__CipherReferenceType
+#define SOAP_TYPE_xenc__CipherReferenceType (94)
+/* xenc:CipherReferenceType */
+struct xenc__CipherReferenceType
+{
+	struct xenc__TransformsType *Transforms;	/* optional element of type xenc:TransformsType */
+	char *URI;	/* required attribute of type xsd:string */
+};
+typedef struct xenc__CipherReferenceType xenc__CipherReferenceType;
+#endif
+
+#ifndef SOAP_TYPE_xenc__TransformsType
+#define SOAP_TYPE_xenc__TransformsType (95)
+/* xenc:TransformsType */
+struct xenc__TransformsType
+{
+	struct ds__TransformType ds__Transform;	/* required element of type ds:Transform */
+};
+typedef struct xenc__TransformsType xenc__TransformsType;
+#endif
+
+#ifndef SOAP_TYPE_xenc__AgreementMethodType
+#define SOAP_TYPE_xenc__AgreementMethodType (98)
+/* xenc:AgreementMethodType */
+struct xenc__AgreementMethodType
+{
+	char *KA_Nonce;	/* optional element of type xsd:string */
+	struct ds__KeyInfoType *OriginatorKeyInfo;	/* optional element of type ds:KeyInfoType */
+	struct ds__KeyInfoType *RecipientKeyInfo;	/* optional element of type ds:KeyInfoType */
+	char *Algorithm;	/* required attribute of type xsd:string */
+	char *__mixed;
+};
+typedef struct xenc__AgreementMethodType xenc__AgreementMethodType;
+#endif
+
+#ifndef SOAP_TYPE_xenc__ReferenceType
+#define SOAP_TYPE_xenc__ReferenceType (99)
+/* xenc:ReferenceType */
+struct xenc__ReferenceType
+{
+	char *URI;	/* required attribute of type xsd:string */
+};
+typedef struct xenc__ReferenceType xenc__ReferenceType;
+#endif
+
+#ifndef SOAP_TYPE_xenc__EncryptionPropertiesType
+#define SOAP_TYPE_xenc__EncryptionPropertiesType (100)
+/* xenc:EncryptionPropertiesType */
+struct xenc__EncryptionPropertiesType
+{
+	int __sizeEncryptionProperty;	/* sequence of elements <EncryptionProperty> */
+	struct xenc__EncryptionPropertyType *EncryptionProperty;	/* required element of type xenc:EncryptionPropertyType */
+	char *Id;	/* optional attribute of type xsd:string */
+};
+typedef struct xenc__EncryptionPropertiesType xenc__EncryptionPropertiesType;
+#endif
+
+#ifndef SOAP_TYPE___xenc__union_ReferenceList
+#define SOAP_TYPE___xenc__union_ReferenceList (110)
+/* Operation wrapper: */
+struct __xenc__union_ReferenceList
+{
+	struct xenc__ReferenceType *DataReference;	/* optional element of type xenc:ReferenceType */
+	struct xenc__ReferenceType *KeyReference;	/* optional element of type xenc:ReferenceType */
+};
+#endif
+
+#ifndef SOAP_TYPE__xenc__ReferenceList
+#define SOAP_TYPE__xenc__ReferenceList (102)
+/* xenc:ReferenceList */
+struct _xenc__ReferenceList
+{
+	int __size_ReferenceList;	/* sequence of elements <-union-ReferenceList> */
+	struct __xenc__union_ReferenceList *__union_ReferenceList;
+};
+typedef struct _xenc__ReferenceList _xenc__ReferenceList;
+#endif
+
+#ifndef SOAP_TYPE_xenc__EncryptedDataType
+#define SOAP_TYPE_xenc__EncryptedDataType (96)
+/* xenc:EncryptedDataType */
+struct xenc__EncryptedDataType
+{
+	struct xenc__EncryptionMethodType *EncryptionMethod;	/* optional element of type xenc:EncryptionMethodType */
+	struct ds__KeyInfoType *ds__KeyInfo;	/* optional element of type ds:KeyInfo */
+	struct xenc__CipherDataType *CipherData;	/* required element of type xenc:CipherDataType */
+	struct xenc__EncryptionPropertiesType *EncryptionProperties;	/* optional element of type xenc:EncryptionPropertiesType */
+	char *Id;	/* optional attribute of type xsd:string */
+	char *Type;	/* optional attribute of type xsd:string */
+	char *MimeType;	/* optional attribute of type xsd:string */
+	char *Encoding;	/* optional attribute of type xsd:string */
+};
+typedef struct xenc__EncryptedDataType xenc__EncryptedDataType;
+#endif
+
+#ifndef SOAP_TYPE_xenc__EncryptedKeyType
+#define SOAP_TYPE_xenc__EncryptedKeyType (97)
+/* xenc:EncryptedKeyType */
+struct xenc__EncryptedKeyType
+{
+	struct xenc__EncryptionMethodType *EncryptionMethod;	/* optional element of type xenc:EncryptionMethodType */
+	struct ds__KeyInfoType *ds__KeyInfo;	/* optional element of type ds:KeyInfo */
+	struct xenc__CipherDataType *CipherData;	/* required element of type xenc:CipherDataType */
+	struct xenc__EncryptionPropertiesType *EncryptionProperties;	/* optional element of type xenc:EncryptionPropertiesType */
+	char *Id;	/* optional attribute of type xsd:string */
+	char *Type;	/* optional attribute of type xsd:string */
+	char *MimeType;	/* optional attribute of type xsd:string */
+	char *Encoding;	/* optional attribute of type xsd:string */
+	struct _xenc__ReferenceList *ReferenceList;	/* optional element of type xenc:ReferenceList */
+	char *CarriedKeyName;	/* optional element of type xsd:string */
+	char *Recipient;	/* optional attribute of type xsd:string */
+};
+typedef struct xenc__EncryptedKeyType xenc__EncryptedKeyType;
+#endif
+
+#ifndef SOAP_TYPE__wsse__Security
+#define SOAP_TYPE__wsse__Security (114)
+/* wsse:Security */
+struct _wsse__Security
+{
+	struct _wsu__Timestamp *wsu__Timestamp;	/* optional element of type wsu:Timestamp */
+	struct _wsse__UsernameToken *UsernameToken;	/* optional element of type wsse:UsernameToken */
+	struct _wsse__BinarySecurityToken *BinarySecurityToken;	/* optional element of type wsse:BinarySecurityToken */
+	struct xenc__EncryptedKeyType *xenc__EncryptedKey;	/* optional element of type xenc:EncryptedKeyType */
+	struct _xenc__ReferenceList *xenc__ReferenceList;	/* optional element of type xenc:ReferenceList */
+	struct ds__SignatureType *ds__Signature;	/* optional element of type ds:SignatureType */
+	char *SOAP_ENV__actor;	/* optional attribute of type xsd:string */
+	char *SOAP_ENV__role;	/* optional attribute of type xsd:string */
+};
+typedef struct _wsse__Security _wsse__Security;
+#endif
+
+#ifndef SOAP_TYPE__wsse__Password
+#define SOAP_TYPE__wsse__Password (44)
+/* Primitive wsse:Password schema type: */
+struct _wsse__Password
+{
+	char *__item;
+	char *Type;	/* optional attribute of type xsd:string */
+};
+typedef struct _wsse__Password _wsse__Password;
+#endif
+
 #ifndef SOAP_TYPE_ns1__resCreateContent
-#define SOAP_TYPE_ns1__resCreateContent (42)
+#define SOAP_TYPE_ns1__resCreateContent (123)
 /* ns1:resCreateContent */
 struct ns1__resCreateContent
 {
@@ -172,7 +667,7 @@ struct ns1__resCreateContent
 #endif
 
 #ifndef SOAP_TYPE_ns1__createReply
-#define SOAP_TYPE_ns1__createReply (46)
+#define SOAP_TYPE_ns1__createReply (127)
 /* ns1:createReply */
 struct ns1__createReply
 {
@@ -184,7 +679,7 @@ struct ns1__createReply
 #endif
 
 #ifndef SOAP_TYPE_ns1__modifyResContent
-#define SOAP_TYPE_ns1__modifyResContent (47)
+#define SOAP_TYPE_ns1__modifyResContent (128)
 /* ns1:modifyResContent */
 struct ns1__modifyResContent
 {
@@ -198,7 +693,7 @@ struct ns1__modifyResContent
 #endif
 
 #ifndef SOAP_TYPE_ns1__modifyResReply
-#define SOAP_TYPE_ns1__modifyResReply (48)
+#define SOAP_TYPE_ns1__modifyResReply (129)
 /* ns1:modifyResReply */
 struct ns1__modifyResReply
 {
@@ -207,7 +702,7 @@ struct ns1__modifyResReply
 #endif
 
 #ifndef SOAP_TYPE_ns1__getTopologyContent
-#define SOAP_TYPE_ns1__getTopologyContent (51)
+#define SOAP_TYPE_ns1__getTopologyContent (132)
 /* ns1:getTopologyContent */
 struct ns1__getTopologyContent
 {
@@ -216,7 +711,7 @@ struct ns1__getTopologyContent
 #endif
 
 #ifndef SOAP_TYPE_ns1__getTopologyResponseContent
-#define SOAP_TYPE_ns1__getTopologyResponseContent (52)
+#define SOAP_TYPE_ns1__getTopologyResponseContent (133)
 /* ns1:getTopologyResponseContent */
 struct ns1__getTopologyResponseContent
 {
@@ -225,7 +720,7 @@ struct ns1__getTopologyResponseContent
 #endif
 
 #ifndef SOAP_TYPE_ns1__createPathContent
-#define SOAP_TYPE_ns1__createPathContent (55)
+#define SOAP_TYPE_ns1__createPathContent (136)
 /* ns1:createPathContent */
 struct ns1__createPathContent
 {
@@ -235,7 +730,7 @@ struct ns1__createPathContent
 #endif
 
 #ifndef SOAP_TYPE_ns1__createPathResponseContent
-#define SOAP_TYPE_ns1__createPathResponseContent (56)
+#define SOAP_TYPE_ns1__createPathResponseContent (137)
 /* ns1:createPathResponseContent */
 struct ns1__createPathResponseContent
 {
@@ -245,7 +740,7 @@ struct ns1__createPathResponseContent
 #endif
 
 #ifndef SOAP_TYPE_ns1__refreshPathContent
-#define SOAP_TYPE_ns1__refreshPathContent (57)
+#define SOAP_TYPE_ns1__refreshPathContent (138)
 /* ns1:refreshPathContent */
 struct ns1__refreshPathContent
 {
@@ -255,7 +750,7 @@ struct ns1__refreshPathContent
 #endif
 
 #ifndef SOAP_TYPE_ns1__refreshPathResponseContent
-#define SOAP_TYPE_ns1__refreshPathResponseContent (58)
+#define SOAP_TYPE_ns1__refreshPathResponseContent (139)
 /* ns1:refreshPathResponseContent */
 struct ns1__refreshPathResponseContent
 {
@@ -265,7 +760,7 @@ struct ns1__refreshPathResponseContent
 #endif
 
 #ifndef SOAP_TYPE_ns1__teardownPathContent
-#define SOAP_TYPE_ns1__teardownPathContent (59)
+#define SOAP_TYPE_ns1__teardownPathContent (140)
 /* ns1:teardownPathContent */
 struct ns1__teardownPathContent
 {
@@ -275,7 +770,7 @@ struct ns1__teardownPathContent
 #endif
 
 #ifndef SOAP_TYPE_ns1__teardownPathResponseContent
-#define SOAP_TYPE_ns1__teardownPathResponseContent (60)
+#define SOAP_TYPE_ns1__teardownPathResponseContent (141)
 /* ns1:teardownPathResponseContent */
 struct ns1__teardownPathResponseContent
 {
@@ -285,7 +780,7 @@ struct ns1__teardownPathResponseContent
 #endif
 
 #ifndef SOAP_TYPE_ns1__resDetails
-#define SOAP_TYPE_ns1__resDetails (49)
+#define SOAP_TYPE_ns1__resDetails (130)
 /* ns1:resDetails */
 struct ns1__resDetails
 {
@@ -302,7 +797,7 @@ struct ns1__resDetails
 #endif
 
 #ifndef SOAP_TYPE___ns1__listRequest_sequence
-#define SOAP_TYPE___ns1__listRequest_sequence (63)
+#define SOAP_TYPE___ns1__listRequest_sequence (144)
 /* Operation wrapper: */
 struct __ns1__listRequest_sequence
 {
@@ -312,7 +807,7 @@ struct __ns1__listRequest_sequence
 #endif
 
 #ifndef SOAP_TYPE_ns1__listRequest
-#define SOAP_TYPE_ns1__listRequest (61)
+#define SOAP_TYPE_ns1__listRequest (142)
 /* ns1:listRequest */
 struct ns1__listRequest
 {
@@ -331,7 +826,7 @@ struct ns1__listRequest
 #endif
 
 #ifndef SOAP_TYPE_ns1__listReply
-#define SOAP_TYPE_ns1__listReply (68)
+#define SOAP_TYPE_ns1__listReply (148)
 /* ns1:listReply */
 struct ns1__listReply
 {
@@ -342,7 +837,7 @@ struct ns1__listReply
 #endif
 
 #ifndef SOAP_TYPE_ns1__forwardPayload
-#define SOAP_TYPE_ns1__forwardPayload (69)
+#define SOAP_TYPE_ns1__forwardPayload (149)
 /* ns1:forwardPayload */
 struct ns1__forwardPayload
 {
@@ -359,7 +854,7 @@ struct ns1__forwardPayload
 #endif
 
 #ifndef SOAP_TYPE_ns1__forwardReply
-#define SOAP_TYPE_ns1__forwardReply (78)
+#define SOAP_TYPE_ns1__forwardReply (158)
 /* ns1:forwardReply */
 struct ns1__forwardReply
 {
@@ -376,7 +871,7 @@ struct ns1__forwardReply
 #endif
 
 #ifndef SOAP_TYPE_ns1__pathInfo
-#define SOAP_TYPE_ns1__pathInfo (44)
+#define SOAP_TYPE_ns1__pathInfo (125)
 /* ns1:pathInfo */
 struct ns1__pathInfo
 {
@@ -390,7 +885,7 @@ struct ns1__pathInfo
 #endif
 
 #ifndef SOAP_TYPE_ns1__layer2Info
-#define SOAP_TYPE_ns1__layer2Info (87)
+#define SOAP_TYPE_ns1__layer2Info (167)
 /* ns1:layer2Info */
 struct ns1__layer2Info
 {
@@ -402,7 +897,7 @@ struct ns1__layer2Info
 #endif
 
 #ifndef SOAP_TYPE_ns1__layer3Info
-#define SOAP_TYPE_ns1__layer3Info (89)
+#define SOAP_TYPE_ns1__layer3Info (169)
 /* ns1:layer3Info */
 struct ns1__layer3Info
 {
@@ -416,7 +911,7 @@ struct ns1__layer3Info
 #endif
 
 #ifndef SOAP_TYPE_ns1__mplsInfo
-#define SOAP_TYPE_ns1__mplsInfo (91)
+#define SOAP_TYPE_ns1__mplsInfo (171)
 /* ns1:mplsInfo */
 struct ns1__mplsInfo
 {
@@ -426,7 +921,7 @@ struct ns1__mplsInfo
 #endif
 
 #ifndef SOAP_TYPE_ns1__eventContent
-#define SOAP_TYPE_ns1__eventContent (93)
+#define SOAP_TYPE_ns1__eventContent (173)
 /* ns1:eventContent */
 struct ns1__eventContent
 {
@@ -444,7 +939,7 @@ struct ns1__eventContent
 #endif
 
 #ifndef SOAP_TYPE_ns1__localDetails
-#define SOAP_TYPE_ns1__localDetails (96)
+#define SOAP_TYPE_ns1__localDetails (176)
 /* ns1:localDetails */
 struct ns1__localDetails
 {
@@ -454,7 +949,7 @@ struct ns1__localDetails
 #endif
 
 #ifndef SOAP_TYPE_ns1__msgDetails
-#define SOAP_TYPE_ns1__msgDetails (94)
+#define SOAP_TYPE_ns1__msgDetails (174)
 /* ns1:msgDetails */
 struct ns1__msgDetails
 {
@@ -481,7 +976,7 @@ struct ns1__msgDetails
 #endif
 
 #ifndef SOAP_TYPE_ns1__emptyArg
-#define SOAP_TYPE_ns1__emptyArg (100)
+#define SOAP_TYPE_ns1__emptyArg (180)
 /* ns1:emptyArg */
 struct ns1__emptyArg
 {
@@ -490,7 +985,7 @@ struct ns1__emptyArg
 #endif
 
 #ifndef SOAP_TYPE_ns1__globalReservationId
-#define SOAP_TYPE_ns1__globalReservationId (72)
+#define SOAP_TYPE_ns1__globalReservationId (152)
 /* ns1:globalReservationId */
 struct ns1__globalReservationId
 {
@@ -499,7 +994,7 @@ struct ns1__globalReservationId
 #endif
 
 #ifndef SOAP_TYPE__ns1__forward
-#define SOAP_TYPE__ns1__forward (101)
+#define SOAP_TYPE__ns1__forward (181)
 /* ns1:forward */
 struct _ns1__forward
 {
@@ -509,7 +1004,7 @@ struct _ns1__forward
 #endif
 
 #ifndef SOAP_TYPE__ns1__AAAFault
-#define SOAP_TYPE__ns1__AAAFault (102)
+#define SOAP_TYPE__ns1__AAAFault (182)
 /* ns1:AAAFault */
 struct _ns1__AAAFault
 {
@@ -518,7 +1013,7 @@ struct _ns1__AAAFault
 #endif
 
 #ifndef SOAP_TYPE__ns1__BSSFault
-#define SOAP_TYPE__ns1__BSSFault (103)
+#define SOAP_TYPE__ns1__BSSFault (183)
 /* ns1:BSSFault */
 struct _ns1__BSSFault
 {
@@ -527,7 +1022,7 @@ struct _ns1__BSSFault
 #endif
 
 #ifndef SOAP_TYPE__ns1__TopologyFault
-#define SOAP_TYPE__ns1__TopologyFault (104)
+#define SOAP_TYPE__ns1__TopologyFault (184)
 /* ns1:TopologyFault */
 struct _ns1__TopologyFault
 {
@@ -536,7 +1031,7 @@ struct _ns1__TopologyFault
 #endif
 
 #ifndef SOAP_TYPE__ns1__SignalFault
-#define SOAP_TYPE__ns1__SignalFault (105)
+#define SOAP_TYPE__ns1__SignalFault (185)
 /* ns1:SignalFault */
 struct _ns1__SignalFault
 {
@@ -545,7 +1040,7 @@ struct _ns1__SignalFault
 #endif
 
 #ifndef SOAP_TYPE_ns3__CtrlPlaneTopologyContent
-#define SOAP_TYPE_ns3__CtrlPlaneTopologyContent (53)
+#define SOAP_TYPE_ns3__CtrlPlaneTopologyContent (134)
 /* ns3:CtrlPlaneTopologyContent */
 struct ns3__CtrlPlaneTopologyContent
 {
@@ -561,7 +1056,7 @@ struct ns3__CtrlPlaneTopologyContent
 #endif
 
 #ifndef SOAP_TYPE_ns3__CtrlPlaneDomainContent
-#define SOAP_TYPE_ns3__CtrlPlaneDomainContent (106)
+#define SOAP_TYPE_ns3__CtrlPlaneDomainContent (186)
 /* ns3:CtrlPlaneDomainContent */
 struct ns3__CtrlPlaneDomainContent
 {
@@ -577,7 +1072,7 @@ struct ns3__CtrlPlaneDomainContent
 #endif
 
 #ifndef SOAP_TYPE_ns3__CtrlPlaneNodeContent
-#define SOAP_TYPE_ns3__CtrlPlaneNodeContent (112)
+#define SOAP_TYPE_ns3__CtrlPlaneNodeContent (192)
 /* ns3:CtrlPlaneNodeContent */
 struct ns3__CtrlPlaneNodeContent
 {
@@ -590,7 +1085,7 @@ struct ns3__CtrlPlaneNodeContent
 #endif
 
 #ifndef SOAP_TYPE_ns3__CtrlPlanePortContent
-#define SOAP_TYPE_ns3__CtrlPlanePortContent (114)
+#define SOAP_TYPE_ns3__CtrlPlanePortContent (194)
 /* ns3:CtrlPlanePortContent */
 struct ns3__CtrlPlanePortContent
 {
@@ -607,7 +1102,7 @@ struct ns3__CtrlPlanePortContent
 #endif
 
 #ifndef SOAP_TYPE_ns3__CtrlPlaneLinkContent
-#define SOAP_TYPE_ns3__CtrlPlaneLinkContent (116)
+#define SOAP_TYPE_ns3__CtrlPlaneLinkContent (196)
 /* ns3:CtrlPlaneLinkContent */
 struct ns3__CtrlPlaneLinkContent
 {
@@ -628,7 +1123,7 @@ struct ns3__CtrlPlaneLinkContent
 #endif
 
 #ifndef SOAP_TYPE_ns3__CtrlPlanePathContent
-#define SOAP_TYPE_ns3__CtrlPlanePathContent (85)
+#define SOAP_TYPE_ns3__CtrlPlanePathContent (165)
 /* ns3:CtrlPlanePathContent */
 struct ns3__CtrlPlanePathContent
 {
@@ -641,7 +1136,7 @@ struct ns3__CtrlPlanePathContent
 #endif
 
 #ifndef SOAP_TYPE_ns3__CtrlPlaneHopContent
-#define SOAP_TYPE_ns3__CtrlPlaneHopContent (124)
+#define SOAP_TYPE_ns3__CtrlPlaneHopContent (204)
 /* ns3:CtrlPlaneHopContent */
 struct ns3__CtrlPlaneHopContent
 {
@@ -660,7 +1155,7 @@ struct ns3__CtrlPlaneHopContent
 #endif
 
 #ifndef SOAP_TYPE_ns3__Lifetime
-#define SOAP_TYPE_ns3__Lifetime (110)
+#define SOAP_TYPE_ns3__Lifetime (190)
 /* ns3:Lifetime */
 struct ns3__Lifetime
 {
@@ -673,7 +1168,7 @@ struct ns3__Lifetime
 #endif
 
 #ifndef SOAP_TYPE_ns3__CtrlPlaneDomainSignatureContent
-#define SOAP_TYPE_ns3__CtrlPlaneDomainSignatureContent (108)
+#define SOAP_TYPE_ns3__CtrlPlaneDomainSignatureContent (188)
 /* ns3:CtrlPlaneDomainSignatureContent */
 struct ns3__CtrlPlaneDomainSignatureContent
 {
@@ -682,7 +1177,7 @@ struct ns3__CtrlPlaneDomainSignatureContent
 #endif
 
 #ifndef SOAP_TYPE_ns3__CtrlPlaneSwcapContent
-#define SOAP_TYPE_ns3__CtrlPlaneSwcapContent (122)
+#define SOAP_TYPE_ns3__CtrlPlaneSwcapContent (202)
 /* ns3:CtrlPlaneSwcapContent */
 struct ns3__CtrlPlaneSwcapContent
 {
@@ -693,7 +1188,7 @@ struct ns3__CtrlPlaneSwcapContent
 #endif
 
 #ifndef SOAP_TYPE_ns3__CtrlPlaneAdministrativeGroup
-#define SOAP_TYPE_ns3__CtrlPlaneAdministrativeGroup (120)
+#define SOAP_TYPE_ns3__CtrlPlaneAdministrativeGroup (200)
 /* ns3:CtrlPlaneAdministrativeGroup */
 struct ns3__CtrlPlaneAdministrativeGroup
 {
@@ -703,7 +1198,7 @@ struct ns3__CtrlPlaneAdministrativeGroup
 #endif
 
 #ifndef SOAP_TYPE_ns3__CtrlPlaneSwitchingCapabilitySpecificInfo
-#define SOAP_TYPE_ns3__CtrlPlaneSwitchingCapabilitySpecificInfo (132)
+#define SOAP_TYPE_ns3__CtrlPlaneSwitchingCapabilitySpecificInfo (212)
 /* ns3:CtrlPlaneSwitchingCapabilitySpecificInfo */
 struct ns3__CtrlPlaneSwitchingCapabilitySpecificInfo
 {
@@ -716,7 +1211,7 @@ struct ns3__CtrlPlaneSwitchingCapabilitySpecificInfo
 #endif
 
 #ifndef SOAP_TYPE_ns4__FilterType
-#define SOAP_TYPE_ns4__FilterType (135)
+#define SOAP_TYPE_ns4__FilterType (215)
 /* ns4:FilterType */
 struct ns4__FilterType
 {
@@ -732,7 +1227,7 @@ struct ns4__FilterType
 #endif
 
 #ifndef SOAP_TYPE_ns4__SubscriptionPolicyType
-#define SOAP_TYPE_ns4__SubscriptionPolicyType (140)
+#define SOAP_TYPE_ns4__SubscriptionPolicyType (220)
 /* ns4:SubscriptionPolicyType */
 struct ns4__SubscriptionPolicyType
 {
@@ -742,7 +1237,7 @@ struct ns4__SubscriptionPolicyType
 #endif
 
 #ifndef SOAP_TYPE_ns4__NotificationMessageHolderType
-#define SOAP_TYPE_ns4__NotificationMessageHolderType (141)
+#define SOAP_TYPE_ns4__NotificationMessageHolderType (221)
 /* ns4:NotificationMessageHolderType */
 struct ns4__NotificationMessageHolderType
 {
@@ -754,7 +1249,7 @@ struct ns4__NotificationMessageHolderType
 #endif
 
 #ifndef SOAP_TYPE_ns4__MessageType
-#define SOAP_TYPE_ns4__MessageType (143)
+#define SOAP_TYPE_ns4__MessageType (223)
 /* ns4:MessageType */
 struct ns4__MessageType
 {
@@ -764,7 +1259,7 @@ struct ns4__MessageType
 #endif
 
 #ifndef SOAP_TYPE__ns4__SubscriptionManagerRP
-#define SOAP_TYPE__ns4__SubscriptionManagerRP (145)
+#define SOAP_TYPE__ns4__SubscriptionManagerRP (225)
 /* ns4:SubscriptionManagerRP */
 struct _ns4__SubscriptionManagerRP
 {
@@ -776,7 +1271,7 @@ struct _ns4__SubscriptionManagerRP
 #endif
 
 #ifndef SOAP_TYPE__ns4__Notify
-#define SOAP_TYPE__ns4__Notify (150)
+#define SOAP_TYPE__ns4__Notify (230)
 /* ns4:Notify */
 struct _ns4__Notify
 {
@@ -788,7 +1283,7 @@ struct _ns4__Notify
 #endif
 
 #ifndef SOAP_TYPE__ns4__UseRaw
-#define SOAP_TYPE__ns4__UseRaw (152)
+#define SOAP_TYPE__ns4__UseRaw (232)
 /* ns4:UseRaw */
 struct _ns4__UseRaw
 {
@@ -799,7 +1294,7 @@ struct _ns4__UseRaw
 #endif
 
 #ifndef SOAP_TYPE__ns4__Subscribe_SubscriptionPolicy
-#define SOAP_TYPE__ns4__Subscribe_SubscriptionPolicy (154)
+#define SOAP_TYPE__ns4__Subscribe_SubscriptionPolicy (234)
 /* ns4:Subscribe-SubscriptionPolicy */
 struct _ns4__Subscribe_SubscriptionPolicy
 {
@@ -809,7 +1304,7 @@ struct _ns4__Subscribe_SubscriptionPolicy
 #endif
 
 #ifndef SOAP_TYPE__ns4__Subscribe
-#define SOAP_TYPE__ns4__Subscribe (153)
+#define SOAP_TYPE__ns4__Subscribe (233)
 /* ns4:Subscribe */
 struct _ns4__Subscribe
 {
@@ -823,7 +1318,7 @@ struct _ns4__Subscribe
 #endif
 
 #ifndef SOAP_TYPE__ns4__SubscribeResponse
-#define SOAP_TYPE__ns4__SubscribeResponse (156)
+#define SOAP_TYPE__ns4__SubscribeResponse (236)
 /* ns4:SubscribeResponse */
 struct _ns4__SubscribeResponse
 {
@@ -836,7 +1331,7 @@ struct _ns4__SubscribeResponse
 #endif
 
 #ifndef SOAP_TYPE__ns4__GetCurrentMessage
-#define SOAP_TYPE__ns4__GetCurrentMessage (157)
+#define SOAP_TYPE__ns4__GetCurrentMessage (237)
 /* ns4:GetCurrentMessage */
 struct _ns4__GetCurrentMessage
 {
@@ -847,7 +1342,7 @@ struct _ns4__GetCurrentMessage
 #endif
 
 #ifndef SOAP_TYPE__ns4__GetCurrentMessageResponse
-#define SOAP_TYPE__ns4__GetCurrentMessageResponse (158)
+#define SOAP_TYPE__ns4__GetCurrentMessageResponse (238)
 /* ns4:GetCurrentMessageResponse */
 struct _ns4__GetCurrentMessageResponse
 {
@@ -857,7 +1352,7 @@ struct _ns4__GetCurrentMessageResponse
 #endif
 
 #ifndef SOAP_TYPE__ns4__GetMessages
-#define SOAP_TYPE__ns4__GetMessages (159)
+#define SOAP_TYPE__ns4__GetMessages (239)
 /* ns4:GetMessages */
 struct _ns4__GetMessages
 {
@@ -868,7 +1363,7 @@ struct _ns4__GetMessages
 #endif
 
 #ifndef SOAP_TYPE__ns4__GetMessagesResponse
-#define SOAP_TYPE__ns4__GetMessagesResponse (162)
+#define SOAP_TYPE__ns4__GetMessagesResponse (242)
 /* ns4:GetMessagesResponse */
 struct _ns4__GetMessagesResponse
 {
@@ -880,7 +1375,7 @@ struct _ns4__GetMessagesResponse
 #endif
 
 #ifndef SOAP_TYPE__ns4__DestroyPullPoint
-#define SOAP_TYPE__ns4__DestroyPullPoint (163)
+#define SOAP_TYPE__ns4__DestroyPullPoint (243)
 /* ns4:DestroyPullPoint */
 struct _ns4__DestroyPullPoint
 {
@@ -890,7 +1385,7 @@ struct _ns4__DestroyPullPoint
 #endif
 
 #ifndef SOAP_TYPE__ns4__DestroyPullPointResponse
-#define SOAP_TYPE__ns4__DestroyPullPointResponse (164)
+#define SOAP_TYPE__ns4__DestroyPullPointResponse (244)
 /* ns4:DestroyPullPointResponse */
 struct _ns4__DestroyPullPointResponse
 {
@@ -900,7 +1395,7 @@ struct _ns4__DestroyPullPointResponse
 #endif
 
 #ifndef SOAP_TYPE__ns4__CreatePullPoint
-#define SOAP_TYPE__ns4__CreatePullPoint (165)
+#define SOAP_TYPE__ns4__CreatePullPoint (245)
 /* ns4:CreatePullPoint */
 struct _ns4__CreatePullPoint
 {
@@ -910,7 +1405,7 @@ struct _ns4__CreatePullPoint
 #endif
 
 #ifndef SOAP_TYPE__ns4__CreatePullPointResponse
-#define SOAP_TYPE__ns4__CreatePullPointResponse (166)
+#define SOAP_TYPE__ns4__CreatePullPointResponse (246)
 /* ns4:CreatePullPointResponse */
 struct _ns4__CreatePullPointResponse
 {
@@ -921,7 +1416,7 @@ struct _ns4__CreatePullPointResponse
 #endif
 
 #ifndef SOAP_TYPE__ns4__Renew
-#define SOAP_TYPE__ns4__Renew (167)
+#define SOAP_TYPE__ns4__Renew (247)
 /* ns4:Renew */
 struct _ns4__Renew
 {
@@ -933,7 +1428,7 @@ struct _ns4__Renew
 #endif
 
 #ifndef SOAP_TYPE__ns4__RenewResponse
-#define SOAP_TYPE__ns4__RenewResponse (168)
+#define SOAP_TYPE__ns4__RenewResponse (248)
 /* ns4:RenewResponse */
 struct _ns4__RenewResponse
 {
@@ -946,7 +1441,7 @@ struct _ns4__RenewResponse
 #endif
 
 #ifndef SOAP_TYPE__ns4__Unsubscribe
-#define SOAP_TYPE__ns4__Unsubscribe (169)
+#define SOAP_TYPE__ns4__Unsubscribe (249)
 /* ns4:Unsubscribe */
 struct _ns4__Unsubscribe
 {
@@ -957,7 +1452,7 @@ struct _ns4__Unsubscribe
 #endif
 
 #ifndef SOAP_TYPE__ns4__UnsubscribeResponse
-#define SOAP_TYPE__ns4__UnsubscribeResponse (170)
+#define SOAP_TYPE__ns4__UnsubscribeResponse (250)
 /* ns4:UnsubscribeResponse */
 struct _ns4__UnsubscribeResponse
 {
@@ -968,7 +1463,7 @@ struct _ns4__UnsubscribeResponse
 #endif
 
 #ifndef SOAP_TYPE__ns4__PauseSubscription
-#define SOAP_TYPE__ns4__PauseSubscription (171)
+#define SOAP_TYPE__ns4__PauseSubscription (251)
 /* ns4:PauseSubscription */
 struct _ns4__PauseSubscription
 {
@@ -979,7 +1474,7 @@ struct _ns4__PauseSubscription
 #endif
 
 #ifndef SOAP_TYPE__ns4__PauseSubscriptionResponse
-#define SOAP_TYPE__ns4__PauseSubscriptionResponse (172)
+#define SOAP_TYPE__ns4__PauseSubscriptionResponse (252)
 /* ns4:PauseSubscriptionResponse */
 struct _ns4__PauseSubscriptionResponse
 {
@@ -990,7 +1485,7 @@ struct _ns4__PauseSubscriptionResponse
 #endif
 
 #ifndef SOAP_TYPE__ns4__ResumeSubscription
-#define SOAP_TYPE__ns4__ResumeSubscription (173)
+#define SOAP_TYPE__ns4__ResumeSubscription (253)
 /* ns4:ResumeSubscription */
 struct _ns4__ResumeSubscription
 {
@@ -1001,7 +1496,7 @@ struct _ns4__ResumeSubscription
 #endif
 
 #ifndef SOAP_TYPE__ns4__ResumeSubscriptionResponse
-#define SOAP_TYPE__ns4__ResumeSubscriptionResponse (174)
+#define SOAP_TYPE__ns4__ResumeSubscriptionResponse (254)
 /* ns4:ResumeSubscriptionResponse */
 struct _ns4__ResumeSubscriptionResponse
 {
@@ -1012,7 +1507,7 @@ struct _ns4__ResumeSubscriptionResponse
 #endif
 
 #ifndef SOAP_TYPE_ns6__BaseFaultType
-#define SOAP_TYPE_ns6__BaseFaultType (175)
+#define SOAP_TYPE_ns6__BaseFaultType (255)
 /* ns6:BaseFaultType */
 struct ns6__BaseFaultType
 {
@@ -1026,7 +1521,7 @@ struct ns6__BaseFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns1__vlanTag
-#define SOAP_TYPE_ns1__vlanTag (65)
+#define SOAP_TYPE_ns1__vlanTag (146)
 /* Primitive ns1:vlanTag schema type: */
 struct ns1__vlanTag
 {
@@ -1036,7 +1531,7 @@ struct ns1__vlanTag
 #endif
 
 #ifndef SOAP_TYPE___ns1__reservationResourceType_sequence
-#define SOAP_TYPE___ns1__reservationResourceType_sequence (181)
+#define SOAP_TYPE___ns1__reservationResourceType_sequence (261)
 /* Operation wrapper: */
 struct __ns1__reservationResourceType_sequence
 {
@@ -1045,7 +1540,7 @@ struct __ns1__reservationResourceType_sequence
 #endif
 
 #ifndef SOAP_TYPE_ns1__reservationResourceType
-#define SOAP_TYPE_ns1__reservationResourceType (180)
+#define SOAP_TYPE_ns1__reservationResourceType (260)
 /* ns1:reservationResourceType */
 struct ns1__reservationResourceType
 {
@@ -1061,7 +1556,7 @@ struct ns1__reservationResourceType
 #endif
 
 #ifndef SOAP_TYPE_ns3__CtrlPlaneNextHopContent
-#define SOAP_TYPE_ns3__CtrlPlaneNextHopContent (126)
+#define SOAP_TYPE_ns3__CtrlPlaneNextHopContent (206)
 /* Primitive ns3:CtrlPlaneNextHopContent schema type: */
 struct ns3__CtrlPlaneNextHopContent
 {
@@ -1072,7 +1567,7 @@ struct ns3__CtrlPlaneNextHopContent
 #endif
 
 #ifndef SOAP_TYPE_ns3__TimeContent
-#define SOAP_TYPE_ns3__TimeContent (128)
+#define SOAP_TYPE_ns3__TimeContent (208)
 /* Primitive ns3:TimeContent schema type: */
 struct ns3__TimeContent
 {
@@ -1082,7 +1577,7 @@ struct ns3__TimeContent
 #endif
 
 #ifndef SOAP_TYPE_ns3__Duration
-#define SOAP_TYPE_ns3__Duration (130)
+#define SOAP_TYPE_ns3__Duration (210)
 /* Primitive ns3:Duration schema type: */
 struct ns3__Duration
 {
@@ -1092,7 +1587,7 @@ struct ns3__Duration
 #endif
 
 #ifndef SOAP_TYPE_ns3__CtrlPlaneAddressContent
-#define SOAP_TYPE_ns3__CtrlPlaneAddressContent (118)
+#define SOAP_TYPE_ns3__CtrlPlaneAddressContent (198)
 /* Primitive ns3:CtrlPlaneAddressContent schema type: */
 struct ns3__CtrlPlaneAddressContent
 {
@@ -1103,7 +1598,7 @@ struct ns3__CtrlPlaneAddressContent
 #endif
 
 #ifndef SOAP_TYPE_ns4__QueryExpressionType
-#define SOAP_TYPE_ns4__QueryExpressionType (138)
+#define SOAP_TYPE_ns4__QueryExpressionType (218)
 /* Primitive ns4:QueryExpressionType schema type: */
 struct ns4__QueryExpressionType
 {
@@ -1113,7 +1608,7 @@ struct ns4__QueryExpressionType
 #endif
 
 #ifndef SOAP_TYPE_ns4__TopicExpressionType
-#define SOAP_TYPE_ns4__TopicExpressionType (136)
+#define SOAP_TYPE_ns4__TopicExpressionType (216)
 /* ns4:TopicExpressionType */
 struct ns4__TopicExpressionType
 {
@@ -1124,7 +1619,7 @@ struct ns4__TopicExpressionType
 #endif
 
 #ifndef SOAP_TYPE_ns4__SubscribeCreationFailedFaultType
-#define SOAP_TYPE_ns4__SubscribeCreationFailedFaultType (183)
+#define SOAP_TYPE_ns4__SubscribeCreationFailedFaultType (263)
 /* ns4:SubscribeCreationFailedFaultType */
 struct ns4__SubscribeCreationFailedFaultType
 {
@@ -1138,7 +1633,7 @@ struct ns4__SubscribeCreationFailedFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns4__InvalidFilterFaultType
-#define SOAP_TYPE_ns4__InvalidFilterFaultType (184)
+#define SOAP_TYPE_ns4__InvalidFilterFaultType (264)
 /* ns4:InvalidFilterFaultType */
 struct ns4__InvalidFilterFaultType
 {
@@ -1154,7 +1649,7 @@ struct ns4__InvalidFilterFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns4__TopicExpressionDialectUnknownFaultType
-#define SOAP_TYPE_ns4__TopicExpressionDialectUnknownFaultType (186)
+#define SOAP_TYPE_ns4__TopicExpressionDialectUnknownFaultType (266)
 /* ns4:TopicExpressionDialectUnknownFaultType */
 struct ns4__TopicExpressionDialectUnknownFaultType
 {
@@ -1168,7 +1663,7 @@ struct ns4__TopicExpressionDialectUnknownFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns4__InvalidTopicExpressionFaultType
-#define SOAP_TYPE_ns4__InvalidTopicExpressionFaultType (187)
+#define SOAP_TYPE_ns4__InvalidTopicExpressionFaultType (267)
 /* ns4:InvalidTopicExpressionFaultType */
 struct ns4__InvalidTopicExpressionFaultType
 {
@@ -1182,7 +1677,7 @@ struct ns4__InvalidTopicExpressionFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns4__TopicNotSupportedFaultType
-#define SOAP_TYPE_ns4__TopicNotSupportedFaultType (188)
+#define SOAP_TYPE_ns4__TopicNotSupportedFaultType (268)
 /* ns4:TopicNotSupportedFaultType */
 struct ns4__TopicNotSupportedFaultType
 {
@@ -1196,7 +1691,7 @@ struct ns4__TopicNotSupportedFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns4__MultipleTopicsSpecifiedFaultType
-#define SOAP_TYPE_ns4__MultipleTopicsSpecifiedFaultType (189)
+#define SOAP_TYPE_ns4__MultipleTopicsSpecifiedFaultType (269)
 /* ns4:MultipleTopicsSpecifiedFaultType */
 struct ns4__MultipleTopicsSpecifiedFaultType
 {
@@ -1210,7 +1705,7 @@ struct ns4__MultipleTopicsSpecifiedFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns4__InvalidProducerPropertiesExpressionFaultType
-#define SOAP_TYPE_ns4__InvalidProducerPropertiesExpressionFaultType (190)
+#define SOAP_TYPE_ns4__InvalidProducerPropertiesExpressionFaultType (270)
 /* ns4:InvalidProducerPropertiesExpressionFaultType */
 struct ns4__InvalidProducerPropertiesExpressionFaultType
 {
@@ -1224,7 +1719,7 @@ struct ns4__InvalidProducerPropertiesExpressionFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns4__InvalidMessageContentExpressionFaultType
-#define SOAP_TYPE_ns4__InvalidMessageContentExpressionFaultType (191)
+#define SOAP_TYPE_ns4__InvalidMessageContentExpressionFaultType (271)
 /* ns4:InvalidMessageContentExpressionFaultType */
 struct ns4__InvalidMessageContentExpressionFaultType
 {
@@ -1238,7 +1733,7 @@ struct ns4__InvalidMessageContentExpressionFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns4__UnrecognizedPolicyRequestFaultType
-#define SOAP_TYPE_ns4__UnrecognizedPolicyRequestFaultType (192)
+#define SOAP_TYPE_ns4__UnrecognizedPolicyRequestFaultType (272)
 /* ns4:UnrecognizedPolicyRequestFaultType */
 struct ns4__UnrecognizedPolicyRequestFaultType
 {
@@ -1254,7 +1749,7 @@ struct ns4__UnrecognizedPolicyRequestFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns4__UnsupportedPolicyRequestFaultType
-#define SOAP_TYPE_ns4__UnsupportedPolicyRequestFaultType (193)
+#define SOAP_TYPE_ns4__UnsupportedPolicyRequestFaultType (273)
 /* ns4:UnsupportedPolicyRequestFaultType */
 struct ns4__UnsupportedPolicyRequestFaultType
 {
@@ -1270,7 +1765,7 @@ struct ns4__UnsupportedPolicyRequestFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns4__NotifyMessageNotSupportedFaultType
-#define SOAP_TYPE_ns4__NotifyMessageNotSupportedFaultType (194)
+#define SOAP_TYPE_ns4__NotifyMessageNotSupportedFaultType (274)
 /* ns4:NotifyMessageNotSupportedFaultType */
 struct ns4__NotifyMessageNotSupportedFaultType
 {
@@ -1284,7 +1779,7 @@ struct ns4__NotifyMessageNotSupportedFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns4__UnacceptableInitialTerminationTimeFaultType
-#define SOAP_TYPE_ns4__UnacceptableInitialTerminationTimeFaultType (195)
+#define SOAP_TYPE_ns4__UnacceptableInitialTerminationTimeFaultType (275)
 /* ns4:UnacceptableInitialTerminationTimeFaultType */
 struct ns4__UnacceptableInitialTerminationTimeFaultType
 {
@@ -1300,7 +1795,7 @@ struct ns4__UnacceptableInitialTerminationTimeFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns4__NoCurrentMessageOnTopicFaultType
-#define SOAP_TYPE_ns4__NoCurrentMessageOnTopicFaultType (196)
+#define SOAP_TYPE_ns4__NoCurrentMessageOnTopicFaultType (276)
 /* ns4:NoCurrentMessageOnTopicFaultType */
 struct ns4__NoCurrentMessageOnTopicFaultType
 {
@@ -1314,7 +1809,7 @@ struct ns4__NoCurrentMessageOnTopicFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns4__UnableToGetMessagesFaultType
-#define SOAP_TYPE_ns4__UnableToGetMessagesFaultType (197)
+#define SOAP_TYPE_ns4__UnableToGetMessagesFaultType (277)
 /* ns4:UnableToGetMessagesFaultType */
 struct ns4__UnableToGetMessagesFaultType
 {
@@ -1328,7 +1823,7 @@ struct ns4__UnableToGetMessagesFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns4__UnableToDestroyPullPointFaultType
-#define SOAP_TYPE_ns4__UnableToDestroyPullPointFaultType (198)
+#define SOAP_TYPE_ns4__UnableToDestroyPullPointFaultType (278)
 /* ns4:UnableToDestroyPullPointFaultType */
 struct ns4__UnableToDestroyPullPointFaultType
 {
@@ -1342,7 +1837,7 @@ struct ns4__UnableToDestroyPullPointFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns4__UnableToCreatePullPointFaultType
-#define SOAP_TYPE_ns4__UnableToCreatePullPointFaultType (199)
+#define SOAP_TYPE_ns4__UnableToCreatePullPointFaultType (279)
 /* ns4:UnableToCreatePullPointFaultType */
 struct ns4__UnableToCreatePullPointFaultType
 {
@@ -1356,7 +1851,7 @@ struct ns4__UnableToCreatePullPointFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns4__UnacceptableTerminationTimeFaultType
-#define SOAP_TYPE_ns4__UnacceptableTerminationTimeFaultType (200)
+#define SOAP_TYPE_ns4__UnacceptableTerminationTimeFaultType (280)
 /* ns4:UnacceptableTerminationTimeFaultType */
 struct ns4__UnacceptableTerminationTimeFaultType
 {
@@ -1372,7 +1867,7 @@ struct ns4__UnacceptableTerminationTimeFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns4__UnableToDestroySubscriptionFaultType
-#define SOAP_TYPE_ns4__UnableToDestroySubscriptionFaultType (201)
+#define SOAP_TYPE_ns4__UnableToDestroySubscriptionFaultType (281)
 /* ns4:UnableToDestroySubscriptionFaultType */
 struct ns4__UnableToDestroySubscriptionFaultType
 {
@@ -1386,7 +1881,7 @@ struct ns4__UnableToDestroySubscriptionFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns4__PauseFailedFaultType
-#define SOAP_TYPE_ns4__PauseFailedFaultType (202)
+#define SOAP_TYPE_ns4__PauseFailedFaultType (282)
 /* ns4:PauseFailedFaultType */
 struct ns4__PauseFailedFaultType
 {
@@ -1400,7 +1895,7 @@ struct ns4__PauseFailedFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns4__ResumeFailedFaultType
-#define SOAP_TYPE_ns4__ResumeFailedFaultType (203)
+#define SOAP_TYPE_ns4__ResumeFailedFaultType (283)
 /* ns4:ResumeFailedFaultType */
 struct ns4__ResumeFailedFaultType
 {
@@ -1414,7 +1909,7 @@ struct ns4__ResumeFailedFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns5__ResourceUnknownFaultType
-#define SOAP_TYPE_ns5__ResourceUnknownFaultType (204)
+#define SOAP_TYPE_ns5__ResourceUnknownFaultType (284)
 /* ns5:ResourceUnknownFaultType */
 struct ns5__ResourceUnknownFaultType
 {
@@ -1428,7 +1923,7 @@ struct ns5__ResourceUnknownFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns5__ResourceUnavailableFaultType
-#define SOAP_TYPE_ns5__ResourceUnavailableFaultType (205)
+#define SOAP_TYPE_ns5__ResourceUnavailableFaultType (285)
 /* ns5:ResourceUnavailableFaultType */
 struct ns5__ResourceUnavailableFaultType
 {
@@ -1442,7 +1937,7 @@ struct ns5__ResourceUnavailableFaultType
 #endif
 
 #ifndef SOAP_TYPE_ns6__ErrorCodeType
-#define SOAP_TYPE_ns6__ErrorCodeType (176)
+#define SOAP_TYPE_ns6__ErrorCodeType (256)
 /* Primitive ns6:ErrorCodeType schema type: */
 struct ns6__ErrorCodeType
 {
@@ -1452,7 +1947,7 @@ struct ns6__ErrorCodeType
 #endif
 
 #ifndef SOAP_TYPE_ns6__FaultCauseType
-#define SOAP_TYPE_ns6__FaultCauseType (178)
+#define SOAP_TYPE_ns6__FaultCauseType (258)
 /* Primitive ns6:FaultCauseType schema type: */
 struct ns6__FaultCauseType
 {
@@ -1464,7 +1959,7 @@ struct ns6__FaultCauseType
 #ifndef WITH_NOGLOBAL
 
 #ifndef SOAP_TYPE_SOAP_ENV__Detail
-#define SOAP_TYPE_SOAP_ENV__Detail (206)
+#define SOAP_TYPE_SOAP_ENV__Detail (286)
 /* SOAP-ENV:Detail */
 struct SOAP_ENV__Detail
 {
@@ -1479,7 +1974,7 @@ struct SOAP_ENV__Detail
 #endif
 
 #ifndef SOAP_TYPE___ns1__createReservation
-#define SOAP_TYPE___ns1__createReservation (212)
+#define SOAP_TYPE___ns1__createReservation (292)
 /* Operation wrapper: */
 struct __ns1__createReservation
 {
@@ -1488,7 +1983,7 @@ struct __ns1__createReservation
 #endif
 
 #ifndef SOAP_TYPE___ns1__queryReservation
-#define SOAP_TYPE___ns1__queryReservation (214)
+#define SOAP_TYPE___ns1__queryReservation (294)
 /* Operation wrapper: */
 struct __ns1__queryReservation
 {
@@ -1497,7 +1992,7 @@ struct __ns1__queryReservation
 #endif
 
 #ifndef SOAP_TYPE___ns1__listReservations
-#define SOAP_TYPE___ns1__listReservations (216)
+#define SOAP_TYPE___ns1__listReservations (296)
 /* Operation wrapper: */
 struct __ns1__listReservations
 {
@@ -1506,7 +2001,7 @@ struct __ns1__listReservations
 #endif
 
 #ifndef SOAP_TYPE___ns1__cancelReservationResponse
-#define SOAP_TYPE___ns1__cancelReservationResponse (218)
+#define SOAP_TYPE___ns1__cancelReservationResponse (298)
 /* Operation wrapper: */
 struct __ns1__cancelReservationResponse
 {
@@ -1515,7 +2010,7 @@ struct __ns1__cancelReservationResponse
 #endif
 
 #ifndef SOAP_TYPE___ns1__cancelReservation
-#define SOAP_TYPE___ns1__cancelReservation (219)
+#define SOAP_TYPE___ns1__cancelReservation (299)
 /* Operation wrapper: */
 struct __ns1__cancelReservation
 {
@@ -1524,7 +2019,7 @@ struct __ns1__cancelReservation
 #endif
 
 #ifndef SOAP_TYPE___ns1__modifyReservation
-#define SOAP_TYPE___ns1__modifyReservation (221)
+#define SOAP_TYPE___ns1__modifyReservation (301)
 /* Operation wrapper: */
 struct __ns1__modifyReservation
 {
@@ -1533,7 +2028,7 @@ struct __ns1__modifyReservation
 #endif
 
 #ifndef SOAP_TYPE___ns1__getNetworkTopology
-#define SOAP_TYPE___ns1__getNetworkTopology (225)
+#define SOAP_TYPE___ns1__getNetworkTopology (305)
 /* Operation wrapper: */
 struct __ns1__getNetworkTopology
 {
@@ -1542,7 +2037,7 @@ struct __ns1__getNetworkTopology
 #endif
 
 #ifndef SOAP_TYPE___ns1__createPath
-#define SOAP_TYPE___ns1__createPath (227)
+#define SOAP_TYPE___ns1__createPath (307)
 /* Operation wrapper: */
 struct __ns1__createPath
 {
@@ -1551,7 +2046,7 @@ struct __ns1__createPath
 #endif
 
 #ifndef SOAP_TYPE___ns1__refreshPath
-#define SOAP_TYPE___ns1__refreshPath (229)
+#define SOAP_TYPE___ns1__refreshPath (309)
 /* Operation wrapper: */
 struct __ns1__refreshPath
 {
@@ -1560,7 +2055,7 @@ struct __ns1__refreshPath
 #endif
 
 #ifndef SOAP_TYPE___ns1__teardownPath
-#define SOAP_TYPE___ns1__teardownPath (231)
+#define SOAP_TYPE___ns1__teardownPath (311)
 /* Operation wrapper: */
 struct __ns1__teardownPath
 {
@@ -1569,7 +2064,7 @@ struct __ns1__teardownPath
 #endif
 
 #ifndef SOAP_TYPE___ns1__forward
-#define SOAP_TYPE___ns1__forward (234)
+#define SOAP_TYPE___ns1__forward (314)
 /* Operation wrapper: */
 struct __ns1__forward
 {
@@ -1578,7 +2073,7 @@ struct __ns1__forward
 #endif
 
 #ifndef SOAP_TYPE___ns1__Notify
-#define SOAP_TYPE___ns1__Notify (237)
+#define SOAP_TYPE___ns1__Notify (317)
 /* Operation wrapper: */
 struct __ns1__Notify
 {
@@ -1589,7 +2084,7 @@ struct __ns1__Notify
 #ifndef WITH_NOGLOBAL
 
 #ifndef SOAP_TYPE_SOAP_ENV__Code
-#define SOAP_TYPE_SOAP_ENV__Code (238)
+#define SOAP_TYPE_SOAP_ENV__Code (318)
 /* SOAP Fault Code: */
 struct SOAP_ENV__Code
 {
@@ -1603,7 +2098,7 @@ struct SOAP_ENV__Code
 #ifndef WITH_NOGLOBAL
 
 #ifndef SOAP_TYPE_SOAP_ENV__Reason
-#define SOAP_TYPE_SOAP_ENV__Reason (240)
+#define SOAP_TYPE_SOAP_ENV__Reason (320)
 /* SOAP-ENV:Reason */
 struct SOAP_ENV__Reason
 {
@@ -1616,7 +2111,7 @@ struct SOAP_ENV__Reason
 #ifndef WITH_NOGLOBAL
 
 #ifndef SOAP_TYPE_SOAP_ENV__Fault
-#define SOAP_TYPE_SOAP_ENV__Fault (241)
+#define SOAP_TYPE_SOAP_ENV__Fault (321)
 /* SOAP Fault: */
 struct SOAP_ENV__Fault
 {
@@ -1730,8 +2225,23 @@ typedef char *_wsa5__ProblemIRI;
 typedef struct wsa5__ProblemActionType _wsa5__ProblemAction;
 #endif
 
+#ifndef SOAP_TYPE__ds__Signature
+#define SOAP_TYPE__ds__Signature (59)
+typedef struct ds__SignatureType _ds__Signature;
+#endif
+
+#ifndef SOAP_TYPE__ds__Transform
+#define SOAP_TYPE__ds__Transform (67)
+typedef struct ds__TransformType _ds__Transform;
+#endif
+
+#ifndef SOAP_TYPE__ds__KeyInfo
+#define SOAP_TYPE__ds__KeyInfo (76)
+typedef struct ds__KeyInfoType _ds__KeyInfo;
+#endif
+
 #ifndef SOAP_TYPE_ns4__AbsoluteOrRelativeTimeType
-#define SOAP_TYPE_ns4__AbsoluteOrRelativeTimeType (41)
+#define SOAP_TYPE_ns4__AbsoluteOrRelativeTimeType (122)
 typedef char *ns4__AbsoluteOrRelativeTimeType;
 #endif
 
