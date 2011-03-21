@@ -9,6 +9,7 @@ bindirs += modules/terapaths modules/monitoring
 endif
 
 if ENABLE_OSCARS
+libdirs += libgsoap
 bindirs += modules/oscars
 endif
 
