@@ -305,8 +305,24 @@ globus_l_xio_xsp_append_nl_meta(
     bson_append_start_object(bb, "subject");
     if (handle->stack == GLOBUS_XIO_XSP_NETSTACK)
     {
-      sprintf(portstr, "%s:%s", handle->local_contact->port,
-		handle->remote_contact->port);
+        if (handle->remote_contact->port &&
+	    handle->local_contact->port)
+	{
+	    sprintf(portstr, "%s:%s", handle->local_contact->port,
+		    handle->remote_contact->port);
+	}
+	else if (handle->local_contact->port)
+	{
+	  sprintf(portstr, "%s:%d", handle->local_contact->port, (int)handle);
+	}
+	else if  (handle->remote_contact->port)
+	{
+	  sprintf(portstr, "%d:%s", (int)handle, handle->remote_contact->port);
+	}
+	else
+	{
+	    sprintf(portstr, "%d", (int)handle);
+	}
 	portstr[strlen(portstr)] = '\0';
 	bson_append_string(bb, "stream_id", portstr);
     }
@@ -345,11 +361,15 @@ globus_l_xio_xsp_append_xfer_meta(
 
     if (handle->stack == GLOBUS_XIO_XSP_NETSTACK)
     {
-	bson_append_string(bb, "type", "network");
-	bson_append_string(bb, "src", handle->local_contact->host);
-	bson_append_string(bb, "dst", handle->remote_contact->host);
-	bson_append_string(bb, "sport", handle->local_contact->port);
-	bson_append_string(bb, "dport", handle->remote_contact->port);
+        bson_append_string(bb, "type", "network");
+	if (handle->local_contact->host)
+	    bson_append_string(bb, "src", handle->local_contact->host);
+	if (handle->remote_contact->host)
+	    bson_append_string(bb, "dst", handle->remote_contact->host);
+	if (handle->local_contact->port)
+	    bson_append_string(bb, "sport", handle->local_contact->port);
+	if (handle->remote_contact->port)
+	    bson_append_string(bb, "dport", handle->remote_contact->port);
     }
     else if (handle->stack == GLOBUS_XIO_XSP_FSSTACK)
     {
@@ -1152,8 +1172,13 @@ globus_l_xio_xsp_open_cb(
 	{
 	  //sprintf(hstring, "%s:%s", handle->remote_contact->host,
 	  //        handle->remote_contact->port);
-	  sprintf(hstring, "%s", handle->remote_contact->host);
-	  hstring[strlen(hstring)] = '\0';
+	  if (handle->remote_contact->host)
+	  {
+	      sprintf(hstring, "%s", handle->remote_contact->host);
+	      hstring[strlen(hstring)] = '\0';
+	  }
+	  else
+	      hstring[0] = '\0';
 
 	  xfer_handle = (xio_l_xsp_xfer_t *) globus_hashtable_lookup(
 		                               &xsp_l_xfer_table, hstring);
@@ -1287,11 +1312,11 @@ globus_l_xio_xsp_open(
     /* get handle for drivers below us */
     handle->xio_driver_handle = globus_xio_operation_get_driver_handle(op);
 
-    /* save the local contact info */
-    globus_xio_contact_copy(handle->local_contact, contact_info);
-
     if (handle->stack == GLOBUS_XIO_XSP_NETSTACK)
     {
+        /* save the contact info */
+        globus_xio_contact_copy(handle->remote_contact, contact_info);
+
 	if (contact_info->host && contact_info->port)
 	{
 	    //sprintf(hstring, "%s:%s", contact_info->host, contact_info->port);
@@ -1302,6 +1327,9 @@ globus_l_xio_xsp_open(
     }
     else if (handle->stack == GLOBUS_XIO_XSP_FSSTACK)
     {
+        /* save the contact info */
+        globus_xio_contact_copy(handle->local_contact, contact_info);
+
 	if (contact_info->resource)
 	    sprintf(hstring, "%s:%d", contact_info->resource, (int)handle);
 	else
@@ -1787,6 +1815,8 @@ globus_l_xio_xsp_set_ci(
     GlobusXIOName(globus_l_xio_xsp_set_ci);
     GlobusXIOXSPDebugEnter();    
 
+    contact_string = NULL;
+
     res = globus_xio_driver_handle_cntl(
 	      d_handle,
 	      GLOBUS_XIO_QUERY,
@@ -1799,17 +1829,19 @@ globus_l_xio_xsp_set_ci(
 	    res);
 	goto error;
     }
-    
-    res = globus_xio_contact_parse(*ci, contact_string);
 
-    if(res != GLOBUS_SUCCESS)
+    if (contact_string)
     {
+      res = globus_xio_contact_parse(*ci, contact_string);
+
+      if(res != GLOBUS_SUCCESS)
+      {
 	res = GlobusXIOErrorWrapFailed(
 	    "globus_xio_contact_parse", res);
 	goto error;
+      }
+      globus_free(contact_string);
     }
-    
-    globus_free(contact_string);
     
     GlobusXIOXSPDebugExit();
     return GLOBUS_SUCCESS;
@@ -1828,7 +1860,7 @@ globus_l_xio_xsp_setup_contact_info(
 
     GlobusXIOName(globus_l_xio_xsp_setup_contact_info);
     GlobusXIOXSPDebugEnter();
-    
+
     res = globus_l_xio_xsp_set_ci(handle->xio_driver_handle,
 				  &(handle->remote_contact),
 				  GLOBUS_XIO_GET_REMOTE_NUMERIC_CONTACT);
