@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-SOAP_SOURCE_STAMP("@(#) oscarsC.c ver 2.8.1 2011-03-20 20:54:50 GMT")
+SOAP_SOURCE_STAMP("@(#) oscarsC.c ver 2.8.1 2011-03-26 17:04:38 GMT")
 
 
 #ifndef WITH_NOGLOBAL
@@ -3630,9 +3630,9 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_SOAP_ENV__Fault(struct soap *soap, const char
 		return soap->error;
 	if (soap_out__QName(soap, "faultcode", -1, (char*const*)&soap_tmp_faultcode, ""))
 		return soap->error;
-	if (soap_out_string(soap, "faultstring", -1, &a->faultstring, "xsd:string"))
+	if (soap_out_string(soap, "faultstring", -1, &a->faultstring, ""))
 		return soap->error;
-	if (soap_out_string(soap, "faultactor", -1, &a->faultactor, "xsd:string"))
+	if (soap_out_string(soap, "faultactor", -1, &a->faultactor, ""))
 		return soap->error;
 	if (soap_out_PointerToSOAP_ENV__Detail(soap, "detail", -1, &a->detail, ""))
 		return soap->error;
@@ -5576,9 +5576,9 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns4__UnacceptableTerminationTimeFaultType(str
 	}
 	if (soap_out_PointerTons6__FaultCauseType(soap, "ns6:FaultCause", -1, &a->ns6__FaultCause, ""))
 		return soap->error;
-	if (soap_out_time(soap, "ns4:MinimumTime", -1, &a->MinimumTime, "xsd:dateTime"))
+	if (soap_out_time(soap, "ns4:MinimumTime", -1, &a->MinimumTime, ""))
 		return soap->error;
-	if (soap_out_PointerTotime(soap, "ns4:MaximumTime", -1, &a->MaximumTime, "xsd:dateTime"))
+	if (soap_out_PointerTotime(soap, "ns4:MaximumTime", -1, &a->MaximumTime, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -6336,9 +6336,9 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns4__UnacceptableInitialTerminationTimeFaultT
 	}
 	if (soap_out_PointerTons6__FaultCauseType(soap, "ns6:FaultCause", -1, &a->ns6__FaultCause, ""))
 		return soap->error;
-	if (soap_out_time(soap, "ns4:MinimumTime", -1, &a->MinimumTime, "xsd:dateTime"))
+	if (soap_out_time(soap, "ns4:MinimumTime", -1, &a->MinimumTime, ""))
 		return soap->error;
-	if (soap_out_PointerTotime(soap, "ns4:MaximumTime", -1, &a->MaximumTime, "xsd:dateTime"))
+	if (soap_out_PointerTotime(soap, "ns4:MaximumTime", -1, &a->MaximumTime, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -8226,7 +8226,7 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__reservationResourceType_sequenc
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__reservationResourceType_sequence(struct soap *soap, const char *tag, int id, const struct __ns1__reservationResourceType_sequence *a, const char *type)
 {
-	if (soap_out_PointerTons1__localDetails(soap, "ns1:localDetails", -1, &a->localDetails, "ns1:localDetails"))
+	if (soap_out_PointerTons1__localDetails(soap, "ns1:localDetails", -1, &a->localDetails, ""))
 		return soap->error;
 	return SOAP_OK;
 }
@@ -8308,22 +8308,22 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__reservationResourceType(struct soap *soa
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__reservationResourceType), type))
 		return soap->error;
-	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, "xsd:string"))
+	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, ""))
 		return soap->error;
-	if (soap_out_LONG64(soap, "ns1:startTime", -1, &a->startTime, "xsd:long"))
+	if (soap_out_LONG64(soap, "ns1:startTime", -1, &a->startTime, ""))
 		return soap->error;
-	if (soap_out_LONG64(soap, "ns1:endTime", -1, &a->endTime, "xsd:long"))
+	if (soap_out_LONG64(soap, "ns1:endTime", -1, &a->endTime, ""))
 		return soap->error;
-	if (soap_out_int(soap, "ns1:bandwidth", -1, &a->bandwidth, "xsd:int"))
+	if (soap_out_int(soap, "ns1:bandwidth", -1, &a->bandwidth, ""))
 		return soap->error;
 	if (a->description)
-	{	if (soap_out_string(soap, "ns1:description", -1, &a->description, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:description", -1, &a->description, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:description"))
 		return soap->error;
 	if (a->pathInfo)
-	{	if (soap_out_PointerTons1__pathInfo(soap, "ns1:pathInfo", -1, &a->pathInfo, "ns1:pathInfo"))
+	{	if (soap_out_PointerTons1__pathInfo(soap, "ns1:pathInfo", -1, &a->pathInfo, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:pathInfo"))
@@ -8331,7 +8331,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__reservationResourceType(struct soap *soa
 	if (a->__reservationResourceType_sequence)
 	{	int i;
 		for (i = 0; i < a->__size_reservationResourceType_sequence; i++)
-			if (soap_out___ns1__reservationResourceType_sequence(soap, "-reservationResourceType-sequence", -1, a->__reservationResourceType_sequence + i, "-ns1:reservationResourceType-sequence"))
+			if (soap_out___ns1__reservationResourceType_sequence(soap, "-reservationResourceType-sequence", -1, a->__reservationResourceType_sequence + i, ""))
 				return soap->error;
 	}
 	return soap_element_end_out(soap, tag);
@@ -8465,7 +8465,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns6__FaultCauseType(struct soap *soap, const 
 {
 	if (a->dialect)
 		soap_set_attr(soap, "dialect", a->dialect, 1);
-	return soap_out_string(soap, tag, id, &a->__item, "ns6:FaultCauseType");
+	return soap_out_string(soap, tag, id, &a->__item, "");
 }
 
 SOAP_FMAC3 struct ns6__FaultCauseType * SOAP_FMAC4 soap_in_ns6__FaultCauseType(struct soap *soap, const char *tag, struct ns6__FaultCauseType *a, const char *type)
@@ -8518,7 +8518,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns6__ErrorCodeType(struct soap *soap, const c
 {
 	if (a->dialect)
 		soap_set_attr(soap, "dialect", a->dialect, 1);
-	return soap_out_string(soap, tag, id, &a->__item, "ns6:ErrorCodeType");
+	return soap_out_string(soap, tag, id, &a->__item, "");
 }
 
 SOAP_FMAC3 struct ns6__ErrorCodeType * SOAP_FMAC4 soap_in_ns6__ErrorCodeType(struct soap *soap, const char *tag, struct ns6__ErrorCodeType *a, const char *type)
@@ -8585,19 +8585,19 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns6__BaseFaultType(struct soap *soap, const c
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns6__BaseFaultType), type))
 		return soap->error;
-	if (soap_out_time(soap, "ns6:Timestamp", -1, &a->Timestamp, "xsd:dateTime"))
+	if (soap_out_time(soap, "ns6:Timestamp", -1, &a->Timestamp, ""))
 		return soap->error;
-	if (soap_out_PointerTowsa5__EndpointReferenceType(soap, "ns6:Originator", -1, &a->Originator, "wsa5:EndpointReferenceType"))
+	if (soap_out_PointerTowsa5__EndpointReferenceType(soap, "ns6:Originator", -1, &a->Originator, ""))
 		return soap->error;
-	if (soap_out_PointerTons6__ErrorCodeType(soap, "ns6:ErrorCode", -1, &a->ErrorCode, "ns6:ErrorCodeType"))
+	if (soap_out_PointerTons6__ErrorCodeType(soap, "ns6:ErrorCode", -1, &a->ErrorCode, ""))
 		return soap->error;
 	if (a->Description)
 	{	int i;
 		for (i = 0; i < a->__sizeDescription; i++)
-			if (soap_out_string(soap, "ns6:Description", -1, a->Description + i, "xsd:string"))
+			if (soap_out_string(soap, "ns6:Description", -1, a->Description + i, ""))
 				return soap->error;
 	}
-	if (soap_out_PointerTons6__FaultCauseType(soap, "ns6:FaultCause", -1, &a->FaultCause, "ns6:FaultCauseType"))
+	if (soap_out_PointerTons6__FaultCauseType(soap, "ns6:FaultCause", -1, &a->FaultCause, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -8720,7 +8720,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns4__ResumeSubscriptionResponse(struct soap 
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ns4__ResumeSubscriptionResponse), type))
 		return soap->error;
-	if (soap_out_PointerTowsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, "wsa5:EndpointReferenceType"))
+	if (soap_out_PointerTowsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, ""))
 		return soap->error;
 	if (a->__any)
 	{	int i;
@@ -8826,7 +8826,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns4__ResumeSubscription(struct soap *soap, c
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ns4__ResumeSubscription), type))
 		return soap->error;
-	if (soap_out_wsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, "wsa5:EndpointReferenceType"))
+	if (soap_out_wsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, ""))
 		return soap->error;
 	if (a->__any)
 	{	int i;
@@ -8935,7 +8935,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns4__PauseSubscriptionResponse(struct soap *
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ns4__PauseSubscriptionResponse), type))
 		return soap->error;
-	if (soap_out_PointerTowsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, "wsa5:EndpointReferenceType"))
+	if (soap_out_PointerTowsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, ""))
 		return soap->error;
 	if (a->__any)
 	{	int i;
@@ -9041,7 +9041,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns4__PauseSubscription(struct soap *soap, co
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ns4__PauseSubscription), type))
 		return soap->error;
-	if (soap_out_wsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, "wsa5:EndpointReferenceType"))
+	if (soap_out_wsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, ""))
 		return soap->error;
 	if (a->__any)
 	{	int i;
@@ -9150,7 +9150,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns4__UnsubscribeResponse(struct soap *soap, 
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ns4__UnsubscribeResponse), type))
 		return soap->error;
-	if (soap_out_PointerTowsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, "wsa5:EndpointReferenceType"))
+	if (soap_out_PointerTowsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, ""))
 		return soap->error;
 	if (a->__any)
 	{	int i;
@@ -9256,7 +9256,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns4__Unsubscribe(struct soap *soap, const ch
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ns4__Unsubscribe), type))
 		return soap->error;
-	if (soap_out_wsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, "wsa5:EndpointReferenceType"))
+	if (soap_out_wsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, ""))
 		return soap->error;
 	if (a->__any)
 	{	int i;
@@ -9369,11 +9369,11 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns4__RenewResponse(struct soap *soap, const 
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ns4__RenewResponse), type))
 		return soap->error;
-	if (soap_out_time(soap, "ns4:TerminationTime", -1, &a->TerminationTime, "xsd:dateTime"))
+	if (soap_out_time(soap, "ns4:TerminationTime", -1, &a->TerminationTime, ""))
 		return soap->error;
-	if (soap_out_PointerTotime(soap, "ns4:CurrentTime", -1, &a->CurrentTime, "xsd:dateTime"))
+	if (soap_out_PointerTotime(soap, "ns4:CurrentTime", -1, &a->CurrentTime, ""))
 		return soap->error;
-	if (soap_out_PointerTowsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, "wsa5:EndpointReferenceType"))
+	if (soap_out_PointerTowsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, ""))
 		return soap->error;
 	if (a->__any)
 	{	int i;
@@ -9497,9 +9497,9 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns4__Renew(struct soap *soap, const char *ta
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ns4__Renew), type))
 		return soap->error;
-	if (soap_out_string(soap, "ns4:TerminationTime", -1, &a->TerminationTime, "xsd:string"))
+	if (soap_out_string(soap, "ns4:TerminationTime", -1, &a->TerminationTime, ""))
 		return soap->error;
-	if (soap_out_wsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, "wsa5:EndpointReferenceType"))
+	if (soap_out_wsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, ""))
 		return soap->error;
 	if (a->__any)
 	{	int i;
@@ -9615,7 +9615,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns4__CreatePullPointResponse(struct soap *so
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ns4__CreatePullPointResponse), type))
 		return soap->error;
-	if (soap_out_wsa5__EndpointReferenceType(soap, "ns4:PullPoint", -1, &a->PullPoint, "wsa5:EndpointReferenceType"))
+	if (soap_out_wsa5__EndpointReferenceType(soap, "ns4:PullPoint", -1, &a->PullPoint, ""))
 		return soap->error;
 	if (a->__any)
 	{	int i;
@@ -10020,7 +10020,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns4__GetMessagesResponse(struct soap *soap, 
 	if (a->NotificationMessage)
 	{	int i;
 		for (i = 0; i < a->__sizeNotificationMessage; i++)
-			if (soap_out_ns4__NotificationMessageHolderType(soap, "ns4:NotificationMessage", -1, a->NotificationMessage + i, "ns4:NotificationMessageHolderType"))
+			if (soap_out_ns4__NotificationMessageHolderType(soap, "ns4:NotificationMessage", -1, a->NotificationMessage + i, ""))
 				return soap->error;
 	}
 	if (a->__any)
@@ -10146,7 +10146,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns4__GetMessages(struct soap *soap, const ch
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ns4__GetMessages), type))
 		return soap->error;
-	if (soap_out_PointerTounsignedInt(soap, "ns4:MaximumNumber", -1, &a->MaximumNumber, "xsd:unsignedInt"))
+	if (soap_out_PointerTounsignedInt(soap, "ns4:MaximumNumber", -1, &a->MaximumNumber, ""))
 		return soap->error;
 	if (a->__any)
 	{	int i;
@@ -10347,7 +10347,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns4__GetCurrentMessage(struct soap *soap, co
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ns4__GetCurrentMessage), type))
 		return soap->error;
 	if (a->Topic)
-	{	if (soap_out_PointerTons4__TopicExpressionType(soap, "ns4:Topic", -1, &a->Topic, "ns4:TopicExpressionType"))
+	{	if (soap_out_PointerTons4__TopicExpressionType(soap, "ns4:Topic", -1, &a->Topic, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns4:Topic"))
@@ -10464,11 +10464,11 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns4__SubscribeResponse(struct soap *soap, co
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ns4__SubscribeResponse), type))
 		return soap->error;
-	if (soap_out_wsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, "wsa5:EndpointReferenceType"))
+	if (soap_out_wsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, ""))
 		return soap->error;
-	if (soap_out_PointerTotime(soap, "ns4:CurrentTime", -1, &a->CurrentTime, "xsd:dateTime"))
+	if (soap_out_PointerTotime(soap, "ns4:CurrentTime", -1, &a->CurrentTime, ""))
 		return soap->error;
-	if (soap_out_PointerTotime(soap, "ns4:TerminationTime", -1, &a->TerminationTime, "xsd:dateTime"))
+	if (soap_out_PointerTotime(soap, "ns4:TerminationTime", -1, &a->TerminationTime, ""))
 		return soap->error;
 	if (a->__any)
 	{	int i;
@@ -10691,11 +10691,11 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns4__Subscribe(struct soap *soap, const char
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ns4__Subscribe), type))
 		return soap->error;
-	if (soap_out_wsa5__EndpointReferenceType(soap, "ns4:ConsumerReference", -1, &a->ConsumerReference, "wsa5:EndpointReferenceType"))
+	if (soap_out_wsa5__EndpointReferenceType(soap, "ns4:ConsumerReference", -1, &a->ConsumerReference, ""))
 		return soap->error;
-	if (soap_out_PointerTons4__FilterType(soap, "ns4:Filter", -1, &a->Filter, "ns4:FilterType"))
+	if (soap_out_PointerTons4__FilterType(soap, "ns4:Filter", -1, &a->Filter, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns4:InitialTerminationTime", -1, &a->InitialTerminationTime, "xsd:string"))
+	if (soap_out_string(soap, "ns4:InitialTerminationTime", -1, &a->InitialTerminationTime, ""))
 		return soap->error;
 	if (soap_out_PointerTo_ns4__Subscribe_SubscriptionPolicy(soap, "ns4:SubscriptionPolicy", -1, &a->SubscriptionPolicy, ""))
 		return soap->error;
@@ -10898,7 +10898,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns4__Notify(struct soap *soap, const char *t
 	if (a->NotificationMessage)
 	{	int i;
 		for (i = 0; i < a->__sizeNotificationMessage; i++)
-			if (soap_out_ns4__NotificationMessageHolderType(soap, "ns4:NotificationMessage", -1, a->NotificationMessage + i, "ns4:NotificationMessageHolderType"))
+			if (soap_out_ns4__NotificationMessageHolderType(soap, "ns4:NotificationMessage", -1, a->NotificationMessage + i, ""))
 				return soap->error;
 	}
 	if (a->__any)
@@ -11033,13 +11033,13 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns4__SubscriptionManagerRP(struct soap *soap
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ns4__SubscriptionManagerRP), type))
 		return soap->error;
-	if (soap_out_wsa5__EndpointReferenceType(soap, "ns4:ConsumerReference", -1, &a->ConsumerReference, "wsa5:EndpointReferenceType"))
+	if (soap_out_wsa5__EndpointReferenceType(soap, "ns4:ConsumerReference", -1, &a->ConsumerReference, ""))
 		return soap->error;
-	if (soap_out_PointerTons4__FilterType(soap, "ns4:Filter", -1, &a->Filter, "ns4:FilterType"))
+	if (soap_out_PointerTons4__FilterType(soap, "ns4:Filter", -1, &a->Filter, ""))
 		return soap->error;
-	if (soap_out_PointerTons4__SubscriptionPolicyType(soap, "ns4:SubscriptionPolicy", -1, &a->SubscriptionPolicy, "ns4:SubscriptionPolicyType"))
+	if (soap_out_PointerTons4__SubscriptionPolicyType(soap, "ns4:SubscriptionPolicy", -1, &a->SubscriptionPolicy, ""))
 		return soap->error;
-	if (soap_out_PointerTotime(soap, "ns4:CreationTime", -1, &a->CreationTime, "xsd:dateTime"))
+	if (soap_out_PointerTotime(soap, "ns4:CreationTime", -1, &a->CreationTime, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -11235,14 +11235,14 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns4__NotificationMessageHolderType(struct soa
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns4__NotificationMessageHolderType), type))
 		return soap->error;
-	if (soap_out_PointerTowsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, "wsa5:EndpointReferenceType"))
+	if (soap_out_PointerTowsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, ""))
 		return soap->error;
-	if (soap_out_PointerTons4__TopicExpressionType(soap, "ns4:Topic", -1, &a->Topic, "ns4:TopicExpressionType"))
+	if (soap_out_PointerTons4__TopicExpressionType(soap, "ns4:Topic", -1, &a->Topic, ""))
 		return soap->error;
-	if (soap_out_PointerTowsa5__EndpointReferenceType(soap, "ns4:ProducerReference", -1, &a->ProducerReference, "wsa5:EndpointReferenceType"))
+	if (soap_out_PointerTowsa5__EndpointReferenceType(soap, "ns4:ProducerReference", -1, &a->ProducerReference, ""))
 		return soap->error;
 	if (a->Message)
-	{	if (soap_out_PointerTons4__MessageType(soap, "ns4:Message", -1, &a->Message, "ns4:MessageType"))
+	{	if (soap_out_PointerTons4__MessageType(soap, "ns4:Message", -1, &a->Message, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns4:Message"))
@@ -11436,7 +11436,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns4__QueryExpressionType(struct soap *soap, c
 {
 	if (a->Dialect)
 		soap_set_attr(soap, "Dialect", a->Dialect, 1);
-	return soap_out_string(soap, tag, id, &a->__item, "ns4:QueryExpressionType");
+	return soap_out_string(soap, tag, id, &a->__item, "");
 }
 
 SOAP_FMAC3 struct ns4__QueryExpressionType * SOAP_FMAC4 soap_in_ns4__QueryExpressionType(struct soap *soap, const char *tag, struct ns4__QueryExpressionType *a, const char *type)
@@ -11492,7 +11492,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns4__TopicExpressionType(struct soap *soap, c
 		soap_set_attr(soap, "Dialect", a->Dialect, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns4__TopicExpressionType), type))
 		return soap->error;
-	if (soap_out_string(soap, "-item", -1, &a->__item, "xsd:string"))
+	if (soap_out_string(soap, "-item", -1, &a->__item, ""))
 		return soap->error;
 	soap_outliteral(soap, "-mixed", &a->__mixed, NULL);
 	return soap_element_end_out(soap, tag);
@@ -11607,19 +11607,19 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns4__FilterType(struct soap *soap, const char
 	if (a->TopicExpression)
 	{	int i;
 		for (i = 0; i < a->__sizeTopicExpression; i++)
-			if (soap_out_ns4__TopicExpressionType(soap, "ns4:TopicExpression", -1, a->TopicExpression + i, "ns4:TopicExpressionType"))
+			if (soap_out_ns4__TopicExpressionType(soap, "ns4:TopicExpression", -1, a->TopicExpression + i, ""))
 				return soap->error;
 	}
 	if (a->ProducerProperties)
 	{	int i;
 		for (i = 0; i < a->__sizeProducerProperties; i++)
-			if (soap_out_ns4__QueryExpressionType(soap, "ns4:ProducerProperties", -1, a->ProducerProperties + i, "ns4:QueryExpressionType"))
+			if (soap_out_ns4__QueryExpressionType(soap, "ns4:ProducerProperties", -1, a->ProducerProperties + i, ""))
 				return soap->error;
 	}
 	if (a->MessageContent)
 	{	int i;
 		for (i = 0; i < a->__sizeMessageContent; i++)
-			if (soap_out_ns4__QueryExpressionType(soap, "ns4:MessageContent", -1, a->MessageContent + i, "ns4:QueryExpressionType"))
+			if (soap_out_ns4__QueryExpressionType(soap, "ns4:MessageContent", -1, a->MessageContent + i, ""))
 				return soap->error;
 	}
 	if (a->__any)
@@ -11803,15 +11803,15 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__CtrlPlaneSwitchingCapabilitySpecificInfo
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns3__CtrlPlaneSwitchingCapabilitySpecificInfo), type))
 		return soap->error;
-	if (soap_out_string(soap, "ns3:capability", -1, &a->capability, "xsd:string"))
+	if (soap_out_string(soap, "ns3:capability", -1, &a->capability, ""))
 		return soap->error;
-	if (soap_out_PointerToint(soap, "ns3:interfaceMTU", -1, &a->interfaceMTU, "xsd:int"))
+	if (soap_out_PointerToint(soap, "ns3:interfaceMTU", -1, &a->interfaceMTU, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns3:vlanRangeAvailability", -1, &a->vlanRangeAvailability, "xsd:string"))
+	if (soap_out_string(soap, "ns3:vlanRangeAvailability", -1, &a->vlanRangeAvailability, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns3:suggestedVLANRange", -1, &a->suggestedVLANRange, "xsd:string"))
+	if (soap_out_string(soap, "ns3:suggestedVLANRange", -1, &a->suggestedVLANRange, ""))
 		return soap->error;
-	if (soap_out_PointerToxsd__boolean_(soap, "ns3:vlanTranslation", -1, &a->vlanTranslation, "xsd:boolean"))
+	if (soap_out_PointerToxsd__boolean_(soap, "ns3:vlanTranslation", -1, &a->vlanTranslation, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -11909,7 +11909,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__Duration(struct soap *soap, const char *
 {
 	if (a->type)
 		soap_set_attr(soap, "type", a->type, 1);
-	return soap_out_string(soap, tag, id, &a->__item, "ns3:Duration");
+	return soap_out_string(soap, tag, id, &a->__item, "");
 }
 
 SOAP_FMAC3 struct ns3__Duration * SOAP_FMAC4 soap_in_ns3__Duration(struct soap *soap, const char *tag, struct ns3__Duration *a, const char *type)
@@ -11962,7 +11962,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__TimeContent(struct soap *soap, const cha
 {
 	if (a->type)
 		soap_set_attr(soap, "type", a->type, 1);
-	return soap_out_string(soap, tag, id, &a->__item, "ns3:TimeContent");
+	return soap_out_string(soap, tag, id, &a->__item, "");
 }
 
 SOAP_FMAC3 struct ns3__TimeContent * SOAP_FMAC4 soap_in_ns3__TimeContent(struct soap *soap, const char *tag, struct ns3__TimeContent *a, const char *type)
@@ -12018,7 +12018,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__CtrlPlaneNextHopContent(struct soap *soa
 		soap_set_attr(soap, "weight", soap_int2s(soap, *a->weight), 1);
 	if (a->optional)
 		soap_set_attr(soap, "optional", soap_xsd__boolean_2s(soap, *a->optional), 1);
-	return soap_out_string(soap, tag, id, &a->__item, "ns3:CtrlPlaneNextHopContent");
+	return soap_out_string(soap, tag, id, &a->__item, "");
 }
 
 SOAP_FMAC3 struct ns3__CtrlPlaneNextHopContent * SOAP_FMAC4 soap_in_ns3__CtrlPlaneNextHopContent(struct soap *soap, const char *tag, struct ns3__CtrlPlaneNextHopContent *a, const char *type)
@@ -12121,26 +12121,26 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__CtrlPlaneHopContent(struct soap *soap, c
 		soap_set_attr(soap, "id", a->id, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns3__CtrlPlaneHopContent), type))
 		return soap->error;
-	if (soap_out_string(soap, "ns3:domainIdRef", -1, &a->domainIdRef, "xsd:string"))
+	if (soap_out_string(soap, "ns3:domainIdRef", -1, &a->domainIdRef, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns3:nodeIdRef", -1, &a->nodeIdRef, "xsd:string"))
+	if (soap_out_string(soap, "ns3:nodeIdRef", -1, &a->nodeIdRef, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns3:portIdRef", -1, &a->portIdRef, "xsd:string"))
+	if (soap_out_string(soap, "ns3:portIdRef", -1, &a->portIdRef, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns3:linkIdRef", -1, &a->linkIdRef, "xsd:string"))
+	if (soap_out_string(soap, "ns3:linkIdRef", -1, &a->linkIdRef, ""))
 		return soap->error;
-	if (soap_out_PointerTons3__CtrlPlaneDomainContent(soap, "ns3:domain", -1, &a->domain, "ns3:CtrlPlaneDomainContent"))
+	if (soap_out_PointerTons3__CtrlPlaneDomainContent(soap, "ns3:domain", -1, &a->domain, ""))
 		return soap->error;
-	if (soap_out_PointerTons3__CtrlPlaneNodeContent(soap, "ns3:node", -1, &a->node, "ns3:CtrlPlaneNodeContent"))
+	if (soap_out_PointerTons3__CtrlPlaneNodeContent(soap, "ns3:node", -1, &a->node, ""))
 		return soap->error;
-	if (soap_out_PointerTons3__CtrlPlanePortContent(soap, "ns3:port", -1, &a->port, "ns3:CtrlPlanePortContent"))
+	if (soap_out_PointerTons3__CtrlPlanePortContent(soap, "ns3:port", -1, &a->port, ""))
 		return soap->error;
-	if (soap_out_PointerTons3__CtrlPlaneLinkContent(soap, "ns3:link", -1, &a->link, "ns3:CtrlPlaneLinkContent"))
+	if (soap_out_PointerTons3__CtrlPlaneLinkContent(soap, "ns3:link", -1, &a->link, ""))
 		return soap->error;
 	if (a->nextHop)
 	{	int i;
 		for (i = 0; i < a->__sizenextHop; i++)
-			if (soap_out_ns3__CtrlPlaneNextHopContent(soap, "ns3:nextHop", -1, a->nextHop + i, "ns3:CtrlPlaneNextHopContent"))
+			if (soap_out_ns3__CtrlPlaneNextHopContent(soap, "ns3:nextHop", -1, a->nextHop + i, ""))
 				return soap->error;
 	}
 	return soap_element_end_out(soap, tag);
@@ -12289,19 +12289,19 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__CtrlPlaneSwcapContent(struct soap *soap,
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns3__CtrlPlaneSwcapContent), type))
 		return soap->error;
 	if (a->switchingcapType)
-	{	if (soap_out_string(soap, "ns3:switchingcapType", -1, &a->switchingcapType, "xsd:string"))
+	{	if (soap_out_string(soap, "ns3:switchingcapType", -1, &a->switchingcapType, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns3:switchingcapType"))
 		return soap->error;
 	if (a->encodingType)
-	{	if (soap_out_string(soap, "ns3:encodingType", -1, &a->encodingType, "xsd:string"))
+	{	if (soap_out_string(soap, "ns3:encodingType", -1, &a->encodingType, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns3:encodingType"))
 		return soap->error;
 	if (a->switchingCapabilitySpecificInfo)
-	{	if (soap_out_PointerTons3__CtrlPlaneSwitchingCapabilitySpecificInfo(soap, "ns3:switchingCapabilitySpecificInfo", -1, &a->switchingCapabilitySpecificInfo, "ns3:CtrlPlaneSwitchingCapabilitySpecificInfo"))
+	{	if (soap_out_PointerTons3__CtrlPlaneSwitchingCapabilitySpecificInfo(soap, "ns3:switchingCapabilitySpecificInfo", -1, &a->switchingCapabilitySpecificInfo, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns3:switchingCapabilitySpecificInfo"))
@@ -12395,9 +12395,9 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__CtrlPlaneAdministrativeGroup(struct soap
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns3__CtrlPlaneAdministrativeGroup), type))
 		return soap->error;
-	if (soap_out_int(soap, "ns3:group", -1, &a->group, "xsd:int"))
+	if (soap_out_int(soap, "ns3:group", -1, &a->group, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns3:groupID", -1, &a->groupID, "xsd:string"))
+	if (soap_out_string(soap, "ns3:groupID", -1, &a->groupID, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -12484,7 +12484,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__CtrlPlaneAddressContent(struct soap *soa
 		soap_set_attr(soap, "value", a->value, 1);
 	if (a->type)
 		soap_set_attr(soap, "type", a->type, 1);
-	return soap_out_string(soap, tag, id, &a->__item, "ns3:CtrlPlaneAddressContent");
+	return soap_out_string(soap, tag, id, &a->__item, "");
 }
 
 SOAP_FMAC3 struct ns3__CtrlPlaneAddressContent * SOAP_FMAC4 soap_in_ns3__CtrlPlaneAddressContent(struct soap *soap, const char *tag, struct ns3__CtrlPlaneAddressContent *a, const char *type)
@@ -12574,38 +12574,38 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__CtrlPlaneLinkContent(struct soap *soap, 
 		soap_set_attr(soap, "id", a->id, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns3__CtrlPlaneLinkContent), type))
 		return soap->error;
-	if (soap_out_string(soap, "ns3:remoteLinkId", -1, &a->remoteLinkId, "xsd:string"))
+	if (soap_out_string(soap, "ns3:remoteLinkId", -1, &a->remoteLinkId, ""))
 		return soap->error;
 	if (a->trafficEngineeringMetric)
-	{	if (soap_out_string(soap, "ns3:trafficEngineeringMetric", -1, &a->trafficEngineeringMetric, "xsd:string"))
+	{	if (soap_out_string(soap, "ns3:trafficEngineeringMetric", -1, &a->trafficEngineeringMetric, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns3:trafficEngineeringMetric"))
 		return soap->error;
-	if (soap_out_string(soap, "ns3:capacity", -1, &a->capacity, "xsd:string"))
+	if (soap_out_string(soap, "ns3:capacity", -1, &a->capacity, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns3:maximumReservableCapacity", -1, &a->maximumReservableCapacity, "xsd:string"))
+	if (soap_out_string(soap, "ns3:maximumReservableCapacity", -1, &a->maximumReservableCapacity, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns3:minimumReservableCapacity", -1, &a->minimumReservableCapacity, "xsd:string"))
+	if (soap_out_string(soap, "ns3:minimumReservableCapacity", -1, &a->minimumReservableCapacity, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns3:granularity", -1, &a->granularity, "xsd:string"))
+	if (soap_out_string(soap, "ns3:granularity", -1, &a->granularity, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns3:unreservedCapacity", -1, &a->unreservedCapacity, "xsd:string"))
+	if (soap_out_string(soap, "ns3:unreservedCapacity", -1, &a->unreservedCapacity, ""))
 		return soap->error;
 	if (a->linkProtectionTypes)
 	{	int i;
 		for (i = 0; i < a->__sizelinkProtectionTypes; i++)
-			if (soap_out_string(soap, "ns3:linkProtectionTypes", -1, a->linkProtectionTypes + i, "xsd:string"))
+			if (soap_out_string(soap, "ns3:linkProtectionTypes", -1, a->linkProtectionTypes + i, ""))
 				return soap->error;
 	}
 	if (a->administrativeGroups)
 	{	int i;
 		for (i = 0; i < a->__sizeadministrativeGroups; i++)
-			if (soap_out_ns3__CtrlPlaneAdministrativeGroup(soap, "ns3:administrativeGroups", -1, a->administrativeGroups + i, "ns3:CtrlPlaneAdministrativeGroup"))
+			if (soap_out_ns3__CtrlPlaneAdministrativeGroup(soap, "ns3:administrativeGroups", -1, a->administrativeGroups + i, ""))
 				return soap->error;
 	}
 	if (a->SwitchingCapabilityDescriptors)
-	{	if (soap_out_PointerTons3__CtrlPlaneSwcapContent(soap, "ns3:SwitchingCapabilityDescriptors", -1, &a->SwitchingCapabilityDescriptors, "ns3:CtrlPlaneSwcapContent"))
+	{	if (soap_out_PointerTons3__CtrlPlaneSwcapContent(soap, "ns3:SwitchingCapabilityDescriptors", -1, &a->SwitchingCapabilityDescriptors, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns3:SwitchingCapabilityDescriptors"))
@@ -12804,22 +12804,22 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__CtrlPlanePortContent(struct soap *soap, 
 		soap_set_attr(soap, "id", a->id, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns3__CtrlPlanePortContent), type))
 		return soap->error;
-	if (soap_out_PointerTons3__Lifetime(soap, "ns3:lifetime", -1, &a->lifetime, "ns3:Lifetime"))
+	if (soap_out_PointerTons3__Lifetime(soap, "ns3:lifetime", -1, &a->lifetime, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns3:capacity", -1, &a->capacity, "xsd:string"))
+	if (soap_out_string(soap, "ns3:capacity", -1, &a->capacity, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns3:maximumReservableCapacity", -1, &a->maximumReservableCapacity, "xsd:string"))
+	if (soap_out_string(soap, "ns3:maximumReservableCapacity", -1, &a->maximumReservableCapacity, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns3:minimumReservableCapacity", -1, &a->minimumReservableCapacity, "xsd:string"))
+	if (soap_out_string(soap, "ns3:minimumReservableCapacity", -1, &a->minimumReservableCapacity, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns3:granularity", -1, &a->granularity, "xsd:string"))
+	if (soap_out_string(soap, "ns3:granularity", -1, &a->granularity, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns3:unreservedCapacity", -1, &a->unreservedCapacity, "xsd:string"))
+	if (soap_out_string(soap, "ns3:unreservedCapacity", -1, &a->unreservedCapacity, ""))
 		return soap->error;
 	if (a->link)
 	{	int i;
 		for (i = 0; i < a->__sizelink; i++)
-			if (soap_out_ns3__CtrlPlaneLinkContent(soap, "ns3:link", -1, a->link + i, "ns3:CtrlPlaneLinkContent"))
+			if (soap_out_ns3__CtrlPlaneLinkContent(soap, "ns3:link", -1, a->link + i, ""))
 				return soap->error;
 	}
 	return soap_element_end_out(soap, tag);
@@ -12966,14 +12966,14 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__CtrlPlaneNodeContent(struct soap *soap, 
 		soap_set_attr(soap, "id", a->id, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns3__CtrlPlaneNodeContent), type))
 		return soap->error;
-	if (soap_out_PointerTons3__Lifetime(soap, "ns3:lifetime", -1, &a->lifetime, "ns3:Lifetime"))
+	if (soap_out_PointerTons3__Lifetime(soap, "ns3:lifetime", -1, &a->lifetime, ""))
 		return soap->error;
-	if (soap_out_PointerTons3__CtrlPlaneAddressContent(soap, "ns3:address", -1, &a->address, "ns3:CtrlPlaneAddressContent"))
+	if (soap_out_PointerTons3__CtrlPlaneAddressContent(soap, "ns3:address", -1, &a->address, ""))
 		return soap->error;
 	if (a->port)
 	{	int i;
 		for (i = 0; i < a->__sizeport; i++)
-			if (soap_out_ns3__CtrlPlanePortContent(soap, "ns3:port", -1, a->port + i, "ns3:CtrlPlanePortContent"))
+			if (soap_out_ns3__CtrlPlanePortContent(soap, "ns3:port", -1, a->port + i, ""))
 				return soap->error;
 	}
 	return soap_element_end_out(soap, tag);
@@ -13091,11 +13091,11 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__Lifetime(struct soap *soap, const char *
 		soap_set_attr(soap, "direction", a->direction, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns3__Lifetime), type))
 		return soap->error;
-	if (soap_out_PointerTons3__TimeContent(soap, "ns3:start", -1, &a->start, "ns3:TimeContent"))
+	if (soap_out_PointerTons3__TimeContent(soap, "ns3:start", -1, &a->start, ""))
 		return soap->error;
-	if (soap_out_PointerTons3__TimeContent(soap, "ns3:end", -1, &a->end, "ns3:TimeContent"))
+	if (soap_out_PointerTons3__TimeContent(soap, "ns3:end", -1, &a->end, ""))
 		return soap->error;
-	if (soap_out_PointerTons3__Duration(soap, "ns3:duration", -1, &a->duration, "ns3:Duration"))
+	if (soap_out_PointerTons3__Duration(soap, "ns3:duration", -1, &a->duration, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -13285,24 +13285,24 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__CtrlPlaneDomainContent(struct soap *soap
 		soap_set_attr(soap, "id", a->id, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns3__CtrlPlaneDomainContent), type))
 		return soap->error;
-	if (soap_out_PointerTons3__Lifetime(soap, "ns3:lifetime", -1, &a->lifetime, "ns3:Lifetime"))
+	if (soap_out_PointerTons3__Lifetime(soap, "ns3:lifetime", -1, &a->lifetime, ""))
 		return soap->error;
 	if (a->node)
 	{	int i;
 		for (i = 0; i < a->__sizenode; i++)
-			if (soap_out_ns3__CtrlPlaneNodeContent(soap, "ns3:node", -1, a->node + i, "ns3:CtrlPlaneNodeContent"))
+			if (soap_out_ns3__CtrlPlaneNodeContent(soap, "ns3:node", -1, a->node + i, ""))
 				return soap->error;
 	}
 	if (a->port)
 	{	int i;
 		for (i = 0; i < a->__sizeport; i++)
-			if (soap_out_ns3__CtrlPlanePortContent(soap, "ns3:port", -1, a->port + i, "ns3:CtrlPlanePortContent"))
+			if (soap_out_ns3__CtrlPlanePortContent(soap, "ns3:port", -1, a->port + i, ""))
 				return soap->error;
 	}
 	if (a->link)
 	{	int i;
 		for (i = 0; i < a->__sizelink; i++)
-			if (soap_out_ns3__CtrlPlaneLinkContent(soap, "ns3:link", -1, a->link + i, "ns3:CtrlPlaneLinkContent"))
+			if (soap_out_ns3__CtrlPlaneLinkContent(soap, "ns3:link", -1, a->link + i, ""))
 				return soap->error;
 	}
 	return soap_element_end_out(soap, tag);
@@ -13457,7 +13457,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns1__SignalFault(struct soap *soap, const ch
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ns1__SignalFault), type))
 		return soap->error;
 	if (a->msg)
-	{	if (soap_out_string(soap, "ns1:msg", -1, &a->msg, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:msg", -1, &a->msg, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:msg"))
@@ -13538,7 +13538,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns1__TopologyFault(struct soap *soap, const 
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ns1__TopologyFault), type))
 		return soap->error;
 	if (a->msg)
-	{	if (soap_out_string(soap, "ns1:msg", -1, &a->msg, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:msg", -1, &a->msg, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:msg"))
@@ -13619,7 +13619,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns1__BSSFault(struct soap *soap, const char 
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ns1__BSSFault), type))
 		return soap->error;
 	if (a->msg)
-	{	if (soap_out_string(soap, "ns1:msg", -1, &a->msg, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:msg", -1, &a->msg, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:msg"))
@@ -13700,7 +13700,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns1__AAAFault(struct soap *soap, const char 
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ns1__AAAFault), type))
 		return soap->error;
 	if (a->msg)
-	{	if (soap_out_string(soap, "ns1:msg", -1, &a->msg, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:msg", -1, &a->msg, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:msg"))
@@ -13783,13 +13783,13 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns1__forward(struct soap *soap, const char *
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ns1__forward), type))
 		return soap->error;
 	if (a->payload)
-	{	if (soap_out_PointerTons1__forwardPayload(soap, "ns1:payload", -1, &a->payload, "ns1:forwardPayload"))
+	{	if (soap_out_PointerTons1__forwardPayload(soap, "ns1:payload", -1, &a->payload, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:payload"))
 		return soap->error;
 	if (a->payloadSender)
-	{	if (soap_out_string(soap, "ns1:payloadSender", -1, &a->payloadSender, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:payloadSender", -1, &a->payloadSender, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:payloadSender"))
@@ -13875,7 +13875,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__emptyArg(struct soap *soap, const char *
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__emptyArg), type))
 		return soap->error;
-	if (soap_out_string(soap, "ns1:msg", -1, &a->msg, "xsd:string"))
+	if (soap_out_string(soap, "ns1:msg", -1, &a->msg, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -14080,46 +14080,46 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__msgDetails(struct soap *soap, const char
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__msgDetails), type))
 		return soap->error;
 	if (a->contentType)
-	{	if (soap_out_string(soap, "ns1:contentType", -1, &a->contentType, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:contentType", -1, &a->contentType, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:contentType"))
 		return soap->error;
-	if (soap_out_PointerTons1__forwardPayload(soap, "ns1:forward", -1, &a->forward, "ns1:forwardPayload"))
+	if (soap_out_PointerTons1__forwardPayload(soap, "ns1:forward", -1, &a->forward, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__resCreateContent(soap, "ns1:createReservation", -1, &a->createReservation, "ns1:resCreateContent"))
+	if (soap_out_PointerTons1__resCreateContent(soap, "ns1:createReservation", -1, &a->createReservation, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__modifyResContent(soap, "ns1:modifyReservation", -1, &a->modifyReservation, "ns1:modifyResContent"))
+	if (soap_out_PointerTons1__modifyResContent(soap, "ns1:modifyReservation", -1, &a->modifyReservation, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__globalReservationId(soap, "ns1:cancelReservation", -1, &a->cancelReservation, "ns1:globalReservationId"))
+	if (soap_out_PointerTons1__globalReservationId(soap, "ns1:cancelReservation", -1, &a->cancelReservation, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__globalReservationId(soap, "ns1:queryReservation", -1, &a->queryReservation, "ns1:globalReservationId"))
+	if (soap_out_PointerTons1__globalReservationId(soap, "ns1:queryReservation", -1, &a->queryReservation, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__listRequest(soap, "ns1:listReservations", -1, &a->listReservations, "ns1:listRequest"))
+	if (soap_out_PointerTons1__listRequest(soap, "ns1:listReservations", -1, &a->listReservations, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__createPathContent(soap, "ns1:createPath", -1, &a->createPath, "ns1:createPathContent"))
+	if (soap_out_PointerTons1__createPathContent(soap, "ns1:createPath", -1, &a->createPath, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__refreshPathContent(soap, "ns1:refreshPath", -1, &a->refreshPath, "ns1:refreshPathContent"))
+	if (soap_out_PointerTons1__refreshPathContent(soap, "ns1:refreshPath", -1, &a->refreshPath, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__teardownPathContent(soap, "ns1:teardownPath", -1, &a->teardownPath, "ns1:teardownPathContent"))
+	if (soap_out_PointerTons1__teardownPathContent(soap, "ns1:teardownPath", -1, &a->teardownPath, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__forwardReply(soap, "ns1:forwardResponse", -1, &a->forwardResponse, "ns1:forwardReply"))
+	if (soap_out_PointerTons1__forwardReply(soap, "ns1:forwardResponse", -1, &a->forwardResponse, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__createReply(soap, "ns1:createReservationResponse", -1, &a->createReservationResponse, "ns1:createReply"))
+	if (soap_out_PointerTons1__createReply(soap, "ns1:createReservationResponse", -1, &a->createReservationResponse, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__modifyResReply(soap, "ns1:modifyReservationResponse", -1, &a->modifyReservationResponse, "ns1:modifyResReply"))
+	if (soap_out_PointerTons1__modifyResReply(soap, "ns1:modifyReservationResponse", -1, &a->modifyReservationResponse, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns1:cancelReservationResponse", -1, &a->cancelReservationResponse, "xsd:string"))
+	if (soap_out_string(soap, "ns1:cancelReservationResponse", -1, &a->cancelReservationResponse, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__resDetails(soap, "ns1:queryReservationResponse", -1, &a->queryReservationResponse, "ns1:resDetails"))
+	if (soap_out_PointerTons1__resDetails(soap, "ns1:queryReservationResponse", -1, &a->queryReservationResponse, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__listReply(soap, "ns1:listReservationsResponse", -1, &a->listReservationsResponse, "ns1:listReply"))
+	if (soap_out_PointerTons1__listReply(soap, "ns1:listReservationsResponse", -1, &a->listReservationsResponse, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__createPathResponseContent(soap, "ns1:createPathResponse", -1, &a->createPathResponse, "ns1:createPathResponseContent"))
+	if (soap_out_PointerTons1__createPathResponseContent(soap, "ns1:createPathResponse", -1, &a->createPathResponse, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__refreshPathResponseContent(soap, "ns1:refreshPathResponse", -1, &a->refreshPathResponse, "ns1:refreshPathResponseContent"))
+	if (soap_out_PointerTons1__refreshPathResponseContent(soap, "ns1:refreshPathResponse", -1, &a->refreshPathResponse, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__teardownPathResponseContent(soap, "ns1:teardownPathResponse", -1, &a->teardownPathResponse, "ns1:teardownPathResponseContent"))
+	if (soap_out_PointerTons1__teardownPathResponseContent(soap, "ns1:teardownPathResponse", -1, &a->teardownPathResponse, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -14323,26 +14323,26 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__eventContent(struct soap *soap, const ch
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__eventContent), type))
 		return soap->error;
 	if (a->type)
-	{	if (soap_out_string(soap, "ns1:type", -1, &a->type, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:type", -1, &a->type, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:type"))
 		return soap->error;
-	if (soap_out_LONG64(soap, "ns1:timestamp", -1, &a->timestamp, "xsd:long"))
+	if (soap_out_LONG64(soap, "ns1:timestamp", -1, &a->timestamp, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns1:userLogin", -1, &a->userLogin, "xsd:string"))
+	if (soap_out_string(soap, "ns1:userLogin", -1, &a->userLogin, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns1:errorSource", -1, &a->errorSource, "xsd:string"))
+	if (soap_out_string(soap, "ns1:errorSource", -1, &a->errorSource, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns1:errorCode", -1, &a->errorCode, "xsd:string"))
+	if (soap_out_string(soap, "ns1:errorCode", -1, &a->errorCode, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns1:errorMessage", -1, &a->errorMessage, "xsd:string"))
+	if (soap_out_string(soap, "ns1:errorMessage", -1, &a->errorMessage, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__resDetails(soap, "ns1:resDetails", -1, &a->resDetails, "ns1:resDetails"))
+	if (soap_out_PointerTons1__resDetails(soap, "ns1:resDetails", -1, &a->resDetails, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__msgDetails(soap, "ns1:msgDetails", -1, &a->msgDetails, "ns1:msgDetails"))
+	if (soap_out_PointerTons1__msgDetails(soap, "ns1:msgDetails", -1, &a->msgDetails, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__localDetails(soap, "ns1:localDetails", -1, &a->localDetails, "ns1:localDetails"))
+	if (soap_out_PointerTons1__localDetails(soap, "ns1:localDetails", -1, &a->localDetails, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -14471,9 +14471,9 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__mplsInfo(struct soap *soap, const char *
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__mplsInfo), type))
 		return soap->error;
-	if (soap_out_int(soap, "ns1:burstLimit", -1, &a->burstLimit, "xsd:int"))
+	if (soap_out_int(soap, "ns1:burstLimit", -1, &a->burstLimit, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns1:lspClass", -1, &a->lspClass, "xsd:string"))
+	if (soap_out_string(soap, "ns1:lspClass", -1, &a->lspClass, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -14567,24 +14567,24 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__layer3Info(struct soap *soap, const char
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__layer3Info), type))
 		return soap->error;
 	if (a->srcHost)
-	{	if (soap_out_string(soap, "ns1:srcHost", -1, &a->srcHost, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:srcHost", -1, &a->srcHost, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:srcHost"))
 		return soap->error;
 	if (a->destHost)
-	{	if (soap_out_string(soap, "ns1:destHost", -1, &a->destHost, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:destHost", -1, &a->destHost, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:destHost"))
 		return soap->error;
-	if (soap_out_string(soap, "ns1:protocol", -1, &a->protocol, "xsd:string"))
+	if (soap_out_string(soap, "ns1:protocol", -1, &a->protocol, ""))
 		return soap->error;
-	if (soap_out_PointerToint(soap, "ns1:srcIpPort", -1, &a->srcIpPort, "xsd:int"))
+	if (soap_out_PointerToint(soap, "ns1:srcIpPort", -1, &a->srcIpPort, ""))
 		return soap->error;
-	if (soap_out_PointerToint(soap, "ns1:destIpPort", -1, &a->destIpPort, "xsd:int"))
+	if (soap_out_PointerToint(soap, "ns1:destIpPort", -1, &a->destIpPort, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns1:dscp", -1, &a->dscp, "xsd:string"))
+	if (soap_out_string(soap, "ns1:dscp", -1, &a->dscp, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -14697,18 +14697,18 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__layer2Info(struct soap *soap, const char
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__layer2Info), type))
 		return soap->error;
-	if (soap_out_PointerTons1__vlanTag(soap, "ns1:srcVtag", -1, &a->srcVtag, "ns1:vlanTag"))
+	if (soap_out_PointerTons1__vlanTag(soap, "ns1:srcVtag", -1, &a->srcVtag, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__vlanTag(soap, "ns1:destVtag", -1, &a->destVtag, "ns1:vlanTag"))
+	if (soap_out_PointerTons1__vlanTag(soap, "ns1:destVtag", -1, &a->destVtag, ""))
 		return soap->error;
 	if (a->srcEndpoint)
-	{	if (soap_out_string(soap, "ns1:srcEndpoint", -1, &a->srcEndpoint, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:srcEndpoint", -1, &a->srcEndpoint, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:srcEndpoint"))
 		return soap->error;
 	if (a->destEndpoint)
-	{	if (soap_out_string(soap, "ns1:destEndpoint", -1, &a->destEndpoint, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:destEndpoint", -1, &a->destEndpoint, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:destEndpoint"))
@@ -14822,12 +14822,12 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__CtrlPlanePathContent(struct soap *soap, 
 		soap_set_attr(soap, "direction", a->direction, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns3__CtrlPlanePathContent), type))
 		return soap->error;
-	if (soap_out_PointerTons3__Lifetime(soap, "ns3:lifetime", -1, &a->lifetime, "ns3:Lifetime"))
+	if (soap_out_PointerTons3__Lifetime(soap, "ns3:lifetime", -1, &a->lifetime, ""))
 		return soap->error;
 	if (a->hop)
 	{	int i;
 		for (i = 0; i < a->__sizehop; i++)
-			if (soap_out_ns3__CtrlPlaneHopContent(soap, "ns3:hop", -1, a->hop + i, "ns3:CtrlPlaneHopContent"))
+			if (soap_out_ns3__CtrlPlaneHopContent(soap, "ns3:hop", -1, a->hop + i, ""))
 				return soap->error;
 	}
 	return soap_element_end_out(soap, tag);
@@ -14950,26 +14950,26 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__forwardReply(struct soap *soap, const ch
 	if (a->contentType)
 		soap_element_result(soap, "ns1:contentType");
 	if (a->contentType)
-	{	if (soap_out_string(soap, "ns1:contentType", -1, &a->contentType, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:contentType", -1, &a->contentType, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:contentType"))
 		return soap->error;
-	if (soap_out_PointerTons1__createReply(soap, "ns1:createReservation", -1, &a->createReservation, "ns1:createReply"))
+	if (soap_out_PointerTons1__createReply(soap, "ns1:createReservation", -1, &a->createReservation, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__modifyResReply(soap, "ns1:modifyReservation", -1, &a->modifyReservation, "ns1:modifyResReply"))
+	if (soap_out_PointerTons1__modifyResReply(soap, "ns1:modifyReservation", -1, &a->modifyReservation, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ns1:cancelReservation", -1, &a->cancelReservation, "xsd:string"))
+	if (soap_out_string(soap, "ns1:cancelReservation", -1, &a->cancelReservation, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__resDetails(soap, "ns1:queryReservation", -1, &a->queryReservation, "ns1:resDetails"))
+	if (soap_out_PointerTons1__resDetails(soap, "ns1:queryReservation", -1, &a->queryReservation, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__listReply(soap, "ns1:listReservations", -1, &a->listReservations, "ns1:listReply"))
+	if (soap_out_PointerTons1__listReply(soap, "ns1:listReservations", -1, &a->listReservations, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__createPathResponseContent(soap, "ns1:createPath", -1, &a->createPath, "ns1:createPathResponseContent"))
+	if (soap_out_PointerTons1__createPathResponseContent(soap, "ns1:createPath", -1, &a->createPath, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__refreshPathResponseContent(soap, "ns1:refreshPath", -1, &a->refreshPath, "ns1:refreshPathResponseContent"))
+	if (soap_out_PointerTons1__refreshPathResponseContent(soap, "ns1:refreshPath", -1, &a->refreshPath, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__teardownPathResponseContent(soap, "ns1:teardownPath", -1, &a->teardownPath, "ns1:teardownPathResponseContent"))
+	if (soap_out_PointerTons1__teardownPathResponseContent(soap, "ns1:teardownPath", -1, &a->teardownPath, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -15096,7 +15096,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__globalReservationId(struct soap *soap, c
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__globalReservationId), type))
 		return soap->error;
 	if (a->gri)
-	{	if (soap_out_string(soap, "ns1:gri", -1, &a->gri, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:gri", -1, &a->gri, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:gri"))
@@ -15193,26 +15193,26 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__forwardPayload(struct soap *soap, const 
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__forwardPayload), type))
 		return soap->error;
 	if (a->contentType)
-	{	if (soap_out_string(soap, "ns1:contentType", -1, &a->contentType, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:contentType", -1, &a->contentType, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:contentType"))
 		return soap->error;
-	if (soap_out_PointerTons1__resCreateContent(soap, "ns1:createReservation", -1, &a->createReservation, "ns1:resCreateContent"))
+	if (soap_out_PointerTons1__resCreateContent(soap, "ns1:createReservation", -1, &a->createReservation, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__modifyResContent(soap, "ns1:modifyReservation", -1, &a->modifyReservation, "ns1:modifyResContent"))
+	if (soap_out_PointerTons1__modifyResContent(soap, "ns1:modifyReservation", -1, &a->modifyReservation, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__globalReservationId(soap, "ns1:cancelReservation", -1, &a->cancelReservation, "ns1:globalReservationId"))
+	if (soap_out_PointerTons1__globalReservationId(soap, "ns1:cancelReservation", -1, &a->cancelReservation, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__globalReservationId(soap, "ns1:queryReservation", -1, &a->queryReservation, "ns1:globalReservationId"))
+	if (soap_out_PointerTons1__globalReservationId(soap, "ns1:queryReservation", -1, &a->queryReservation, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__listRequest(soap, "ns1:listReservations", -1, &a->listReservations, "ns1:listRequest"))
+	if (soap_out_PointerTons1__listRequest(soap, "ns1:listReservations", -1, &a->listReservations, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__createPathContent(soap, "ns1:createPath", -1, &a->createPath, "ns1:createPathContent"))
+	if (soap_out_PointerTons1__createPathContent(soap, "ns1:createPath", -1, &a->createPath, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__refreshPathContent(soap, "ns1:refreshPath", -1, &a->refreshPath, "ns1:refreshPathContent"))
+	if (soap_out_PointerTons1__refreshPathContent(soap, "ns1:refreshPath", -1, &a->refreshPath, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__teardownPathContent(soap, "ns1:teardownPath", -1, &a->teardownPath, "ns1:teardownPathContent"))
+	if (soap_out_PointerTons1__teardownPathContent(soap, "ns1:teardownPath", -1, &a->teardownPath, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -15351,10 +15351,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__listReply(struct soap *soap, const char 
 	if (a->resDetails)
 	{	int i;
 		for (i = 0; i < a->__sizeresDetails; i++)
-			if (soap_out_ns1__resDetails(soap, "ns1:resDetails", -1, a->resDetails + i, "ns1:resDetails"))
+			if (soap_out_ns1__resDetails(soap, "ns1:resDetails", -1, a->resDetails + i, ""))
 				return soap->error;
 	}
-	if (soap_out_PointerToint(soap, "ns1:totalResults", -1, &a->totalResults, "xsd:int"))
+	if (soap_out_PointerToint(soap, "ns1:totalResults", -1, &a->totalResults, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -15455,7 +15455,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__vlanTag(struct soap *soap, const char *t
 {
 	if (a->tagged)
 		soap_set_attr(soap, "tagged", soap_xsd__boolean_2s(soap, *a->tagged), 1);
-	return soap_out_string(soap, tag, id, &a->__item, "ns1:vlanTag");
+	return soap_out_string(soap, tag, id, &a->__item, "");
 }
 
 SOAP_FMAC3 struct ns1__vlanTag * SOAP_FMAC4 soap_in_ns1__vlanTag(struct soap *soap, const char *tag, struct ns1__vlanTag *a, const char *type)
@@ -15516,9 +15516,9 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__listRequest_sequence(struct soa
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__listRequest_sequence(struct soap *soap, const char *tag, int id, const struct __ns1__listRequest_sequence *a, const char *type)
 {
-	if (soap_out_LONG64(soap, "ns1:startTime", -1, &a->startTime, "xsd:long"))
+	if (soap_out_LONG64(soap, "ns1:startTime", -1, &a->startTime, ""))
 		return soap->error;
-	if (soap_out_LONG64(soap, "ns1:endTime", -1, &a->endTime, "xsd:long"))
+	if (soap_out_LONG64(soap, "ns1:endTime", -1, &a->endTime, ""))
 		return soap->error;
 	return SOAP_OK;
 }
@@ -15637,32 +15637,32 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__listRequest(struct soap *soap, const cha
 	if (a->resStatus)
 	{	int i;
 		for (i = 0; i < a->__sizeresStatus; i++)
-			if (soap_out_string(soap, "ns1:resStatus", -1, a->resStatus + i, "xsd:string"))
+			if (soap_out_string(soap, "ns1:resStatus", -1, a->resStatus + i, ""))
 				return soap->error;
 	}
 	if (a->__listRequest_sequence)
 	{	int i;
 		for (i = 0; i < a->__size_listRequest_sequence; i++)
-			if (soap_out___ns1__listRequest_sequence(soap, "-listRequest-sequence", -1, a->__listRequest_sequence + i, "-ns1:listRequest-sequence"))
+			if (soap_out___ns1__listRequest_sequence(soap, "-listRequest-sequence", -1, a->__listRequest_sequence + i, ""))
 				return soap->error;
 	}
-	if (soap_out_string(soap, "ns1:description", -1, &a->description, "xsd:string"))
+	if (soap_out_string(soap, "ns1:description", -1, &a->description, ""))
 		return soap->error;
 	if (a->linkId)
 	{	int i;
 		for (i = 0; i < a->__sizelinkId; i++)
-			if (soap_out_string(soap, "ns1:linkId", -1, a->linkId + i, "xsd:string"))
+			if (soap_out_string(soap, "ns1:linkId", -1, a->linkId + i, ""))
 				return soap->error;
 	}
 	if (a->vlanTag)
 	{	int i;
 		for (i = 0; i < a->__sizevlanTag; i++)
-			if (soap_out_ns1__vlanTag(soap, "ns1:vlanTag", -1, a->vlanTag + i, "ns1:vlanTag"))
+			if (soap_out_ns1__vlanTag(soap, "ns1:vlanTag", -1, a->vlanTag + i, ""))
 				return soap->error;
 	}
-	if (soap_out_PointerToint(soap, "ns1:resRequested", -1, &a->resRequested, "xsd:int"))
+	if (soap_out_PointerToint(soap, "ns1:resRequested", -1, &a->resRequested, ""))
 		return soap->error;
-	if (soap_out_PointerToint(soap, "ns1:resOffset", -1, &a->resOffset, "xsd:int"))
+	if (soap_out_PointerToint(soap, "ns1:resOffset", -1, &a->resOffset, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -15859,13 +15859,13 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__teardownPathResponseContent(struct soap 
 	if (a->globalReservationId)
 		soap_element_result(soap, "ns1:globalReservationId");
 	if (a->globalReservationId)
-	{	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:globalReservationId"))
 		return soap->error;
 	if (a->status)
-	{	if (soap_out_string(soap, "ns1:status", -1, &a->status, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:status", -1, &a->status, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:status"))
@@ -15954,10 +15954,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__teardownPathContent(struct soap *soap, c
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__teardownPathContent), type))
 		return soap->error;
-	if (soap_out_string(soap, "ns1:token", -1, &a->token, "xsd:string"))
+	if (soap_out_string(soap, "ns1:token", -1, &a->token, ""))
 		return soap->error;
 	if (a->globalReservationId)
-	{	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:globalReservationId"))
@@ -16048,13 +16048,13 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__refreshPathResponseContent(struct soap *
 	if (a->globalReservationId)
 		soap_element_result(soap, "ns1:globalReservationId");
 	if (a->globalReservationId)
-	{	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:globalReservationId"))
 		return soap->error;
 	if (a->status)
-	{	if (soap_out_string(soap, "ns1:status", -1, &a->status, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:status", -1, &a->status, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:status"))
@@ -16143,10 +16143,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__refreshPathContent(struct soap *soap, co
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__refreshPathContent), type))
 		return soap->error;
-	if (soap_out_string(soap, "ns1:token", -1, &a->token, "xsd:string"))
+	if (soap_out_string(soap, "ns1:token", -1, &a->token, ""))
 		return soap->error;
 	if (a->globalReservationId)
-	{	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:globalReservationId"))
@@ -16237,13 +16237,13 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__createPathResponseContent(struct soap *s
 	if (a->globalReservationId)
 		soap_element_result(soap, "ns1:globalReservationId");
 	if (a->globalReservationId)
-	{	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:globalReservationId"))
 		return soap->error;
 	if (a->status)
-	{	if (soap_out_string(soap, "ns1:status", -1, &a->status, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:status", -1, &a->status, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:status"))
@@ -16332,10 +16332,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__createPathContent(struct soap *soap, con
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__createPathContent), type))
 		return soap->error;
-	if (soap_out_string(soap, "ns1:token", -1, &a->token, "xsd:string"))
+	if (soap_out_string(soap, "ns1:token", -1, &a->token, ""))
 		return soap->error;
 	if (a->globalReservationId)
-	{	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:globalReservationId"))
@@ -16455,7 +16455,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__CtrlPlaneTopologyContent(struct soap *so
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns3__CtrlPlaneTopologyContent), type))
 		return soap->error;
 	if (a->idcId)
-	{	if (soap_out_string(soap, "ns3:idcId", -1, &a->idcId, "xsd:string"))
+	{	if (soap_out_string(soap, "ns3:idcId", -1, &a->idcId, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns3:idcId"))
@@ -16463,19 +16463,19 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__CtrlPlaneTopologyContent(struct soap *so
 	if (a->path)
 	{	int i;
 		for (i = 0; i < a->__sizepath; i++)
-			if (soap_out_ns3__CtrlPlanePathContent(soap, "ns3:path", -1, a->path + i, "ns3:CtrlPlanePathContent"))
+			if (soap_out_ns3__CtrlPlanePathContent(soap, "ns3:path", -1, a->path + i, ""))
 				return soap->error;
 	}
 	if (a->domain)
 	{	int i;
 		for (i = 0; i < a->__sizedomain; i++)
-			if (soap_out_ns3__CtrlPlaneDomainContent(soap, "ns3:domain", -1, a->domain + i, "ns3:CtrlPlaneDomainContent"))
+			if (soap_out_ns3__CtrlPlaneDomainContent(soap, "ns3:domain", -1, a->domain + i, ""))
 				return soap->error;
 	}
 	if (a->domainSignature)
 	{	int i;
 		for (i = 0; i < a->__sizedomainSignature; i++)
-			if (soap_out_ns3__CtrlPlaneDomainSignatureContent(soap, "ns3:domainSignature", -1, a->domainSignature + i, "ns3:CtrlPlaneDomainSignatureContent"))
+			if (soap_out_ns3__CtrlPlaneDomainSignatureContent(soap, "ns3:domainSignature", -1, a->domainSignature + i, ""))
 				return soap->error;
 	}
 	return soap_element_end_out(soap, tag);
@@ -16718,7 +16718,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__getTopologyContent(struct soap *soap, co
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__getTopologyContent), type))
 		return soap->error;
 	if (a->topologyType)
-	{	if (soap_out_string(soap, "ns1:topologyType", -1, &a->topologyType, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:topologyType", -1, &a->topologyType, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:topologyType"))
@@ -16814,39 +16814,39 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__resDetails(struct soap *soap, const char
 	if (a->globalReservationId)
 		soap_element_result(soap, "ns1:globalReservationId");
 	if (a->globalReservationId)
-	{	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:globalReservationId"))
 		return soap->error;
 	if (a->login)
-	{	if (soap_out_string(soap, "ns1:login", -1, &a->login, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:login", -1, &a->login, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:login"))
 		return soap->error;
 	if (a->status)
-	{	if (soap_out_string(soap, "ns1:status", -1, &a->status, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:status", -1, &a->status, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:status"))
 		return soap->error;
-	if (soap_out_LONG64(soap, "ns1:startTime", -1, &a->startTime, "xsd:long"))
+	if (soap_out_LONG64(soap, "ns1:startTime", -1, &a->startTime, ""))
 		return soap->error;
-	if (soap_out_LONG64(soap, "ns1:endTime", -1, &a->endTime, "xsd:long"))
+	if (soap_out_LONG64(soap, "ns1:endTime", -1, &a->endTime, ""))
 		return soap->error;
-	if (soap_out_LONG64(soap, "ns1:createTime", -1, &a->createTime, "xsd:long"))
+	if (soap_out_LONG64(soap, "ns1:createTime", -1, &a->createTime, ""))
 		return soap->error;
-	if (soap_out_int(soap, "ns1:bandwidth", -1, &a->bandwidth, "xsd:int"))
+	if (soap_out_int(soap, "ns1:bandwidth", -1, &a->bandwidth, ""))
 		return soap->error;
 	if (a->description)
-	{	if (soap_out_string(soap, "ns1:description", -1, &a->description, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:description", -1, &a->description, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:description"))
 		return soap->error;
 	if (a->pathInfo)
-	{	if (soap_out_PointerTons1__pathInfo(soap, "ns1:pathInfo", -1, &a->pathInfo, "ns1:pathInfo"))
+	{	if (soap_out_PointerTons1__pathInfo(soap, "ns1:pathInfo", -1, &a->pathInfo, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:pathInfo"))
@@ -16978,7 +16978,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__modifyResReply(struct soap *soap, const 
 	if (a->reservation)
 		soap_element_result(soap, "ns1:reservation");
 	if (a->reservation)
-	{	if (soap_out_PointerTons1__resDetails(soap, "ns1:reservation", -1, &a->reservation, "ns1:resDetails"))
+	{	if (soap_out_PointerTons1__resDetails(soap, "ns1:reservation", -1, &a->reservation, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:reservation"))
@@ -17068,24 +17068,24 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__modifyResContent(struct soap *soap, cons
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__modifyResContent), type))
 		return soap->error;
 	if (a->globalReservationId)
-	{	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:globalReservationId"))
 		return soap->error;
-	if (soap_out_LONG64(soap, "ns1:startTime", -1, &a->startTime, "xsd:long"))
+	if (soap_out_LONG64(soap, "ns1:startTime", -1, &a->startTime, ""))
 		return soap->error;
-	if (soap_out_LONG64(soap, "ns1:endTime", -1, &a->endTime, "xsd:long"))
+	if (soap_out_LONG64(soap, "ns1:endTime", -1, &a->endTime, ""))
 		return soap->error;
-	if (soap_out_int(soap, "ns1:bandwidth", -1, &a->bandwidth, "xsd:int"))
+	if (soap_out_int(soap, "ns1:bandwidth", -1, &a->bandwidth, ""))
 		return soap->error;
 	if (a->description)
-	{	if (soap_out_string(soap, "ns1:description", -1, &a->description, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:description", -1, &a->description, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:description"))
 		return soap->error;
-	if (soap_out_PointerTons1__pathInfo(soap, "ns1:pathInfo", -1, &a->pathInfo, "ns1:pathInfo"))
+	if (soap_out_PointerTons1__pathInfo(soap, "ns1:pathInfo", -1, &a->pathInfo, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -17201,20 +17201,20 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__createReply(struct soap *soap, const cha
 	if (a->globalReservationId)
 		soap_element_result(soap, "ns1:globalReservationId");
 	if (a->globalReservationId)
-	{	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:globalReservationId"))
 		return soap->error;
-	if (soap_out_string(soap, "ns1:token", -1, &a->token, "xsd:string"))
+	if (soap_out_string(soap, "ns1:token", -1, &a->token, ""))
 		return soap->error;
 	if (a->status)
-	{	if (soap_out_string(soap, "ns1:status", -1, &a->status, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:status", -1, &a->status, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:status"))
 		return soap->error;
-	if (soap_out_PointerTons1__pathInfo(soap, "ns1:pathInfo", -1, &a->pathInfo, "ns1:pathInfo"))
+	if (soap_out_PointerTons1__pathInfo(soap, "ns1:pathInfo", -1, &a->pathInfo, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -17321,20 +17321,20 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__pathInfo(struct soap *soap, const char *
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__pathInfo), type))
 		return soap->error;
 	if (a->pathSetupMode)
-	{	if (soap_out_string(soap, "ns1:pathSetupMode", -1, &a->pathSetupMode, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:pathSetupMode", -1, &a->pathSetupMode, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:pathSetupMode"))
 		return soap->error;
-	if (soap_out_string(soap, "ns1:pathType", -1, &a->pathType, "xsd:string"))
+	if (soap_out_string(soap, "ns1:pathType", -1, &a->pathType, ""))
 		return soap->error;
-	if (soap_out_PointerTons3__CtrlPlanePathContent(soap, "ns1:path", -1, &a->path, "ns3:CtrlPlanePathContent"))
+	if (soap_out_PointerTons3__CtrlPlanePathContent(soap, "ns1:path", -1, &a->path, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__layer2Info(soap, "ns1:layer2Info", -1, &a->layer2Info, "ns1:layer2Info"))
+	if (soap_out_PointerTons1__layer2Info(soap, "ns1:layer2Info", -1, &a->layer2Info, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__layer3Info(soap, "ns1:layer3Info", -1, &a->layer3Info, "ns1:layer3Info"))
+	if (soap_out_PointerTons1__layer3Info(soap, "ns1:layer3Info", -1, &a->layer3Info, ""))
 		return soap->error;
-	if (soap_out_PointerTons1__mplsInfo(soap, "ns1:mplsInfo", -1, &a->mplsInfo, "ns1:mplsInfo"))
+	if (soap_out_PointerTons1__mplsInfo(soap, "ns1:mplsInfo", -1, &a->mplsInfo, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -17449,22 +17449,22 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__resCreateContent(struct soap *soap, cons
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__resCreateContent), type))
 		return soap->error;
-	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, "xsd:string"))
+	if (soap_out_string(soap, "ns1:globalReservationId", -1, &a->globalReservationId, ""))
 		return soap->error;
-	if (soap_out_LONG64(soap, "ns1:startTime", -1, &a->startTime, "xsd:long"))
+	if (soap_out_LONG64(soap, "ns1:startTime", -1, &a->startTime, ""))
 		return soap->error;
-	if (soap_out_LONG64(soap, "ns1:endTime", -1, &a->endTime, "xsd:long"))
+	if (soap_out_LONG64(soap, "ns1:endTime", -1, &a->endTime, ""))
 		return soap->error;
-	if (soap_out_int(soap, "ns1:bandwidth", -1, &a->bandwidth, "xsd:int"))
+	if (soap_out_int(soap, "ns1:bandwidth", -1, &a->bandwidth, ""))
 		return soap->error;
 	if (a->description)
-	{	if (soap_out_string(soap, "ns1:description", -1, &a->description, "xsd:string"))
+	{	if (soap_out_string(soap, "ns1:description", -1, &a->description, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:description"))
 		return soap->error;
 	if (a->pathInfo)
-	{	if (soap_out_PointerTons1__pathInfo(soap, "ns1:pathInfo", -1, &a->pathInfo, "ns1:pathInfo"))
+	{	if (soap_out_PointerTons1__pathInfo(soap, "ns1:pathInfo", -1, &a->pathInfo, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ns1:pathInfo"))
@@ -17707,9 +17707,9 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___xenc__union_ReferenceList(struct soa
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out___xenc__union_ReferenceList(struct soap *soap, const char *tag, int id, const struct __xenc__union_ReferenceList *a, const char *type)
 {
-	if (soap_out_PointerToxenc__ReferenceType(soap, "xenc:DataReference", -1, &a->DataReference, "xenc:ReferenceType"))
+	if (soap_out_PointerToxenc__ReferenceType(soap, "xenc:DataReference", -1, &a->DataReference, ""))
 		return soap->error;
-	if (soap_out_PointerToxenc__ReferenceType(soap, "xenc:KeyReference", -1, &a->KeyReference, "xenc:ReferenceType"))
+	if (soap_out_PointerToxenc__ReferenceType(soap, "xenc:KeyReference", -1, &a->KeyReference, ""))
 		return soap->error;
 	return SOAP_OK;
 }
@@ -17790,7 +17790,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__xenc__ReferenceList(struct soap *soap, const
 	if (a->__union_ReferenceList)
 	{	int i;
 		for (i = 0; i < a->__size_ReferenceList; i++)
-			if (soap_out___xenc__union_ReferenceList(soap, "-union-ReferenceList", -1, a->__union_ReferenceList + i, "-xenc:union-ReferenceList"))
+			if (soap_out___xenc__union_ReferenceList(soap, "-union-ReferenceList", -1, a->__union_ReferenceList + i, ""))
 				return soap->error;
 	}
 	return soap_element_end_out(soap, tag);
@@ -17974,7 +17974,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__EncryptionPropertiesType(struct soap *s
 	if (a->EncryptionProperty)
 	{	int i;
 		for (i = 0; i < a->__sizeEncryptionProperty; i++)
-			if (soap_out_xenc__EncryptionPropertyType(soap, "xenc:EncryptionProperty", -1, a->EncryptionProperty + i, "xenc:EncryptionPropertyType"))
+			if (soap_out_xenc__EncryptionPropertyType(soap, "xenc:EncryptionProperty", -1, a->EncryptionProperty + i, ""))
 				return soap->error;
 	}
 	return soap_element_end_out(soap, tag);
@@ -18150,11 +18150,11 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__AgreementMethodType(struct soap *soap, 
 		soap_set_attr(soap, "Algorithm", a->Algorithm, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_xenc__AgreementMethodType), type))
 		return soap->error;
-	if (soap_out_string(soap, "xenc:KA-Nonce", -1, &a->KA_Nonce, "xsd:string"))
+	if (soap_out_string(soap, "xenc:KA-Nonce", -1, &a->KA_Nonce, ""))
 		return soap->error;
-	if (soap_out_PointerTods__KeyInfoType(soap, "xenc:OriginatorKeyInfo", -1, &a->OriginatorKeyInfo, "ds:KeyInfoType"))
+	if (soap_out_PointerTods__KeyInfoType(soap, "xenc:OriginatorKeyInfo", -1, &a->OriginatorKeyInfo, ""))
 		return soap->error;
-	if (soap_out_PointerTods__KeyInfoType(soap, "xenc:RecipientKeyInfo", -1, &a->RecipientKeyInfo, "ds:KeyInfoType"))
+	if (soap_out_PointerTods__KeyInfoType(soap, "xenc:RecipientKeyInfo", -1, &a->RecipientKeyInfo, ""))
 		return soap->error;
 	soap_outliteral(soap, "-mixed", &a->__mixed, NULL);
 	return soap_element_end_out(soap, tag);
@@ -18273,21 +18273,21 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__EncryptedKeyType(struct soap *soap, con
 		soap_set_attr(soap, "Recipient", a->Recipient, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_xenc__EncryptedKeyType), type))
 		return soap->error;
-	if (soap_out_PointerToxenc__EncryptionMethodType(soap, "xenc:EncryptionMethod", -1, &a->EncryptionMethod, "xenc:EncryptionMethodType"))
+	if (soap_out_PointerToxenc__EncryptionMethodType(soap, "xenc:EncryptionMethod", -1, &a->EncryptionMethod, ""))
 		return soap->error;
 	if (soap_out_PointerTo_ds__KeyInfo(soap, "ds:KeyInfo", -1, &a->ds__KeyInfo, ""))
 		return soap->error;
 	if (a->CipherData)
-	{	if (soap_out_PointerToxenc__CipherDataType(soap, "xenc:CipherData", -1, &a->CipherData, "xenc:CipherDataType"))
+	{	if (soap_out_PointerToxenc__CipherDataType(soap, "xenc:CipherData", -1, &a->CipherData, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "xenc:CipherData"))
 		return soap->error;
-	if (soap_out_PointerToxenc__EncryptionPropertiesType(soap, "xenc:EncryptionProperties", -1, &a->EncryptionProperties, "xenc:EncryptionPropertiesType"))
+	if (soap_out_PointerToxenc__EncryptionPropertiesType(soap, "xenc:EncryptionProperties", -1, &a->EncryptionProperties, ""))
 		return soap->error;
 	if (soap_out_PointerTo_xenc__ReferenceList(soap, "xenc:ReferenceList", -1, &a->ReferenceList, ""))
 		return soap->error;
-	if (soap_out_string(soap, "xenc:CarriedKeyName", -1, &a->CarriedKeyName, "xsd:string"))
+	if (soap_out_string(soap, "xenc:CarriedKeyName", -1, &a->CarriedKeyName, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -18422,17 +18422,17 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__EncryptedDataType(struct soap *soap, co
 		soap_set_attr(soap, "Encoding", a->Encoding, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_xenc__EncryptedDataType), type))
 		return soap->error;
-	if (soap_out_PointerToxenc__EncryptionMethodType(soap, "xenc:EncryptionMethod", -1, &a->EncryptionMethod, "xenc:EncryptionMethodType"))
+	if (soap_out_PointerToxenc__EncryptionMethodType(soap, "xenc:EncryptionMethod", -1, &a->EncryptionMethod, ""))
 		return soap->error;
 	if (soap_out_PointerTo_ds__KeyInfo(soap, "ds:KeyInfo", -1, &a->ds__KeyInfo, ""))
 		return soap->error;
 	if (a->CipherData)
-	{	if (soap_out_PointerToxenc__CipherDataType(soap, "xenc:CipherData", -1, &a->CipherData, "xenc:CipherDataType"))
+	{	if (soap_out_PointerToxenc__CipherDataType(soap, "xenc:CipherData", -1, &a->CipherData, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "xenc:CipherData"))
 		return soap->error;
-	if (soap_out_PointerToxenc__EncryptionPropertiesType(soap, "xenc:EncryptionProperties", -1, &a->EncryptionProperties, "xenc:EncryptionPropertiesType"))
+	if (soap_out_PointerToxenc__EncryptionPropertiesType(soap, "xenc:EncryptionProperties", -1, &a->EncryptionProperties, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -18615,7 +18615,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__CipherReferenceType(struct soap *soap, 
 		soap_set_attr(soap, "URI", a->URI, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_xenc__CipherReferenceType), type))
 		return soap->error;
-	if (soap_out_PointerToxenc__TransformsType(soap, "xenc:Transforms", -1, &a->Transforms, "xenc:TransformsType"))
+	if (soap_out_PointerToxenc__TransformsType(soap, "xenc:Transforms", -1, &a->Transforms, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -18692,9 +18692,9 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__CipherDataType(struct soap *soap, const
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_xenc__CipherDataType), type))
 		return soap->error;
-	if (soap_out_string(soap, "xenc:CipherValue", -1, &a->CipherValue, "xsd:string"))
+	if (soap_out_string(soap, "xenc:CipherValue", -1, &a->CipherValue, ""))
 		return soap->error;
-	if (soap_out_PointerToxenc__CipherReferenceType(soap, "xenc:CipherReference", -1, &a->CipherReference, "xenc:CipherReferenceType"))
+	if (soap_out_PointerToxenc__CipherReferenceType(soap, "xenc:CipherReference", -1, &a->CipherReference, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -18779,9 +18779,9 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__EncryptionMethodType(struct soap *soap,
 		soap_set_attr(soap, "Algorithm", a->Algorithm, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_xenc__EncryptionMethodType), type))
 		return soap->error;
-	if (soap_out_PointerToint(soap, "xenc:KeySize", -1, &a->KeySize, "xsd:int"))
+	if (soap_out_PointerToint(soap, "xenc:KeySize", -1, &a->KeySize, ""))
 		return soap->error;
-	if (soap_out_string(soap, "xenc:OAEPparams", -1, &a->OAEPparams, "xsd:string"))
+	if (soap_out_string(soap, "xenc:OAEPparams", -1, &a->OAEPparams, ""))
 		return soap->error;
 	soap_outliteral(soap, "-mixed", &a->__mixed, NULL);
 	return soap_element_end_out(soap, tag);
@@ -18887,17 +18887,17 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__EncryptedType(struct soap *soap, const 
 		soap_set_attr(soap, "Encoding", a->Encoding, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_xenc__EncryptedType), type))
 		return soap->error;
-	if (soap_out_PointerToxenc__EncryptionMethodType(soap, "xenc:EncryptionMethod", -1, &a->EncryptionMethod, "xenc:EncryptionMethodType"))
+	if (soap_out_PointerToxenc__EncryptionMethodType(soap, "xenc:EncryptionMethod", -1, &a->EncryptionMethod, ""))
 		return soap->error;
 	if (soap_out_PointerTo_ds__KeyInfo(soap, "ds:KeyInfo", -1, &a->ds__KeyInfo, ""))
 		return soap->error;
 	if (a->CipherData)
-	{	if (soap_out_PointerToxenc__CipherDataType(soap, "xenc:CipherData", -1, &a->CipherData, "xenc:CipherDataType"))
+	{	if (soap_out_PointerToxenc__CipherDataType(soap, "xenc:CipherData", -1, &a->CipherData, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "xenc:CipherData"))
 		return soap->error;
-	if (soap_out_PointerToxenc__EncryptionPropertiesType(soap, "xenc:EncryptionProperties", -1, &a->EncryptionProperties, "xenc:EncryptionPropertiesType"))
+	if (soap_out_PointerToxenc__EncryptionPropertiesType(soap, "xenc:EncryptionProperties", -1, &a->EncryptionProperties, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -19003,13 +19003,13 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__RSAKeyValueType(struct soap *soap, const 
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__RSAKeyValueType), type))
 		return soap->error;
 	if (a->Modulus)
-	{	if (soap_out_string(soap, "ds:Modulus", -1, &a->Modulus, "xsd:string"))
+	{	if (soap_out_string(soap, "ds:Modulus", -1, &a->Modulus, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ds:Modulus"))
 		return soap->error;
 	if (a->Exponent)
-	{	if (soap_out_string(soap, "ds:Exponent", -1, &a->Exponent, "xsd:string"))
+	{	if (soap_out_string(soap, "ds:Exponent", -1, &a->Exponent, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ds:Exponent"))
@@ -19107,36 +19107,36 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__DSAKeyValueType(struct soap *soap, const 
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__DSAKeyValueType), type))
 		return soap->error;
-	if (soap_out_string(soap, "ds:G", -1, &a->G, "xsd:string"))
+	if (soap_out_string(soap, "ds:G", -1, &a->G, ""))
 		return soap->error;
 	if (a->Y)
-	{	if (soap_out_string(soap, "ds:Y", -1, &a->Y, "xsd:string"))
+	{	if (soap_out_string(soap, "ds:Y", -1, &a->Y, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ds:Y"))
 		return soap->error;
-	if (soap_out_string(soap, "ds:J", -1, &a->J, "xsd:string"))
+	if (soap_out_string(soap, "ds:J", -1, &a->J, ""))
 		return soap->error;
 	if (a->P)
-	{	if (soap_out_string(soap, "ds:P", -1, &a->P, "xsd:string"))
+	{	if (soap_out_string(soap, "ds:P", -1, &a->P, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ds:P"))
 		return soap->error;
 	if (a->Q)
-	{	if (soap_out_string(soap, "ds:Q", -1, &a->Q, "xsd:string"))
+	{	if (soap_out_string(soap, "ds:Q", -1, &a->Q, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ds:Q"))
 		return soap->error;
 	if (a->Seed)
-	{	if (soap_out_string(soap, "ds:Seed", -1, &a->Seed, "xsd:string"))
+	{	if (soap_out_string(soap, "ds:Seed", -1, &a->Seed, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ds:Seed"))
 		return soap->error;
 	if (a->PgenCounter)
-	{	if (soap_out_string(soap, "ds:PgenCounter", -1, &a->PgenCounter, "xsd:string"))
+	{	if (soap_out_string(soap, "ds:PgenCounter", -1, &a->PgenCounter, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ds:PgenCounter"))
@@ -19255,12 +19255,12 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__X509IssuerSerialType(struct soap *soap, c
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__X509IssuerSerialType), type))
 		return soap->error;
 	if (a->X509IssuerName)
-	{	if (soap_out_string(soap, "ds:X509IssuerName", -1, &a->X509IssuerName, "xsd:string"))
+	{	if (soap_out_string(soap, "ds:X509IssuerName", -1, &a->X509IssuerName, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ds:X509IssuerName"))
 		return soap->error;
-	if (soap_out_int(soap, "ds:X509SerialNumber", -1, &a->X509SerialNumber, "xsd:int"))
+	if (soap_out_int(soap, "ds:X509SerialNumber", -1, &a->X509SerialNumber, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -19352,31 +19352,31 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__X509DataType(struct soap *soap, const cha
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__X509DataType), type))
 		return soap->error;
 	if (a->X509IssuerSerial)
-	{	if (soap_out_PointerTods__X509IssuerSerialType(soap, "ds:X509IssuerSerial", -1, &a->X509IssuerSerial, "ds:X509IssuerSerialType"))
+	{	if (soap_out_PointerTods__X509IssuerSerialType(soap, "ds:X509IssuerSerial", -1, &a->X509IssuerSerial, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ds:X509IssuerSerial"))
 		return soap->error;
 	if (a->X509SKI)
-	{	if (soap_out_string(soap, "ds:X509SKI", -1, &a->X509SKI, "xsd:string"))
+	{	if (soap_out_string(soap, "ds:X509SKI", -1, &a->X509SKI, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ds:X509SKI"))
 		return soap->error;
 	if (a->X509SubjectName)
-	{	if (soap_out_string(soap, "ds:X509SubjectName", -1, &a->X509SubjectName, "xsd:string"))
+	{	if (soap_out_string(soap, "ds:X509SubjectName", -1, &a->X509SubjectName, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ds:X509SubjectName"))
 		return soap->error;
 	if (a->X509Certificate)
-	{	if (soap_out_string(soap, "ds:X509Certificate", -1, &a->X509Certificate, "xsd:string"))
+	{	if (soap_out_string(soap, "ds:X509Certificate", -1, &a->X509Certificate, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ds:X509Certificate"))
 		return soap->error;
 	if (a->X509CRL)
-	{	if (soap_out_string(soap, "ds:X509CRL", -1, &a->X509CRL, "xsd:string"))
+	{	if (soap_out_string(soap, "ds:X509CRL", -1, &a->X509CRL, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ds:X509CRL"))
@@ -19486,7 +19486,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__RetrievalMethodType(struct soap *soap, co
 		soap_set_attr(soap, "Type", a->Type, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__RetrievalMethodType), type))
 		return soap->error;
-	if (soap_out_PointerTods__TransformsType(soap, "ds:Transforms", -1, &a->Transforms, "ds:TransformsType"))
+	if (soap_out_PointerTods__TransformsType(soap, "ds:Transforms", -1, &a->Transforms, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -19566,13 +19566,13 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__KeyValueType(struct soap *soap, const cha
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__KeyValueType), type))
 		return soap->error;
 	if (a->DSAKeyValue)
-	{	if (soap_out_PointerTods__DSAKeyValueType(soap, "ds:DSAKeyValue", -1, &a->DSAKeyValue, "ds:DSAKeyValueType"))
+	{	if (soap_out_PointerTods__DSAKeyValueType(soap, "ds:DSAKeyValue", -1, &a->DSAKeyValue, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ds:DSAKeyValue"))
 		return soap->error;
 	if (a->RSAKeyValue)
-	{	if (soap_out_PointerTods__RSAKeyValueType(soap, "ds:RSAKeyValue", -1, &a->RSAKeyValue, "ds:RSAKeyValueType"))
+	{	if (soap_out_PointerTods__RSAKeyValueType(soap, "ds:RSAKeyValue", -1, &a->RSAKeyValue, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ds:RSAKeyValue"))
@@ -19891,7 +19891,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__TransformsType(struct soap *soap, const c
 	if (a->Transform)
 	{	int i;
 		for (i = 0; i < a->__sizeTransform; i++)
-			if (soap_out_ds__TransformType(soap, "ds:Transform", -1, a->Transform + i, "ds:TransformType"))
+			if (soap_out_ds__TransformType(soap, "ds:Transform", -1, a->Transform + i, ""))
 				return soap->error;
 	}
 	return soap_element_end_out(soap, tag);
@@ -19998,16 +19998,16 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__ReferenceType(struct soap *soap, const ch
 		soap_set_attr(soap, "Type", a->Type, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__ReferenceType), type))
 		return soap->error;
-	if (soap_out_PointerTods__TransformsType(soap, "ds:Transforms", -1, &a->Transforms, "ds:TransformsType"))
+	if (soap_out_PointerTods__TransformsType(soap, "ds:Transforms", -1, &a->Transforms, ""))
 		return soap->error;
 	if (a->DigestMethod)
-	{	if (soap_out_PointerTods__DigestMethodType(soap, "ds:DigestMethod", -1, &a->DigestMethod, "ds:DigestMethodType"))
+	{	if (soap_out_PointerTods__DigestMethodType(soap, "ds:DigestMethod", -1, &a->DigestMethod, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ds:DigestMethod"))
 		return soap->error;
 	if (a->DigestValue)
-	{	if (soap_out_string(soap, "ds:DigestValue", -1, &a->DigestValue, "xsd:string"))
+	{	if (soap_out_string(soap, "ds:DigestValue", -1, &a->DigestValue, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ds:DigestValue"))
@@ -20108,7 +20108,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__SignatureMethodType(struct soap *soap, co
 		soap_set_attr(soap, "Algorithm", a->Algorithm, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__SignatureMethodType), type))
 		return soap->error;
-	if (soap_out_PointerToint(soap, "ds:HMACOutputLength", -1, &a->HMACOutputLength, "xsd:int"))
+	if (soap_out_PointerToint(soap, "ds:HMACOutputLength", -1, &a->HMACOutputLength, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -20272,13 +20272,13 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__KeyInfoType(struct soap *soap, const char
 		soap_set_attr(soap, "Id", a->Id, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__KeyInfoType), type))
 		return soap->error;
-	if (soap_out_string(soap, "ds:KeyName", -1, &a->KeyName, "xsd:string"))
+	if (soap_out_string(soap, "ds:KeyName", -1, &a->KeyName, ""))
 		return soap->error;
-	if (soap_out_PointerTods__KeyValueType(soap, "ds:KeyValue", -1, &a->KeyValue, "ds:KeyValueType"))
+	if (soap_out_PointerTods__KeyValueType(soap, "ds:KeyValue", -1, &a->KeyValue, ""))
 		return soap->error;
-	if (soap_out_PointerTods__RetrievalMethodType(soap, "ds:RetrievalMethod", -1, &a->RetrievalMethod, "ds:RetrievalMethodType"))
+	if (soap_out_PointerTods__RetrievalMethodType(soap, "ds:RetrievalMethod", -1, &a->RetrievalMethod, ""))
 		return soap->error;
-	if (soap_out_PointerTods__X509DataType(soap, "ds:X509Data", -1, &a->X509Data, "ds:X509DataType"))
+	if (soap_out_PointerTods__X509DataType(soap, "ds:X509Data", -1, &a->X509Data, ""))
 		return soap->error;
 	if (soap_out_PointerTo_wsse__SecurityTokenReference(soap, "wsse:SecurityTokenReference", -1, &a->wsse__SecurityTokenReference, ""))
 		return soap->error;
@@ -20394,13 +20394,13 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__SignedInfoType(struct soap *soap, const c
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__SignedInfoType), type))
 		return soap->error;
 	if (a->CanonicalizationMethod)
-	{	if (soap_out_PointerTods__CanonicalizationMethodType(soap, "ds:CanonicalizationMethod", -1, &a->CanonicalizationMethod, "ds:CanonicalizationMethodType"))
+	{	if (soap_out_PointerTods__CanonicalizationMethodType(soap, "ds:CanonicalizationMethod", -1, &a->CanonicalizationMethod, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ds:CanonicalizationMethod"))
 		return soap->error;
 	if (a->SignatureMethod)
-	{	if (soap_out_PointerTods__SignatureMethodType(soap, "ds:SignatureMethod", -1, &a->SignatureMethod, "ds:SignatureMethodType"))
+	{	if (soap_out_PointerTods__SignatureMethodType(soap, "ds:SignatureMethod", -1, &a->SignatureMethod, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "ds:SignatureMethod"))
@@ -20408,7 +20408,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__SignedInfoType(struct soap *soap, const c
 	if (a->Reference)
 	{	int i;
 		for (i = 0; i < a->__sizeReference; i++)
-			if (soap_out_PointerTods__ReferenceType(soap, "ds:Reference", -1, a->Reference + i, "ds:ReferenceType"))
+			if (soap_out_PointerTods__ReferenceType(soap, "ds:Reference", -1, a->Reference + i, ""))
 				return soap->error;
 	}
 	return soap_element_end_out(soap, tag);
@@ -20527,11 +20527,11 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__SignatureType(struct soap *soap, const ch
 		soap_set_attr(soap, "Id", a->Id, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__SignatureType), type))
 		return soap->error;
-	if (soap_out_PointerTods__SignedInfoType(soap, "ds:SignedInfo", -1, &a->SignedInfo, "ds:SignedInfoType"))
+	if (soap_out_PointerTods__SignedInfoType(soap, "ds:SignedInfo", -1, &a->SignedInfo, ""))
 		return soap->error;
-	if (soap_out_string(soap, "ds:SignatureValue", -1, &a->SignatureValue, "xsd:string"))
+	if (soap_out_string(soap, "ds:SignatureValue", -1, &a->SignatureValue, ""))
 		return soap->error;
-	if (soap_out_PointerTods__KeyInfoType(soap, "ds:KeyInfo", -1, &a->KeyInfo, "ds:KeyInfoType"))
+	if (soap_out_PointerTods__KeyInfoType(soap, "ds:KeyInfo", -1, &a->KeyInfo, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -21055,11 +21055,11 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsse__UsernameToken(struct soap *soap, const
 		soap_set_attr(soap, "wsu:Id", a->wsu__Id, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__wsse__UsernameToken), type))
 		return soap->error;
-	if (soap_out_string(soap, "wsse:Username", -1, &a->Username, "xsd:string"))
+	if (soap_out_string(soap, "wsse:Username", -1, &a->Username, ""))
 		return soap->error;
 	if (soap_out_PointerTo_wsse__Password(soap, "wsse:Password", -1, &a->Password, ""))
 		return soap->error;
-	if (soap_out_string(soap, "wsse:Nonce", -1, &a->Nonce, "xsd:string"))
+	if (soap_out_string(soap, "wsse:Nonce", -1, &a->Nonce, ""))
 		return soap->error;
 	if (soap_out_string(soap, "wsu:Created", -1, &a->wsu__Created, ""))
 		return soap->error;
@@ -21159,9 +21159,9 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsu__Timestamp(struct soap *soap, const char
 		soap_set_attr(soap, "wsu:Id", a->wsu__Id, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__wsu__Timestamp), type))
 		return soap->error;
-	if (soap_out_string(soap, "wsu:Created", -1, &a->Created, "xsd:string"))
+	if (soap_out_string(soap, "wsu:Created", -1, &a->Created, ""))
 		return soap->error;
-	if (soap_out_string(soap, "wsu:Expires", -1, &a->Expires, "xsd:string"))
+	if (soap_out_string(soap, "wsu:Expires", -1, &a->Expires, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -21399,9 +21399,9 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__ProblemActionType(struct soap *soap, co
 		soap_set_attr(soap, "-anyAttribute", a->__anyAttribute, 1);
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_wsa5__ProblemActionType), type))
 		return soap->error;
-	if (soap_out_string(soap, "wsa5:Action", -1, &a->Action, "xsd:string"))
+	if (soap_out_string(soap, "wsa5:Action", -1, &a->Action, ""))
 		return soap->error;
-	if (soap_out_string(soap, "wsa5:SoapAction", -1, &a->SoapAction, "xsd:string"))
+	if (soap_out_string(soap, "wsa5:SoapAction", -1, &a->SoapAction, ""))
 		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
@@ -21486,7 +21486,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__RelatesToType(struct soap *soap, const 
 		soap_set_attr(soap, "RelationshipType", a->RelationshipType, 1);
 	if (a->__anyAttribute)
 		soap_set_attr(soap, "-anyAttribute", a->__anyAttribute, 1);
-	return soap_out_string(soap, tag, id, &a->__item, "wsa5:RelatesToType");
+	return soap_out_string(soap, tag, id, &a->__item, "");
 }
 
 SOAP_FMAC3 struct wsa5__RelatesToType * SOAP_FMAC4 soap_in_wsa5__RelatesToType(struct soap *soap, const char *tag, struct wsa5__RelatesToType *a, const char *type)
@@ -21750,14 +21750,14 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__EndpointReferenceType(struct soap *soap
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_wsa5__EndpointReferenceType), type))
 		return soap->error;
 	if (a->Address)
-	{	if (soap_out_string(soap, "wsa5:Address", -1, &a->Address, "xsd:string"))
+	{	if (soap_out_string(soap, "wsa5:Address", -1, &a->Address, ""))
 			return soap->error;
 	}
 	else if (soap_element_nil(soap, "wsa5:Address"))
 		return soap->error;
-	if (soap_out_PointerTowsa5__ReferenceParametersType(soap, "wsa5:ReferenceParameters", -1, &a->ReferenceParameters, "wsa5:ReferenceParametersType"))
+	if (soap_out_PointerTowsa5__ReferenceParametersType(soap, "wsa5:ReferenceParameters", -1, &a->ReferenceParameters, ""))
 		return soap->error;
-	if (soap_out_PointerTowsa5__MetadataType(soap, "wsa5:Metadata", -1, &a->Metadata, "wsa5:MetadataType"))
+	if (soap_out_PointerTowsa5__MetadataType(soap, "wsa5:Metadata", -1, &a->Metadata, ""))
 		return soap->error;
 	if (a->__any)
 	{	int i;
