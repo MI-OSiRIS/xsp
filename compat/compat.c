@@ -745,7 +745,7 @@ error_exit2:
 error_exit:
         return -1;
 }
-#endif JUNOS
+#endif // JUNOS
 
 int *listen_port_iface(char **interfaces, int interface_count, int protocol, int port, int *length) {
 	int *sd_list;
