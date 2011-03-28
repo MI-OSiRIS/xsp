@@ -5,20 +5,19 @@ int xspd_copy_soap_context(xspdSoapContext *src, xspdSoapContext *dst) {
 	return 0;
 }
 
-int xspd_start_soap_ssl(xspdSoapContext *sc) {
+int xspd_start_soap_ssl(xspdSoapContext *sc, int soap_ssl_flags) {
 	struct soap *soap = (struct soap *)malloc(sizeof(struct soap));
 	soap_init(soap);
 	soap_set_namespaces(soap, sc->namespaces);
 	soap_ssl_init();
 
 	if (CRYPTO_thread_setup()) {
-		xspd_err(0, "Couldn't setup SSL threads");
+		fprintf(stderr, "Couldn't setup SSL threads\n");
 		return -1;
 	} 
 	
 	if (soap_ssl_client_context(soap,
-				    SOAP_SSL_REQUIRE_SERVER_AUTHENTICATION
-				    | SOAP_SSL_SKIP_HOST_CHECK,
+				    soap_ssl_flags,
 				    sc->keyfile,
 				    sc->keypass,
 				    sc->cacerts,
@@ -27,7 +26,7 @@ int xspd_start_soap_ssl(xspdSoapContext *sc) {
 				    ))
 		{
 			//soap_print_fault(soap, stderr);
-			xspd_err(0, "Could not initialize SOAP SSL context");
+			fprintf(stderr, "Could not initialize SOAP SSL context\n");
 			return -1;
 		}
 
@@ -59,3 +58,4 @@ int xspd_stop_soap(xspdSoapContext *sc) {
 	}
         return 0;
 }
+

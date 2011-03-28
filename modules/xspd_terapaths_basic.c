@@ -287,7 +287,8 @@ static int __xspd_terapaths_new_channel(xspdPath *path, uint32_t size, xspdChann
 	path->tag++;
 	pthread_cond_signal(&(path->timeout_cond));
 
-	if (xspd_start_soap_ssl(&(pi->tsc)) != 0) {
+	if (xspd_start_soap_ssl(&(pi->tsc), SOAP_SSL_REQUIRE_SERVER_AUTHENTICATION
+				| SOAP_SSL_SKIP_HOST_CHECK) != 0) {
 		xspd_err(0, "couldn't start SOAP context");
 		goto error_exit;
 	}
