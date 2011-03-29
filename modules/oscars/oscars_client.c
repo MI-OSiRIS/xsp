@@ -5,10 +5,27 @@
 #include "oscars.h"
 #include "oscars.nsmap"
 
+OSCARS_listRequest list_request = {
+	0,
+	NULL,
+	0,
+	NULL,
+	"test reservation",
+	0,
+	NULL,
+	0,
+	NULL,
+	10,
+	0
+};
+
+
+
 int main(int argc, char* argv[])
 {
 	int i, j;	
-	char *response = "default";
+	void *response;
+	void *request;
 	xspdSoapContext oscars_soap;
 
 	oscars_soap.soap_endpoint = "https://192.168.1.103:8443/axis2/services/OSCARS";
@@ -25,10 +42,21 @@ int main(int argc, char* argv[])
 
 	xspd_start_soap_ssl(&oscars_soap, SOAP_SSL_NO_AUTHENTICATION);
 	
+	printf("\nTesting oscars_getNetworkTopology\n\n");
+	request = (void*) "all";
+        if (oscars_getNetworkTopology(&oscars_soap, request, &response) == 0) {
+                pretty_print(GET_TOPO, response);
+	}
+	
+	sleep(1);
+
 	printf("\nTesting oscars_listReservations\n\n");
-	if (oscars_listReservations(&oscars_soap) == 0) {
-                printf("Response: %s\n", response);
+	request = (void*) &list_request;
+	if (oscars_listReservations(&oscars_soap, request, &response) == 0) {
+		pretty_print(LIST_RES, response);
         }
+
+	exit(1);
 
 	sleep(1);
 
@@ -41,7 +69,7 @@ int main(int argc, char* argv[])
 
 	printf("\nTesting oscars_cancelReservation\n\n");
 	if (oscars_cancelReservation(&oscars_soap, "blah", &response) == 0) {
-		printf("Response: %s\n", response);
+		printf("Response: %s\n", (char*)response);
 	}
 	
 	
