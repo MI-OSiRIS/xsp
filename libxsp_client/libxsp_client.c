@@ -743,9 +743,10 @@ int xsp_recv_msg(libxspSess *sess, void **ret_buf, int *len, int *ret_type) {
 	    goto error_exit;
 	}
 	    
-	bcopy(block->blob, *ret_buf, block->length);
+	memcpy(block->blob, *ret_buf, block->length);
 	
 	*ret_type = block->type;
+	*len = block->length;
 	
 	return block->length;
 

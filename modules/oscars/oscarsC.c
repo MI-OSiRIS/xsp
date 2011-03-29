@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-SOAP_SOURCE_STAMP("@(#) oscarsC.c ver 2.8.1 2011-03-26 17:04:38 GMT")
+SOAP_SOURCE_STAMP("@(#) oscarsC.c ver 2.8.1 2011-03-29 02:13:14 GMT")
 
 
 #ifndef WITH_NOGLOBAL
@@ -422,6 +422,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTounsignedInt(soap, NULL, NULL, "xsd:unsignedInt");
 	case SOAP_TYPE_PointerTo_ns4__Subscribe_SubscriptionPolicy:
 		return soap_in_PointerTo_ns4__Subscribe_SubscriptionPolicy(soap, NULL, NULL, "ns4:Subscribe-SubscriptionPolicy");
+	case SOAP_TYPE_PointerToPointerTons4__NotificationMessageHolderType:
+		return soap_in_PointerToPointerTons4__NotificationMessageHolderType(soap, NULL, NULL, "ns4:NotificationMessageHolderType");
 	case SOAP_TYPE_PointerTons4__NotificationMessageHolderType:
 		return soap_in_PointerTons4__NotificationMessageHolderType(soap, NULL, NULL, "ns4:NotificationMessageHolderType");
 	case SOAP_TYPE_PointerTotime:
@@ -434,8 +436,12 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTons4__MessageType(soap, NULL, NULL, "ns4:MessageType");
 	case SOAP_TYPE_PointerTowsa5__EndpointReferenceType:
 		return soap_in_PointerTowsa5__EndpointReferenceType(soap, NULL, NULL, "wsa5:EndpointReferenceType");
+	case SOAP_TYPE_PointerToPointerTons4__QueryExpressionType:
+		return soap_in_PointerToPointerTons4__QueryExpressionType(soap, NULL, NULL, "ns4:QueryExpressionType");
 	case SOAP_TYPE_PointerTons4__QueryExpressionType:
 		return soap_in_PointerTons4__QueryExpressionType(soap, NULL, NULL, "ns4:QueryExpressionType");
+	case SOAP_TYPE_PointerToPointerTons4__TopicExpressionType:
+		return soap_in_PointerToPointerTons4__TopicExpressionType(soap, NULL, NULL, "ns4:TopicExpressionType");
 	case SOAP_TYPE_PointerTons4__TopicExpressionType:
 		return soap_in_PointerTons4__TopicExpressionType(soap, NULL, NULL, "ns4:TopicExpressionType");
 	case SOAP_TYPE_PointerToxsd__boolean_:
@@ -446,28 +452,46 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTons3__Duration(soap, NULL, NULL, "ns3:Duration");
 	case SOAP_TYPE_PointerTons3__TimeContent:
 		return soap_in_PointerTons3__TimeContent(soap, NULL, NULL, "ns3:TimeContent");
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneNextHopContent:
+		return soap_in_PointerToPointerTons3__CtrlPlaneNextHopContent(soap, NULL, NULL, "ns3:CtrlPlaneNextHopContent");
 	case SOAP_TYPE_PointerTons3__CtrlPlaneNextHopContent:
 		return soap_in_PointerTons3__CtrlPlaneNextHopContent(soap, NULL, NULL, "ns3:CtrlPlaneNextHopContent");
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneHopContent:
+		return soap_in_PointerToPointerTons3__CtrlPlaneHopContent(soap, NULL, NULL, "ns3:CtrlPlaneHopContent");
 	case SOAP_TYPE_PointerTons3__CtrlPlaneHopContent:
 		return soap_in_PointerTons3__CtrlPlaneHopContent(soap, NULL, NULL, "ns3:CtrlPlaneHopContent");
 	case SOAP_TYPE_PointerTons3__CtrlPlaneSwcapContent:
 		return soap_in_PointerTons3__CtrlPlaneSwcapContent(soap, NULL, NULL, "ns3:CtrlPlaneSwcapContent");
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneAdministrativeGroup:
+		return soap_in_PointerToPointerTons3__CtrlPlaneAdministrativeGroup(soap, NULL, NULL, "ns3:CtrlPlaneAdministrativeGroup");
 	case SOAP_TYPE_PointerTons3__CtrlPlaneAdministrativeGroup:
 		return soap_in_PointerTons3__CtrlPlaneAdministrativeGroup(soap, NULL, NULL, "ns3:CtrlPlaneAdministrativeGroup");
 	case SOAP_TYPE_PointerTons3__CtrlPlaneAddressContent:
 		return soap_in_PointerTons3__CtrlPlaneAddressContent(soap, NULL, NULL, "ns3:CtrlPlaneAddressContent");
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneLinkContent:
+		return soap_in_PointerToPointerTons3__CtrlPlaneLinkContent(soap, NULL, NULL, "ns3:CtrlPlaneLinkContent");
 	case SOAP_TYPE_PointerTons3__CtrlPlaneLinkContent:
 		return soap_in_PointerTons3__CtrlPlaneLinkContent(soap, NULL, NULL, "ns3:CtrlPlaneLinkContent");
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlanePortContent:
+		return soap_in_PointerToPointerTons3__CtrlPlanePortContent(soap, NULL, NULL, "ns3:CtrlPlanePortContent");
 	case SOAP_TYPE_PointerTons3__CtrlPlanePortContent:
 		return soap_in_PointerTons3__CtrlPlanePortContent(soap, NULL, NULL, "ns3:CtrlPlanePortContent");
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneNodeContent:
+		return soap_in_PointerToPointerTons3__CtrlPlaneNodeContent(soap, NULL, NULL, "ns3:CtrlPlaneNodeContent");
 	case SOAP_TYPE_PointerTons3__CtrlPlaneNodeContent:
 		return soap_in_PointerTons3__CtrlPlaneNodeContent(soap, NULL, NULL, "ns3:CtrlPlaneNodeContent");
 	case SOAP_TYPE_PointerTons3__Lifetime:
 		return soap_in_PointerTons3__Lifetime(soap, NULL, NULL, "ns3:Lifetime");
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneDomainSignatureContent:
+		return soap_in_PointerToPointerTons3__CtrlPlaneDomainSignatureContent(soap, NULL, NULL, "ns3:CtrlPlaneDomainSignatureContent");
 	case SOAP_TYPE_PointerTons3__CtrlPlaneDomainSignatureContent:
 		return soap_in_PointerTons3__CtrlPlaneDomainSignatureContent(soap, NULL, NULL, "ns3:CtrlPlaneDomainSignatureContent");
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneDomainContent:
+		return soap_in_PointerToPointerTons3__CtrlPlaneDomainContent(soap, NULL, NULL, "ns3:CtrlPlaneDomainContent");
 	case SOAP_TYPE_PointerTons3__CtrlPlaneDomainContent:
 		return soap_in_PointerTons3__CtrlPlaneDomainContent(soap, NULL, NULL, "ns3:CtrlPlaneDomainContent");
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlanePathContent:
+		return soap_in_PointerToPointerTons3__CtrlPlanePathContent(soap, NULL, NULL, "ns3:CtrlPlanePathContent");
 	case SOAP_TYPE_PointerTons1__forwardReply:
 		return soap_in_PointerTons1__forwardReply(soap, NULL, NULL, "ns1:forwardReply");
 	case SOAP_TYPE_PointerTons1__forwardPayload:
@@ -510,6 +534,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTons1__modifyResContent(soap, NULL, NULL, "ns1:modifyResContent");
 	case SOAP_TYPE_PointerTons1__resCreateContent:
 		return soap_in_PointerTons1__resCreateContent(soap, NULL, NULL, "ns1:resCreateContent");
+	case SOAP_TYPE_PointerToPointerTons1__resDetails:
+		return soap_in_PointerToPointerTons1__resDetails(soap, NULL, NULL, "ns1:resDetails");
+	case SOAP_TYPE_PointerToPointerTons1__vlanTag:
+		return soap_in_PointerToPointerTons1__vlanTag(soap, NULL, NULL, "ns1:vlanTag");
 	case SOAP_TYPE_PointerTons1__vlanTag:
 		return soap_in_PointerTons1__vlanTag(soap, NULL, NULL, "ns1:vlanTag");
 	case SOAP_TYPE_PointerTostring:
@@ -1788,6 +1816,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTounsignedInt(soap, tag, id, (unsigned int *const*)ptr, "xsd:unsignedInt");
 	case SOAP_TYPE_PointerTo_ns4__Subscribe_SubscriptionPolicy:
 		return soap_out_PointerTo_ns4__Subscribe_SubscriptionPolicy(soap, tag, id, (struct _ns4__Subscribe_SubscriptionPolicy *const*)ptr, "ns4:Subscribe-SubscriptionPolicy");
+	case SOAP_TYPE_PointerToPointerTons4__NotificationMessageHolderType:
+		return soap_out_PointerToPointerTons4__NotificationMessageHolderType(soap, tag, id, (struct ns4__NotificationMessageHolderType **const*)ptr, "ns4:NotificationMessageHolderType");
 	case SOAP_TYPE_PointerTons4__NotificationMessageHolderType:
 		return soap_out_PointerTons4__NotificationMessageHolderType(soap, tag, id, (struct ns4__NotificationMessageHolderType *const*)ptr, "ns4:NotificationMessageHolderType");
 	case SOAP_TYPE_PointerTotime:
@@ -1800,8 +1830,12 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTons4__MessageType(soap, tag, id, (struct ns4__MessageType *const*)ptr, "ns4:MessageType");
 	case SOAP_TYPE_PointerTowsa5__EndpointReferenceType:
 		return soap_out_PointerTowsa5__EndpointReferenceType(soap, tag, id, (struct wsa5__EndpointReferenceType *const*)ptr, "wsa5:EndpointReferenceType");
+	case SOAP_TYPE_PointerToPointerTons4__QueryExpressionType:
+		return soap_out_PointerToPointerTons4__QueryExpressionType(soap, tag, id, (struct ns4__QueryExpressionType **const*)ptr, "ns4:QueryExpressionType");
 	case SOAP_TYPE_PointerTons4__QueryExpressionType:
 		return soap_out_PointerTons4__QueryExpressionType(soap, tag, id, (struct ns4__QueryExpressionType *const*)ptr, "ns4:QueryExpressionType");
+	case SOAP_TYPE_PointerToPointerTons4__TopicExpressionType:
+		return soap_out_PointerToPointerTons4__TopicExpressionType(soap, tag, id, (struct ns4__TopicExpressionType **const*)ptr, "ns4:TopicExpressionType");
 	case SOAP_TYPE_PointerTons4__TopicExpressionType:
 		return soap_out_PointerTons4__TopicExpressionType(soap, tag, id, (struct ns4__TopicExpressionType *const*)ptr, "ns4:TopicExpressionType");
 	case SOAP_TYPE_PointerToxsd__boolean_:
@@ -1812,28 +1846,46 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTons3__Duration(soap, tag, id, (struct ns3__Duration *const*)ptr, "ns3:Duration");
 	case SOAP_TYPE_PointerTons3__TimeContent:
 		return soap_out_PointerTons3__TimeContent(soap, tag, id, (struct ns3__TimeContent *const*)ptr, "ns3:TimeContent");
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneNextHopContent:
+		return soap_out_PointerToPointerTons3__CtrlPlaneNextHopContent(soap, tag, id, (struct ns3__CtrlPlaneNextHopContent **const*)ptr, "ns3:CtrlPlaneNextHopContent");
 	case SOAP_TYPE_PointerTons3__CtrlPlaneNextHopContent:
 		return soap_out_PointerTons3__CtrlPlaneNextHopContent(soap, tag, id, (struct ns3__CtrlPlaneNextHopContent *const*)ptr, "ns3:CtrlPlaneNextHopContent");
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneHopContent:
+		return soap_out_PointerToPointerTons3__CtrlPlaneHopContent(soap, tag, id, (struct ns3__CtrlPlaneHopContent **const*)ptr, "ns3:CtrlPlaneHopContent");
 	case SOAP_TYPE_PointerTons3__CtrlPlaneHopContent:
 		return soap_out_PointerTons3__CtrlPlaneHopContent(soap, tag, id, (struct ns3__CtrlPlaneHopContent *const*)ptr, "ns3:CtrlPlaneHopContent");
 	case SOAP_TYPE_PointerTons3__CtrlPlaneSwcapContent:
 		return soap_out_PointerTons3__CtrlPlaneSwcapContent(soap, tag, id, (struct ns3__CtrlPlaneSwcapContent *const*)ptr, "ns3:CtrlPlaneSwcapContent");
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneAdministrativeGroup:
+		return soap_out_PointerToPointerTons3__CtrlPlaneAdministrativeGroup(soap, tag, id, (struct ns3__CtrlPlaneAdministrativeGroup **const*)ptr, "ns3:CtrlPlaneAdministrativeGroup");
 	case SOAP_TYPE_PointerTons3__CtrlPlaneAdministrativeGroup:
 		return soap_out_PointerTons3__CtrlPlaneAdministrativeGroup(soap, tag, id, (struct ns3__CtrlPlaneAdministrativeGroup *const*)ptr, "ns3:CtrlPlaneAdministrativeGroup");
 	case SOAP_TYPE_PointerTons3__CtrlPlaneAddressContent:
 		return soap_out_PointerTons3__CtrlPlaneAddressContent(soap, tag, id, (struct ns3__CtrlPlaneAddressContent *const*)ptr, "ns3:CtrlPlaneAddressContent");
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneLinkContent:
+		return soap_out_PointerToPointerTons3__CtrlPlaneLinkContent(soap, tag, id, (struct ns3__CtrlPlaneLinkContent **const*)ptr, "ns3:CtrlPlaneLinkContent");
 	case SOAP_TYPE_PointerTons3__CtrlPlaneLinkContent:
 		return soap_out_PointerTons3__CtrlPlaneLinkContent(soap, tag, id, (struct ns3__CtrlPlaneLinkContent *const*)ptr, "ns3:CtrlPlaneLinkContent");
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlanePortContent:
+		return soap_out_PointerToPointerTons3__CtrlPlanePortContent(soap, tag, id, (struct ns3__CtrlPlanePortContent **const*)ptr, "ns3:CtrlPlanePortContent");
 	case SOAP_TYPE_PointerTons3__CtrlPlanePortContent:
 		return soap_out_PointerTons3__CtrlPlanePortContent(soap, tag, id, (struct ns3__CtrlPlanePortContent *const*)ptr, "ns3:CtrlPlanePortContent");
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneNodeContent:
+		return soap_out_PointerToPointerTons3__CtrlPlaneNodeContent(soap, tag, id, (struct ns3__CtrlPlaneNodeContent **const*)ptr, "ns3:CtrlPlaneNodeContent");
 	case SOAP_TYPE_PointerTons3__CtrlPlaneNodeContent:
 		return soap_out_PointerTons3__CtrlPlaneNodeContent(soap, tag, id, (struct ns3__CtrlPlaneNodeContent *const*)ptr, "ns3:CtrlPlaneNodeContent");
 	case SOAP_TYPE_PointerTons3__Lifetime:
 		return soap_out_PointerTons3__Lifetime(soap, tag, id, (struct ns3__Lifetime *const*)ptr, "ns3:Lifetime");
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneDomainSignatureContent:
+		return soap_out_PointerToPointerTons3__CtrlPlaneDomainSignatureContent(soap, tag, id, (struct ns3__CtrlPlaneDomainSignatureContent **const*)ptr, "ns3:CtrlPlaneDomainSignatureContent");
 	case SOAP_TYPE_PointerTons3__CtrlPlaneDomainSignatureContent:
 		return soap_out_PointerTons3__CtrlPlaneDomainSignatureContent(soap, tag, id, (struct ns3__CtrlPlaneDomainSignatureContent *const*)ptr, "ns3:CtrlPlaneDomainSignatureContent");
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneDomainContent:
+		return soap_out_PointerToPointerTons3__CtrlPlaneDomainContent(soap, tag, id, (struct ns3__CtrlPlaneDomainContent **const*)ptr, "ns3:CtrlPlaneDomainContent");
 	case SOAP_TYPE_PointerTons3__CtrlPlaneDomainContent:
 		return soap_out_PointerTons3__CtrlPlaneDomainContent(soap, tag, id, (struct ns3__CtrlPlaneDomainContent *const*)ptr, "ns3:CtrlPlaneDomainContent");
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlanePathContent:
+		return soap_out_PointerToPointerTons3__CtrlPlanePathContent(soap, tag, id, (struct ns3__CtrlPlanePathContent **const*)ptr, "ns3:CtrlPlanePathContent");
 	case SOAP_TYPE_PointerTons1__forwardReply:
 		return soap_out_PointerTons1__forwardReply(soap, tag, id, (struct ns1__forwardReply *const*)ptr, "ns1:forwardReply");
 	case SOAP_TYPE_PointerTons1__forwardPayload:
@@ -1876,6 +1928,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTons1__modifyResContent(soap, tag, id, (struct ns1__modifyResContent *const*)ptr, "ns1:modifyResContent");
 	case SOAP_TYPE_PointerTons1__resCreateContent:
 		return soap_out_PointerTons1__resCreateContent(soap, tag, id, (struct ns1__resCreateContent *const*)ptr, "ns1:resCreateContent");
+	case SOAP_TYPE_PointerToPointerTons1__resDetails:
+		return soap_out_PointerToPointerTons1__resDetails(soap, tag, id, (struct ns1__resDetails **const*)ptr, "ns1:resDetails");
+	case SOAP_TYPE_PointerToPointerTons1__vlanTag:
+		return soap_out_PointerToPointerTons1__vlanTag(soap, tag, id, (struct ns1__vlanTag **const*)ptr, "ns1:vlanTag");
 	case SOAP_TYPE_PointerTons1__vlanTag:
 		return soap_out_PointerTons1__vlanTag(soap, tag, id, (struct ns1__vlanTag *const*)ptr, "ns1:vlanTag");
 	case SOAP_TYPE_PointerTostring:
@@ -2549,6 +2605,9 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTo_ns4__Subscribe_SubscriptionPolicy:
 		soap_serialize_PointerTo_ns4__Subscribe_SubscriptionPolicy(soap, (struct _ns4__Subscribe_SubscriptionPolicy *const*)ptr);
 		break;
+	case SOAP_TYPE_PointerToPointerTons4__NotificationMessageHolderType:
+		soap_serialize_PointerToPointerTons4__NotificationMessageHolderType(soap, (struct ns4__NotificationMessageHolderType **const*)ptr);
+		break;
 	case SOAP_TYPE_PointerTons4__NotificationMessageHolderType:
 		soap_serialize_PointerTons4__NotificationMessageHolderType(soap, (struct ns4__NotificationMessageHolderType *const*)ptr);
 		break;
@@ -2567,8 +2626,14 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTowsa5__EndpointReferenceType:
 		soap_serialize_PointerTowsa5__EndpointReferenceType(soap, (struct wsa5__EndpointReferenceType *const*)ptr);
 		break;
+	case SOAP_TYPE_PointerToPointerTons4__QueryExpressionType:
+		soap_serialize_PointerToPointerTons4__QueryExpressionType(soap, (struct ns4__QueryExpressionType **const*)ptr);
+		break;
 	case SOAP_TYPE_PointerTons4__QueryExpressionType:
 		soap_serialize_PointerTons4__QueryExpressionType(soap, (struct ns4__QueryExpressionType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerToPointerTons4__TopicExpressionType:
+		soap_serialize_PointerToPointerTons4__TopicExpressionType(soap, (struct ns4__TopicExpressionType **const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTons4__TopicExpressionType:
 		soap_serialize_PointerTons4__TopicExpressionType(soap, (struct ns4__TopicExpressionType *const*)ptr);
@@ -2585,8 +2650,14 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTons3__TimeContent:
 		soap_serialize_PointerTons3__TimeContent(soap, (struct ns3__TimeContent *const*)ptr);
 		break;
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneNextHopContent:
+		soap_serialize_PointerToPointerTons3__CtrlPlaneNextHopContent(soap, (struct ns3__CtrlPlaneNextHopContent **const*)ptr);
+		break;
 	case SOAP_TYPE_PointerTons3__CtrlPlaneNextHopContent:
 		soap_serialize_PointerTons3__CtrlPlaneNextHopContent(soap, (struct ns3__CtrlPlaneNextHopContent *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneHopContent:
+		soap_serialize_PointerToPointerTons3__CtrlPlaneHopContent(soap, (struct ns3__CtrlPlaneHopContent **const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTons3__CtrlPlaneHopContent:
 		soap_serialize_PointerTons3__CtrlPlaneHopContent(soap, (struct ns3__CtrlPlaneHopContent *const*)ptr);
@@ -2594,17 +2665,29 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTons3__CtrlPlaneSwcapContent:
 		soap_serialize_PointerTons3__CtrlPlaneSwcapContent(soap, (struct ns3__CtrlPlaneSwcapContent *const*)ptr);
 		break;
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneAdministrativeGroup:
+		soap_serialize_PointerToPointerTons3__CtrlPlaneAdministrativeGroup(soap, (struct ns3__CtrlPlaneAdministrativeGroup **const*)ptr);
+		break;
 	case SOAP_TYPE_PointerTons3__CtrlPlaneAdministrativeGroup:
 		soap_serialize_PointerTons3__CtrlPlaneAdministrativeGroup(soap, (struct ns3__CtrlPlaneAdministrativeGroup *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTons3__CtrlPlaneAddressContent:
 		soap_serialize_PointerTons3__CtrlPlaneAddressContent(soap, (struct ns3__CtrlPlaneAddressContent *const*)ptr);
 		break;
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneLinkContent:
+		soap_serialize_PointerToPointerTons3__CtrlPlaneLinkContent(soap, (struct ns3__CtrlPlaneLinkContent **const*)ptr);
+		break;
 	case SOAP_TYPE_PointerTons3__CtrlPlaneLinkContent:
 		soap_serialize_PointerTons3__CtrlPlaneLinkContent(soap, (struct ns3__CtrlPlaneLinkContent *const*)ptr);
 		break;
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlanePortContent:
+		soap_serialize_PointerToPointerTons3__CtrlPlanePortContent(soap, (struct ns3__CtrlPlanePortContent **const*)ptr);
+		break;
 	case SOAP_TYPE_PointerTons3__CtrlPlanePortContent:
 		soap_serialize_PointerTons3__CtrlPlanePortContent(soap, (struct ns3__CtrlPlanePortContent *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneNodeContent:
+		soap_serialize_PointerToPointerTons3__CtrlPlaneNodeContent(soap, (struct ns3__CtrlPlaneNodeContent **const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTons3__CtrlPlaneNodeContent:
 		soap_serialize_PointerTons3__CtrlPlaneNodeContent(soap, (struct ns3__CtrlPlaneNodeContent *const*)ptr);
@@ -2612,11 +2695,20 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTons3__Lifetime:
 		soap_serialize_PointerTons3__Lifetime(soap, (struct ns3__Lifetime *const*)ptr);
 		break;
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneDomainSignatureContent:
+		soap_serialize_PointerToPointerTons3__CtrlPlaneDomainSignatureContent(soap, (struct ns3__CtrlPlaneDomainSignatureContent **const*)ptr);
+		break;
 	case SOAP_TYPE_PointerTons3__CtrlPlaneDomainSignatureContent:
 		soap_serialize_PointerTons3__CtrlPlaneDomainSignatureContent(soap, (struct ns3__CtrlPlaneDomainSignatureContent *const*)ptr);
 		break;
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlaneDomainContent:
+		soap_serialize_PointerToPointerTons3__CtrlPlaneDomainContent(soap, (struct ns3__CtrlPlaneDomainContent **const*)ptr);
+		break;
 	case SOAP_TYPE_PointerTons3__CtrlPlaneDomainContent:
 		soap_serialize_PointerTons3__CtrlPlaneDomainContent(soap, (struct ns3__CtrlPlaneDomainContent *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerToPointerTons3__CtrlPlanePathContent:
+		soap_serialize_PointerToPointerTons3__CtrlPlanePathContent(soap, (struct ns3__CtrlPlanePathContent **const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTons1__forwardReply:
 		soap_serialize_PointerTons1__forwardReply(soap, (struct ns1__forwardReply *const*)ptr);
@@ -2680,6 +2772,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE_PointerTons1__resCreateContent:
 		soap_serialize_PointerTons1__resCreateContent(soap, (struct ns1__resCreateContent *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerToPointerTons1__resDetails:
+		soap_serialize_PointerToPointerTons1__resDetails(soap, (struct ns1__resDetails **const*)ptr);
+		break;
+	case SOAP_TYPE_PointerToPointerTons1__vlanTag:
+		soap_serialize_PointerToPointerTons1__vlanTag(soap, (struct ns1__vlanTag **const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTons1__vlanTag:
 		soap_serialize_PointerTons1__vlanTag(soap, (struct ns1__vlanTag *const*)ptr);
@@ -10007,8 +10105,7 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__ns4__GetMessagesResponse(struct soap 
 	{	int i;
 		for (i = 0; i < a->__sizeNotificationMessage; i++)
 		{
-			soap_embedded(soap, a->NotificationMessage + i, SOAP_TYPE_ns4__NotificationMessageHolderType);
-			soap_serialize_ns4__NotificationMessageHolderType(soap, a->NotificationMessage + i);
+			soap_serialize_PointerTons4__NotificationMessageHolderType(soap, a->NotificationMessage + i);
 		}
 	}
 }
@@ -10020,7 +10117,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns4__GetMessagesResponse(struct soap *soap, 
 	if (a->NotificationMessage)
 	{	int i;
 		for (i = 0; i < a->__sizeNotificationMessage; i++)
-			if (soap_out_ns4__NotificationMessageHolderType(soap, "ns4:NotificationMessage", -1, a->NotificationMessage + i, ""))
+			if (soap_out_PointerTons4__NotificationMessageHolderType(soap, "ns4:NotificationMessage", -1, a->NotificationMessage + i, ""))
 				return soap->error;
 	}
 	if (a->__any)
@@ -10049,13 +10146,13 @@ SOAP_FMAC3 struct _ns4__GetMessagesResponse * SOAP_FMAC4 soap_in__ns4__GetMessag
 			{	if (a->NotificationMessage == NULL)
 				{	if (soap_blist_NotificationMessage == NULL)
 						soap_blist_NotificationMessage = soap_new_block(soap);
-					a->NotificationMessage = (struct ns4__NotificationMessageHolderType *)soap_push_block(soap, soap_blist_NotificationMessage, sizeof(struct ns4__NotificationMessageHolderType));
+					a->NotificationMessage = (struct ns4__NotificationMessageHolderType **)soap_push_block(soap, soap_blist_NotificationMessage, sizeof(struct ns4__NotificationMessageHolderType *));
 					if (a->NotificationMessage == NULL)
 						return NULL;
-					soap_default_ns4__NotificationMessageHolderType(soap, a->NotificationMessage);
+					*a->NotificationMessage = NULL;
 				}
 				soap_revert(soap);
-				if (soap_in_ns4__NotificationMessageHolderType(soap, "ns4:NotificationMessage", a->NotificationMessage, "ns4:NotificationMessageHolderType"))
+				if (soap_in_PointerTons4__NotificationMessageHolderType(soap, "ns4:NotificationMessage", a->NotificationMessage, "ns4:NotificationMessageHolderType"))
 				{	a->__sizeNotificationMessage++;
 					a->NotificationMessage = NULL;
 					continue;
@@ -10086,7 +10183,7 @@ SOAP_FMAC3 struct _ns4__GetMessagesResponse * SOAP_FMAC4 soap_in__ns4__GetMessag
 		if (a->NotificationMessage)
 			soap_pop_block(soap, soap_blist_NotificationMessage);
 		if (a->__sizeNotificationMessage)
-			a->NotificationMessage = (struct ns4__NotificationMessageHolderType *)soap_save_block(soap, soap_blist_NotificationMessage, NULL, 1);
+			a->NotificationMessage = (struct ns4__NotificationMessageHolderType **)soap_save_block(soap, soap_blist_NotificationMessage, NULL, 1);
 		else
 		{	a->NotificationMessage = NULL;
 			if (soap_blist_NotificationMessage)
@@ -10885,8 +10982,7 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__ns4__Notify(struct soap *soap, const 
 	{	int i;
 		for (i = 0; i < a->__sizeNotificationMessage; i++)
 		{
-			soap_embedded(soap, a->NotificationMessage + i, SOAP_TYPE_ns4__NotificationMessageHolderType);
-			soap_serialize_ns4__NotificationMessageHolderType(soap, a->NotificationMessage + i);
+			soap_serialize_PointerTons4__NotificationMessageHolderType(soap, a->NotificationMessage + i);
 		}
 	}
 }
@@ -10898,7 +10994,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns4__Notify(struct soap *soap, const char *t
 	if (a->NotificationMessage)
 	{	int i;
 		for (i = 0; i < a->__sizeNotificationMessage; i++)
-			if (soap_out_ns4__NotificationMessageHolderType(soap, "ns4:NotificationMessage", -1, a->NotificationMessage + i, ""))
+			if (soap_out_PointerTons4__NotificationMessageHolderType(soap, "ns4:NotificationMessage", -1, a->NotificationMessage + i, ""))
 				return soap->error;
 	}
 	if (a->__any)
@@ -10927,13 +11023,13 @@ SOAP_FMAC3 struct _ns4__Notify * SOAP_FMAC4 soap_in__ns4__Notify(struct soap *so
 			{	if (a->NotificationMessage == NULL)
 				{	if (soap_blist_NotificationMessage == NULL)
 						soap_blist_NotificationMessage = soap_new_block(soap);
-					a->NotificationMessage = (struct ns4__NotificationMessageHolderType *)soap_push_block(soap, soap_blist_NotificationMessage, sizeof(struct ns4__NotificationMessageHolderType));
+					a->NotificationMessage = (struct ns4__NotificationMessageHolderType **)soap_push_block(soap, soap_blist_NotificationMessage, sizeof(struct ns4__NotificationMessageHolderType *));
 					if (a->NotificationMessage == NULL)
 						return NULL;
-					soap_default_ns4__NotificationMessageHolderType(soap, a->NotificationMessage);
+					*a->NotificationMessage = NULL;
 				}
 				soap_revert(soap);
-				if (soap_in_ns4__NotificationMessageHolderType(soap, "ns4:NotificationMessage", a->NotificationMessage, "ns4:NotificationMessageHolderType"))
+				if (soap_in_PointerTons4__NotificationMessageHolderType(soap, "ns4:NotificationMessage", a->NotificationMessage, "ns4:NotificationMessageHolderType"))
 				{	a->__sizeNotificationMessage++;
 					a->NotificationMessage = NULL;
 					continue;
@@ -10964,7 +11060,7 @@ SOAP_FMAC3 struct _ns4__Notify * SOAP_FMAC4 soap_in__ns4__Notify(struct soap *so
 		if (a->NotificationMessage)
 			soap_pop_block(soap, soap_blist_NotificationMessage);
 		if (a->__sizeNotificationMessage)
-			a->NotificationMessage = (struct ns4__NotificationMessageHolderType *)soap_save_block(soap, soap_blist_NotificationMessage, NULL, 1);
+			a->NotificationMessage = (struct ns4__NotificationMessageHolderType **)soap_save_block(soap, soap_blist_NotificationMessage, NULL, 1);
 		else
 		{	a->NotificationMessage = NULL;
 			if (soap_blist_NotificationMessage)
@@ -11578,24 +11674,21 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns4__FilterType(struct soap *soap, con
 	{	int i;
 		for (i = 0; i < a->__sizeTopicExpression; i++)
 		{
-			soap_embedded(soap, a->TopicExpression + i, SOAP_TYPE_ns4__TopicExpressionType);
-			soap_serialize_ns4__TopicExpressionType(soap, a->TopicExpression + i);
+			soap_serialize_PointerTons4__TopicExpressionType(soap, a->TopicExpression + i);
 		}
 	}
 	if (a->ProducerProperties)
 	{	int i;
 		for (i = 0; i < a->__sizeProducerProperties; i++)
 		{
-			soap_embedded(soap, a->ProducerProperties + i, SOAP_TYPE_ns4__QueryExpressionType);
-			soap_serialize_ns4__QueryExpressionType(soap, a->ProducerProperties + i);
+			soap_serialize_PointerTons4__QueryExpressionType(soap, a->ProducerProperties + i);
 		}
 	}
 	if (a->MessageContent)
 	{	int i;
 		for (i = 0; i < a->__sizeMessageContent; i++)
 		{
-			soap_embedded(soap, a->MessageContent + i, SOAP_TYPE_ns4__QueryExpressionType);
-			soap_serialize_ns4__QueryExpressionType(soap, a->MessageContent + i);
+			soap_serialize_PointerTons4__QueryExpressionType(soap, a->MessageContent + i);
 		}
 	}
 }
@@ -11607,19 +11700,19 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns4__FilterType(struct soap *soap, const char
 	if (a->TopicExpression)
 	{	int i;
 		for (i = 0; i < a->__sizeTopicExpression; i++)
-			if (soap_out_ns4__TopicExpressionType(soap, "ns4:TopicExpression", -1, a->TopicExpression + i, ""))
+			if (soap_out_PointerTons4__TopicExpressionType(soap, "ns4:TopicExpression", -1, a->TopicExpression + i, ""))
 				return soap->error;
 	}
 	if (a->ProducerProperties)
 	{	int i;
 		for (i = 0; i < a->__sizeProducerProperties; i++)
-			if (soap_out_ns4__QueryExpressionType(soap, "ns4:ProducerProperties", -1, a->ProducerProperties + i, ""))
+			if (soap_out_PointerTons4__QueryExpressionType(soap, "ns4:ProducerProperties", -1, a->ProducerProperties + i, ""))
 				return soap->error;
 	}
 	if (a->MessageContent)
 	{	int i;
 		for (i = 0; i < a->__sizeMessageContent; i++)
-			if (soap_out_ns4__QueryExpressionType(soap, "ns4:MessageContent", -1, a->MessageContent + i, ""))
+			if (soap_out_PointerTons4__QueryExpressionType(soap, "ns4:MessageContent", -1, a->MessageContent + i, ""))
 				return soap->error;
 	}
 	if (a->__any)
@@ -11650,13 +11743,13 @@ SOAP_FMAC3 struct ns4__FilterType * SOAP_FMAC4 soap_in_ns4__FilterType(struct so
 			{	if (a->TopicExpression == NULL)
 				{	if (soap_blist_TopicExpression == NULL)
 						soap_blist_TopicExpression = soap_new_block(soap);
-					a->TopicExpression = (struct ns4__TopicExpressionType *)soap_push_block(soap, soap_blist_TopicExpression, sizeof(struct ns4__TopicExpressionType));
+					a->TopicExpression = (struct ns4__TopicExpressionType **)soap_push_block(soap, soap_blist_TopicExpression, sizeof(struct ns4__TopicExpressionType *));
 					if (a->TopicExpression == NULL)
 						return NULL;
-					soap_default_ns4__TopicExpressionType(soap, a->TopicExpression);
+					*a->TopicExpression = NULL;
 				}
 				soap_revert(soap);
-				if (soap_in_ns4__TopicExpressionType(soap, "ns4:TopicExpression", a->TopicExpression, "ns4:TopicExpressionType"))
+				if (soap_in_PointerTons4__TopicExpressionType(soap, "ns4:TopicExpression", a->TopicExpression, "ns4:TopicExpressionType"))
 				{	a->__sizeTopicExpression++;
 					a->TopicExpression = NULL;
 					continue;
@@ -11666,13 +11759,13 @@ SOAP_FMAC3 struct ns4__FilterType * SOAP_FMAC4 soap_in_ns4__FilterType(struct so
 			{	if (a->ProducerProperties == NULL)
 				{	if (soap_blist_ProducerProperties == NULL)
 						soap_blist_ProducerProperties = soap_new_block(soap);
-					a->ProducerProperties = (struct ns4__QueryExpressionType *)soap_push_block(soap, soap_blist_ProducerProperties, sizeof(struct ns4__QueryExpressionType));
+					a->ProducerProperties = (struct ns4__QueryExpressionType **)soap_push_block(soap, soap_blist_ProducerProperties, sizeof(struct ns4__QueryExpressionType *));
 					if (a->ProducerProperties == NULL)
 						return NULL;
-					soap_default_ns4__QueryExpressionType(soap, a->ProducerProperties);
+					*a->ProducerProperties = NULL;
 				}
 				soap_revert(soap);
-				if (soap_in_ns4__QueryExpressionType(soap, "ns4:ProducerProperties", a->ProducerProperties, "ns4:QueryExpressionType"))
+				if (soap_in_PointerTons4__QueryExpressionType(soap, "ns4:ProducerProperties", a->ProducerProperties, "ns4:QueryExpressionType"))
 				{	a->__sizeProducerProperties++;
 					a->ProducerProperties = NULL;
 					continue;
@@ -11682,13 +11775,13 @@ SOAP_FMAC3 struct ns4__FilterType * SOAP_FMAC4 soap_in_ns4__FilterType(struct so
 			{	if (a->MessageContent == NULL)
 				{	if (soap_blist_MessageContent == NULL)
 						soap_blist_MessageContent = soap_new_block(soap);
-					a->MessageContent = (struct ns4__QueryExpressionType *)soap_push_block(soap, soap_blist_MessageContent, sizeof(struct ns4__QueryExpressionType));
+					a->MessageContent = (struct ns4__QueryExpressionType **)soap_push_block(soap, soap_blist_MessageContent, sizeof(struct ns4__QueryExpressionType *));
 					if (a->MessageContent == NULL)
 						return NULL;
-					soap_default_ns4__QueryExpressionType(soap, a->MessageContent);
+					*a->MessageContent = NULL;
 				}
 				soap_revert(soap);
-				if (soap_in_ns4__QueryExpressionType(soap, "ns4:MessageContent", a->MessageContent, "ns4:QueryExpressionType"))
+				if (soap_in_PointerTons4__QueryExpressionType(soap, "ns4:MessageContent", a->MessageContent, "ns4:QueryExpressionType"))
 				{	a->__sizeMessageContent++;
 					a->MessageContent = NULL;
 					continue;
@@ -11719,7 +11812,7 @@ SOAP_FMAC3 struct ns4__FilterType * SOAP_FMAC4 soap_in_ns4__FilterType(struct so
 		if (a->TopicExpression)
 			soap_pop_block(soap, soap_blist_TopicExpression);
 		if (a->__sizeTopicExpression)
-			a->TopicExpression = (struct ns4__TopicExpressionType *)soap_save_block(soap, soap_blist_TopicExpression, NULL, 1);
+			a->TopicExpression = (struct ns4__TopicExpressionType **)soap_save_block(soap, soap_blist_TopicExpression, NULL, 1);
 		else
 		{	a->TopicExpression = NULL;
 			if (soap_blist_TopicExpression)
@@ -11728,7 +11821,7 @@ SOAP_FMAC3 struct ns4__FilterType * SOAP_FMAC4 soap_in_ns4__FilterType(struct so
 		if (a->ProducerProperties)
 			soap_pop_block(soap, soap_blist_ProducerProperties);
 		if (a->__sizeProducerProperties)
-			a->ProducerProperties = (struct ns4__QueryExpressionType *)soap_save_block(soap, soap_blist_ProducerProperties, NULL, 1);
+			a->ProducerProperties = (struct ns4__QueryExpressionType **)soap_save_block(soap, soap_blist_ProducerProperties, NULL, 1);
 		else
 		{	a->ProducerProperties = NULL;
 			if (soap_blist_ProducerProperties)
@@ -11737,7 +11830,7 @@ SOAP_FMAC3 struct ns4__FilterType * SOAP_FMAC4 soap_in_ns4__FilterType(struct so
 		if (a->MessageContent)
 			soap_pop_block(soap, soap_blist_MessageContent);
 		if (a->__sizeMessageContent)
-			a->MessageContent = (struct ns4__QueryExpressionType *)soap_save_block(soap, soap_blist_MessageContent, NULL, 1);
+			a->MessageContent = (struct ns4__QueryExpressionType **)soap_save_block(soap, soap_blist_MessageContent, NULL, 1);
 		else
 		{	a->MessageContent = NULL;
 			if (soap_blist_MessageContent)
@@ -12109,8 +12202,7 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns3__CtrlPlaneHopContent(struct soap *
 	{	int i;
 		for (i = 0; i < a->__sizenextHop; i++)
 		{
-			soap_embedded(soap, a->nextHop + i, SOAP_TYPE_ns3__CtrlPlaneNextHopContent);
-			soap_serialize_ns3__CtrlPlaneNextHopContent(soap, a->nextHop + i);
+			soap_serialize_PointerTons3__CtrlPlaneNextHopContent(soap, a->nextHop + i);
 		}
 	}
 }
@@ -12140,7 +12232,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__CtrlPlaneHopContent(struct soap *soap, c
 	if (a->nextHop)
 	{	int i;
 		for (i = 0; i < a->__sizenextHop; i++)
-			if (soap_out_ns3__CtrlPlaneNextHopContent(soap, "ns3:nextHop", -1, a->nextHop + i, ""))
+			if (soap_out_PointerTons3__CtrlPlaneNextHopContent(soap, "ns3:nextHop", -1, a->nextHop + i, ""))
 				return soap->error;
 	}
 	return soap_element_end_out(soap, tag);
@@ -12213,13 +12305,13 @@ SOAP_FMAC3 struct ns3__CtrlPlaneHopContent * SOAP_FMAC4 soap_in_ns3__CtrlPlaneHo
 			{	if (a->nextHop == NULL)
 				{	if (soap_blist_nextHop == NULL)
 						soap_blist_nextHop = soap_new_block(soap);
-					a->nextHop = (struct ns3__CtrlPlaneNextHopContent *)soap_push_block(soap, soap_blist_nextHop, sizeof(struct ns3__CtrlPlaneNextHopContent));
+					a->nextHop = (struct ns3__CtrlPlaneNextHopContent **)soap_push_block(soap, soap_blist_nextHop, sizeof(struct ns3__CtrlPlaneNextHopContent *));
 					if (a->nextHop == NULL)
 						return NULL;
-					soap_default_ns3__CtrlPlaneNextHopContent(soap, a->nextHop);
+					*a->nextHop = NULL;
 				}
 				soap_revert(soap);
-				if (soap_in_ns3__CtrlPlaneNextHopContent(soap, "ns3:nextHop", a->nextHop, "ns3:CtrlPlaneNextHopContent"))
+				if (soap_in_PointerTons3__CtrlPlaneNextHopContent(soap, "ns3:nextHop", a->nextHop, "ns3:CtrlPlaneNextHopContent"))
 				{	a->__sizenextHop++;
 					a->nextHop = NULL;
 					continue;
@@ -12235,7 +12327,7 @@ SOAP_FMAC3 struct ns3__CtrlPlaneHopContent * SOAP_FMAC4 soap_in_ns3__CtrlPlaneHo
 		if (a->nextHop)
 			soap_pop_block(soap, soap_blist_nextHop);
 		if (a->__sizenextHop)
-			a->nextHop = (struct ns3__CtrlPlaneNextHopContent *)soap_save_block(soap, soap_blist_nextHop, NULL, 1);
+			a->nextHop = (struct ns3__CtrlPlaneNextHopContent **)soap_save_block(soap, soap_blist_nextHop, NULL, 1);
 		else
 		{	a->nextHop = NULL;
 			if (soap_blist_nextHop)
@@ -12561,8 +12653,7 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns3__CtrlPlaneLinkContent(struct soap 
 	{	int i;
 		for (i = 0; i < a->__sizeadministrativeGroups; i++)
 		{
-			soap_embedded(soap, a->administrativeGroups + i, SOAP_TYPE_ns3__CtrlPlaneAdministrativeGroup);
-			soap_serialize_ns3__CtrlPlaneAdministrativeGroup(soap, a->administrativeGroups + i);
+			soap_serialize_PointerTons3__CtrlPlaneAdministrativeGroup(soap, a->administrativeGroups + i);
 		}
 	}
 	soap_serialize_PointerTons3__CtrlPlaneSwcapContent(soap, &a->SwitchingCapabilityDescriptors);
@@ -12601,7 +12692,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__CtrlPlaneLinkContent(struct soap *soap, 
 	if (a->administrativeGroups)
 	{	int i;
 		for (i = 0; i < a->__sizeadministrativeGroups; i++)
-			if (soap_out_ns3__CtrlPlaneAdministrativeGroup(soap, "ns3:administrativeGroups", -1, a->administrativeGroups + i, ""))
+			if (soap_out_PointerTons3__CtrlPlaneAdministrativeGroup(soap, "ns3:administrativeGroups", -1, a->administrativeGroups + i, ""))
 				return soap->error;
 	}
 	if (a->SwitchingCapabilityDescriptors)
@@ -12692,13 +12783,13 @@ SOAP_FMAC3 struct ns3__CtrlPlaneLinkContent * SOAP_FMAC4 soap_in_ns3__CtrlPlaneL
 			{	if (a->administrativeGroups == NULL)
 				{	if (soap_blist_administrativeGroups == NULL)
 						soap_blist_administrativeGroups = soap_new_block(soap);
-					a->administrativeGroups = (struct ns3__CtrlPlaneAdministrativeGroup *)soap_push_block(soap, soap_blist_administrativeGroups, sizeof(struct ns3__CtrlPlaneAdministrativeGroup));
+					a->administrativeGroups = (struct ns3__CtrlPlaneAdministrativeGroup **)soap_push_block(soap, soap_blist_administrativeGroups, sizeof(struct ns3__CtrlPlaneAdministrativeGroup *));
 					if (a->administrativeGroups == NULL)
 						return NULL;
-					soap_default_ns3__CtrlPlaneAdministrativeGroup(soap, a->administrativeGroups);
+					*a->administrativeGroups = NULL;
 				}
 				soap_revert(soap);
-				if (soap_in_ns3__CtrlPlaneAdministrativeGroup(soap, "ns3:administrativeGroups", a->administrativeGroups, "ns3:CtrlPlaneAdministrativeGroup"))
+				if (soap_in_PointerTons3__CtrlPlaneAdministrativeGroup(soap, "ns3:administrativeGroups", a->administrativeGroups, "ns3:CtrlPlaneAdministrativeGroup"))
 				{	a->__sizeadministrativeGroups++;
 					a->administrativeGroups = NULL;
 					continue;
@@ -12728,7 +12819,7 @@ SOAP_FMAC3 struct ns3__CtrlPlaneLinkContent * SOAP_FMAC4 soap_in_ns3__CtrlPlaneL
 		if (a->administrativeGroups)
 			soap_pop_block(soap, soap_blist_administrativeGroups);
 		if (a->__sizeadministrativeGroups)
-			a->administrativeGroups = (struct ns3__CtrlPlaneAdministrativeGroup *)soap_save_block(soap, soap_blist_administrativeGroups, NULL, 1);
+			a->administrativeGroups = (struct ns3__CtrlPlaneAdministrativeGroup **)soap_save_block(soap, soap_blist_administrativeGroups, NULL, 1);
 		else
 		{	a->administrativeGroups = NULL;
 			if (soap_blist_administrativeGroups)
@@ -12792,8 +12883,7 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns3__CtrlPlanePortContent(struct soap 
 	{	int i;
 		for (i = 0; i < a->__sizelink; i++)
 		{
-			soap_embedded(soap, a->link + i, SOAP_TYPE_ns3__CtrlPlaneLinkContent);
-			soap_serialize_ns3__CtrlPlaneLinkContent(soap, a->link + i);
+			soap_serialize_PointerTons3__CtrlPlaneLinkContent(soap, a->link + i);
 		}
 	}
 }
@@ -12819,7 +12909,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__CtrlPlanePortContent(struct soap *soap, 
 	if (a->link)
 	{	int i;
 		for (i = 0; i < a->__sizelink; i++)
-			if (soap_out_ns3__CtrlPlaneLinkContent(soap, "ns3:link", -1, a->link + i, ""))
+			if (soap_out_PointerTons3__CtrlPlaneLinkContent(soap, "ns3:link", -1, a->link + i, ""))
 				return soap->error;
 	}
 	return soap_element_end_out(soap, tag);
@@ -12880,13 +12970,13 @@ SOAP_FMAC3 struct ns3__CtrlPlanePortContent * SOAP_FMAC4 soap_in_ns3__CtrlPlaneP
 			{	if (a->link == NULL)
 				{	if (soap_blist_link == NULL)
 						soap_blist_link = soap_new_block(soap);
-					a->link = (struct ns3__CtrlPlaneLinkContent *)soap_push_block(soap, soap_blist_link, sizeof(struct ns3__CtrlPlaneLinkContent));
+					a->link = (struct ns3__CtrlPlaneLinkContent **)soap_push_block(soap, soap_blist_link, sizeof(struct ns3__CtrlPlaneLinkContent *));
 					if (a->link == NULL)
 						return NULL;
-					soap_default_ns3__CtrlPlaneLinkContent(soap, a->link);
+					*a->link = NULL;
 				}
 				soap_revert(soap);
-				if (soap_in_ns3__CtrlPlaneLinkContent(soap, "ns3:link", a->link, "ns3:CtrlPlaneLinkContent"))
+				if (soap_in_PointerTons3__CtrlPlaneLinkContent(soap, "ns3:link", a->link, "ns3:CtrlPlaneLinkContent"))
 				{	a->__sizelink++;
 					a->link = NULL;
 					continue;
@@ -12902,7 +12992,7 @@ SOAP_FMAC3 struct ns3__CtrlPlanePortContent * SOAP_FMAC4 soap_in_ns3__CtrlPlaneP
 		if (a->link)
 			soap_pop_block(soap, soap_blist_link);
 		if (a->__sizelink)
-			a->link = (struct ns3__CtrlPlaneLinkContent *)soap_save_block(soap, soap_blist_link, NULL, 1);
+			a->link = (struct ns3__CtrlPlaneLinkContent **)soap_save_block(soap, soap_blist_link, NULL, 1);
 		else
 		{	a->link = NULL;
 			if (soap_blist_link)
@@ -12954,8 +13044,7 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns3__CtrlPlaneNodeContent(struct soap 
 	{	int i;
 		for (i = 0; i < a->__sizeport; i++)
 		{
-			soap_embedded(soap, a->port + i, SOAP_TYPE_ns3__CtrlPlanePortContent);
-			soap_serialize_ns3__CtrlPlanePortContent(soap, a->port + i);
+			soap_serialize_PointerTons3__CtrlPlanePortContent(soap, a->port + i);
 		}
 	}
 }
@@ -12973,7 +13062,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__CtrlPlaneNodeContent(struct soap *soap, 
 	if (a->port)
 	{	int i;
 		for (i = 0; i < a->__sizeport; i++)
-			if (soap_out_ns3__CtrlPlanePortContent(soap, "ns3:port", -1, a->port + i, ""))
+			if (soap_out_PointerTons3__CtrlPlanePortContent(soap, "ns3:port", -1, a->port + i, ""))
 				return soap->error;
 	}
 	return soap_element_end_out(soap, tag);
@@ -13010,13 +13099,13 @@ SOAP_FMAC3 struct ns3__CtrlPlaneNodeContent * SOAP_FMAC4 soap_in_ns3__CtrlPlaneN
 			{	if (a->port == NULL)
 				{	if (soap_blist_port == NULL)
 						soap_blist_port = soap_new_block(soap);
-					a->port = (struct ns3__CtrlPlanePortContent *)soap_push_block(soap, soap_blist_port, sizeof(struct ns3__CtrlPlanePortContent));
+					a->port = (struct ns3__CtrlPlanePortContent **)soap_push_block(soap, soap_blist_port, sizeof(struct ns3__CtrlPlanePortContent *));
 					if (a->port == NULL)
 						return NULL;
-					soap_default_ns3__CtrlPlanePortContent(soap, a->port);
+					*a->port = NULL;
 				}
 				soap_revert(soap);
-				if (soap_in_ns3__CtrlPlanePortContent(soap, "ns3:port", a->port, "ns3:CtrlPlanePortContent"))
+				if (soap_in_PointerTons3__CtrlPlanePortContent(soap, "ns3:port", a->port, "ns3:CtrlPlanePortContent"))
 				{	a->__sizeport++;
 					a->port = NULL;
 					continue;
@@ -13032,7 +13121,7 @@ SOAP_FMAC3 struct ns3__CtrlPlaneNodeContent * SOAP_FMAC4 soap_in_ns3__CtrlPlaneN
 		if (a->port)
 			soap_pop_block(soap, soap_blist_port);
 		if (a->__sizeport)
-			a->port = (struct ns3__CtrlPlanePortContent *)soap_save_block(soap, soap_blist_port, NULL, 1);
+			a->port = (struct ns3__CtrlPlanePortContent **)soap_save_block(soap, soap_blist_port, NULL, 1);
 		else
 		{	a->port = NULL;
 			if (soap_blist_port)
@@ -13257,24 +13346,21 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns3__CtrlPlaneDomainContent(struct soa
 	{	int i;
 		for (i = 0; i < a->__sizenode; i++)
 		{
-			soap_embedded(soap, a->node + i, SOAP_TYPE_ns3__CtrlPlaneNodeContent);
-			soap_serialize_ns3__CtrlPlaneNodeContent(soap, a->node + i);
+			soap_serialize_PointerTons3__CtrlPlaneNodeContent(soap, a->node + i);
 		}
 	}
 	if (a->port)
 	{	int i;
 		for (i = 0; i < a->__sizeport; i++)
 		{
-			soap_embedded(soap, a->port + i, SOAP_TYPE_ns3__CtrlPlanePortContent);
-			soap_serialize_ns3__CtrlPlanePortContent(soap, a->port + i);
+			soap_serialize_PointerTons3__CtrlPlanePortContent(soap, a->port + i);
 		}
 	}
 	if (a->link)
 	{	int i;
 		for (i = 0; i < a->__sizelink; i++)
 		{
-			soap_embedded(soap, a->link + i, SOAP_TYPE_ns3__CtrlPlaneLinkContent);
-			soap_serialize_ns3__CtrlPlaneLinkContent(soap, a->link + i);
+			soap_serialize_PointerTons3__CtrlPlaneLinkContent(soap, a->link + i);
 		}
 	}
 }
@@ -13290,19 +13376,19 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__CtrlPlaneDomainContent(struct soap *soap
 	if (a->node)
 	{	int i;
 		for (i = 0; i < a->__sizenode; i++)
-			if (soap_out_ns3__CtrlPlaneNodeContent(soap, "ns3:node", -1, a->node + i, ""))
+			if (soap_out_PointerTons3__CtrlPlaneNodeContent(soap, "ns3:node", -1, a->node + i, ""))
 				return soap->error;
 	}
 	if (a->port)
 	{	int i;
 		for (i = 0; i < a->__sizeport; i++)
-			if (soap_out_ns3__CtrlPlanePortContent(soap, "ns3:port", -1, a->port + i, ""))
+			if (soap_out_PointerTons3__CtrlPlanePortContent(soap, "ns3:port", -1, a->port + i, ""))
 				return soap->error;
 	}
 	if (a->link)
 	{	int i;
 		for (i = 0; i < a->__sizelink; i++)
-			if (soap_out_ns3__CtrlPlaneLinkContent(soap, "ns3:link", -1, a->link + i, ""))
+			if (soap_out_PointerTons3__CtrlPlaneLinkContent(soap, "ns3:link", -1, a->link + i, ""))
 				return soap->error;
 	}
 	return soap_element_end_out(soap, tag);
@@ -13335,13 +13421,13 @@ SOAP_FMAC3 struct ns3__CtrlPlaneDomainContent * SOAP_FMAC4 soap_in_ns3__CtrlPlan
 			{	if (a->node == NULL)
 				{	if (soap_blist_node == NULL)
 						soap_blist_node = soap_new_block(soap);
-					a->node = (struct ns3__CtrlPlaneNodeContent *)soap_push_block(soap, soap_blist_node, sizeof(struct ns3__CtrlPlaneNodeContent));
+					a->node = (struct ns3__CtrlPlaneNodeContent **)soap_push_block(soap, soap_blist_node, sizeof(struct ns3__CtrlPlaneNodeContent *));
 					if (a->node == NULL)
 						return NULL;
-					soap_default_ns3__CtrlPlaneNodeContent(soap, a->node);
+					*a->node = NULL;
 				}
 				soap_revert(soap);
-				if (soap_in_ns3__CtrlPlaneNodeContent(soap, "ns3:node", a->node, "ns3:CtrlPlaneNodeContent"))
+				if (soap_in_PointerTons3__CtrlPlaneNodeContent(soap, "ns3:node", a->node, "ns3:CtrlPlaneNodeContent"))
 				{	a->__sizenode++;
 					a->node = NULL;
 					continue;
@@ -13351,13 +13437,13 @@ SOAP_FMAC3 struct ns3__CtrlPlaneDomainContent * SOAP_FMAC4 soap_in_ns3__CtrlPlan
 			{	if (a->port == NULL)
 				{	if (soap_blist_port == NULL)
 						soap_blist_port = soap_new_block(soap);
-					a->port = (struct ns3__CtrlPlanePortContent *)soap_push_block(soap, soap_blist_port, sizeof(struct ns3__CtrlPlanePortContent));
+					a->port = (struct ns3__CtrlPlanePortContent **)soap_push_block(soap, soap_blist_port, sizeof(struct ns3__CtrlPlanePortContent *));
 					if (a->port == NULL)
 						return NULL;
-					soap_default_ns3__CtrlPlanePortContent(soap, a->port);
+					*a->port = NULL;
 				}
 				soap_revert(soap);
-				if (soap_in_ns3__CtrlPlanePortContent(soap, "ns3:port", a->port, "ns3:CtrlPlanePortContent"))
+				if (soap_in_PointerTons3__CtrlPlanePortContent(soap, "ns3:port", a->port, "ns3:CtrlPlanePortContent"))
 				{	a->__sizeport++;
 					a->port = NULL;
 					continue;
@@ -13367,13 +13453,13 @@ SOAP_FMAC3 struct ns3__CtrlPlaneDomainContent * SOAP_FMAC4 soap_in_ns3__CtrlPlan
 			{	if (a->link == NULL)
 				{	if (soap_blist_link == NULL)
 						soap_blist_link = soap_new_block(soap);
-					a->link = (struct ns3__CtrlPlaneLinkContent *)soap_push_block(soap, soap_blist_link, sizeof(struct ns3__CtrlPlaneLinkContent));
+					a->link = (struct ns3__CtrlPlaneLinkContent **)soap_push_block(soap, soap_blist_link, sizeof(struct ns3__CtrlPlaneLinkContent *));
 					if (a->link == NULL)
 						return NULL;
-					soap_default_ns3__CtrlPlaneLinkContent(soap, a->link);
+					*a->link = NULL;
 				}
 				soap_revert(soap);
-				if (soap_in_ns3__CtrlPlaneLinkContent(soap, "ns3:link", a->link, "ns3:CtrlPlaneLinkContent"))
+				if (soap_in_PointerTons3__CtrlPlaneLinkContent(soap, "ns3:link", a->link, "ns3:CtrlPlaneLinkContent"))
 				{	a->__sizelink++;
 					a->link = NULL;
 					continue;
@@ -13389,7 +13475,7 @@ SOAP_FMAC3 struct ns3__CtrlPlaneDomainContent * SOAP_FMAC4 soap_in_ns3__CtrlPlan
 		if (a->node)
 			soap_pop_block(soap, soap_blist_node);
 		if (a->__sizenode)
-			a->node = (struct ns3__CtrlPlaneNodeContent *)soap_save_block(soap, soap_blist_node, NULL, 1);
+			a->node = (struct ns3__CtrlPlaneNodeContent **)soap_save_block(soap, soap_blist_node, NULL, 1);
 		else
 		{	a->node = NULL;
 			if (soap_blist_node)
@@ -13398,7 +13484,7 @@ SOAP_FMAC3 struct ns3__CtrlPlaneDomainContent * SOAP_FMAC4 soap_in_ns3__CtrlPlan
 		if (a->port)
 			soap_pop_block(soap, soap_blist_port);
 		if (a->__sizeport)
-			a->port = (struct ns3__CtrlPlanePortContent *)soap_save_block(soap, soap_blist_port, NULL, 1);
+			a->port = (struct ns3__CtrlPlanePortContent **)soap_save_block(soap, soap_blist_port, NULL, 1);
 		else
 		{	a->port = NULL;
 			if (soap_blist_port)
@@ -13407,7 +13493,7 @@ SOAP_FMAC3 struct ns3__CtrlPlaneDomainContent * SOAP_FMAC4 soap_in_ns3__CtrlPlan
 		if (a->link)
 			soap_pop_block(soap, soap_blist_link);
 		if (a->__sizelink)
-			a->link = (struct ns3__CtrlPlaneLinkContent *)soap_save_block(soap, soap_blist_link, NULL, 1);
+			a->link = (struct ns3__CtrlPlaneLinkContent **)soap_save_block(soap, soap_blist_link, NULL, 1);
 		else
 		{	a->link = NULL;
 			if (soap_blist_link)
@@ -14808,8 +14894,7 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns3__CtrlPlanePathContent(struct soap 
 	{	int i;
 		for (i = 0; i < a->__sizehop; i++)
 		{
-			soap_embedded(soap, a->hop + i, SOAP_TYPE_ns3__CtrlPlaneHopContent);
-			soap_serialize_ns3__CtrlPlaneHopContent(soap, a->hop + i);
+			soap_serialize_PointerTons3__CtrlPlaneHopContent(soap, a->hop + i);
 		}
 	}
 }
@@ -14827,7 +14912,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__CtrlPlanePathContent(struct soap *soap, 
 	if (a->hop)
 	{	int i;
 		for (i = 0; i < a->__sizehop; i++)
-			if (soap_out_ns3__CtrlPlaneHopContent(soap, "ns3:hop", -1, a->hop + i, ""))
+			if (soap_out_PointerTons3__CtrlPlaneHopContent(soap, "ns3:hop", -1, a->hop + i, ""))
 				return soap->error;
 	}
 	return soap_element_end_out(soap, tag);
@@ -14860,13 +14945,13 @@ SOAP_FMAC3 struct ns3__CtrlPlanePathContent * SOAP_FMAC4 soap_in_ns3__CtrlPlaneP
 			{	if (a->hop == NULL)
 				{	if (soap_blist_hop == NULL)
 						soap_blist_hop = soap_new_block(soap);
-					a->hop = (struct ns3__CtrlPlaneHopContent *)soap_push_block(soap, soap_blist_hop, sizeof(struct ns3__CtrlPlaneHopContent));
+					a->hop = (struct ns3__CtrlPlaneHopContent **)soap_push_block(soap, soap_blist_hop, sizeof(struct ns3__CtrlPlaneHopContent *));
 					if (a->hop == NULL)
 						return NULL;
-					soap_default_ns3__CtrlPlaneHopContent(soap, a->hop);
+					*a->hop = NULL;
 				}
 				soap_revert(soap);
-				if (soap_in_ns3__CtrlPlaneHopContent(soap, "ns3:hop", a->hop, "ns3:CtrlPlaneHopContent"))
+				if (soap_in_PointerTons3__CtrlPlaneHopContent(soap, "ns3:hop", a->hop, "ns3:CtrlPlaneHopContent"))
 				{	a->__sizehop++;
 					a->hop = NULL;
 					continue;
@@ -14882,7 +14967,7 @@ SOAP_FMAC3 struct ns3__CtrlPlanePathContent * SOAP_FMAC4 soap_in_ns3__CtrlPlaneP
 		if (a->hop)
 			soap_pop_block(soap, soap_blist_hop);
 		if (a->__sizehop)
-			a->hop = (struct ns3__CtrlPlaneHopContent *)soap_save_block(soap, soap_blist_hop, NULL, 1);
+			a->hop = (struct ns3__CtrlPlaneHopContent **)soap_save_block(soap, soap_blist_hop, NULL, 1);
 		else
 		{	a->hop = NULL;
 			if (soap_blist_hop)
@@ -15336,8 +15421,7 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns1__listReply(struct soap *soap, cons
 	{	int i;
 		for (i = 0; i < a->__sizeresDetails; i++)
 		{
-			soap_embedded(soap, a->resDetails + i, SOAP_TYPE_ns1__resDetails);
-			soap_serialize_ns1__resDetails(soap, a->resDetails + i);
+			soap_serialize_PointerTons1__resDetails(soap, a->resDetails + i);
 		}
 	}
 	soap_serialize_PointerToint(soap, &a->totalResults);
@@ -15351,7 +15435,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__listReply(struct soap *soap, const char 
 	if (a->resDetails)
 	{	int i;
 		for (i = 0; i < a->__sizeresDetails; i++)
-			if (soap_out_ns1__resDetails(soap, "ns1:resDetails", -1, a->resDetails + i, ""))
+			if (soap_out_PointerTons1__resDetails(soap, "ns1:resDetails", -1, a->resDetails + i, ""))
 				return soap->error;
 	}
 	if (soap_out_PointerToint(soap, "ns1:totalResults", -1, &a->totalResults, ""))
@@ -15377,13 +15461,13 @@ SOAP_FMAC3 struct ns1__listReply * SOAP_FMAC4 soap_in_ns1__listReply(struct soap
 			{	if (a->resDetails == NULL)
 				{	if (soap_blist_resDetails == NULL)
 						soap_blist_resDetails = soap_new_block(soap);
-					a->resDetails = (struct ns1__resDetails *)soap_push_block(soap, soap_blist_resDetails, sizeof(struct ns1__resDetails));
+					a->resDetails = (struct ns1__resDetails **)soap_push_block(soap, soap_blist_resDetails, sizeof(struct ns1__resDetails *));
 					if (a->resDetails == NULL)
 						return NULL;
-					soap_default_ns1__resDetails(soap, a->resDetails);
+					*a->resDetails = NULL;
 				}
 				soap_revert(soap);
-				if (soap_in_ns1__resDetails(soap, "ns1:resDetails", a->resDetails, "ns1:resDetails"))
+				if (soap_in_PointerTons1__resDetails(soap, "ns1:resDetails", a->resDetails, "ns1:resDetails"))
 				{	a->__sizeresDetails++;
 					a->resDetails = NULL;
 					continue;
@@ -15405,7 +15489,7 @@ SOAP_FMAC3 struct ns1__listReply * SOAP_FMAC4 soap_in_ns1__listReply(struct soap
 		if (a->resDetails)
 			soap_pop_block(soap, soap_blist_resDetails);
 		if (a->__sizeresDetails)
-			a->resDetails = (struct ns1__resDetails *)soap_save_block(soap, soap_blist_resDetails, NULL, 1);
+			a->resDetails = (struct ns1__resDetails **)soap_save_block(soap, soap_blist_resDetails, NULL, 1);
 		else
 		{	a->resDetails = NULL;
 			if (soap_blist_resDetails)
@@ -15622,8 +15706,7 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns1__listRequest(struct soap *soap, co
 	{	int i;
 		for (i = 0; i < a->__sizevlanTag; i++)
 		{
-			soap_embedded(soap, a->vlanTag + i, SOAP_TYPE_ns1__vlanTag);
-			soap_serialize_ns1__vlanTag(soap, a->vlanTag + i);
+			soap_serialize_PointerTons1__vlanTag(soap, a->vlanTag + i);
 		}
 	}
 	soap_serialize_PointerToint(soap, &a->resRequested);
@@ -15657,7 +15740,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__listRequest(struct soap *soap, const cha
 	if (a->vlanTag)
 	{	int i;
 		for (i = 0; i < a->__sizevlanTag; i++)
-			if (soap_out_ns1__vlanTag(soap, "ns1:vlanTag", -1, a->vlanTag + i, ""))
+			if (soap_out_PointerTons1__vlanTag(soap, "ns1:vlanTag", -1, a->vlanTag + i, ""))
 				return soap->error;
 	}
 	if (soap_out_PointerToint(soap, "ns1:resRequested", -1, &a->resRequested, ""))
@@ -15742,13 +15825,13 @@ SOAP_FMAC3 struct ns1__listRequest * SOAP_FMAC4 soap_in_ns1__listRequest(struct 
 			{	if (a->vlanTag == NULL)
 				{	if (soap_blist_vlanTag == NULL)
 						soap_blist_vlanTag = soap_new_block(soap);
-					a->vlanTag = (struct ns1__vlanTag *)soap_push_block(soap, soap_blist_vlanTag, sizeof(struct ns1__vlanTag));
+					a->vlanTag = (struct ns1__vlanTag **)soap_push_block(soap, soap_blist_vlanTag, sizeof(struct ns1__vlanTag *));
 					if (a->vlanTag == NULL)
 						return NULL;
-					soap_default_ns1__vlanTag(soap, a->vlanTag);
+					*a->vlanTag = NULL;
 				}
 				soap_revert(soap);
-				if (soap_in_ns1__vlanTag(soap, "ns1:vlanTag", a->vlanTag, "ns1:vlanTag"))
+				if (soap_in_PointerTons1__vlanTag(soap, "ns1:vlanTag", a->vlanTag, "ns1:vlanTag"))
 				{	a->__sizevlanTag++;
 					a->vlanTag = NULL;
 					continue;
@@ -15801,7 +15884,7 @@ SOAP_FMAC3 struct ns1__listRequest * SOAP_FMAC4 soap_in_ns1__listRequest(struct 
 		if (a->vlanTag)
 			soap_pop_block(soap, soap_blist_vlanTag);
 		if (a->__sizevlanTag)
-			a->vlanTag = (struct ns1__vlanTag *)soap_save_block(soap, soap_blist_vlanTag, NULL, 1);
+			a->vlanTag = (struct ns1__vlanTag **)soap_save_block(soap, soap_blist_vlanTag, NULL, 1);
 		else
 		{	a->vlanTag = NULL;
 			if (soap_blist_vlanTag)
@@ -16426,24 +16509,21 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns3__CtrlPlaneTopologyContent(struct s
 	{	int i;
 		for (i = 0; i < a->__sizepath; i++)
 		{
-			soap_embedded(soap, a->path + i, SOAP_TYPE_ns3__CtrlPlanePathContent);
-			soap_serialize_ns3__CtrlPlanePathContent(soap, a->path + i);
+			soap_serialize_PointerTons3__CtrlPlanePathContent(soap, a->path + i);
 		}
 	}
 	if (a->domain)
 	{	int i;
 		for (i = 0; i < a->__sizedomain; i++)
 		{
-			soap_embedded(soap, a->domain + i, SOAP_TYPE_ns3__CtrlPlaneDomainContent);
-			soap_serialize_ns3__CtrlPlaneDomainContent(soap, a->domain + i);
+			soap_serialize_PointerTons3__CtrlPlaneDomainContent(soap, a->domain + i);
 		}
 	}
 	if (a->domainSignature)
 	{	int i;
 		for (i = 0; i < a->__sizedomainSignature; i++)
 		{
-			soap_embedded(soap, a->domainSignature + i, SOAP_TYPE_ns3__CtrlPlaneDomainSignatureContent);
-			soap_serialize_ns3__CtrlPlaneDomainSignatureContent(soap, a->domainSignature + i);
+			soap_serialize_PointerTons3__CtrlPlaneDomainSignatureContent(soap, a->domainSignature + i);
 		}
 	}
 }
@@ -16463,19 +16543,19 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__CtrlPlaneTopologyContent(struct soap *so
 	if (a->path)
 	{	int i;
 		for (i = 0; i < a->__sizepath; i++)
-			if (soap_out_ns3__CtrlPlanePathContent(soap, "ns3:path", -1, a->path + i, ""))
+			if (soap_out_PointerTons3__CtrlPlanePathContent(soap, "ns3:path", -1, a->path + i, ""))
 				return soap->error;
 	}
 	if (a->domain)
 	{	int i;
 		for (i = 0; i < a->__sizedomain; i++)
-			if (soap_out_ns3__CtrlPlaneDomainContent(soap, "ns3:domain", -1, a->domain + i, ""))
+			if (soap_out_PointerTons3__CtrlPlaneDomainContent(soap, "ns3:domain", -1, a->domain + i, ""))
 				return soap->error;
 	}
 	if (a->domainSignature)
 	{	int i;
 		for (i = 0; i < a->__sizedomainSignature; i++)
-			if (soap_out_ns3__CtrlPlaneDomainSignatureContent(soap, "ns3:domainSignature", -1, a->domainSignature + i, ""))
+			if (soap_out_PointerTons3__CtrlPlaneDomainSignatureContent(soap, "ns3:domainSignature", -1, a->domainSignature + i, ""))
 				return soap->error;
 	}
 	return soap_element_end_out(soap, tag);
@@ -16508,13 +16588,13 @@ SOAP_FMAC3 struct ns3__CtrlPlaneTopologyContent * SOAP_FMAC4 soap_in_ns3__CtrlPl
 			{	if (a->path == NULL)
 				{	if (soap_blist_path == NULL)
 						soap_blist_path = soap_new_block(soap);
-					a->path = (struct ns3__CtrlPlanePathContent *)soap_push_block(soap, soap_blist_path, sizeof(struct ns3__CtrlPlanePathContent));
+					a->path = (struct ns3__CtrlPlanePathContent **)soap_push_block(soap, soap_blist_path, sizeof(struct ns3__CtrlPlanePathContent *));
 					if (a->path == NULL)
 						return NULL;
-					soap_default_ns3__CtrlPlanePathContent(soap, a->path);
+					*a->path = NULL;
 				}
 				soap_revert(soap);
-				if (soap_in_ns3__CtrlPlanePathContent(soap, "ns3:path", a->path, "ns3:CtrlPlanePathContent"))
+				if (soap_in_PointerTons3__CtrlPlanePathContent(soap, "ns3:path", a->path, "ns3:CtrlPlanePathContent"))
 				{	a->__sizepath++;
 					a->path = NULL;
 					continue;
@@ -16524,13 +16604,13 @@ SOAP_FMAC3 struct ns3__CtrlPlaneTopologyContent * SOAP_FMAC4 soap_in_ns3__CtrlPl
 			{	if (a->domain == NULL)
 				{	if (soap_blist_domain == NULL)
 						soap_blist_domain = soap_new_block(soap);
-					a->domain = (struct ns3__CtrlPlaneDomainContent *)soap_push_block(soap, soap_blist_domain, sizeof(struct ns3__CtrlPlaneDomainContent));
+					a->domain = (struct ns3__CtrlPlaneDomainContent **)soap_push_block(soap, soap_blist_domain, sizeof(struct ns3__CtrlPlaneDomainContent *));
 					if (a->domain == NULL)
 						return NULL;
-					soap_default_ns3__CtrlPlaneDomainContent(soap, a->domain);
+					*a->domain = NULL;
 				}
 				soap_revert(soap);
-				if (soap_in_ns3__CtrlPlaneDomainContent(soap, "ns3:domain", a->domain, "ns3:CtrlPlaneDomainContent"))
+				if (soap_in_PointerTons3__CtrlPlaneDomainContent(soap, "ns3:domain", a->domain, "ns3:CtrlPlaneDomainContent"))
 				{	a->__sizedomain++;
 					a->domain = NULL;
 					continue;
@@ -16540,13 +16620,13 @@ SOAP_FMAC3 struct ns3__CtrlPlaneTopologyContent * SOAP_FMAC4 soap_in_ns3__CtrlPl
 			{	if (a->domainSignature == NULL)
 				{	if (soap_blist_domainSignature == NULL)
 						soap_blist_domainSignature = soap_new_block(soap);
-					a->domainSignature = (struct ns3__CtrlPlaneDomainSignatureContent *)soap_push_block(soap, soap_blist_domainSignature, sizeof(struct ns3__CtrlPlaneDomainSignatureContent));
+					a->domainSignature = (struct ns3__CtrlPlaneDomainSignatureContent **)soap_push_block(soap, soap_blist_domainSignature, sizeof(struct ns3__CtrlPlaneDomainSignatureContent *));
 					if (a->domainSignature == NULL)
 						return NULL;
-					soap_default_ns3__CtrlPlaneDomainSignatureContent(soap, a->domainSignature);
+					*a->domainSignature = NULL;
 				}
 				soap_revert(soap);
-				if (soap_in_ns3__CtrlPlaneDomainSignatureContent(soap, "ns3:domainSignature", a->domainSignature, "ns3:CtrlPlaneDomainSignatureContent"))
+				if (soap_in_PointerTons3__CtrlPlaneDomainSignatureContent(soap, "ns3:domainSignature", a->domainSignature, "ns3:CtrlPlaneDomainSignatureContent"))
 				{	a->__sizedomainSignature++;
 					a->domainSignature = NULL;
 					continue;
@@ -16562,7 +16642,7 @@ SOAP_FMAC3 struct ns3__CtrlPlaneTopologyContent * SOAP_FMAC4 soap_in_ns3__CtrlPl
 		if (a->path)
 			soap_pop_block(soap, soap_blist_path);
 		if (a->__sizepath)
-			a->path = (struct ns3__CtrlPlanePathContent *)soap_save_block(soap, soap_blist_path, NULL, 1);
+			a->path = (struct ns3__CtrlPlanePathContent **)soap_save_block(soap, soap_blist_path, NULL, 1);
 		else
 		{	a->path = NULL;
 			if (soap_blist_path)
@@ -16571,7 +16651,7 @@ SOAP_FMAC3 struct ns3__CtrlPlaneTopologyContent * SOAP_FMAC4 soap_in_ns3__CtrlPl
 		if (a->domain)
 			soap_pop_block(soap, soap_blist_domain);
 		if (a->__sizedomain)
-			a->domain = (struct ns3__CtrlPlaneDomainContent *)soap_save_block(soap, soap_blist_domain, NULL, 1);
+			a->domain = (struct ns3__CtrlPlaneDomainContent **)soap_save_block(soap, soap_blist_domain, NULL, 1);
 		else
 		{	a->domain = NULL;
 			if (soap_blist_domain)
@@ -16580,7 +16660,7 @@ SOAP_FMAC3 struct ns3__CtrlPlaneTopologyContent * SOAP_FMAC4 soap_in_ns3__CtrlPl
 		if (a->domainSignature)
 			soap_pop_block(soap, soap_blist_domainSignature);
 		if (a->__sizedomainSignature)
-			a->domainSignature = (struct ns3__CtrlPlaneDomainSignatureContent *)soap_save_block(soap, soap_blist_domainSignature, NULL, 1);
+			a->domainSignature = (struct ns3__CtrlPlaneDomainSignatureContent **)soap_save_block(soap, soap_blist_domainSignature, NULL, 1);
 		else
 		{	a->domainSignature = NULL;
 			if (soap_blist_domainSignature)
@@ -22638,6 +22718,57 @@ SOAP_FMAC3 struct _ns4__Subscribe_SubscriptionPolicy ** SOAP_FMAC4 soap_get_Poin
 	return p;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons4__NotificationMessageHolderType(struct soap *soap, struct ns4__NotificationMessageHolderType **const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons4__NotificationMessageHolderType))
+		soap_serialize_PointerTons4__NotificationMessageHolderType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons4__NotificationMessageHolderType(struct soap *soap, const char *tag, int id, struct ns4__NotificationMessageHolderType **const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons4__NotificationMessageHolderType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_PointerTons4__NotificationMessageHolderType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns4__NotificationMessageHolderType *** SOAP_FMAC4 soap_in_PointerToPointerTons4__NotificationMessageHolderType(struct soap *soap, const char *tag, struct ns4__NotificationMessageHolderType ***a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ns4__NotificationMessageHolderType ***)soap_malloc(soap, sizeof(struct ns4__NotificationMessageHolderType **))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_PointerTons4__NotificationMessageHolderType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ns4__NotificationMessageHolderType ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons4__NotificationMessageHolderType, sizeof(struct ns4__NotificationMessageHolderType *), 1);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons4__NotificationMessageHolderType(struct soap *soap, struct ns4__NotificationMessageHolderType **const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons4__NotificationMessageHolderType);
+	if (soap_out_PointerToPointerTons4__NotificationMessageHolderType(soap, tag?tag:"ns4:NotificationMessageHolderType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns4__NotificationMessageHolderType *** SOAP_FMAC4 soap_get_PointerToPointerTons4__NotificationMessageHolderType(struct soap *soap, struct ns4__NotificationMessageHolderType ***p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToPointerTons4__NotificationMessageHolderType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons4__NotificationMessageHolderType(struct soap *soap, struct ns4__NotificationMessageHolderType *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE_ns4__NotificationMessageHolderType))
@@ -22943,6 +23074,57 @@ SOAP_FMAC3 struct wsa5__EndpointReferenceType ** SOAP_FMAC4 soap_get_PointerTows
 	return p;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons4__QueryExpressionType(struct soap *soap, struct ns4__QueryExpressionType **const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons4__QueryExpressionType))
+		soap_serialize_PointerTons4__QueryExpressionType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons4__QueryExpressionType(struct soap *soap, const char *tag, int id, struct ns4__QueryExpressionType **const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons4__QueryExpressionType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_PointerTons4__QueryExpressionType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns4__QueryExpressionType *** SOAP_FMAC4 soap_in_PointerToPointerTons4__QueryExpressionType(struct soap *soap, const char *tag, struct ns4__QueryExpressionType ***a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ns4__QueryExpressionType ***)soap_malloc(soap, sizeof(struct ns4__QueryExpressionType **))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_PointerTons4__QueryExpressionType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ns4__QueryExpressionType ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons4__QueryExpressionType, sizeof(struct ns4__QueryExpressionType *), 1);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons4__QueryExpressionType(struct soap *soap, struct ns4__QueryExpressionType **const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons4__QueryExpressionType);
+	if (soap_out_PointerToPointerTons4__QueryExpressionType(soap, tag?tag:"ns4:QueryExpressionType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns4__QueryExpressionType *** SOAP_FMAC4 soap_get_PointerToPointerTons4__QueryExpressionType(struct soap *soap, struct ns4__QueryExpressionType ***p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToPointerTons4__QueryExpressionType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons4__QueryExpressionType(struct soap *soap, struct ns4__QueryExpressionType *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE_ns4__QueryExpressionType))
@@ -22989,6 +23171,57 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons4__QueryExpressionType(struct soap
 SOAP_FMAC3 struct ns4__QueryExpressionType ** SOAP_FMAC4 soap_get_PointerTons4__QueryExpressionType(struct soap *soap, struct ns4__QueryExpressionType **p, const char *tag, const char *type)
 {
 	if ((p = soap_in_PointerTons4__QueryExpressionType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons4__TopicExpressionType(struct soap *soap, struct ns4__TopicExpressionType **const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons4__TopicExpressionType))
+		soap_serialize_PointerTons4__TopicExpressionType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons4__TopicExpressionType(struct soap *soap, const char *tag, int id, struct ns4__TopicExpressionType **const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons4__TopicExpressionType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_PointerTons4__TopicExpressionType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns4__TopicExpressionType *** SOAP_FMAC4 soap_in_PointerToPointerTons4__TopicExpressionType(struct soap *soap, const char *tag, struct ns4__TopicExpressionType ***a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ns4__TopicExpressionType ***)soap_malloc(soap, sizeof(struct ns4__TopicExpressionType **))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_PointerTons4__TopicExpressionType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ns4__TopicExpressionType ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons4__TopicExpressionType, sizeof(struct ns4__TopicExpressionType *), 1);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons4__TopicExpressionType(struct soap *soap, struct ns4__TopicExpressionType **const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons4__TopicExpressionType);
+	if (soap_out_PointerToPointerTons4__TopicExpressionType(soap, tag?tag:"ns4:TopicExpressionType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns4__TopicExpressionType *** SOAP_FMAC4 soap_get_PointerToPointerTons4__TopicExpressionType(struct soap *soap, struct ns4__TopicExpressionType ***p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToPointerTons4__TopicExpressionType(soap, tag, p, type)))
 		if (soap_getindependent(soap))
 			return NULL;
 	return p;
@@ -23248,6 +23481,57 @@ SOAP_FMAC3 struct ns3__TimeContent ** SOAP_FMAC4 soap_get_PointerTons3__TimeCont
 	return p;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons3__CtrlPlaneNextHopContent(struct soap *soap, struct ns3__CtrlPlaneNextHopContent **const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons3__CtrlPlaneNextHopContent))
+		soap_serialize_PointerTons3__CtrlPlaneNextHopContent(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons3__CtrlPlaneNextHopContent(struct soap *soap, const char *tag, int id, struct ns3__CtrlPlaneNextHopContent **const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons3__CtrlPlaneNextHopContent);
+	if (id < 0)
+		return soap->error;
+	return soap_out_PointerTons3__CtrlPlaneNextHopContent(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns3__CtrlPlaneNextHopContent *** SOAP_FMAC4 soap_in_PointerToPointerTons3__CtrlPlaneNextHopContent(struct soap *soap, const char *tag, struct ns3__CtrlPlaneNextHopContent ***a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ns3__CtrlPlaneNextHopContent ***)soap_malloc(soap, sizeof(struct ns3__CtrlPlaneNextHopContent **))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_PointerTons3__CtrlPlaneNextHopContent(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ns3__CtrlPlaneNextHopContent ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons3__CtrlPlaneNextHopContent, sizeof(struct ns3__CtrlPlaneNextHopContent *), 1);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons3__CtrlPlaneNextHopContent(struct soap *soap, struct ns3__CtrlPlaneNextHopContent **const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons3__CtrlPlaneNextHopContent);
+	if (soap_out_PointerToPointerTons3__CtrlPlaneNextHopContent(soap, tag?tag:"ns3:CtrlPlaneNextHopContent", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns3__CtrlPlaneNextHopContent *** SOAP_FMAC4 soap_get_PointerToPointerTons3__CtrlPlaneNextHopContent(struct soap *soap, struct ns3__CtrlPlaneNextHopContent ***p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToPointerTons3__CtrlPlaneNextHopContent(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons3__CtrlPlaneNextHopContent(struct soap *soap, struct ns3__CtrlPlaneNextHopContent *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE_ns3__CtrlPlaneNextHopContent))
@@ -23294,6 +23578,57 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons3__CtrlPlaneNextHopContent(struct 
 SOAP_FMAC3 struct ns3__CtrlPlaneNextHopContent ** SOAP_FMAC4 soap_get_PointerTons3__CtrlPlaneNextHopContent(struct soap *soap, struct ns3__CtrlPlaneNextHopContent **p, const char *tag, const char *type)
 {
 	if ((p = soap_in_PointerTons3__CtrlPlaneNextHopContent(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons3__CtrlPlaneHopContent(struct soap *soap, struct ns3__CtrlPlaneHopContent **const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons3__CtrlPlaneHopContent))
+		soap_serialize_PointerTons3__CtrlPlaneHopContent(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons3__CtrlPlaneHopContent(struct soap *soap, const char *tag, int id, struct ns3__CtrlPlaneHopContent **const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons3__CtrlPlaneHopContent);
+	if (id < 0)
+		return soap->error;
+	return soap_out_PointerTons3__CtrlPlaneHopContent(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns3__CtrlPlaneHopContent *** SOAP_FMAC4 soap_in_PointerToPointerTons3__CtrlPlaneHopContent(struct soap *soap, const char *tag, struct ns3__CtrlPlaneHopContent ***a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ns3__CtrlPlaneHopContent ***)soap_malloc(soap, sizeof(struct ns3__CtrlPlaneHopContent **))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_PointerTons3__CtrlPlaneHopContent(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ns3__CtrlPlaneHopContent ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons3__CtrlPlaneHopContent, sizeof(struct ns3__CtrlPlaneHopContent *), 1);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons3__CtrlPlaneHopContent(struct soap *soap, struct ns3__CtrlPlaneHopContent **const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons3__CtrlPlaneHopContent);
+	if (soap_out_PointerToPointerTons3__CtrlPlaneHopContent(soap, tag?tag:"ns3:CtrlPlaneHopContent", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns3__CtrlPlaneHopContent *** SOAP_FMAC4 soap_get_PointerToPointerTons3__CtrlPlaneHopContent(struct soap *soap, struct ns3__CtrlPlaneHopContent ***p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToPointerTons3__CtrlPlaneHopContent(soap, tag, p, type)))
 		if (soap_getindependent(soap))
 			return NULL;
 	return p;
@@ -23401,6 +23736,57 @@ SOAP_FMAC3 struct ns3__CtrlPlaneSwcapContent ** SOAP_FMAC4 soap_get_PointerTons3
 	return p;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons3__CtrlPlaneAdministrativeGroup(struct soap *soap, struct ns3__CtrlPlaneAdministrativeGroup **const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons3__CtrlPlaneAdministrativeGroup))
+		soap_serialize_PointerTons3__CtrlPlaneAdministrativeGroup(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons3__CtrlPlaneAdministrativeGroup(struct soap *soap, const char *tag, int id, struct ns3__CtrlPlaneAdministrativeGroup **const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons3__CtrlPlaneAdministrativeGroup);
+	if (id < 0)
+		return soap->error;
+	return soap_out_PointerTons3__CtrlPlaneAdministrativeGroup(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns3__CtrlPlaneAdministrativeGroup *** SOAP_FMAC4 soap_in_PointerToPointerTons3__CtrlPlaneAdministrativeGroup(struct soap *soap, const char *tag, struct ns3__CtrlPlaneAdministrativeGroup ***a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ns3__CtrlPlaneAdministrativeGroup ***)soap_malloc(soap, sizeof(struct ns3__CtrlPlaneAdministrativeGroup **))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_PointerTons3__CtrlPlaneAdministrativeGroup(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ns3__CtrlPlaneAdministrativeGroup ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons3__CtrlPlaneAdministrativeGroup, sizeof(struct ns3__CtrlPlaneAdministrativeGroup *), 1);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons3__CtrlPlaneAdministrativeGroup(struct soap *soap, struct ns3__CtrlPlaneAdministrativeGroup **const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons3__CtrlPlaneAdministrativeGroup);
+	if (soap_out_PointerToPointerTons3__CtrlPlaneAdministrativeGroup(soap, tag?tag:"ns3:CtrlPlaneAdministrativeGroup", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns3__CtrlPlaneAdministrativeGroup *** SOAP_FMAC4 soap_get_PointerToPointerTons3__CtrlPlaneAdministrativeGroup(struct soap *soap, struct ns3__CtrlPlaneAdministrativeGroup ***p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToPointerTons3__CtrlPlaneAdministrativeGroup(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons3__CtrlPlaneAdministrativeGroup(struct soap *soap, struct ns3__CtrlPlaneAdministrativeGroup *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE_ns3__CtrlPlaneAdministrativeGroup))
@@ -23503,6 +23889,57 @@ SOAP_FMAC3 struct ns3__CtrlPlaneAddressContent ** SOAP_FMAC4 soap_get_PointerTon
 	return p;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons3__CtrlPlaneLinkContent(struct soap *soap, struct ns3__CtrlPlaneLinkContent **const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons3__CtrlPlaneLinkContent))
+		soap_serialize_PointerTons3__CtrlPlaneLinkContent(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons3__CtrlPlaneLinkContent(struct soap *soap, const char *tag, int id, struct ns3__CtrlPlaneLinkContent **const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons3__CtrlPlaneLinkContent);
+	if (id < 0)
+		return soap->error;
+	return soap_out_PointerTons3__CtrlPlaneLinkContent(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns3__CtrlPlaneLinkContent *** SOAP_FMAC4 soap_in_PointerToPointerTons3__CtrlPlaneLinkContent(struct soap *soap, const char *tag, struct ns3__CtrlPlaneLinkContent ***a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ns3__CtrlPlaneLinkContent ***)soap_malloc(soap, sizeof(struct ns3__CtrlPlaneLinkContent **))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_PointerTons3__CtrlPlaneLinkContent(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ns3__CtrlPlaneLinkContent ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons3__CtrlPlaneLinkContent, sizeof(struct ns3__CtrlPlaneLinkContent *), 1);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons3__CtrlPlaneLinkContent(struct soap *soap, struct ns3__CtrlPlaneLinkContent **const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons3__CtrlPlaneLinkContent);
+	if (soap_out_PointerToPointerTons3__CtrlPlaneLinkContent(soap, tag?tag:"ns3:CtrlPlaneLinkContent", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns3__CtrlPlaneLinkContent *** SOAP_FMAC4 soap_get_PointerToPointerTons3__CtrlPlaneLinkContent(struct soap *soap, struct ns3__CtrlPlaneLinkContent ***p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToPointerTons3__CtrlPlaneLinkContent(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons3__CtrlPlaneLinkContent(struct soap *soap, struct ns3__CtrlPlaneLinkContent *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE_ns3__CtrlPlaneLinkContent))
@@ -23554,6 +23991,57 @@ SOAP_FMAC3 struct ns3__CtrlPlaneLinkContent ** SOAP_FMAC4 soap_get_PointerTons3_
 	return p;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons3__CtrlPlanePortContent(struct soap *soap, struct ns3__CtrlPlanePortContent **const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons3__CtrlPlanePortContent))
+		soap_serialize_PointerTons3__CtrlPlanePortContent(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons3__CtrlPlanePortContent(struct soap *soap, const char *tag, int id, struct ns3__CtrlPlanePortContent **const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons3__CtrlPlanePortContent);
+	if (id < 0)
+		return soap->error;
+	return soap_out_PointerTons3__CtrlPlanePortContent(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns3__CtrlPlanePortContent *** SOAP_FMAC4 soap_in_PointerToPointerTons3__CtrlPlanePortContent(struct soap *soap, const char *tag, struct ns3__CtrlPlanePortContent ***a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ns3__CtrlPlanePortContent ***)soap_malloc(soap, sizeof(struct ns3__CtrlPlanePortContent **))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_PointerTons3__CtrlPlanePortContent(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ns3__CtrlPlanePortContent ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons3__CtrlPlanePortContent, sizeof(struct ns3__CtrlPlanePortContent *), 1);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons3__CtrlPlanePortContent(struct soap *soap, struct ns3__CtrlPlanePortContent **const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons3__CtrlPlanePortContent);
+	if (soap_out_PointerToPointerTons3__CtrlPlanePortContent(soap, tag?tag:"ns3:CtrlPlanePortContent", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns3__CtrlPlanePortContent *** SOAP_FMAC4 soap_get_PointerToPointerTons3__CtrlPlanePortContent(struct soap *soap, struct ns3__CtrlPlanePortContent ***p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToPointerTons3__CtrlPlanePortContent(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons3__CtrlPlanePortContent(struct soap *soap, struct ns3__CtrlPlanePortContent *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE_ns3__CtrlPlanePortContent))
@@ -23600,6 +24088,57 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons3__CtrlPlanePortContent(struct soa
 SOAP_FMAC3 struct ns3__CtrlPlanePortContent ** SOAP_FMAC4 soap_get_PointerTons3__CtrlPlanePortContent(struct soap *soap, struct ns3__CtrlPlanePortContent **p, const char *tag, const char *type)
 {
 	if ((p = soap_in_PointerTons3__CtrlPlanePortContent(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons3__CtrlPlaneNodeContent(struct soap *soap, struct ns3__CtrlPlaneNodeContent **const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons3__CtrlPlaneNodeContent))
+		soap_serialize_PointerTons3__CtrlPlaneNodeContent(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons3__CtrlPlaneNodeContent(struct soap *soap, const char *tag, int id, struct ns3__CtrlPlaneNodeContent **const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons3__CtrlPlaneNodeContent);
+	if (id < 0)
+		return soap->error;
+	return soap_out_PointerTons3__CtrlPlaneNodeContent(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns3__CtrlPlaneNodeContent *** SOAP_FMAC4 soap_in_PointerToPointerTons3__CtrlPlaneNodeContent(struct soap *soap, const char *tag, struct ns3__CtrlPlaneNodeContent ***a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ns3__CtrlPlaneNodeContent ***)soap_malloc(soap, sizeof(struct ns3__CtrlPlaneNodeContent **))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_PointerTons3__CtrlPlaneNodeContent(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ns3__CtrlPlaneNodeContent ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons3__CtrlPlaneNodeContent, sizeof(struct ns3__CtrlPlaneNodeContent *), 1);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons3__CtrlPlaneNodeContent(struct soap *soap, struct ns3__CtrlPlaneNodeContent **const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons3__CtrlPlaneNodeContent);
+	if (soap_out_PointerToPointerTons3__CtrlPlaneNodeContent(soap, tag?tag:"ns3:CtrlPlaneNodeContent", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns3__CtrlPlaneNodeContent *** SOAP_FMAC4 soap_get_PointerToPointerTons3__CtrlPlaneNodeContent(struct soap *soap, struct ns3__CtrlPlaneNodeContent ***p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToPointerTons3__CtrlPlaneNodeContent(soap, tag, p, type)))
 		if (soap_getindependent(soap))
 			return NULL;
 	return p;
@@ -23707,6 +24246,57 @@ SOAP_FMAC3 struct ns3__Lifetime ** SOAP_FMAC4 soap_get_PointerTons3__Lifetime(st
 	return p;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons3__CtrlPlaneDomainSignatureContent(struct soap *soap, struct ns3__CtrlPlaneDomainSignatureContent **const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons3__CtrlPlaneDomainSignatureContent))
+		soap_serialize_PointerTons3__CtrlPlaneDomainSignatureContent(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons3__CtrlPlaneDomainSignatureContent(struct soap *soap, const char *tag, int id, struct ns3__CtrlPlaneDomainSignatureContent **const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons3__CtrlPlaneDomainSignatureContent);
+	if (id < 0)
+		return soap->error;
+	return soap_out_PointerTons3__CtrlPlaneDomainSignatureContent(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns3__CtrlPlaneDomainSignatureContent *** SOAP_FMAC4 soap_in_PointerToPointerTons3__CtrlPlaneDomainSignatureContent(struct soap *soap, const char *tag, struct ns3__CtrlPlaneDomainSignatureContent ***a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ns3__CtrlPlaneDomainSignatureContent ***)soap_malloc(soap, sizeof(struct ns3__CtrlPlaneDomainSignatureContent **))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_PointerTons3__CtrlPlaneDomainSignatureContent(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ns3__CtrlPlaneDomainSignatureContent ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons3__CtrlPlaneDomainSignatureContent, sizeof(struct ns3__CtrlPlaneDomainSignatureContent *), 1);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons3__CtrlPlaneDomainSignatureContent(struct soap *soap, struct ns3__CtrlPlaneDomainSignatureContent **const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons3__CtrlPlaneDomainSignatureContent);
+	if (soap_out_PointerToPointerTons3__CtrlPlaneDomainSignatureContent(soap, tag?tag:"ns3:CtrlPlaneDomainSignatureContent", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns3__CtrlPlaneDomainSignatureContent *** SOAP_FMAC4 soap_get_PointerToPointerTons3__CtrlPlaneDomainSignatureContent(struct soap *soap, struct ns3__CtrlPlaneDomainSignatureContent ***p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToPointerTons3__CtrlPlaneDomainSignatureContent(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons3__CtrlPlaneDomainSignatureContent(struct soap *soap, struct ns3__CtrlPlaneDomainSignatureContent *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE_ns3__CtrlPlaneDomainSignatureContent))
@@ -23758,6 +24348,57 @@ SOAP_FMAC3 struct ns3__CtrlPlaneDomainSignatureContent ** SOAP_FMAC4 soap_get_Po
 	return p;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons3__CtrlPlaneDomainContent(struct soap *soap, struct ns3__CtrlPlaneDomainContent **const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons3__CtrlPlaneDomainContent))
+		soap_serialize_PointerTons3__CtrlPlaneDomainContent(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons3__CtrlPlaneDomainContent(struct soap *soap, const char *tag, int id, struct ns3__CtrlPlaneDomainContent **const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons3__CtrlPlaneDomainContent);
+	if (id < 0)
+		return soap->error;
+	return soap_out_PointerTons3__CtrlPlaneDomainContent(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns3__CtrlPlaneDomainContent *** SOAP_FMAC4 soap_in_PointerToPointerTons3__CtrlPlaneDomainContent(struct soap *soap, const char *tag, struct ns3__CtrlPlaneDomainContent ***a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ns3__CtrlPlaneDomainContent ***)soap_malloc(soap, sizeof(struct ns3__CtrlPlaneDomainContent **))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_PointerTons3__CtrlPlaneDomainContent(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ns3__CtrlPlaneDomainContent ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons3__CtrlPlaneDomainContent, sizeof(struct ns3__CtrlPlaneDomainContent *), 1);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons3__CtrlPlaneDomainContent(struct soap *soap, struct ns3__CtrlPlaneDomainContent **const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons3__CtrlPlaneDomainContent);
+	if (soap_out_PointerToPointerTons3__CtrlPlaneDomainContent(soap, tag?tag:"ns3:CtrlPlaneDomainContent", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns3__CtrlPlaneDomainContent *** SOAP_FMAC4 soap_get_PointerToPointerTons3__CtrlPlaneDomainContent(struct soap *soap, struct ns3__CtrlPlaneDomainContent ***p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToPointerTons3__CtrlPlaneDomainContent(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons3__CtrlPlaneDomainContent(struct soap *soap, struct ns3__CtrlPlaneDomainContent *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE_ns3__CtrlPlaneDomainContent))
@@ -23804,6 +24445,57 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons3__CtrlPlaneDomainContent(struct s
 SOAP_FMAC3 struct ns3__CtrlPlaneDomainContent ** SOAP_FMAC4 soap_get_PointerTons3__CtrlPlaneDomainContent(struct soap *soap, struct ns3__CtrlPlaneDomainContent **p, const char *tag, const char *type)
 {
 	if ((p = soap_in_PointerTons3__CtrlPlaneDomainContent(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons3__CtrlPlanePathContent(struct soap *soap, struct ns3__CtrlPlanePathContent **const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons3__CtrlPlanePathContent))
+		soap_serialize_PointerTons3__CtrlPlanePathContent(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons3__CtrlPlanePathContent(struct soap *soap, const char *tag, int id, struct ns3__CtrlPlanePathContent **const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons3__CtrlPlanePathContent);
+	if (id < 0)
+		return soap->error;
+	return soap_out_PointerTons3__CtrlPlanePathContent(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns3__CtrlPlanePathContent *** SOAP_FMAC4 soap_in_PointerToPointerTons3__CtrlPlanePathContent(struct soap *soap, const char *tag, struct ns3__CtrlPlanePathContent ***a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ns3__CtrlPlanePathContent ***)soap_malloc(soap, sizeof(struct ns3__CtrlPlanePathContent **))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_PointerTons3__CtrlPlanePathContent(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ns3__CtrlPlanePathContent ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons3__CtrlPlanePathContent, sizeof(struct ns3__CtrlPlanePathContent *), 1);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons3__CtrlPlanePathContent(struct soap *soap, struct ns3__CtrlPlanePathContent **const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons3__CtrlPlanePathContent);
+	if (soap_out_PointerToPointerTons3__CtrlPlanePathContent(soap, tag?tag:"ns3:CtrlPlanePathContent", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns3__CtrlPlanePathContent *** SOAP_FMAC4 soap_get_PointerToPointerTons3__CtrlPlanePathContent(struct soap *soap, struct ns3__CtrlPlanePathContent ***p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToPointerTons3__CtrlPlanePathContent(soap, tag, p, type)))
 		if (soap_getindependent(soap))
 			return NULL;
 	return p;
@@ -24875,6 +25567,108 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons1__resCreateContent(struct soap *s
 SOAP_FMAC3 struct ns1__resCreateContent ** SOAP_FMAC4 soap_get_PointerTons1__resCreateContent(struct soap *soap, struct ns1__resCreateContent **p, const char *tag, const char *type)
 {
 	if ((p = soap_in_PointerTons1__resCreateContent(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons1__resDetails(struct soap *soap, struct ns1__resDetails **const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons1__resDetails))
+		soap_serialize_PointerTons1__resDetails(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons1__resDetails(struct soap *soap, const char *tag, int id, struct ns1__resDetails **const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons1__resDetails);
+	if (id < 0)
+		return soap->error;
+	return soap_out_PointerTons1__resDetails(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns1__resDetails *** SOAP_FMAC4 soap_in_PointerToPointerTons1__resDetails(struct soap *soap, const char *tag, struct ns1__resDetails ***a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ns1__resDetails ***)soap_malloc(soap, sizeof(struct ns1__resDetails **))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_PointerTons1__resDetails(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ns1__resDetails ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons1__resDetails, sizeof(struct ns1__resDetails *), 1);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons1__resDetails(struct soap *soap, struct ns1__resDetails **const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons1__resDetails);
+	if (soap_out_PointerToPointerTons1__resDetails(soap, tag?tag:"ns1:resDetails", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns1__resDetails *** SOAP_FMAC4 soap_get_PointerToPointerTons1__resDetails(struct soap *soap, struct ns1__resDetails ***p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToPointerTons1__resDetails(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons1__vlanTag(struct soap *soap, struct ns1__vlanTag **const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons1__vlanTag))
+		soap_serialize_PointerTons1__vlanTag(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons1__vlanTag(struct soap *soap, const char *tag, int id, struct ns1__vlanTag **const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons1__vlanTag);
+	if (id < 0)
+		return soap->error;
+	return soap_out_PointerTons1__vlanTag(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns1__vlanTag *** SOAP_FMAC4 soap_in_PointerToPointerTons1__vlanTag(struct soap *soap, const char *tag, struct ns1__vlanTag ***a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ns1__vlanTag ***)soap_malloc(soap, sizeof(struct ns1__vlanTag **))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_PointerTons1__vlanTag(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ns1__vlanTag ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons1__vlanTag, sizeof(struct ns1__vlanTag *), 1);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons1__vlanTag(struct soap *soap, struct ns1__vlanTag **const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons1__vlanTag);
+	if (soap_out_PointerToPointerTons1__vlanTag(soap, tag?tag:"ns1:vlanTag", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns1__vlanTag *** SOAP_FMAC4 soap_get_PointerToPointerTons1__vlanTag(struct soap *soap, struct ns1__vlanTag ***p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToPointerTons1__vlanTag(soap, tag, p, type)))
 		if (soap_getindependent(soap))
 			return NULL;
 	return p;
