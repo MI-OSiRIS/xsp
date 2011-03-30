@@ -300,7 +300,7 @@ PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg) {
     }
     memcpy(io->view.datatypes, msg_ptr+sizeof(int), io->view.ndatatypes*sizeof(int));
 
-    print_photon_io_info(&io);
+    print_photon_io_info(io);
 
     return io;
 }
