@@ -26,7 +26,7 @@ typedef struct OSCARS_time_t {
 } OSCARS_time;
 
 typedef struct OSCARS_vlanTag_t {
-	char *tag;
+	char *id;
 	int tagged;
 } OSCARS_vlanTag;
 
@@ -54,7 +54,7 @@ typedef struct OSCARS_MPLSInfo_t {
 typedef struct OSCARS_pathInfo_t {
 	char *setup_mode;
 	char *type;
-	void *path_content;
+	void *ctrl_plane_path_content;
 	OSCARS_L2Info *l2_info;
 	OSCARS_L3Info *l3_info;
 	OSCARS_MPLSInfo *mpls_info;
@@ -70,8 +70,8 @@ typedef struct OSCARS_listRequest_t {
 	char **links;
 	int size_vlan_tags;
 	OSCARS_vlanTag **vlan_tags;
-	int res_requestes;
-	int resOffset;
+	int res_requested;
+	int res_offset;
 } OSCARS_listRequest;
 
 typedef struct OSCARS_createRequest_t {
@@ -83,7 +83,7 @@ typedef struct OSCARS_createRequest_t {
 	OSCARS_pathInfo *path_info;
 } OSCARS_createRequest;
 
-void *pretty_print(int type, void *res);
+void oscars_pretty_print(int type, void *res);
 int oscars_cancelReservation(xspdSoapContext *osc, const void *request, void **response);
 
 

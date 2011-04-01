@@ -10,7 +10,7 @@ OSCARS_listRequest list_request = {
 	NULL,
 	0,
 	NULL,
-	"test reservation",
+	"test res",
 	0,
 	NULL,
 	0,
@@ -19,7 +19,39 @@ OSCARS_listRequest list_request = {
 	0
 };
 
+OSCARS_L2Info l2_info = {
+	NULL,
+	NULL,
+	"vlsr1",
+	"vlsr2"
+};
 
+OSCARS_pathInfo path_info = {
+	"timer-automatic",
+	NULL,
+	NULL,
+	&l2_info,
+	NULL,
+	NULL
+};
+
+OSCARS_createRequest create_request = {
+	NULL,
+	1301772039,
+	1301782039,
+	1000,
+	"test res",
+	&path_info
+};
+
+OSCARS_createRequest modify_request = {
+	"12345",
+	1301772039,
+	1301792039,
+	2000,
+	"modified res",
+	&path_info
+};
 
 int main(int argc, char* argv[])
 {
@@ -45,34 +77,59 @@ int main(int argc, char* argv[])
 	printf("\nTesting oscars_getNetworkTopology\n\n");
 	request = (void*) "all";
         if (oscars_getNetworkTopology(&oscars_soap, request, &response) == 0) {
-                pretty_print(GET_TOPO, response);
+                oscars_pretty_print(GET_TOPO, response);
 	}
+	else
+		printf("error in oscars_getNetworkTopology\n");
+	
+	sleep(1);
+
+	printf("\nTesting oscars_createReservation\n\n");
+	request = (void*) &create_request;
+	if (oscars_createReservation(&oscars_soap, request, &response) == 0) {
+		oscars_pretty_print(CREATE_RES, response);
+        }
+        else
+                printf("error in oscars_createReservation\n");
 	
 	sleep(1);
 
 	printf("\nTesting oscars_listReservations\n\n");
 	request = (void*) &list_request;
 	if (oscars_listReservations(&oscars_soap, request, &response) == 0) {
-		pretty_print(LIST_RES, response);
+		oscars_pretty_print(LIST_RES, response);
         }
-
-	exit(1);
-
-	sleep(1);
-
-	printf("\nTesting oscars_createReservation\n\n");
-	if (oscars_createReservation(&oscars_soap) == 0) {
-		printf("Response: %s\n", response);
-	}
+	else
+		printf("error in oscars_listReservations\n");
 	
 	sleep(1);
+
+	printf("\nTesting oscars_modifyReservation\n\n");
+	request = (void*) &modify_request;
+        if (oscars_modifyReservation(&oscars_soap, request, &response) == 0) {
+                oscars_pretty_print(MODIFY_RES, response);
+        }
+        else
+                printf("error in oscars_modifyReservation\n");
+
+        sleep(1);
+
+	printf("\nTesting oscars_queryReservation\n\n");
+        if (oscars_queryReservation(&oscars_soap, "12345", &response) == 0) {
+                oscars_pretty_print(QUERY_RES, response);
+        }
+        else
+                printf("error in oscars_queryReservation\n");
+
+        sleep(1);
 
 	printf("\nTesting oscars_cancelReservation\n\n");
-	if (oscars_cancelReservation(&oscars_soap, "blah", &response) == 0) {
-		printf("Response: %s\n", (char*)response);
-	}
-	
-	
+	if (oscars_cancelReservation(&oscars_soap, "12345", &response) == 0) {
+		oscars_pretty_print(CANCEL_RES, response);
+        }
+        else
+                printf("error in oscars_cancelReservation\n");
+
 
 	printf("done\n");
 	

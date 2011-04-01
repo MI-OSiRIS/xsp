@@ -1,9 +1,52 @@
 #include "oscars.h"
 #include "oscarsH.h"
 
-void *pretty_print(int type, void *res) {
+void oscars_pretty_print(int type, void *res) {
 	switch (type) {
 		
+	  case MODIFY_RES:
+	  case QUERY_RES:
+	  {
+		  struct ns1__resDetails *det = (struct ns1__resDetails*)res;
+		  printf("GRI: %s\n", det->globalReservationId);
+		  printf("\tlogin: %s\n\tstatus: %s\n\tstart: %llu\n\tend: %llu\n",
+			 det->login, det->status, det->startTime, det->endTime);
+		  printf("\t,create: %llu\n\tbandwidth: %d\n\t,description: %s\n\tpathInfo: N/A\n",
+			 det->createTime, det->bandwidth, det->description);
+	  }
+	  break;
+	  case CREATE_RES:
+	  {
+		  struct ns1__createReply *tmp = 
+			  (struct ns1__createReply*)res;
+		  printf("GRI: %s\n", tmp->globalReservationId);
+		  if (tmp->token)
+			  printf("\ttoken: %s\n", tmp->token);
+		  printf("\tstatus: %s\n", tmp->status);
+		  printf("\tpathInfo: N/A\n");
+	  }
+	  break;
+	  case CANCEL_RES:
+	  {
+		  printf("GRI: %s\n", (char*)res);
+	  }
+	  break;
+	  case LIST_RES:
+	  {
+		  int i;
+		  struct ns1__listReply *tmp = 
+			  (struct ns1__listReply*)res;
+		  printf("Total results: %d\n", *(tmp->totalResults));
+		  for (i=0; i<tmp->__sizeresDetails; i++) {
+			  struct ns1__resDetails *det = tmp->resDetails[i];
+			  printf("[%d] GRI: %s\n", i, det->globalReservationId);
+			  printf("\tlogin: %s\n\tstatus: %s\n\tstart: %llu\n\tend: %llu\n",
+				 det->login, det->status, det->startTime, det->endTime);
+			  printf("\t,create: %llu\n\tbandwidth: %d\n\t,description: %s\n\tpathInfo: N/A\n",
+				 det->createTime, det->bandwidth, det->description);
+		  }
+	  }
+	  break;
 	  case GET_TOPO:
 	  {
 		  int i, j, k, l;
@@ -108,7 +151,8 @@ int oscars_getNetworkTopology(xspdSoapContext *osc, const void *request, void **
 
 int oscars_listReservations(xspdSoapContext *osc, const void *request, void **response) {
 	int ret = 0;
-	
+	int i;
+
 	struct ns1__listRequest list_req;
 	struct ns1__listReply *list_res = calloc(1, sizeof(struct ns1__listReply));
 	
@@ -116,11 +160,71 @@ int oscars_listReservations(xspdSoapContext *osc, const void *request, void **re
 
 	OSCARS_listRequest *lr = (OSCARS_listRequest *)request;
 
-	// XXX: finish this
-	if (lr->description) {
+	if (lr->description)
 		list_req.description = lr->description;
+	
+	if (lr->res_requested)
+		list_req.resRequested = &(lr->res_requested);
+	
+	if (lr->res_offset)
+		list_req.resOffset = &(lr->res_offset);
+
+	// Reservation statuses
+	if (lr->size_status > 0 && lr->size_status <= 5) {
+		list_req.__sizeresStatus = lr->size_status;
+		for (i=0; i<lr->size_status; i++) {
+			if (lr->statuses[i])
+				list_req.resStatus[i] = lr->statuses[i];
+			else
+				return -1;
+		}
 	}
 	
+	// Reservation times
+	if (lr->size_res_times > 0) {
+		list_req.__size_listRequest_sequence = lr->size_res_times;
+		if (!(lr->res_times))
+			return -1;
+		for (i=0; i<lr->size_res_times; i++) {
+			if (lr->res_times[i]) {
+				list_req.__listRequest_sequence->startTime = 
+					lr->res_times[i]->start_time;
+				list_req.__listRequest_sequence->endTime = 
+					lr->res_times[i]->end_time;
+			}
+			else
+				return -1;
+		}
+	}
+	
+	// Links
+	if (lr->size_links > 0) {
+                list_req.__sizelinkId = lr->size_links;
+                for (i=0; i<lr->size_links; i++) {
+                        if (lr->links[i])
+                                list_req.linkId[i] = lr->links[i];
+                        else
+                                return -1;
+                }
+        }
+
+	// VLANs
+	if (lr->size_vlan_tags > 0) {
+                list_req.__sizevlanTag = lr->size_vlan_tags;
+                if (!(lr->vlan_tags))
+                        return -1;
+                for (i=0; i<lr->size_vlan_tags; i++) {
+                        if (lr->vlan_tags[i]) {
+                                list_req.vlanTag[i]->__item =
+                                        lr->vlan_tags[i]->id;
+				list_req.vlanTag[i]->tagged = 
+					(enum xsd__boolean_*)&(lr->vlan_tags[i]->tagged);
+                        }
+                        else
+                                return -1;
+                }
+        }
+
 	if (_oscars_wsse_sign(osc) != 0) {
                 return -1;
 	}
@@ -140,12 +244,110 @@ int oscars_listReservations(xspdSoapContext *osc, const void *request, void **re
 }
 
 int oscars_createReservation(xspdSoapContext *osc, const void *request, void **response) {
+	int ret = 0;
+	
+        struct ns1__resCreateContent create_req;
+        struct ns1__createReply *create_res = calloc(1, sizeof(struct ns1__createReply*));
+
+        bzero(&create_req, sizeof(struct ns1__resCreateContent));
+
+        OSCARS_createRequest *cr = (OSCARS_createRequest *)request;
+
+	if (cr->res_id)
+		create_req.globalReservationId = cr->res_id;
+	
+	create_req.startTime = cr->start_time;
+	create_req.endTime = cr->end_time;
+	create_req.bandwidth = cr->bandwidth;
+	create_req.description = cr->description;
+
+	create_req.pathInfo = (struct ns1__pathInfo*)cr->path_info;
+
 	if (_oscars_wsse_sign(osc) != 0) {
                 return -1;
         }
 	
+	if (soap_call___ns1__createReservation((struct soap*)osc->soap,
+					       osc->soap_endpoint,
+					       osc->soap_action,
+					       &create_req, create_res) == SOAP_OK) {
+		*response = create_res;
+	}
+	else {
+		soap_print_fault((struct soap *)osc->soap, stderr);
+		ret = -1;
+	}
+		
+	return ret;
+}
+
+int oscars_modifyReservation(xspdSoapContext *osc, const void *request, void **response) {
+        int ret = 0;
+
+        struct ns1__modifyResContent modify_req;
+        struct ns1__modifyResReply *modify_res = calloc(1, sizeof(struct ns1__modifyResReply*));
+
+        bzero(&modify_req, sizeof(struct ns1__modifyResContent));
+
+        OSCARS_createRequest *cr = (OSCARS_createRequest *)request;
+
+        if (cr->res_id)
+                modify_req.globalReservationId = cr->res_id;
+
+        modify_req.startTime = cr->start_time;
+        modify_req.endTime = cr->end_time;
+        modify_req.bandwidth = cr->bandwidth;
+        modify_req.description = cr->description;
+
+        modify_req.pathInfo = (struct ns1__pathInfo*)cr->path_info;
+
+        if (_oscars_wsse_sign(osc) != 0) {
+                return -1;
+        }
+
+        if (soap_call___ns1__modifyReservation((struct soap*)osc->soap,
+                                               osc->soap_endpoint,
+                                               osc->soap_action,
+                                               &modify_req, modify_res) == SOAP_OK) {
+		
+                *response = modify_res->reservation;
+        }
+        else {
+                soap_print_fault((struct soap *)osc->soap, stderr);
+                ret = -1;
+        }
 	
-	return 0;
+        return ret;
+}
+
+int oscars_queryReservation(xspdSoapContext *osc, const void *request, void **response) {
+	int ret =0;
+
+	struct ns1__globalReservationId query_req;
+	struct ns1__resDetails *query_res = calloc(1, sizeof(struct ns1__resDetails));
+		
+        if (_oscars_wsse_sign(osc) != 0) {
+                return -1;
+        }
+
+	if (request) {
+                query_req.gri = (char *) request;
+                if (soap_call___ns1__queryReservation((struct soap*)osc->soap,
+						      osc->soap_endpoint,
+						      osc->soap_action,
+						      &query_req, query_res) == SOAP_OK) {
+			*response = query_res;
+                }
+                else {
+                        soap_print_fault((struct soap *)osc->soap, stderr);
+                        ret = -1;
+                }
+        }
+        else {
+                ret = -1;
+        }
+
+        return ret;
 }
 
 int oscars_cancelReservation(xspdSoapContext *osc, const void *request, void **response) {
