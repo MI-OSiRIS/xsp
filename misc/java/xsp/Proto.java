@@ -5,6 +5,11 @@ import java.util.Vector;
 
 public class Proto {
 	public Vector<XspProtoHandler> proto_list;
+	
+	Proto()
+	{
+		proto_list=new Vector<XspProtoHandler>();
+	}
 
 	public int xsp_add_proto_handler(byte version, XspProtoHandler handler) {
 		proto_list.add(version, handler);

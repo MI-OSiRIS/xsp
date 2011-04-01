@@ -4,18 +4,18 @@ import java.util.Vector;
 import java.util.Arrays;
 
 public class Hop {
-	char opt_type;
-	short flags;
-	byte [] hop_id;
+	public char opt_type;
+	public short flags;
+	public byte [] hop_id;
 
-	byte [] protocol;
+	public byte [] protocol;
+	public int child_count;
+	public Session session;
 
-	Session session;
-
-	Vector<Hop> child;
-	int child_count;
+	public Vector<Hop> child;
 	
-	Hop()
+	public static final int size = 2+2+Constants.XSP_HOPID_LEN+Constants.XSP_PROTO_NAME_LEN+4;
+	public Hop()
 	{
 		opt_type = 0;
 		flags = 0;
@@ -23,9 +23,39 @@ public class Hop {
 		protocol = new byte[Constants.XSP_PROTO_NAME_LEN];
 		session = new Session();
 		child_count = 0;
+		child=new Vector<Hop>();
 	}
 	
-	int xsp_hop_merge_children(Hop dst, Hop src) {
+    public byte[] getBytes() {    	
+    	byte [] binData;
+ 
+    	binData=new byte[size];    	    
+    	System.arraycopy(Xsp.shortToByteArray((short)opt_type), 0, binData, 0, 2);
+    	System.arraycopy(Xsp.shortToByteArray(flags), 0, binData, 2, 2);
+    	System.arraycopy(hop_id, 0, binData, 4, Constants.XSP_HOPID_LEN);
+    	System.arraycopy(protocol, 0, binData, Constants.XSP_HOPID_LEN+4, Constants.XSP_PROTO_NAME_LEN);
+    	System.arraycopy(Xsp.intToByteArray(child_count), 0, binData, Constants.XSP_HOPID_LEN + Constants.XSP_PROTO_NAME_LEN+4, 4);
+    	return binData;    	
+	}
+	
+    Hop(byte [] binData)
+    {
+    	byte [] shortByte;
+    	shortByte=new byte[2];
+    	byte [] intByte;
+    	intByte=new byte[4];
+    	
+    	System.arraycopy(binData, 0, shortByte, 0, 2);
+    	opt_type=(char)Xsp.byteArrayToShort(shortByte);
+    	System.arraycopy(binData, 2, shortByte, 0, 2);
+    	flags=Xsp.byteArrayToShort(shortByte);    	
+    	System.arraycopy(binData, 4, hop_id, 0, Constants.XSP_HOPID_LEN);    	
+    	System.arraycopy(binData, Constants.XSP_HOPID_LEN+4, protocol, 0, Constants.XSP_PROTO_NAME_LEN); 	
+    	System.arraycopy(binData, Constants.XSP_HOPID_LEN + Constants.XSP_PROTO_NAME_LEN+4, intByte, 0, 4);    	
+    	child_count=Xsp.byteArrayToInt(intByte);    	
+    } 
+    
+	public int xsp_hop_merge_children(Hop dst, Hop src) {
 		int i;
 		if (src.child_count == 0)
 			return 0;
@@ -38,33 +68,31 @@ public class Hop {
 		return 0;
 	}
 
-	int xsp_hop_add_child(Hop chld) {
+	public int xsp_hop_add_child(Hop chld) {
 		child.add(chld);
 		child_count = child.size();
 		return 0;
 	}
 
-	byte [] xsp_hop_getid()
+	public byte [] xsp_hop_getid()
 	{
 		return hop_id;
 	}
 	
-	void xsp_hop_setid(byte [] id)
+	public void xsp_hop_setid(byte [] id)
 	{
-		int i;
-		for(i=0;i<hop_id.length;i++)
-			hop_id[i] = id[i];
+		hop_id=id.clone();
 	}
 	
-	void xsp_hop_set_flag(short flag) {
+	public void xsp_hop_set_flag(short flag) {
 		flags = flag;
 	}
 
-	int xsp_hop_check_flag(char flag) {
+	public int xsp_hop_check_flag(char flag) {
 		return (flags & flag);
 	}
 	
-	int xsp_path_merge_duplicates() {
+	public int xsp_path_merge_duplicates() {
 		int i, curr;
 
 		curr = 0;

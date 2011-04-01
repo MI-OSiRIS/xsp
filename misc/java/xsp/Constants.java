@@ -22,6 +22,8 @@ public class Constants {
 	
 	
 	public static final int LIBXSP_PROTO_BINARY_ID = 0;
+	public static final int XSP_HOP_NATIVE = 1;
+	public static final int SHA_DIGEST_LENGTH = 20;
 	
 }
 
