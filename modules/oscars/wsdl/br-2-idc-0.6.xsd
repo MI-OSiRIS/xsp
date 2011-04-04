@@ -20,25 +20,12 @@ This document and the information contained herein is provided on an "AS IS" bas
   xmlns:wsn-br="http://docs.oasis-open.org/wsn/br-2"
   xmlns:wsn-b="http://docs.oasis-open.org/wsn/b-2"
   xmlns:wsrf-bf="http://docs.oasis-open.org/wsrf/bf-2"      
-  xmlns:wstop="http://docs.oasis-open.org/wsn/t-1"
   targetNamespace="http://docs.oasis-open.org/wsn/br-2"   
   elementFormDefault="qualified"  
   attributeFormDefault="unqualified">
 
 <!-- ======================== Imports  ============================ -->
   
-   <xsd:import namespace="http://www.w3.org/2005/08/addressing"
-              schemaLocation="http://www.w3.org/2005/08/addressing/ws-addr.xsd"/>
-
-   <xsd:import namespace="http://docs.oasis-open.org/wsrf/bf-2"
-              schemaLocation="http://docs.oasis-open.org/wsrf/bf-2.xsd"/>
-
-   <xsd:import namespace="http://docs.oasis-open.org/wsn/b-2"
-              schemaLocation="http://docs.oasis-open.org/wsn/b-2.xsd"/>
-
-   <xsd:import namespace="http://docs.oasis-open.org/wsn/t-1"
-              schemaLocation="http://docs.oasis-open.org/wsn/t-1.xsd"/>
-
 <!-- ======== Resource Properties for NotificationBroker ========== -->
    <xsd:element name="RequiresRegistration" type="xsd:boolean"/>         
 
@@ -53,40 +40,6 @@ This document and the information contained herein is provided on an "AS IS" bas
                       type="xsd:boolean"/>
    <xsd:element name="CreationTime" 
                       type="xsd:dateTime"/>
-   <xsd:element name="NotificationBrokerRP">
-            <xsd:complexType>
-               <xsd:sequence>
-         <!-- From NotificationProducer -->
-                  <xsd:element ref="wsn-b:TopicExpression"        
-                     minOccurs="0" maxOccurs="unbounded" />
-        		  <xsd:element ref="wsn-b:FixedTopicSet"        
-                     minOccurs="0" maxOccurs="1" />
-        		  <xsd:element ref="wsn-b:TopicExpressionDialect"
-                     minOccurs="0" maxOccurs="unbounded" />
-                  <xsd:element ref="wstop:TopicSet"
-                     minOccurs="0" maxOccurs="1" />
-         <!-- NotificationBroker specific  -->
-                  <xsd:element ref="wsn-br:RequiresRegistration"        
-                               minOccurs="1" maxOccurs="1" />        
-               </xsd:sequence>
-            </xsd:complexType>
-   </xsd:element>
- 
-<!-- ====== Resource Properties for PublisherRegistration ========= -->
-   <xsd:element name="PublisherRegistrationRP">
-            <xsd:complexType>
-               <xsd:sequence>
-                  <xsd:element ref="wsn-br:PublisherReference"        
-                               minOccurs="0" maxOccurs="1" />
-                  <xsd:element ref="wsn-br:Topic"        
-                               minOccurs="0" maxOccurs="unbounded" />
-                  <xsd:element ref="wsn-br:Demand"        
-                               minOccurs="1" maxOccurs="1" />
-                  <xsd:element ref="wsn-br:CreationTime"        
-                               minOccurs="0" maxOccurs="1" />
-               </xsd:sequence>
-            </xsd:complexType>
-   </xsd:element>
 
 <!-- ========== Message Types for NotificationBroker  ============ -->
    <xsd:element name="RegisterPublisher">
@@ -104,7 +57,7 @@ This document and the information contained herein is provided on an "AS IS" bas
                   <xsd:element name="InitialTerminationTime" 
                                type="xsd:dateTime"
                                minOccurs="0" maxOccurs="1" />
-                  <xsd:any namespace="##other" processContents="lax"
+                 <xsd:any namespace="##other" processContents="lax"
                        minOccurs="0" maxOccurs="unbounded"/>
                </xsd:sequence>
             </xsd:complexType>
@@ -145,20 +98,28 @@ This document and the information contained herein is provided on an "AS IS" bas
    <xsd:element name="DestroyRegistration">
     <xsd:complexType>
       <xsd:sequence>
+        <!-- CHANGE: Implementation specific requirement -->
+         <xsd:element name="PublisherRegistrationReference" 
+                               type="wsa:EndpointReferenceType"
+                               minOccurs="1" maxOccurs="1" />
         <xsd:any namespace="##other" processContents="lax"
                  minOccurs="0" maxOccurs="unbounded"/>
       </xsd:sequence>
-      <xsd:anyAttribute/>
+      <!-- <xsd:anyAttribute/> -->
     </xsd:complexType>
   </xsd:element>
 
   <xsd:element name="DestroyRegistrationResponse">
     <xsd:complexType>
       <xsd:sequence>
+      <!-- Added PublisherRegistrationReference for the IDC -->
+        <xsd:element name="PublisherRegistrationReference" 
+                               type="wsa:EndpointReferenceType"
+                               minOccurs="1" maxOccurs="1" />
         <xsd:any namespace="##other" processContents="lax"
                  minOccurs="0" maxOccurs="unbounded"/>
       </xsd:sequence>
-      <xsd:anyAttribute/>
+      <!-- <xsd:anyAttribute/> -->
     </xsd:complexType>
   </xsd:element>
 

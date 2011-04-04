@@ -14,72 +14,58 @@ This document and the information contained herein is provided on an "AS IS" bas
 -->
 
 <xsd:schema 
-  xmlns="http://www.w3.org/2001/XMLSchema" 
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:wsa="http://www.w3.org/2005/08/addressing"
-  xmlns:wsrf-bf=
-    "http://docs.oasis-open.org/wsrf/bf-2" 
+  xmlns:wsrf-bf="http://docs.oasis-open.org/wsrf/bf-2" 
+  xmlns:tns="http://docs.oasis-open.org/wsrf/bf-2" 
   elementFormDefault="qualified" attributeFormDefault="unqualified" 
   targetNamespace=
     "http://docs.oasis-open.org/wsrf/bf-2">
-  <xsd:import
-     namespace="http://www.w3.org/2005/08/addressing" 
-     schemaLocation=
-              "http://www.w3.org/2005/08/addressing/ws-addr.xsd"/>
-              
-  <xsd:import namespace="http://www.w3.org/XML/1998/namespace" 
-              schemaLocation="http://www.w3.org/2001/xml.xsd">
-    <xsd:annotation>
-      <xsd:documentation>
-        Get access to the xml: attribute groups for xml:lang as declared on 'schema'
-        and 'documentation' below
-      </xsd:documentation> 
-    </xsd:annotation>
-  </xsd:import>
-<!-- ====================== BaseFault Types ======================= -->
+  <!--  Makes the schema validate, but not compile 
+  <xsd:import namespace="http://www.w3.org/2005/08/addressing"
+            schemaLocation="http://www.w3.org/2002/ws/addr/ns/ws-addr"/>
+    -->
+  <!-- ====================== BaseFault Types ======================= -->
       
   <xsd:element name="BaseFault" type="wsrf-bf:BaseFaultType"/>
   
   <xsd:complexType name="BaseFaultType">
     <xsd:sequence>
-      <xsd:any namespace="##other" processContents="lax"
-              minOccurs="0" maxOccurs="unbounded"/>
       <xsd:element name="Timestamp" type="xsd:dateTime" 
                minOccurs="1" maxOccurs="1"/>
       <xsd:element name="Originator" type="wsa:EndpointReferenceType" 
                minOccurs="0" maxOccurs="1"/>
       <xsd:element name="ErrorCode" 
-               minOccurs="0" maxOccurs="1">
-        <xsd:complexType>
-          <xsd:complexContent mixed="true">
-            <xsd:extension base="xsd:anyType">
-              <xsd:attribute name="dialect" type="xsd:anyURI"
-                         use="required"/>
-            </xsd:extension>
-          </xsd:complexContent>
-        </xsd:complexType>      
-      </xsd:element>
-
+               minOccurs="0" maxOccurs="1" type="tns:ErrorCodeType" />
+      
+      <!-- made a string instead of a complex type -->
       <xsd:element name="Description" 
-               minOccurs="0" maxOccurs="unbounded">
-        <xsd:complexType>
-          <xsd:simpleContent>
-            <xsd:extension base="xsd:string">
-              <xsd:attribute ref="xml:lang" use="optional"/>
-            </xsd:extension>
-          </xsd:simpleContent>
-        </xsd:complexType>
-      </xsd:element>
-      <xsd:element name="FaultCause" minOccurs="0" maxOccurs="1">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:any namespace="##other" processContents="lax" 
-                     minOccurs="1" maxOccurs="1"/>
-          </xsd:sequence>
-        </xsd:complexType> 
-      </xsd:element>
+               minOccurs="0" maxOccurs="unbounded" type="xsd:string" />
+      <xsd:element name="FaultCause" minOccurs="0" maxOccurs="1" type="tns:FaultCauseType"/>
     </xsd:sequence>
-    <xsd:anyAttribute namespace="##other" processContents="lax"/>
+    <!-- <xsd:anyAttribute namespace="##other" processContents="lax"/> -->
  </xsd:complexType>
+ 
+ <!-- Changed from complexContent to simpleContent. 
+      Also changed extension 'any' to string -->
+ <xsd:complexType name="ErrorCodeType">
+  <xsd:simpleContent>
+    <xsd:extension base="xsd:string">
+      <xsd:attribute name="dialect" type="xsd:anyURI"
+                 use="required"/>
+    </xsd:extension>
+  </xsd:simpleContent>
+ </xsd:complexType>
+
+ <!-- Completely changed type from any to type below -->
+ <xsd:complexType name="FaultCauseType">
+  <xsd:simpleContent>
+    <xsd:extension base="xsd:string">
+      <xsd:attribute name="dialect" type="xsd:anyURI"
+                 use="optional"/>
+    </xsd:extension>
+  </xsd:simpleContent>
+</xsd:complexType> 
+
 </xsd:schema>

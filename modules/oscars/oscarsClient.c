@@ -14,13 +14,11 @@
 extern "C" {
 #endif
 
-SOAP_SOURCE_STAMP("@(#) oscarsClient.c ver 2.8.1 2011-03-29 02:13:14 GMT")
+SOAP_SOURCE_STAMP("@(#) oscarsClient.c ver 2.8.1 2011-04-04 17:19:48 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__createReservation(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns1__resCreateContent *ns1__createReservation, struct ns1__createReply *ns1__createReservationResponse)
 {	struct __ns1__createReservation soap_tmp___ns1__createReservation;
-	if (!soap_endpoint)
-		soap_endpoint = "https://192.168.1.103:8443/axis2/services/OSCARS/";
 	if (!soap_action)
 		soap_action = "http://oscars.es.net/OSCARS/createReservation";
 	soap->encodingStyle = NULL;
@@ -70,8 +68,6 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__createReservation(struct soap *soap, 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__queryReservation(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns1__globalReservationId *ns1__queryReservation, struct ns1__resDetails *ns1__queryReservationResponse)
 {	struct __ns1__queryReservation soap_tmp___ns1__queryReservation;
-	if (!soap_endpoint)
-		soap_endpoint = "https://192.168.1.103:8443/axis2/services/OSCARS/";
 	if (!soap_action)
 		soap_action = "http://oscars.es.net/OSCARS/queryReservation";
 	soap->encodingStyle = NULL;
@@ -121,8 +117,6 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__queryReservation(struct soap *soap, c
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__listReservations(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns1__listRequest *ns1__listReservations, struct ns1__listReply *ns1__listReservationsResponse)
 {	struct __ns1__listReservations soap_tmp___ns1__listReservations;
-	if (!soap_endpoint)
-		soap_endpoint = "https://192.168.1.103:8443/axis2/services/OSCARS/";
 	if (!soap_action)
 		soap_action = "http://oscars.es.net/OSCARS/listReservations";
 	soap->encodingStyle = NULL;
@@ -173,8 +167,6 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__listReservations(struct soap *soap, c
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__cancelReservation(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns1__globalReservationId *ns1__cancelReservation, char **ns1__cancelReservationResponse)
 {	struct __ns1__cancelReservation soap_tmp___ns1__cancelReservation;
 	struct __ns1__cancelReservationResponse *soap_tmp___ns1__cancelReservationResponse;
-	if (!soap_endpoint)
-		soap_endpoint = "https://192.168.1.103:8443/axis2/services/OSCARS/";
 	if (!soap_action)
 		soap_action = "http://oscars.es.net/OSCARS/cancelReservation";
 	soap->encodingStyle = NULL;
@@ -226,8 +218,6 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__cancelReservation(struct soap *soap, 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__modifyReservation(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns1__modifyResContent *ns1__modifyReservation, struct ns1__modifyResReply *ns1__modifyReservationResponse)
 {	struct __ns1__modifyReservation soap_tmp___ns1__modifyReservation;
-	if (!soap_endpoint)
-		soap_endpoint = "https://192.168.1.103:8443/axis2/services/OSCARS/";
 	if (!soap_action)
 		soap_action = "http://oscars.es.net/OSCARS/modifyReservation";
 	soap->encodingStyle = NULL;
@@ -277,8 +267,6 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__modifyReservation(struct soap *soap, 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__getNetworkTopology(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns1__getTopologyContent *ns1__getNetworkTopology, struct ns1__getTopologyResponseContent *ns1__getNetworkTopologyResponse)
 {	struct __ns1__getNetworkTopology soap_tmp___ns1__getNetworkTopology;
-	if (!soap_endpoint)
-		soap_endpoint = "https://192.168.1.103:8443/axis2/services/OSCARS/";
 	if (!soap_action)
 		soap_action = "http://oscars.es.net/OSCARS/getNetworkTopology";
 	soap->encodingStyle = NULL;
@@ -328,8 +316,6 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__getNetworkTopology(struct soap *soap,
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__createPath(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns1__createPathContent *ns1__createPath, struct ns1__createPathResponseContent *ns1__createPathResponse)
 {	struct __ns1__createPath soap_tmp___ns1__createPath;
-	if (!soap_endpoint)
-		soap_endpoint = "https://192.168.1.103:8443/axis2/services/OSCARS/";
 	if (!soap_action)
 		soap_action = "http://oscars.es.net/OSCARS/createPath";
 	soap->encodingStyle = NULL;
@@ -379,8 +365,6 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__createPath(struct soap *soap, const c
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__refreshPath(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns1__refreshPathContent *ns1__refreshPath, struct ns1__refreshPathResponseContent *ns1__refreshPathResponse)
 {	struct __ns1__refreshPath soap_tmp___ns1__refreshPath;
-	if (!soap_endpoint)
-		soap_endpoint = "https://192.168.1.103:8443/axis2/services/OSCARS/";
 	if (!soap_action)
 		soap_action = "http://oscars.es.net/OSCARS/refreshPath";
 	soap->encodingStyle = NULL;
@@ -430,8 +414,6 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__refreshPath(struct soap *soap, const 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__teardownPath(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns1__teardownPathContent *ns1__teardownPath, struct ns1__teardownPathResponseContent *ns1__teardownPathResponse)
 {	struct __ns1__teardownPath soap_tmp___ns1__teardownPath;
-	if (!soap_endpoint)
-		soap_endpoint = "https://192.168.1.103:8443/axis2/services/OSCARS/";
 	if (!soap_action)
 		soap_action = "http://oscars.es.net/OSCARS/teardownPath";
 	soap->encodingStyle = NULL;
@@ -481,8 +463,6 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__teardownPath(struct soap *soap, const
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__forward(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct _ns1__forward *ns1__forward, struct ns1__forwardReply *ns1__forwardResponse)
 {	struct __ns1__forward soap_tmp___ns1__forward;
-	if (!soap_endpoint)
-		soap_endpoint = "https://192.168.1.103:8443/axis2/services/OSCARS/";
 	if (!soap_action)
 		soap_action = "http://oscars.es.net/OSCARS/forward";
 	soap->encodingStyle = NULL;
@@ -532,8 +512,6 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__forward(struct soap *soap, const char
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_send___ns1__Notify(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct _ns4__Notify *ns4__Notify)
 {	struct __ns1__Notify soap_tmp___ns1__Notify;
-	if (!soap_endpoint)
-		soap_endpoint = "https://192.168.1.103:8443/axis2/services/OSCARS/";
 	if (!soap_action)
 		soap_action = "http://oscars.es.net/OSCARS/Notify";
 	soap->encodingStyle = NULL;

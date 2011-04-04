@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-SOAP_SOURCE_STAMP("@(#) oscarsC.c ver 2.8.1 2011-03-29 02:13:14 GMT")
+SOAP_SOURCE_STAMP("@(#) oscarsC.c ver 2.8.1 2011-04-04 17:19:48 GMT")
 
 
 #ifndef WITH_NOGLOBAL
@@ -280,8 +280,6 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_ns3__CtrlPlaneDomainSignatureContent(soap, NULL, NULL, "ns3:CtrlPlaneDomainSignatureContent");
 	case SOAP_TYPE_ns3__CtrlPlaneDomainContent:
 		return soap_in_ns3__CtrlPlaneDomainContent(soap, NULL, NULL, "ns3:CtrlPlaneDomainContent");
-	case SOAP_TYPE_ns1__emptyArg:
-		return soap_in_ns1__emptyArg(soap, NULL, NULL, "ns1:emptyArg");
 	case SOAP_TYPE_ns1__localDetails:
 		return soap_in_ns1__localDetails(soap, NULL, NULL, "ns1:localDetails");
 	case SOAP_TYPE_ns1__msgDetails:
@@ -899,10 +897,6 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "ns3:CtrlPlaneDomainContent"))
 		{	*type = SOAP_TYPE_ns3__CtrlPlaneDomainContent;
 			return soap_in_ns3__CtrlPlaneDomainContent(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns1:emptyArg"))
-		{	*type = SOAP_TYPE_ns1__emptyArg;
-			return soap_in_ns1__emptyArg(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ns1:localDetails"))
 		{	*type = SOAP_TYPE_ns1__localDetails;
@@ -1630,8 +1624,6 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out__ns1__AAAFault(soap, "ns1:AAAFault", id, (const struct _ns1__AAAFault *)ptr, NULL);
 	case SOAP_TYPE__ns1__forward:
 		return soap_out__ns1__forward(soap, "ns1:forward", id, (const struct _ns1__forward *)ptr, NULL);
-	case SOAP_TYPE_ns1__emptyArg:
-		return soap_out_ns1__emptyArg(soap, tag, id, (const struct ns1__emptyArg *)ptr, "ns1:emptyArg");
 	case SOAP_TYPE_ns1__localDetails:
 		return soap_out_ns1__localDetails(soap, tag, id, (const struct ns1__localDetails *)ptr, "ns1:localDetails");
 	case SOAP_TYPE_ns1__msgDetails:
@@ -2316,9 +2308,6 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE__ns1__forward:
 		soap_serialize__ns1__forward(soap, (const struct _ns1__forward *)ptr);
-		break;
-	case SOAP_TYPE_ns1__emptyArg:
-		soap_serialize_ns1__emptyArg(soap, (const struct ns1__emptyArg *)ptr);
 		break;
 	case SOAP_TYPE_ns1__localDetails:
 		soap_serialize_ns1__localDetails(soap, (const struct ns1__localDetails *)ptr);
@@ -9595,7 +9584,11 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ns4__Renew(struct soap *soap, const char *ta
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ns4__Renew), type))
 		return soap->error;
-	if (soap_out_string(soap, "ns4:TerminationTime", -1, &a->TerminationTime, ""))
+	if (a->TerminationTime)
+	{	if (soap_out_string(soap, "ns4:TerminationTime", -1, &a->TerminationTime, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "ns4:TerminationTime"))
 		return soap->error;
 	if (soap_out_wsa5__EndpointReferenceType(soap, "ns4:SubscriptionReference", -1, &a->SubscriptionReference, ""))
 		return soap->error;
@@ -9671,7 +9664,7 @@ SOAP_FMAC3 struct _ns4__Renew * SOAP_FMAC4 soap_in__ns4__Renew(struct soap *soap
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
-	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_SubscriptionReference > 0))
+	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_TerminationTime > 0 || soap_flag_SubscriptionReference > 0))
 	{	soap->error = SOAP_OCCURS;
 		return NULL;
 	}
@@ -13940,79 +13933,6 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_put__ns1__forward(struct soap *soap, const struct
 SOAP_FMAC3 struct _ns1__forward * SOAP_FMAC4 soap_get__ns1__forward(struct soap *soap, struct _ns1__forward *p, const char *tag, const char *type)
 {
 	if ((p = soap_in__ns1__forward(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns1__emptyArg(struct soap *soap, struct ns1__emptyArg *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_string(soap, &a->msg);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns1__emptyArg(struct soap *soap, const struct ns1__emptyArg *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_string(soap, &a->msg);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__emptyArg(struct soap *soap, const char *tag, int id, const struct ns1__emptyArg *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__emptyArg), type))
-		return soap->error;
-	if (soap_out_string(soap, "ns1:msg", -1, &a->msg, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns1__emptyArg * SOAP_FMAC4 soap_in_ns1__emptyArg(struct soap *soap, const char *tag, struct ns1__emptyArg *a, const char *type)
-{
-	size_t soap_flag_msg = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns1__emptyArg *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns1__emptyArg, sizeof(struct ns1__emptyArg), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns1__emptyArg(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_msg && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "ns1:msg", &a->msg, "xsd:string"))
-				{	soap_flag_msg--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns1__emptyArg *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns1__emptyArg, 0, sizeof(struct ns1__emptyArg), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns1__emptyArg(struct soap *soap, const struct ns1__emptyArg *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns1__emptyArg);
-	if (soap_out_ns1__emptyArg(soap, tag?tag:"ns1:emptyArg", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns1__emptyArg * SOAP_FMAC4 soap_get_ns1__emptyArg(struct soap *soap, struct ns1__emptyArg *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns1__emptyArg(soap, tag, p, type)))
 		if (soap_getindependent(soap))
 			return NULL;
 	return p;
