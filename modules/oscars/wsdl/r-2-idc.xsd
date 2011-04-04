@@ -22,13 +22,10 @@ This document and the information contained herein is provided on an "AS IS" bas
   elementFormDefault="qualified" attributeFormDefault="unqualified" 
   targetNamespace="http://docs.oasis-open.org/wsrf/r-2" 
 >
- 
-  <xsd:import 
-     namespace=
-  "http://docs.oasis-open.org/wsrf/bf-2"
-     schemaLocation="http://docs.oasis-open.org/wsrf/bf-2.xsd"
-  />
-
+<!-- 
+<xsd:import namespace="http://docs.oasis-open.org/wsrf/bf-2"
+     schemaLocation="http://docs.oasis-open.org/wsrf/bf-2.xsd"/>
+ -->
 <!-- ====================== WS-Resource fault types ============= -->
  
       <xsd:complexType name="ResourceUnknownFaultType">

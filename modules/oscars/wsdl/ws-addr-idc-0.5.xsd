@@ -24,6 +24,8 @@
            finalDefault=""
            attributeFormDefault="unqualified">
 	
+	<xs:import namespace="http://oscars.es.net/OSCARS" schemaLocation="OSCARS-0.5.xsd"/>
+
 	<!-- Constructs from the WS-Addressing Core -->
 
 	<xs:element name="EndpointReference" type="tns:EndpointReferenceType"/>

@@ -1,6 +1,49 @@
 #include "oscars.h"
 #include "oscarsH.h"
 
+void _oscars_pretty_print_path_info(void *path) {
+	struct ns1__pathInfo *pi = (struct ns1__pathInfo*)path;
+	
+	printf("\t   setup mode: %s\n", pi->pathSetupMode);
+	if (pi->pathType)
+		printf("\t   path type: %s\n", pi->pathType);
+	if (pi->path) {
+		printf("\t   path content: N/A\n");
+	}
+	if (pi->layer2Info) {
+		printf("\t   layer2Info:\n");
+		printf("\t\tSRC: %s\n", pi->layer2Info->srcEndpoint);
+		printf("\t\tDST: %s\n", pi->layer2Info->destEndpoint);
+		if (pi->layer2Info->srcVtag)
+			printf("\t\tSRC_vlan_id: %s, tagged = %d\n", 
+			       pi->layer2Info->srcVtag->__item,
+			       *(pi->layer2Info->srcVtag->tagged));
+		if (pi->layer2Info->destVtag)
+                        printf("\t\tDST_vlan_id: %s, tagged = %d\n",
+                               pi->layer2Info->destVtag->__item,
+                               *(pi->layer2Info->destVtag->tagged));
+	}
+	if (pi->layer3Info) {
+		printf("\t   layer3Info:\n");
+		printf("\t\tSRC: %s\n", pi->layer3Info->srcHost);
+		printf("\t\tDST: %s\n", pi->layer3Info->destHost);
+		if (pi->layer3Info->protocol)
+			printf("\t\tprotocol: %s\n", pi->layer3Info->protocol);
+		if (pi->layer3Info->srcIpPort)
+			printf("\t\tsrc_port: %d\n", *(pi->layer3Info->srcIpPort));
+		if (pi->layer3Info->destIpPort)
+			printf("\t\tdst_port: %d\n", *(pi->layer3Info->destIpPort));
+		if (pi->layer3Info->dscp)
+			printf("\t\tDSCP: %s\n", pi->layer3Info->dscp);
+	}
+	if (pi->mplsInfo) {
+		printf("\t   mplsInfo:\n");
+		printf("\t\tburst limit: %d\n", pi->mplsInfo->burstLimit);
+		if (pi->mplsInfo->lspClass)
+			printf("\t\tLSP class: %s\n", pi->mplsInfo->lspClass);
+	}
+}
+
 void oscars_pretty_print(int type, void *res) {
 	switch (type) {
 		
@@ -9,10 +52,11 @@ void oscars_pretty_print(int type, void *res) {
 	  {
 		  struct ns1__resDetails *det = (struct ns1__resDetails*)res;
 		  printf("GRI: %s\n", det->globalReservationId);
-		  printf("\tlogin: %s\n\tstatus: %s\n\tstart: %llu\n\tend: %llu\n",
+		  printf("\t login: %s\n\t status: %s\n\t start: %llu\n\t end: %llu\n",
 			 det->login, det->status, det->startTime, det->endTime);
-		  printf("\t,create: %llu\n\tbandwidth: %d\n\t,description: %s\n\tpathInfo: N/A\n",
+		  printf("\t create: %llu\n\t bandwidth: %d\n\t description: %s\n\t pathInfo:\n",
 			 det->createTime, det->bandwidth, det->description);
+		  _oscars_pretty_print_path_info((void*)det->pathInfo);
 	  }
 	  break;
 	  case CREATE_RES:
@@ -21,9 +65,9 @@ void oscars_pretty_print(int type, void *res) {
 			  (struct ns1__createReply*)res;
 		  printf("GRI: %s\n", tmp->globalReservationId);
 		  if (tmp->token)
-			  printf("\ttoken: %s\n", tmp->token);
-		  printf("\tstatus: %s\n", tmp->status);
-		  printf("\tpathInfo: N/A\n");
+			  printf("\t token: %s\n", tmp->token);
+		  printf("\t status: %s\n", tmp->status);
+		  printf("\t pathInfo: N/A\n");
 	  }
 	  break;
 	  case CANCEL_RES:
@@ -40,10 +84,11 @@ void oscars_pretty_print(int type, void *res) {
 		  for (i=0; i<tmp->__sizeresDetails; i++) {
 			  struct ns1__resDetails *det = tmp->resDetails[i];
 			  printf("[%d] GRI: %s\n", i, det->globalReservationId);
-			  printf("\tlogin: %s\n\tstatus: %s\n\tstart: %llu\n\tend: %llu\n",
+			  printf("\t login: %s\n\t status: %s\n\t start: %llu\n\t end: %llu\n",
 				 det->login, det->status, det->startTime, det->endTime);
-			  printf("\t,create: %llu\n\tbandwidth: %d\n\t,description: %s\n\tpathInfo: N/A\n",
+			  printf("\t create: %llu\n\t bandwidth: %d\n\t description: %s\n\t pathInfo:\n",
 				 det->createTime, det->bandwidth, det->description);
+			  _oscars_pretty_print_path_info((void*)det->pathInfo);
 		  }
 	  }
 	  break;

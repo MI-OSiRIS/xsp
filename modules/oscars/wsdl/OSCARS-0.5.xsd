@@ -456,13 +456,6 @@
         </xsd:restriction>
     </xsd:simpleType> -->
 
-    <!--  WS1-BP approved way to pass null arguments -->
-    <xsd:complexType name="emptyArg">
-        <xsd:sequence>
-            <xsd:element name="msg" minOccurs="0" type="xsd:string" />
-        </xsd:sequence>
-    </xsd:complexType>
-
     <xsd:complexType name="globalReservationId">
         <xsd:sequence>
             <xsd:element name="gri" type="xsd:string" />
