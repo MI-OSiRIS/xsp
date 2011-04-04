@@ -1,6 +1,6 @@
 package xsp;
 
-public class XspHopHdr {
+public class XspHopHdr extends XspBase {
 	public byte [] id;
 	public byte [] protocol;
 	public int flags;

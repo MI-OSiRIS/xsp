@@ -2,7 +2,7 @@ package xsp;
 
 import java.util.Vector;
 
-public class SlabsInfo {
+public class SlabsInfo  extends XspBase{
 	int length;
     int rec_count;
     Vector<SlabsRecord> entries;
@@ -12,6 +12,7 @@ public class SlabsInfo {
     {    	
     }
     
+    @Override
     public byte[] getBytes() {    	     	
     	byte [] binData;
   

@@ -1,6 +1,6 @@
 package xsp;
 
-public class XspMsgAuthInfoHdr {
+public class XspMsgAuthInfoHdr extends XspBase {
 	public byte [] name;
 
 	public static final int size = Constants.XSP_AUTH_NAME_LEN;

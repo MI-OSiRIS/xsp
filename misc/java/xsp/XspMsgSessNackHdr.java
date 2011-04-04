@@ -1,6 +1,6 @@
 package xsp;
 
-public class XspMsgSessNackHdr {
+public class XspMsgSessNackHdr extends XspBase {
 	public int length;	
 	public static final int size = 4 ;
 

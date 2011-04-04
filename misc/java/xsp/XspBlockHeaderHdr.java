@@ -1,6 +1,6 @@
 package xsp;
 
-public class XspBlockHeaderHdr {
+public class XspBlockHeaderHdr extends XspBase {
 	public short type;
 	public short sport;
 	public int length;

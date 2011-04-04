@@ -3,7 +3,7 @@ package xsp;
 import java.io.IOException;
 import java.util.Vector;
 
-public class Proto {
+public class Proto  extends XspBase{
 	public Vector<XspProtoHandler> proto_list;
 	
 	Proto()
@@ -16,12 +16,13 @@ public class Proto {
 		return 0;
 	}
 
-	int xsp_writeout_msgbody(byte [] buf, int length, byte version, byte type, Object msg_body) {
+	int xsp_writeout_msgbody(byte [] buf, int length, byte version, byte type, XspBase msg_body) {
 		if (proto_list.get(version) == null || proto_list.get(version).max_msg_type < type) {
-			System.out.println("couldn't write: " + (proto_list.get(version) == null) + type);
+			System.out.println("couldn't write: " + (proto_list.get(version) == null) + " " +type + " " + proto_list.get(version).max_msg_type);
 			return -1;
 		}
-	       
+		System.out.println("xsp_writeout_msgbody=> length : "+length+", version : "+version+", type : "+type);
+
 		switch(type)
 		{
 		case Xsp.XSP_MSG_INVALID:
@@ -35,6 +36,7 @@ public class Proto {
 		case Xsp.XSP_MSG_BLOCK_HEADER:
 			return proto_list.get(version).writeout_BLOCK_HEADER(msg_body, buf, length);
 		case Xsp.XSP_MSG_AUTH_TYPE:
+			System.out.println("xsp_writeout_msgbody2=> length : "+length+", version : "+version+", type : "+type);
 			return proto_list.get(version).writeout_AUTH_TYPE(msg_body, buf, length);
 		case Xsp.XSP_MSG_AUTH_TOKEN:
 			return proto_list.get(version).writeout_AUTH_TOKEN(msg_body, buf, length);
@@ -60,7 +62,7 @@ public class Proto {
 		return -1;
 	}
 	
-	public int xsp_writeout_msg(byte [] buf, int length, byte version, byte type, byte [] sess_id, Object msg_body) {
+	public int xsp_writeout_msg(byte [] buf, int length, byte version, byte type, byte [] sess_id, XspBase msg_body) {
 		XspMsgHdr hdr = new XspMsgHdr();
 		byte [] msg_buf;
 		int body_length;
@@ -71,11 +73,11 @@ public class Proto {
 			
 		hdr.type = type;
 		hdr.version = version;
-
-		System.arraycopy(sess_id, 0, hdr.sess_id, 0, Constants.XSP_SESSIONID_LEN);
-
+	
+		hdr.sess_id=sess_id.clone();
+		System.out.println("xsp_writeout_msg=> sess_id : "+new String(hdr.sess_id));
 		remainder = length - XspMsgHdr.size;
-
+		//System.out.println("xsp_writeout_msg=> length : "+length+", version : "+version+", type : "+type+", remainder :" + remainder);
 		// fill in the message body
 		msg_buf=new byte[remainder];
 		body_length = xsp_writeout_msgbody(msg_buf, remainder, version, type, msg_body);
@@ -83,19 +85,21 @@ public class Proto {
 		if (body_length < 0)
 			return -1;
 		
-		System.arraycopy(msg_buf, 0, buf, XspMsgHdr.size, remainder);
+		System.arraycopy(msg_buf, 0, buf, XspMsgHdr.size, body_length);
 		hdr.length = (short)body_length;
 
 		System.out.println("body_length: " + body_length + " " + hdr.length);
 		System.out.println("header_length: " + XspMsgHdr.size);
-
+		System.arraycopy(hdr.getBytes(),0,buf,0, XspMsgHdr.size);
+		System.out.println("xsp_writeout_msg=> msg_buf : "+msg_buf[2]+" "+msg_buf.length);//new String(Xsp.byteToCharArray(hdr.)));
+		//System.out.println("xsp_writeout_msg"+new String(Xsp.byteToCharArray(msg_buf)));
 		return (XspMsgHdr.size + body_length);
 
 	}
 	
 
 
-	int xsp_parse_msgbody(XspMsg hdr, byte [] buf, int length, Object msg_object) throws IOException {
+	int xsp_parse_msgbody(XspMsg hdr, byte [] buf, int length, XspBase msg_object) throws IOException {
 		int retval=-1;
 
 		if (proto_list.get(hdr.version) == null || proto_list.get(hdr.version).max_msg_type < hdr.type) {
@@ -141,6 +145,12 @@ public class Proto {
 		}
 
 		return retval;
+	}
+
+	@Override
+	public byte[] getBytes() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

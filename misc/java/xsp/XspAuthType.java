@@ -1,6 +1,6 @@
 package xsp;
 
-public class XspAuthType {
+public class XspAuthType extends XspBase {
 	byte [] name;
 	
 	public static final int size = Constants.XSP_AUTH_NAME_LEN;
@@ -16,6 +16,9 @@ public class XspAuthType {
 	
     XspAuthType(byte [] binData)
     {	
-    		System.arraycopy(binData, 0, name, 0, Constants.XSP_AUTH_NAME_LEN);    	    
+    	if(name==null)
+    		name = new byte[Constants.XSP_AUTH_NAME_LEN];
+    	System.out.println(name.length + " " + binData.length);
+    	System.arraycopy(binData, 0, name, 0, Xsp.min(name.length, binData.length));    	    
     }  
 }

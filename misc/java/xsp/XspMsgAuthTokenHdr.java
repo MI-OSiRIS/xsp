@@ -1,6 +1,6 @@
 package xsp;
 
-public class XspMsgAuthTokenHdr {
+public class XspMsgAuthTokenHdr extends XspBase {
 	public int token_length;
 	public static final int size = 4;
 	
