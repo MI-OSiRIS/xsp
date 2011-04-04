@@ -1,6 +1,6 @@
 package xsp;
 
-public class SlabsRecordHdr {
+public class SlabsRecordHdr extends XspBase {
     public byte [] sess_id;
     public int offset;
     public int length;

@@ -1,6 +1,6 @@
 package xsp;
 
-public class XspMsgHdr {
+public class XspMsgHdr extends XspBase {
 	public short length;
 	public byte version;
 	public byte type;
@@ -20,7 +20,9 @@ public class XspMsgHdr {
     	System.arraycopy(Xsp.shortToByteArray(length), 0, binData, 0, 2);
     	binData[2]=version;
     	binData[3]=type;
-    	System.arraycopy(sess_id, 0, binData, 4, Constants.XSP_SESSIONID_LEN);    		    		
+    	
+    	System.arraycopy(sess_id, 0, binData, 4, Constants.XSP_SESSIONID_LEN);    		    
+    	//System.out.println("XspMsgHdr.getbytes()=> binData : "+binData[4]);//new String(Xsp.byteToCharArray(binData)));
     	return binData;    	
 	}
 	
@@ -34,6 +36,12 @@ public class XspMsgHdr {
 
     	version=binData[2];
     	type=binData[3];
+    	if(sess_id==null)
+    		sess_id=new byte[Constants.XSP_SESSIONID_LEN];
     	System.arraycopy(binData, 4, sess_id, 0, Constants.XSP_SESSIONID_LEN); 	
+    	System.out.println("XspMsgHdr => length  : "+length);
+    	System.out.println("XspMsgHdr => version : "+version);
+    	System.out.println("XspMsgHdr => type    : "+type);
+    	System.out.println("XspMsgHdr => sess_id : "+sess_id[2]);
     } 
 }

@@ -1,6 +1,6 @@
 package xsp;
 
-public class SlabsRecord {	 
+public class SlabsRecord  extends XspBase{	 
 	byte [] sess_id; //[XSP_SESSIONID_LEN * 2 + 1];
     int offset;
     int length;

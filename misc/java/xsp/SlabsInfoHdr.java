@@ -1,6 +1,6 @@
 package xsp;
 
-public class SlabsInfoHdr {
+public class SlabsInfoHdr  extends XspBase{
     public int length;
     public int rec_count;
     
@@ -9,6 +9,7 @@ public class SlabsInfoHdr {
     SlabsInfoHdr()
     {}
     
+    @Override
     public byte[] getBytes() {
     	byte [] binData;
     	binData=new byte[8];

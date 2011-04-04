@@ -3,7 +3,7 @@ package xsp;
 import java.util.Arrays;
 import java.util.Vector;
 
-public class Session {
+public class Session extends XspBase {
 	byte [] sess_id;
 
 	byte [] src_id;
@@ -26,6 +26,7 @@ public class Session {
 		child_count = 0 ;		
 	}
 	
+	@Override
     public byte[] getBytes() {    	
     	byte [] binData;
  

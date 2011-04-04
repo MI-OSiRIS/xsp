@@ -79,6 +79,13 @@ public class Xsp {
                 + (b[1] & 0xFF));
 	}
 	
+	public static int min(int a, int b)
+	{
+		if(a<b)
+			return a;
+		else
+			return b;
+	}
 
 	public static int xsp_parse_hopid(String hop_id, String [] serverStr) 
 	{

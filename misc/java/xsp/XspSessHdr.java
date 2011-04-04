@@ -1,6 +1,6 @@
 package xsp;
 
-public class XspSessHdr {
+public class XspSessHdr extends XspBase {
 	public byte [] sess_id;
 	public byte [] src_id;
 	public int sess_flags;
@@ -14,6 +14,7 @@ public class XspSessHdr {
 		src_id = new byte[Constants.XSP_HOPID_LEN];
 	}
 	
+	@Override
     public byte[] getBytes() {    	
     	byte [] binData;
  

@@ -1,6 +1,6 @@
 package xsp;
 
-public class XspDataOpenHdr {
+public class XspDataOpenHdr extends XspBase {
 	short flags;
 	byte [] hop_id;
 	byte [] proto;

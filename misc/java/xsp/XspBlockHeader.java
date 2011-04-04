@@ -1,6 +1,6 @@
 package xsp;
 
-public class XspBlockHeader {
+public class XspBlockHeader extends XspBase {
 	short type;
 	short sport;
 	int length;
@@ -8,10 +8,12 @@ public class XspBlockHeader {
 	
 	XspBlockHeader()
 	{
+		super();
 		length=0;
 	}
 	
-    public byte[] getBytes() {    	
+	@Override
+    public byte[] getBytes()  {    	
     	byte [] binData;
     	if(length<=0)
     	{    	
@@ -45,6 +47,7 @@ public class XspBlockHeader {
     	sport=Xsp.byteArrayToShort(shortByte);
     	System.arraycopy(binData, 4, intByte, 0, 4);
     	length=Xsp.byteArrayToInt(intByte);
+    	blob=new byte[length];
     	if(length>=0)
     	{    	
     		System.arraycopy(binData, 8, blob, 0, length);

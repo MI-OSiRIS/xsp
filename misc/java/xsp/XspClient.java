@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
-public class XspClient {
+public class XspClient{
 	byte [] sess_id;
 	byte [] src_id;
 
@@ -87,6 +87,7 @@ public class XspClient {
 		hop.xsp_hop_setid(child_name);
 	
 		hop.session.sess_id=sess_id.clone();
+		
 		hop.session.src_id=src_id.clone();
 		hop.session.sess_flags=sess_flags;
 		hop.session.hop_flags=hop_flags;
@@ -183,7 +184,7 @@ public class XspClient {
 		return retval;
 	}
 	
-	int xsp_put_msg(byte version, byte type, byte [] sess_id, byte [] msg_body) 
+	int xsp_put_msg(byte version, byte type, byte [] sess_id, XspBase msg_body) 
 	{			
 		byte [] msg_buf;
 		int msg_buf_len;
@@ -191,19 +192,17 @@ public class XspClient {
 
 		msg_buf = new byte [65536];
 		msg_buf_len = 65536;
+		System.out.println("xsp_put_msg => version: "+version+" -- type :"+type );
 		msg_len=xsp.protocol.xsp_writeout_msg(msg_buf, msg_buf_len, version, type, sess_id, msg_body);
-
+		System.out.println("xsp_put_msg => msg_len : "+msg_len);
+		System.out.println("xsp_put_msg=>"+msg_buf[8]);//new String(Xsp.byteToCharArray(msg_buf)));
 		if (msg_len < 0)
 			return -1;
 
 		OutputStream out;
 		try {
 			out = sock.getOutputStream();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return -1;
-		}
-		try {
+			System.out.println("xsp_put_msg => msg_buf[0]: "+msg_buf[22]); 
 			out.write(msg_buf, 0, msg_len);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -220,94 +219,76 @@ public class XspClient {
 		XspMsg msg;
 		XspMsgHdr hdr;
 		InputStream in;
+		System.out.println("xsp_get_msg ------------------------------------------");
 		try {
 			in = sock.getInputStream();
-		} catch (IOException e1) {			
-			e1.printStackTrace();
-			return null;
-		}
-		// if they don't want to wait, check to see if everything can be read in without waiting
-		// if not, return an error stating as such
-		if ((flags & XSP_MSG_NOWAIT)!=0) {		    
+		
+			// if they don't want to wait, check to see if everything can be read in without waiting
+			// if not, return an error stating as such
+			if ((flags & XSP_MSG_NOWAIT)!=0) {		    
 
-			// read in the buffer using MSG_PEEK so as to not actually remove the data from the stream
-		    try {
+				// read in the buffer using MSG_PEEK so as to not actually remove the data from the stream
 				rd=in.read(hdr_buf,0,XspMsgHdr.size);
-			} catch (IOException e) {			
-				e.printStackTrace();
-				return null;
-			}
-		    if (rd < (XspMsgHdr.size )) {
-				return null;
-			}
-		    
-			hdr = new XspMsgHdr(hdr_buf);
-
-			// grab the remainder
-			remainder = hdr.length;
-			if (remainder < 0 || remainder > Constants.XSP_MAX_LENGTH)
-				return null;
-
-			// if there is a remainder, allocate a buffer and try to read into that
-			if (remainder > 0) {
-				buf = new byte[remainder + XspMsgHdr.size];
-				try {
-					rd=in.read(buf, 0, buf.length);
-				} catch (IOException e) {
-					e.printStackTrace();
-					return null;
-				}				
-				if (rd < (XspMsgHdr.size + remainder)) {
+			
+				if (rd < (XspMsgHdr.size )) {
 					return null;
 				}
-			}
-		}
+				
+				hdr = new XspMsgHdr(hdr_buf);
+				System.out.println("xsp_get_msg => length : "+hdr.length);
+				// grab the remainder
+				remainder = hdr.length;
+				if (remainder < 0 || remainder > Constants.XSP_MAX_LENGTH)
+					return null;
 
-		// read the header in
-		try {
+				// if there is a remainder, allocate a buffer and try to read into that
+				if (remainder > 0) {
+					buf = new byte[remainder + XspMsgHdr.size];
+					rd=in.read(buf, 0, buf.length);
+						
+					if (rd < (XspMsgHdr.size + remainder)) {
+						return null;
+					}
+				}
+			}
+
+			// read the header in
 			amt_read = in.read(hdr_buf, 0, XspMsgHdr.size);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			return null;
-		}
-		if (amt_read < XspMsgHdr.size) {
-			return null;
-		}
-
-		hdr = new XspMsgHdr(hdr_buf);
-
-		// obtain the length of the message and verify that it fits in bounds
-		remainder = hdr.length;
-		if (remainder < 0 || remainder > Constants.XSP_MAX_LENGTH)
-			return null;
-			
-		if (remainder > 0) {
-			// allocate space for the remainder
-			buf = new byte[remainder];
-			// grab the remainder
-			try {
-				amt_read =in.read(buf, 0, remainder);
-			} catch (IOException e) {
-				e.printStackTrace();
+		
+			if (amt_read < XspMsgHdr.size) {
 				return null;
 			}
-			
-			if (amt_read < remainder)
+
+			hdr = new XspMsgHdr(hdr_buf);
+
+			// obtain the length of the message and verify that it fits in bounds
+			remainder = hdr.length;
+			System.out.println("xsp_get_msg => length : "+hdr.length);
+			if (remainder < 0 || remainder > Constants.XSP_MAX_LENGTH)
 				return null;
-		}
+			
+			if (remainder > 0) {
+				// allocate space for the remainder
+				buf = new byte[remainder];
+				// grab the remainder
+				amt_read =in.read(buf, 0, remainder);			
+				System.out.println("xsp_get_msg => buf : "+buf[2]);
+				if (amt_read < remainder)
+					return null;
+			}
 
-		// allocate a message to return
-		msg = new XspMsg();
-		// fill in the message
-		msg.type = hdr.type;
-		msg.version = hdr.version;
-		msg.sess_id=hdr.sess_id.clone();
+			// allocate a message to return
+			msg = new XspMsg();
+			// fill in the message
+			msg.type = hdr.type;
+			msg.version = hdr.version;
+			msg.sess_id=hdr.sess_id.clone();
 
-		// fill in the message body
-		try {
+			// fill in the message body
 			if (xsp.protocol.xsp_parse_msgbody(msg, buf, remainder, msg.msg_object)!=0)
 				return null;
-		} catch (IOException e) {
+		} 
+		catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -338,7 +319,7 @@ public class XspClient {
     		block.length = path.length() + 1;
     		block.blob = Xsp.charToByteArray(path.toCharArray());
 
-    		if (xsp_put_msg((byte)0, (byte)Xsp.XSP_MSG_PATH_OPEN, sess_id, block.getBytes()) < 0) {
+    		if (xsp_put_msg((byte)0, (byte)Xsp.XSP_MSG_PATH_OPEN, sess_id, block) < 0) {
     			System.out.println("xsp_signal_path(): error: failed to send session path message");
     			return -1;
     		}
@@ -432,7 +413,7 @@ public class XspClient {
 		}
 		
 		sock = socket;
-		if (((int)next_hop.flags & Constants.XSP_HOP_NATIVE) == 0) {
+		if (((int)next_hop.flags & Constants.XSP_HOP_NATIVE) != 0) {
 			XspMsg msg;
 			XspAuthType auth_type = new XspAuthType();
 			XspAuthToken token,ret_token;
@@ -443,7 +424,7 @@ public class XspClient {
 				auth_type=new XspAuthType();
 				auth_type.name=Xsp.charToByteArray("PASS".toCharArray());
 				
-				if (xsp_put_msg((byte)0, (byte)Xsp.XSP_MSG_AUTH_TYPE, sess_id, auth_type.getBytes()) < 0) {
+				if (xsp_put_msg((byte)0, (byte)Xsp.XSP_MSG_AUTH_TYPE, sess_id, auth_type) < 0) {
 					System.out.println("xsp_connect(): error: PASS authorization failed: couldn't send auth type");					
 					try {
 						sock.close();
@@ -456,7 +437,7 @@ public class XspClient {
 				token.token = Xsp.charToByteArray(System.getenv("XSP_USERNAME").toCharArray());
 				token.token_length = System.getenv("XSP_USERNAME").length();
 
-				if (xsp_put_msg((byte)0, (byte)Xsp.XSP_MSG_AUTH_TOKEN, sess_id, token.getBytes()) < 0) {
+				if (xsp_put_msg((byte)0, (byte)Xsp.XSP_MSG_AUTH_TOKEN, sess_id, token) < 0) {
 					System.out.println("xsp_connect(): error: PASS authorization failed: couldn't send username");
 					try {
 						sock.close();
@@ -492,7 +473,7 @@ public class XspClient {
 				token.token = SHA1(System.getenv("XSP_PASSWORD"));
 				token.token_length = Constants.SHA_DIGEST_LENGTH;
 
-				if (xsp_put_msg((byte)0, (byte)Xsp.XSP_MSG_AUTH_TOKEN, sess_id, token.getBytes()) < 0) {
+				if (xsp_put_msg((byte)0, (byte)Xsp.XSP_MSG_AUTH_TOKEN, sess_id, token) < 0) {
 					System.out.println("xsp_connect(): error: PASS authorization failed: couldn't send password hash");					
 					try {
 						sock.close();
@@ -502,8 +483,9 @@ public class XspClient {
 					return -1;
 				}
 			} else {
+				System.out.println("xsp_connect() : authorization in process");
 				auth_type.name=Xsp.charToByteArray("ANON".toCharArray()).clone();				
-				if (xsp_put_msg((byte)0, (byte)Xsp.XSP_MSG_AUTH_TYPE, sess_id, auth_type.getBytes()) < 0) {
+				if (xsp_put_msg((byte)0, (byte)Xsp.XSP_MSG_AUTH_TYPE, sess_id, auth_type) < 0) {
 					System.out.println("xsp_connect(): error: authorization failed");					
 					try {
 						sock.close();
@@ -513,8 +495,11 @@ public class XspClient {
 				}
 			}
 
-
-			if (xsp_put_msg((byte)0, (byte)Xsp.XSP_MSG_SESS_OPEN, sess_id, next_hop.getBytes()) < 0) {
+			next_hop.session.sess_id=sess_id.clone();
+			System.out.println("--------------------------------------------------------1");
+			//System.out.println("xsp_connect => "+new String(src_id));
+			//System.out.println("xsp_connect => "+new String(next_hop.session.sess_id));
+			if (xsp_put_msg((byte)0, (byte)Xsp.XSP_MSG_SESS_OPEN, sess_id, next_hop) < 0) {
 				System.out.println("xsp_connect(): error: failed to send session open message");
 				try {
 					sock.close();
@@ -523,14 +508,14 @@ public class XspClient {
 				}
 				return -1;
 			}
-
-			if (System.getenv("XSP_CIRCUIT") == null) {
+			System.out.println("--------------------------------------------------------2");
+			if (System.getenv("XSP_CIRCUIT") != null) {
 				System.out.println("xsp_connect(): found XSP_CIRCUIT, using " + System.getenv("XSP_CIRCUIT"));
 				if (xsp_signal_path(System.getenv("XSP_CIRCUIT")) != 0) {
 					System.out.println("xsp_connect(): could not signal XSP_CIRCUIT");
 				}
 			}
-			
+			System.out.println("--------------------------------------------------------3");
 			msg = xsp_get_msg(0);
 			if (msg==null) {
 				System.out.println("xsp_connect(): error: did not receive a valid response");
@@ -657,13 +642,15 @@ public class XspClient {
     int xsp_send_msg(byte [] buf, int len, int opt_type) {
     	XspBlockHeader block=new XspBlockHeader();
     	int ret;
-
+    	System.out.println("xsp_send_msg-------------------------------------------------------"); 
+    	
     	block.type = (short)opt_type;
     	block.sport = 0;
     	block.length = len;
-    	block.blob = buf;
-
-    	if ((ret = xsp_put_msg((byte)0, (byte)Xsp.XSP_MSG_APP_DATA, sess_id, block.getBytes())) < 0) {
+    	block.blob = buf.clone();
+    	System.out.println("xsp_send_msg => msg : "+new String(block.blob));
+    	
+    	if ((ret = xsp_put_msg((byte)0, (byte)Xsp.XSP_MSG_APP_DATA, sess_id, block)) < 0) {
     		System.out.println("xsp_send_msg(): error: failed to send message");
     		return 0;
     	}
@@ -674,7 +661,7 @@ public class XspClient {
     int xsp_recv_msg(byte [] ret_buf, int len, Integer ret_type) {
     	XspMsg msg;
     	XspBlockHeader block;
-
+    	System.out.println("xsp_recv_msg-------------------------------------------------------"); 
     	msg = xsp_get_msg(0);
     	
     	if (msg==null) {

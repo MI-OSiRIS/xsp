@@ -1,6 +1,6 @@
 package xsp;
 
-public class XspAuthToken {
+public class XspAuthToken extends XspBase {
 	int token_length;
 	byte [] token;
 	

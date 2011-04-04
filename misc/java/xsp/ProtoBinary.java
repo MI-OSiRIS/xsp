@@ -1,7 +1,18 @@
 package xsp;
 
 public class ProtoBinary extends XspProtoHandler{
-
+	
+	ProtoBinary()
+	{
+		max_msg_type=Xsp.XSP_MSG_SLAB_INFO;
+	}
+	
+	@Override
+	public byte[] getBytes()
+	{
+		return null;
+	}
+	
 	Hop xsp_parsehop(Session sess, byte [] buf, int remainder, String size) {
 		Hop new_hop = null;
 		XspHopHdr hdr = null;
@@ -80,15 +91,13 @@ public class ProtoBinary extends XspProtoHandler{
 		return new_hop;
 	}
 	
-	public int parse_INVALID (byte [] buf, int remainder, Object msg_object) { return 0; }
+	public int parse_INVALID (byte [] buf, int remainder, XspBase msg_object) { return 0; }
 
-	public int parse_SESS_OPEN(byte [] buf, int remainder, Object msg_object) 
+	public int parse_SESS_OPEN(byte [] buf, int remainder, XspBase msg_object) 
 	{ 	
 		XspSessHdr hdr;
-		Hop next_hop;
-		Session ret_sess=(Session)msg_object;
-		if(ret_sess==null)
-			ret_sess = new Session();
+		Hop next_hop=(Hop)msg_object;
+		Session ret_sess=next_hop.session;
 		
 		hdr = new XspSessHdr(buf);
 		hdr.sess_id=buf.clone();
@@ -141,15 +150,13 @@ public class ProtoBinary extends XspProtoHandler{
 		return 0;
 	}
 		
-	public int parse_SESS_ACK (byte [] buf, int remainder, Object msg_object){ return 0; } 
-	public int parse_SESS_CLOSE (byte [] buf, int remainder, Object msg_object){ return 0; }	
+	public int parse_SESS_ACK (byte [] buf, int remainder, XspBase msg_object){ return 0; } 
+	public int parse_SESS_CLOSE (byte [] buf, int remainder, XspBase msg_object){ return 0; }	
 	
-	public int parse_BLOCK_HEADER (byte [] buf, int remainder, Object msg_object)
+	public int parse_BLOCK_HEADER (byte [] buf, int remainder, XspBase msg_object)
 	{
 		XspBlockHeaderHdr hdr;
 		XspBlockHeader new_header=(XspBlockHeader)msg_object;
-		if(new_header==null)
-			new_header = new XspBlockHeader();
 		
 		if (remainder < XspBlockHeaderHdr.size)
 			return -1;
@@ -179,13 +186,10 @@ public class ProtoBinary extends XspProtoHandler{
 		
 	}
 	
-	public int parse_AUTH_TYPE	(byte [] buf, int remainder, Object msg_object)
+	public int parse_AUTH_TYPE	(byte [] buf, int remainder, XspBase msg_object)
 	{ 
 		XspMsgAuthInfoHdr hdr;
 		XspAuthType new_auth_type=(XspAuthType)msg_object;
-
-		if (new_auth_type==null)
-			new_auth_type = new XspAuthType();
 		
 		if (remainder < XspMsgAuthInfoHdr.size)
 			return -1;
@@ -200,13 +204,10 @@ public class ProtoBinary extends XspProtoHandler{
 		return 0;
 	} 
 	
-	public int parse_AUTH_TOKEN (byte [] buf, int remainder, Object msg_object)
+	public int parse_AUTH_TOKEN (byte [] buf, int remainder, XspBase msg_object)
 	{ 
 		XspMsgAuthTokenHdr hdr;
 		XspAuthToken new_token=(XspAuthToken)msg_object;
-
-		if(new_token==null)
-			new_token = new XspAuthToken();
 		
 		if (remainder < XspMsgAuthTokenHdr.size)
 			return -1;
@@ -231,11 +232,12 @@ public class ProtoBinary extends XspProtoHandler{
 		return 0;
 	}	 
 	
-	public int parse_SESS_NACK	(byte [] buf, int remainder, Object msg_object)
+	public int parse_SESS_NACK	(byte [] buf, int remainder, XspBase msg_object)
 	{ 
 		XspMsgSessNackHdr hdr;
 		short len;		
-		byte [] error_message=(byte [])msg_object;
+		byte [] error_message;
+		error_message=new byte[10];
 		
 		if (remainder < XspMsgSessNackHdr.size)
 			return -1;
@@ -261,16 +263,13 @@ public class ProtoBinary extends XspProtoHandler{
 		return 0; 
 		
 	} 
-	public int parse_PING (byte [] buf, int remainder, Object msg_object){ return 0; }	 
-	public int parse_PONG (byte [] buf, int remainder, Object msg_object){ return 0; }
+	public int parse_PING (byte [] buf, int remainder, XspBase msg_object){ return 0; }	 
+	public int parse_PONG (byte [] buf, int remainder, XspBase msg_object){ return 0; }
 	
-	public int parse_DATA_OPEN (byte [] buf, int remainder, Object msg_object)
+	public int parse_DATA_OPEN (byte [] buf, int remainder, XspBase msg_object)
 	{ 
 		XspMsgDataOpenHdr hdr;
 		XspDataOpenHdr new_hdr=(XspDataOpenHdr)msg_object;
-
-		if(new_hdr==null)
-			new_hdr =new XspDataOpenHdr();
 		
 		if (remainder < XspMsgDataOpenHdr.size)
 			return -1;
@@ -283,13 +282,11 @@ public class ProtoBinary extends XspProtoHandler{
 		return 0; 		
 	}
 	
-	public int parse_DATA_CLOSE (byte [] buf, int remainder, Object msg_object){ return 0; }
-	public int parse_PATH_OPEN (byte [] buf, int remainder, Object msg_object)
+	public int parse_DATA_CLOSE (byte [] buf, int remainder, XspBase msg_object){ return 0; }
+	public int parse_PATH_OPEN (byte [] buf, int remainder, XspBase msg_object)
 	{ 
 		XspBlockHeaderHdr hdr;
 		XspBlockHeader new_header=(XspBlockHeader)msg_object;
-		if(new_header==null)
-			new_header = new XspBlockHeader();
 		
 		if (remainder < XspBlockHeaderHdr.size)
 			return -1;
@@ -317,13 +314,11 @@ public class ProtoBinary extends XspProtoHandler{
 		
 		return 0; 
 	} 
-	public int parse_PATH_CLOSE (byte [] buf, int remainder, Object msg_object){ return 0; }
-	public int parse_APP_DATA (byte [] buf, int remainder, Object msg_object)
+	public int parse_PATH_CLOSE (byte [] buf, int remainder, XspBase msg_object){ return 0; }
+	public int parse_APP_DATA (byte [] buf, int remainder, XspBase msg_object)
 	{
 		XspBlockHeaderHdr hdr;
 		XspBlockHeader new_header=(XspBlockHeader)msg_object;
-		if(new_header==null)
-			new_header = new XspBlockHeader();
 		
 		if (remainder < XspBlockHeaderHdr.size)
 			return -1;
@@ -375,7 +370,7 @@ public class ProtoBinary extends XspProtoHandler{
         return new_rec;
     }
 	
-	public int parse_SLAB_INFO (byte [] buf, int remainder, Object msg_object)
+	public int parse_SLAB_INFO (byte [] buf, int remainder, XspBase msg_object)
 	{ 
 	    SlabsInfo new_info;
         SlabsInfoHdr in;
@@ -465,13 +460,13 @@ public class ProtoBinary extends XspProtoHandler{
 		return orig_remainder - remainder;
 	}
 	
-	public int writeout_INVALID (Object msg_object, byte [] buf, int remainder){ return 0; }
+	public int writeout_INVALID (XspBase msg_object, byte [] buf, int remainder){ return 0; }
 	
-	public int writeout_SESS_OPEN (Object msg_object, byte [] buf, int remainder)
+	public int writeout_SESS_OPEN (XspBase msg_object, byte [] buf, int remainder)
 	{ 
 		int orig_remainder;
-		
-		Hop hop = (Hop) msg_object;
+		System.out.println("writeout_SESS_OPEN");
+		Hop hop = (Hop)msg_object;
 		XspSessHdr sess_hdr=new XspSessHdr();
 		int i;
 		int child_size;
@@ -481,6 +476,7 @@ public class ProtoBinary extends XspProtoHandler{
 		if (remainder < XspSessHdr.size)
 			return -1;
 
+		//hop.session=new Session();
 		System.arraycopy(hop.session.sess_id, 0, sess_hdr.sess_id, 0, Constants.XSP_SESSIONID_LEN);
 		System.arraycopy(hop.session.src_id, 0, sess_hdr.src_id, 0, Constants.XSP_HOPID_LEN);
 
@@ -488,9 +484,9 @@ public class ProtoBinary extends XspProtoHandler{
 		sess_hdr.hop_flags = hop.flags;
 		
 		remainder -= XspSessHdr.size;
-		
+		System.out.println("writeout_SESS_OPEN => "+new String(hop.session.sess_id));
 		System.arraycopy(sess_hdr.getBytes(), 0, buf, 0, XspSessHdr.size);
-		
+		System.out.println("writeout_SESS_OPEN => child_count : "+hop.child_count);
 		byte [] buf2;
 		buf2=new byte[remainder];
 		
@@ -510,10 +506,10 @@ public class ProtoBinary extends XspProtoHandler{
 		return orig_remainder - remainder;		
 	}
 	
-	public int writeout_SESS_ACK (Object msg_object, byte [] buf, int remainder){ return 0; } 
-	public int writeout_SESS_CLOSE (Object msg_object, byte [] buf, int remainder){ return 0; }	
+	public int writeout_SESS_ACK (XspBase msg_object, byte [] buf, int remainder){ return 0; } 
+	public int writeout_SESS_CLOSE (XspBase msg_object, byte [] buf, int remainder){ return 0; }	
 	
-	public int writeout_BLOCK_HEADER (Object msg_object, byte [] buf, int remainder)
+	public int writeout_BLOCK_HEADER (XspBase msg_object, byte [] buf, int remainder)
 	{ 	
 		XspBlockHeader block = (XspBlockHeader)msg_object;
 		XspBlockHeaderHdr hdr = new XspBlockHeaderHdr();
@@ -538,12 +534,26 @@ public class ProtoBinary extends XspProtoHandler{
 		return XspBlockHeaderHdr.size + block.length;
 	}
 	
-	public int writeout_AUTH_TYPE	(Object msg_object, byte [] buf, int remainder){ return 0; } 
+	public int writeout_AUTH_TYPE	(XspBase msg_object, byte [] buf, int remainder)
+	{ 	
+		System.out.println("writeout_AUTH_TOKEN=> remainder : "+remainder);
+		XspAuthType auth_type = (XspAuthType)msg_object;
+		XspMsgAuthInfoHdr hdr=new XspMsgAuthInfoHdr();
+
+		if (remainder < XspMsgAuthInfoHdr.size)
+			return -1;
+
+		hdr.name=auth_type.name.clone();		
+		System.arraycopy(hdr.name, 0, buf, 0, hdr.name.length);
+		System.out.println("writeout_AUTH_TOqweqKEN=> "+hdr.name.length+" "+buf[1]);//new String(Xsp.byteToCharArray(buf))+" ds"+buf[1]);
+		return XspMsgAuthInfoHdr.size; 
+	}
 	
-	public int writeout_AUTH_TOKEN (Object msg_object, byte [] buf, int remainder)
+	public int writeout_AUTH_TOKEN (XspBase msg_object, byte [] buf, int remainder)
 	{ 
 		XspAuthToken xsp_token = (XspAuthToken)msg_object;
 		XspMsgAuthTokenHdr hdr=new XspMsgAuthTokenHdr();
+		System.out.println("writeout_AUTH_TOKEN=> remainder : "+remainder);
 
 		// if there isn't enough room to write the structure, don't do it
 		if (remainder < XspMsgAuthTokenHdr.size)			
@@ -563,9 +573,9 @@ public class ProtoBinary extends XspProtoHandler{
 		return XspMsgAuthTokenHdr.size + xsp_token.token_length;	
 	}	
 	
-	public int writeout_SESS_NACK (Object msg_object, byte [] buf, int remainder)
+	public int writeout_SESS_NACK (XspBase msg_object, byte [] buf, int remainder)
 	{ 
-		String error_msg = (String)msg_object;
+		String error_msg = new String(Xsp.byteToCharArray(msg_object.getBytes()));
 		XspMsgSessNackHdr hdr = new XspMsgSessNackHdr();
 
 		// if there isn't enough room to write the structure, don't do it
@@ -586,10 +596,10 @@ public class ProtoBinary extends XspProtoHandler{
 		return XspMsgSessNackHdr.size + error_msg.length();		
 	}
 	
-	public int writeout_PING (Object msg_object, byte [] buf, int remainder){ return 0; }	 
-	public int writeout_PONG (Object msg_object, byte [] buf, int remainder){ return 0; }	 
+	public int writeout_PING (XspBase msg_object, byte [] buf, int remainder){ return 0; }	 
+	public int writeout_PONG (XspBase msg_object, byte [] buf, int remainder){ return 0; }	 
 	
-	public int writeout_DATA_OPEN (Object msg_object, byte [] buf, int remainder)
+	public int writeout_DATA_OPEN (XspBase msg_object, byte [] buf, int remainder)
 	{ 
 		XspDataOpenHdr dopen = (XspDataOpenHdr)msg_object;
 		XspMsgDataOpenHdr hdr = new XspMsgDataOpenHdr();
@@ -608,9 +618,9 @@ public class ProtoBinary extends XspProtoHandler{
 		
 		return XspMsgDataOpenHdr.size;
 	}
-	public int writeout_DATA_CLOSE (Object msg_object, byte [] buf, int remainder){ return 0; }
+	public int writeout_DATA_CLOSE (XspBase msg_object, byte [] buf, int remainder){ return 0; }
 	
-	public int writeout_PATH_OPEN (Object msg_object, byte [] buf, int remainder)
+	public int writeout_PATH_OPEN (XspBase msg_object, byte [] buf, int remainder)
 	{ 
 		XspBlockHeader block = (XspBlockHeader)msg_object;
 		XspBlockHeaderHdr hdr = new XspBlockHeaderHdr();
@@ -635,9 +645,9 @@ public class ProtoBinary extends XspProtoHandler{
 		return XspBlockHeaderHdr.size + block.length;	
 	} 
 	
-	public int writeout_PATH_CLOSE (Object msg_object, byte [] buf, int remainder){ return 0; }
+	public int writeout_PATH_CLOSE (XspBase msg_object, byte [] buf, int remainder){ return 0; }
 	
-	public int writeout_APP_DATA (Object msg_object, byte [] buf, int remainder)
+	public int writeout_APP_DATA (XspBase msg_object, byte [] buf, int remainder)
 	{ 
 		XspBlockHeader block = (XspBlockHeader)msg_object;
 		XspBlockHeaderHdr hdr = new XspBlockHeaderHdr();
@@ -681,10 +691,10 @@ public class ProtoBinary extends XspProtoHandler{
         return orig_remainder - remainder;
 	}
 	
-	public int writeout_SLAB_INFO (Object msg_object, byte [] buf, int remainder)
+	public int writeout_SLAB_INFO (XspBase msg_object, byte [] buf, int remainder)
 	{ 
         int orig_remainder;
-        SlabsInfo info = (SlabsInfo) msg_object;
+        SlabsInfo info = (SlabsInfo)msg_object;
         SlabsInfoHdr out = new SlabsInfoHdr();
         int i;
         int rec_size;
