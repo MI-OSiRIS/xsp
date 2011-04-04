@@ -52,10 +52,11 @@ void oscars_pretty_print(int type, void *res) {
 	  {
 		  struct ns1__resDetails *det = (struct ns1__resDetails*)res;
 		  printf("GRI: %s\n", det->globalReservationId);
-		  printf("\t login: %s\n\t status: %s\n\t start: %llu\n\t end: %llu\n",
-			 det->login, det->status, det->startTime, det->endTime);
-		  printf("\t create: %llu\n\t bandwidth: %d\n\t description: %s\n\t pathInfo:\n",
-			 det->createTime, det->bandwidth, det->description);
+		  printf("\t login: %s\n\t status: %s\n\t start:\t\t%s\t end:\t\t%s",
+			 det->login, det->status, ctime((const time_t*)&det->startTime),
+			 ctime((const time_t*)&det->endTime));
+		  printf("\t create:\t%s\t bandwidth: %d\n\t description: %s\n\t pathInfo:\n",
+			 ctime((const time_t*)&det->createTime), det->bandwidth, det->description);
 		  _oscars_pretty_print_path_info((void*)det->pathInfo);
 	  }
 	  break;
@@ -67,7 +68,8 @@ void oscars_pretty_print(int type, void *res) {
 		  if (tmp->token)
 			  printf("\t token: %s\n", tmp->token);
 		  printf("\t status: %s\n", tmp->status);
-		  printf("\t pathInfo: N/A\n");
+		  printf("\t pathInfo:\n");
+		  _oscars_pretty_print_path_info((void*)tmp->pathInfo);
 	  }
 	  break;
 	  case CANCEL_RES:
@@ -84,10 +86,11 @@ void oscars_pretty_print(int type, void *res) {
 		  for (i=0; i<tmp->__sizeresDetails; i++) {
 			  struct ns1__resDetails *det = tmp->resDetails[i];
 			  printf("[%d] GRI: %s\n", i, det->globalReservationId);
-			  printf("\t login: %s\n\t status: %s\n\t start: %llu\n\t end: %llu\n",
-				 det->login, det->status, det->startTime, det->endTime);
-			  printf("\t create: %llu\n\t bandwidth: %d\n\t description: %s\n\t pathInfo:\n",
-				 det->createTime, det->bandwidth, det->description);
+			  printf("\t login: %s\n\t status: %s\n\t start:\t\t%s\t end:\t\t%s",
+				 det->login, det->status, ctime((const time_t*)&det->startTime),
+				 ctime((const time_t*)&det->endTime));
+			  printf("\t create:\t%s\t bandwidth: %d\n\t description: %s\n\t pathInfo:\n",
+				 ctime((const time_t*)&det->createTime), det->bandwidth, det->description);
 			  _oscars_pretty_print_path_info((void*)det->pathInfo);
 		  }
 	  }
