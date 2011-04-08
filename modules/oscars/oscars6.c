@@ -16,11 +16,11 @@ void _oscars_pretty_print_path_info(void *path) {
 		if (pi->layer2Info->srcVtag)
 			printf("\t\tSRC_vlan_id: %s, tagged = %d\n", 
 			       pi->layer2Info->srcVtag->__item,
-			       *(pi->layer2Info->srcVtag->tagged));
+			       pi->layer2Info->srcVtag->tagged);
 		if (pi->layer2Info->destVtag)
                         printf("\t\tDST_vlan_id: %s, tagged = %d\n",
                                pi->layer2Info->destVtag->__item,
-                               *(pi->layer2Info->destVtag->tagged));
+                               pi->layer2Info->destVtag->tagged);
 	}
 	if (pi->layer3Info) {
 		printf("\t   layer3Info:\n");
@@ -52,11 +52,12 @@ void oscars_pretty_print(int type, void *res) {
 		  struct ns1__resDetails *det = (struct ns1__resDetails*)res;
 		  printf("GRI: %s\n", det->globalReservationId);
 		  printf("\t login: %s\n\t status: %s\n\t start:\t\t%s\t end:\t\t%s",
-			 det->login, det->status, ctime((const time_t*)&det->startTime),
-			 ctime((const time_t*)&det->endTime));
+			 det->login, det->status, ctime((const time_t*)&det->userRequestConstraint->startTime),
+			 ctime((const time_t*)&det->userRequestConstraint->endTime));
 		  printf("\t create:\t%s\t bandwidth: %d\n\t description: %s\n\t pathInfo:\n",
-			 ctime((const time_t*)&det->createTime), det->bandwidth, det->description);
-		  _oscars_pretty_print_path_info((void*)det->pathInfo);
+			 ctime((const time_t*)&det->createTime), det->userRequestConstraint->bandwidth,
+			 det->description);
+		  _oscars_pretty_print_path_info((void*)det->userRequestConstraint->pathInfo);
 	  }
 	  break;
 	  case CREATE_RES:
@@ -68,7 +69,7 @@ void oscars_pretty_print(int type, void *res) {
 			  printf("\t token: %s\n", tmp->token);
 		  printf("\t status: %s\n", tmp->status);
 		  printf("\t pathInfo:\n");
-		  _oscars_pretty_print_path_info((void*)tmp->pathInfo);
+		  _oscars_pretty_print_path_info((void*)tmp->userRequestConstraint->pathInfo);
 	  }
 	  break;
 	  case CANCEL_RES:
@@ -86,19 +87,20 @@ void oscars_pretty_print(int type, void *res) {
 			  struct ns1__resDetails *det = tmp->resDetails[i];
 			  printf("[%d] GRI: %s\n", i, det->globalReservationId);
 			  printf("\t login: %s\n\t status: %s\n\t start:\t\t%s\t end:\t\t%s",
-				 det->login, det->status, ctime((const time_t*)&det->startTime),
-				 ctime((const time_t*)&det->endTime));
+				 det->login, det->status, ctime((const time_t*)&det->userRequestConstraint->startTime),
+				 ctime((const time_t*)&det->userRequestConstraint->endTime));
 			  printf("\t create:\t%s\t bandwidth: %d\n\t description: %s\n\t pathInfo:\n",
-				 ctime((const time_t*)&det->createTime), det->bandwidth, det->description);
-			  _oscars_pretty_print_path_info((void*)det->pathInfo);
+				 ctime((const time_t*)&det->createTime), det->userRequestConstraint->bandwidth,
+				 det->description);
+			  _oscars_pretty_print_path_info((void*)det->userRequestConstraint->pathInfo);
 		  }
 	  }
 	  break;
 	  case GET_TOPO:
 	  {
 		  int i, j, k, l;
-		  struct ns3__CtrlPlaneTopologyContent *tmp = 
-			  (struct ns3__CtrlPlaneTopologyContent*)res;
+		  struct ns5__CtrlPlaneTopologyContent *tmp = 
+			  (struct ns5__CtrlPlaneTopologyContent*)res;
 
 		  printf("IDC_ID: %s\n", tmp->idcId);
 		  printf("Topology %s\n", tmp->id);
@@ -183,7 +185,7 @@ int oscars_getNetworkTopology(xspdSoapContext *osc, const void *request, void **
 						      osc->soap_action,
 						      &nt_req, &nt_res) == SOAP_OK) {
 			
-			*response = nt_res.ns3__topology;
+			*response = nt_res.ns5__topology;
 			
 		}
 		else {
@@ -265,7 +267,7 @@ int oscars_listReservations(xspdSoapContext *osc, const void *request, void **re
                                 list_req.vlanTag[i]->__item =
                                         lr->vlan_tags[i]->id;
 				list_req.vlanTag[i]->tagged = 
-					(enum xsd__boolean_*)&(lr->vlan_tags[i]->tagged);
+					(enum xsd__boolean_)lr->vlan_tags[i]->tagged;
                         }
                         else
                                 return -1;
@@ -294,6 +296,7 @@ int oscars_createReservation(xspdSoapContext *osc, const void *request, void **r
 	int ret = 0;
 	
         struct ns1__resCreateContent create_req;
+	struct ns1__userRequestConstraintType user_content;
         struct ns1__createReply *create_res = calloc(1, sizeof(struct ns1__createReply*));
 
         bzero(&create_req, sizeof(struct ns1__resCreateContent));
@@ -303,12 +306,13 @@ int oscars_createReservation(xspdSoapContext *osc, const void *request, void **r
 	if (cr->res_id)
 		create_req.globalReservationId = cr->res_id;
 	
-	create_req.startTime = cr->start_time;
-	create_req.endTime = cr->end_time;
-	create_req.bandwidth = cr->bandwidth;
-	create_req.description = cr->description;
+	user_content.startTime = cr->start_time;
+	user_content.endTime = cr->end_time;
+	user_content.bandwidth = cr->bandwidth;
+	user_content.pathInfo = (struct ns1__pathInfo*)cr->path_info;
 
-	create_req.pathInfo = (struct ns1__pathInfo*)cr->path_info;
+	create_req.description = cr->description;
+	create_req.userRequestConstraint = &user_content;
 
 	if (_oscars_wsse_sign(osc) != 0) {
                 return -1;
@@ -332,6 +336,7 @@ int oscars_modifyReservation(xspdSoapContext *osc, const void *request, void **r
         int ret = 0;
 
         struct ns1__modifyResContent modify_req;
+	struct ns1__userRequestConstraintType user_content;
         struct ns1__modifyResReply *modify_res = calloc(1, sizeof(struct ns1__modifyResReply*));
 
         bzero(&modify_req, sizeof(struct ns1__modifyResContent));
@@ -341,12 +346,13 @@ int oscars_modifyReservation(xspdSoapContext *osc, const void *request, void **r
         if (cr->res_id)
                 modify_req.globalReservationId = cr->res_id;
 
-        modify_req.startTime = cr->start_time;
-        modify_req.endTime = cr->end_time;
-        modify_req.bandwidth = cr->bandwidth;
-        modify_req.description = cr->description;
+        user_content.startTime = cr->start_time;
+	user_content.endTime = cr->end_time;
+        user_content.bandwidth = cr->bandwidth;
+        user_content.pathInfo = (struct ns1__pathInfo*)cr->path_info;
 
-        modify_req.pathInfo = (struct ns1__pathInfo*)cr->path_info;
+        modify_req.description = cr->description;
+	modify_req.userRequestConstraint = &user_content;
 
         if (_oscars_wsse_sign(osc) != 0) {
                 return -1;
@@ -370,20 +376,20 @@ int oscars_modifyReservation(xspdSoapContext *osc, const void *request, void **r
 int oscars_queryReservation(xspdSoapContext *osc, const void *request, void **response) {
 	int ret =0;
 
-	struct ns1__globalReservationId query_req;
-	struct ns1__resDetails *query_res = calloc(1, sizeof(struct ns1__resDetails));
+	struct ns1__queryResContent query_req;
+	struct ns1__queryResReply query_res;
 		
         if (_oscars_wsse_sign(osc) != 0) {
                 return -1;
         }
 
 	if (request) {
-                query_req.gri = (char *) request;
+                query_req.globalReservationId = (char *) request;
                 if (soap_call___ns1__queryReservation((struct soap*)osc->soap,
 						      osc->soap_endpoint,
 						      osc->soap_action,
-						      &query_req, query_res) == SOAP_OK) {
-			*response = query_res;
+						      &query_req, &query_res) == SOAP_OK) {
+			*response = query_res.reservationDetails;
                 }
                 else {
                         soap_print_fault((struct soap *)osc->soap, stderr);
@@ -400,21 +406,21 @@ int oscars_queryReservation(xspdSoapContext *osc, const void *request, void **re
 int oscars_cancelReservation(xspdSoapContext *osc, const void *request, void **response) {
 	int ret = 0;
 	
-	struct ns1__globalReservationId cancel_req;
-	char *cancel_res;
+	struct ns1__cancelResContent cancel_req;
+	struct ns1__cancelResReply cancel_res;
 
 	if (_oscars_wsse_sign(osc) != 0) {
 		return -1;
 	}
 	
 	if (request) {
-		cancel_req.gri = (char *) request;
+		cancel_req.globalReservationId = (char *) request;
 		if (soap_call___ns1__cancelReservation((struct soap*)osc->soap,
 						       osc->soap_endpoint,
 						       osc->soap_action,
 						       &cancel_req, &cancel_res) == SOAP_OK) {
-			if (cancel_res)
-				*response = cancel_res;
+			if (cancel_res.status)
+				*response = cancel_res.status;
 			else
 				ret = -1;
 		}

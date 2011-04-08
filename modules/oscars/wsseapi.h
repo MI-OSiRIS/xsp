@@ -51,7 +51,14 @@ A commercial use license is available from Genivia, Inc., contact@genivia.com
 #ifndef WSSEAPI_H
 #define WSSEAPI_H
 
+#ifdef OSCARS5
 #include "oscarsH.h"	/* replace with soapcpp2-generated *H.h file */
+#endif
+
+#ifdef OSCARS6
+#include "oscars6H.h"
+#endif
+
 #include "smdevp.h"
 #include "mecevp.h"
 
