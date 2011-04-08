@@ -5,23 +5,31 @@ LDFLAGS= -L../../libgsoap
 CFLAGS= -DWITH_NONAMESPACES -DWITH_OPENSSL -DWITH_DOM
 
 ALL= oscars_client
-COMMON_SRC = dom.c smdevp.c mecevp.c wsaapi.c wsseapi.c oscars.c oscars_client.c
-SRC5 = oscarsClient.c oscarsC.c
-SRC6 = oscars6Client oscars6C.c
+COMMON_SRC = dom.c smdevp.c mecevp.c
+VER_SRC = wsaapi.c wsseapi.c oscars_client.c
+SRC5 = oscars.c oscarsClient.c oscarsC.c
+SRC6 = oscars6.c oscars6Client.c oscars6C.c
 COMMON_OBJS = ${COMMON_SRC:.c=.o}
+VER_OBJS = ${VER_SRC:.c=.o}
 SRC5_OBJS = ${SRC5:.c=.o}
 SRC6_OBJS = ${SRC6:.c=.o}
 
-all: $(COMMON_OBJS) $(SRC5_OBJS) $(ALL)
+all: $(ALL)
 
 clean:
 	rm -f $(ALL) $(COMMON_OBJS) $(SRC5_OBJS) $(SRC6_OBJS) *.o
 
 oscars_client: $(COMMON_OBJS) $(SRC5_OBJS)
-	$(CC) $(LDFLAGS) $(COMMON_OBJS) $(SRC5_OBJS) $(LIBS) -o $@
+	$(CC) $(LDFLAGS) $(COMMON_OBJS) $(VER_OBJS) $(SRC5_OBJS) $(LIBS) -o $@
 
 oscars6_client: $(COMMON_OBJS) $(SRC6_OBJS)
-	$(CC) $(LDFLAGS) $(COMMON_OBJS) $(SRC6_OBJS) $(LIBS) -o $@
+	$(CC) $(LDFLAGS) $(COMMON_OBJS) $(VER_OBJS) $(SRC6_OBJS) $(LIBS) -o $@
 
 .c.o:
 	$(CC) $(CFLAGS) $(INCLUDES) -c $^
+
+$(SRC5_OBJS): $(SRC5) $(VER_SRC)
+	$(CC) $(CFLAGS) -DOSCARS5 $(INCLUDES) -c $^
+
+$(SRC6_OBJS): $(SRC6) $(VER_SRC)
+	$(CC) $(CFLAGS) -DOSCARS6 $(INCLUDES) -c $^

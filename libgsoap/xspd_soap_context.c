@@ -36,6 +36,7 @@ int xspd_start_soap_ssl(xspdSoapContext *sc, int soap_ssl_flags) {
 
 int xspd_stop_soap_ssl(xspdSoapContext *sc) {
 	if (sc->soap){
+		soap_end(sc->soap);
 		soap_done(sc->soap);
 		CRYPTO_thread_cleanup(); 
 		free(sc->soap);
@@ -53,6 +54,7 @@ int xspd_start_soap(xspdSoapContext *sc) {
 
 int xspd_stop_soap(xspdSoapContext *sc) {
 	if (sc->soap) {
+		soap_end(sc->soap);
 		soap_done(sc->soap);
 		free(sc->soap);
 	}

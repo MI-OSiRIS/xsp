@@ -3,7 +3,15 @@
 #include <stdlib.h>
 
 #include "oscars.h"
+
+#ifdef OSCARS5
 #include "oscars.nsmap"
+#endif
+
+#ifdef OSCARS6
+#include "oscars6.nsmap"
+#endif
+
 
 OSCARS_listRequest list_request = {
 	0,                                 // num statuses
@@ -61,8 +69,8 @@ int main(int argc, char* argv[])
 	xspdSoapContext oscars_soap;
 
 	//oscars_soap.soap_endpoint = "http://192.168.1.103:8080/axis2/services/OSCARS";
-	//oscars_soap.soap_endpoint = "http://192.168.1.20:9001/OSCARS";
-	oscars_soap.soap_endpoint = "https://idcdev0.internet2.edu:8443/axis2/services/OSCARS";
+	oscars_soap.soap_endpoint = "http://localhost:9001/OSCARS";
+	//oscars_soap.soap_endpoint = "https://idcdev0.internet2.edu:8443/axis2/services/OSCARS";
 	oscars_soap.soap_action = NULL;
 	
 	// setup soap context
@@ -75,7 +83,6 @@ int main(int argc, char* argv[])
 	oscars_soap.wsse_cert = "/home/ezra/.ssl/oscars-cert.pem";
 
 	xspd_start_soap_ssl(&oscars_soap, SOAP_SSL_NO_AUTHENTICATION);
-	//xspd_start_soap(&oscars_soap);
 
 	/*
 	printf("\nTesting oscars_getNetworkTopology\n\n");
