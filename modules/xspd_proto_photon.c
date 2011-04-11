@@ -15,6 +15,7 @@
 #include "xspd_config.h"
 #include "xspd_tpool.h"
 #include "xspd_modules.h"
+#include "xspd_main_settings.h"
 #include "xspd_settings.h"
 #include "xspd_listener.h"
 #include "xspd_session.h"
@@ -84,15 +85,15 @@ xspdModule *module_info() {
 }
 
 int xspd_proto_photon_init() {
+	int maxclients;
+	xspdSettings *settings;
 	
-	// maybe we eventually want this to be a generic protocal handler
-	//if (xspd_add_protocol_handler(&xspd_photon_handler)) {
-	//      xspd_err(0, "couldn't add protocol handler");
-	//	goto error_exit;
-	//}
+	if (xspd_main_settings_get_section("photon", &settings) != 0 ||
+	        xspd_settings_get_int(settings, "maxclients", &maxclients) != 0) {
+	    maxclients = 46; /* default */
+	}
 
-	// allow 4 libphoton client connections to test
-	if (photon_xsp_init_server(4) != 0) {
+	if (photon_xsp_init_server(maxclients) != 0) {
 		xspd_err(0, "could not init photon backend");
 		goto error_exit;
 	}
