@@ -165,7 +165,7 @@ int _oscars_wsse_sign(xspdSoapContext *osc) {
 	return 0;
 }
 
-int oscars_getNetworkTopology(xspdSoapContext *osc, const void *request, void **response) {
+int oscars_getNetworkTopology(xspdSoapContext *osc, const char *request, void **response) {
 	int ret = 0;
 	
 	struct ns1__getTopologyContent nt_req;
@@ -198,7 +198,7 @@ int oscars_getNetworkTopology(xspdSoapContext *osc, const void *request, void **
 }
 	
 
-int oscars_listReservations(xspdSoapContext *osc, const void *request, void **response) {
+int oscars_listReservations(xspdSoapContext *osc, const OSCARS_listRequest *request, void **response) {
 	int ret = 0;
 	int i;
 
@@ -292,7 +292,7 @@ int oscars_listReservations(xspdSoapContext *osc, const void *request, void **re
 	return ret;
 }
 
-int oscars_createReservation(xspdSoapContext *osc, const void *request, void **response) {
+int oscars_createReservation(xspdSoapContext *osc, const OSCARS_resRequest *request, void **response) {
 	int ret = 0;
 	
         struct ns1__resCreateContent create_req;
@@ -301,7 +301,7 @@ int oscars_createReservation(xspdSoapContext *osc, const void *request, void **r
 
         bzero(&create_req, sizeof(struct ns1__resCreateContent));
 
-        OSCARS_createRequest *cr = (OSCARS_createRequest *)request;
+        OSCARS_resRequest *cr = (OSCARS_resRequest *)request;
 
 	if (cr->res_id)
 		create_req.globalReservationId = cr->res_id;
@@ -332,7 +332,7 @@ int oscars_createReservation(xspdSoapContext *osc, const void *request, void **r
 	return ret;
 }
 
-int oscars_modifyReservation(xspdSoapContext *osc, const void *request, void **response) {
+int oscars_modifyReservation(xspdSoapContext *osc, const OSCARS_resRequest *request, void **response) {
         int ret = 0;
 
         struct ns1__modifyResContent modify_req;
@@ -341,7 +341,7 @@ int oscars_modifyReservation(xspdSoapContext *osc, const void *request, void **r
 
         bzero(&modify_req, sizeof(struct ns1__modifyResContent));
 
-        OSCARS_createRequest *cr = (OSCARS_createRequest *)request;
+        OSCARS_resRequest *cr = (OSCARS_resRequest *)request;
 
         if (cr->res_id)
                 modify_req.globalReservationId = cr->res_id;
@@ -373,7 +373,7 @@ int oscars_modifyReservation(xspdSoapContext *osc, const void *request, void **r
         return ret;
 }
 
-int oscars_queryReservation(xspdSoapContext *osc, const void *request, void **response) {
+int oscars_queryReservation(xspdSoapContext *osc, const char *request, void **response) {
 	int ret =0;
 
 	struct ns1__queryResContent query_req;
@@ -403,7 +403,7 @@ int oscars_queryReservation(xspdSoapContext *osc, const void *request, void **re
         return ret;
 }
 
-int oscars_cancelReservation(xspdSoapContext *osc, const void *request, void **response) {
+int oscars_cancelReservation(xspdSoapContext *osc, const char *request, void **response) {
 	int ret = 0;
 	
 	struct ns1__cancelResContent cancel_req;

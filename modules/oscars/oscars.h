@@ -74,17 +74,22 @@ typedef struct OSCARS_listRequest_t {
 	int res_offset;
 } OSCARS_listRequest;
 
-typedef struct OSCARS_createRequest_t {
+typedef struct OSCARS_resRequest_t {
 	char *res_id;
 	int64_t start_time;
         int64_t end_time;
 	int bandwidth;
 	char *description;
 	OSCARS_pathInfo *path_info;
-} OSCARS_createRequest;
+} OSCARS_resRequest;
 
 void oscars_pretty_print(int type, void *res);
-int oscars_cancelReservation(xspdSoapContext *osc, const void *request, void **response);
 
+int oscars_createReservation(xspdSoapContext *osc, const OSCARS_resRequest *request, void **response);
+int oscars_listReservation(xspdSoapContext *osc, const OSCARS_listRequest *request, void **response);
+int oscars_modifyReservation(xspdSoapContext *osc, const OSCARS_resRequest *request, void **response);
+int oscars_queryReservation(xspdSoapContext *osc, const char *request, void **response);
+int oscars_cancelReservation(xspdSoapContext *osc, const char *request, void **response);
+int oscars_getNetworkTopology(xspdSoapContext *osc, const char *request, void **response);
 
 #endif
