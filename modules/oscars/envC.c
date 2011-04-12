@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-SOAP_SOURCE_STAMP("@(#) envC.c ver 2.8.1 2011-03-20 18:36:57 GMT")
+SOAP_SOURCE_STAMP("@(#) envC.c ver 2.8.1 2011-04-12 05:56:54 GMT")
 
 
 #ifndef WITH_NOGLOBAL
@@ -168,6 +168,181 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_byte(soap, NULL, NULL, "xsd:byte");
 	case SOAP_TYPE_int:
 		return soap_in_int(soap, NULL, NULL, "xsd:int");
+	case SOAP_TYPE_unsignedLONG64:
+		return soap_in_unsignedLONG64(soap, NULL, NULL, "xsd:unsignedLong");
+	case SOAP_TYPE__wsa5__IsReferenceParameter:
+		return soap_in__wsa5__IsReferenceParameter(soap, NULL, NULL, "wsa5:IsReferenceParameter");
+	case SOAP_TYPE_wsa5__FaultCodesType:
+		return soap_in_wsa5__FaultCodesType(soap, NULL, NULL, "wsa5:FaultCodesType");
+	case SOAP_TYPE_wsa5__RelationshipType:
+		return soap_in_wsa5__RelationshipType(soap, NULL, NULL, "wsa5:RelationshipType");
+	case SOAP_TYPE_wsse__FaultcodeEnum:
+		return soap_in_wsse__FaultcodeEnum(soap, NULL, NULL, "wsse:FaultcodeEnum");
+	case SOAP_TYPE_wsu__tTimestampFault:
+		return soap_in_wsu__tTimestampFault(soap, NULL, NULL, "wsu:tTimestampFault");
+	case SOAP_TYPE_wsa5__ProblemActionType:
+		return soap_in_wsa5__ProblemActionType(soap, NULL, NULL, "wsa5:ProblemActionType");
+	case SOAP_TYPE_wsa5__RelatesToType:
+		return soap_in_wsa5__RelatesToType(soap, NULL, NULL, "wsa5:RelatesToType");
+	case SOAP_TYPE_wsa5__MetadataType:
+		return soap_in_wsa5__MetadataType(soap, NULL, NULL, "wsa5:MetadataType");
+	case SOAP_TYPE_wsa5__ReferenceParametersType:
+		return soap_in_wsa5__ReferenceParametersType(soap, NULL, NULL, "wsa5:ReferenceParametersType");
+	case SOAP_TYPE_wsa5__EndpointReferenceType:
+		return soap_in_wsa5__EndpointReferenceType(soap, NULL, NULL, "wsa5:EndpointReferenceType");
+	case SOAP_TYPE_xenc__EncryptionPropertyType:
+		return soap_in_xenc__EncryptionPropertyType(soap, NULL, NULL, "xenc:EncryptionPropertyType");
+	case SOAP_TYPE_xenc__EncryptionPropertiesType:
+		return soap_in_xenc__EncryptionPropertiesType(soap, NULL, NULL, "xenc:EncryptionPropertiesType");
+	case SOAP_TYPE_xenc__ReferenceType:
+		return soap_in_xenc__ReferenceType(soap, NULL, NULL, "xenc:ReferenceType");
+	case SOAP_TYPE_xenc__AgreementMethodType:
+		return soap_in_xenc__AgreementMethodType(soap, NULL, NULL, "xenc:AgreementMethodType");
+	case SOAP_TYPE_xenc__EncryptedKeyType:
+		return soap_in_xenc__EncryptedKeyType(soap, NULL, NULL, "xenc:EncryptedKeyType");
+	case SOAP_TYPE_xenc__EncryptedDataType:
+		return soap_in_xenc__EncryptedDataType(soap, NULL, NULL, "xenc:EncryptedDataType");
+	case SOAP_TYPE_xenc__TransformsType:
+		return soap_in_xenc__TransformsType(soap, NULL, NULL, "xenc:TransformsType");
+	case SOAP_TYPE_xenc__CipherReferenceType:
+		return soap_in_xenc__CipherReferenceType(soap, NULL, NULL, "xenc:CipherReferenceType");
+	case SOAP_TYPE_xenc__CipherDataType:
+		return soap_in_xenc__CipherDataType(soap, NULL, NULL, "xenc:CipherDataType");
+	case SOAP_TYPE_xenc__EncryptionMethodType:
+		return soap_in_xenc__EncryptionMethodType(soap, NULL, NULL, "xenc:EncryptionMethodType");
+	case SOAP_TYPE_xenc__EncryptedType:
+		return soap_in_xenc__EncryptedType(soap, NULL, NULL, "xenc:EncryptedType");
+	case SOAP_TYPE_ds__RSAKeyValueType:
+		return soap_in_ds__RSAKeyValueType(soap, NULL, NULL, "ds:RSAKeyValueType");
+	case SOAP_TYPE_ds__DSAKeyValueType:
+		return soap_in_ds__DSAKeyValueType(soap, NULL, NULL, "ds:DSAKeyValueType");
+	case SOAP_TYPE_ds__X509IssuerSerialType:
+		return soap_in_ds__X509IssuerSerialType(soap, NULL, NULL, "ds:X509IssuerSerialType");
+	case SOAP_TYPE_ds__X509DataType:
+		return soap_in_ds__X509DataType(soap, NULL, NULL, "ds:X509DataType");
+	case SOAP_TYPE_ds__RetrievalMethodType:
+		return soap_in_ds__RetrievalMethodType(soap, NULL, NULL, "ds:RetrievalMethodType");
+	case SOAP_TYPE_ds__KeyValueType:
+		return soap_in_ds__KeyValueType(soap, NULL, NULL, "ds:KeyValueType");
+	case SOAP_TYPE_ds__DigestMethodType:
+		return soap_in_ds__DigestMethodType(soap, NULL, NULL, "ds:DigestMethodType");
+	case SOAP_TYPE_ds__TransformType:
+		return soap_in_ds__TransformType(soap, NULL, NULL, "ds:TransformType");
+	case SOAP_TYPE_ds__TransformsType:
+		return soap_in_ds__TransformsType(soap, NULL, NULL, "ds:TransformsType");
+	case SOAP_TYPE_ds__ReferenceType:
+		return soap_in_ds__ReferenceType(soap, NULL, NULL, "ds:ReferenceType");
+	case SOAP_TYPE_ds__SignatureMethodType:
+		return soap_in_ds__SignatureMethodType(soap, NULL, NULL, "ds:SignatureMethodType");
+	case SOAP_TYPE_ds__CanonicalizationMethodType:
+		return soap_in_ds__CanonicalizationMethodType(soap, NULL, NULL, "ds:CanonicalizationMethodType");
+	case SOAP_TYPE_ds__KeyInfoType:
+		return soap_in_ds__KeyInfoType(soap, NULL, NULL, "ds:KeyInfoType");
+	case SOAP_TYPE_ds__SignedInfoType:
+		return soap_in_ds__SignedInfoType(soap, NULL, NULL, "ds:SignedInfoType");
+	case SOAP_TYPE_ds__SignatureType:
+		return soap_in_ds__SignatureType(soap, NULL, NULL, "ds:SignatureType");
+	case SOAP_TYPE_PointerTo_wsa5__FaultTo:
+		return soap_in_PointerTo_wsa5__FaultTo(soap, NULL, NULL, "wsa5:FaultTo");
+	case SOAP_TYPE_PointerTo_wsa5__ReplyTo:
+		return soap_in_PointerTo_wsa5__ReplyTo(soap, NULL, NULL, "wsa5:ReplyTo");
+	case SOAP_TYPE_PointerTo_wsa5__From:
+		return soap_in_PointerTo_wsa5__From(soap, NULL, NULL, "wsa5:From");
+	case SOAP_TYPE_PointerTo_wsa5__RelatesTo:
+		return soap_in_PointerTo_wsa5__RelatesTo(soap, NULL, NULL, "wsa5:RelatesTo");
+	case SOAP_TYPE__wsa5__ProblemHeaderQName:
+	{	char **s;
+		s = soap_in__wsa5__ProblemHeaderQName(soap, NULL, NULL, "xsd:QName");
+		return s ? *s : NULL;
+	}
+	case SOAP_TYPE_PointerTowsa5__MetadataType:
+		return soap_in_PointerTowsa5__MetadataType(soap, NULL, NULL, "wsa5:MetadataType");
+	case SOAP_TYPE_PointerTowsa5__ReferenceParametersType:
+		return soap_in_PointerTowsa5__ReferenceParametersType(soap, NULL, NULL, "wsa5:ReferenceParametersType");
+	case SOAP_TYPE_wsa5__FaultCodesOpenEnumType:
+	{	char **s;
+		s = soap_in_wsa5__FaultCodesOpenEnumType(soap, NULL, NULL, "wsa5:FaultCodesOpenEnumType");
+		return s ? *s : NULL;
+	}
+	case SOAP_TYPE_wsa5__RelationshipTypeOpenEnum:
+	{	char **s;
+		s = soap_in_wsa5__RelationshipTypeOpenEnum(soap, NULL, NULL, "wsa5:RelationshipTypeOpenEnum");
+		return s ? *s : NULL;
+	}
+	case SOAP_TYPE_PointerTo_wsse__Security:
+		return soap_in_PointerTo_wsse__Security(soap, NULL, NULL, "wsse:Security");
+	case SOAP_TYPE_PointerTods__SignatureType:
+		return soap_in_PointerTods__SignatureType(soap, NULL, NULL, "ds:SignatureType");
+	case SOAP_TYPE_PointerToxenc__EncryptedKeyType:
+		return soap_in_PointerToxenc__EncryptedKeyType(soap, NULL, NULL, "xenc:EncryptedKeyType");
+	case SOAP_TYPE_PointerTo_wsse__BinarySecurityToken:
+		return soap_in_PointerTo_wsse__BinarySecurityToken(soap, NULL, NULL, "wsse:BinarySecurityToken");
+	case SOAP_TYPE_PointerTo_wsse__UsernameToken:
+		return soap_in_PointerTo_wsse__UsernameToken(soap, NULL, NULL, "wsse:UsernameToken");
+	case SOAP_TYPE_PointerTo_wsu__Timestamp:
+		return soap_in_PointerTo_wsu__Timestamp(soap, NULL, NULL, "wsu:Timestamp");
+	case SOAP_TYPE_PointerTo_xenc__ReferenceList:
+		return soap_in_PointerTo_xenc__ReferenceList(soap, NULL, NULL, "xenc:ReferenceList");
+	case SOAP_TYPE_PointerToxenc__ReferenceType:
+		return soap_in_PointerToxenc__ReferenceType(soap, NULL, NULL, "xenc:ReferenceType");
+	case SOAP_TYPE_PointerToxenc__EncryptionPropertyType:
+		return soap_in_PointerToxenc__EncryptionPropertyType(soap, NULL, NULL, "xenc:EncryptionPropertyType");
+	case SOAP_TYPE_PointerToxenc__TransformsType:
+		return soap_in_PointerToxenc__TransformsType(soap, NULL, NULL, "xenc:TransformsType");
+	case SOAP_TYPE_PointerToxenc__CipherReferenceType:
+		return soap_in_PointerToxenc__CipherReferenceType(soap, NULL, NULL, "xenc:CipherReferenceType");
+	case SOAP_TYPE_PointerToxenc__EncryptionPropertiesType:
+		return soap_in_PointerToxenc__EncryptionPropertiesType(soap, NULL, NULL, "xenc:EncryptionPropertiesType");
+	case SOAP_TYPE_PointerToxenc__CipherDataType:
+		return soap_in_PointerToxenc__CipherDataType(soap, NULL, NULL, "xenc:CipherDataType");
+	case SOAP_TYPE_PointerTo_ds__KeyInfo:
+		return soap_in_PointerTo_ds__KeyInfo(soap, NULL, NULL, "ds:KeyInfo");
+	case SOAP_TYPE_PointerToxenc__EncryptionMethodType:
+		return soap_in_PointerToxenc__EncryptionMethodType(soap, NULL, NULL, "xenc:EncryptionMethodType");
+	case SOAP_TYPE_PointerTods__X509IssuerSerialType:
+		return soap_in_PointerTods__X509IssuerSerialType(soap, NULL, NULL, "ds:X509IssuerSerialType");
+	case SOAP_TYPE_PointerTods__RSAKeyValueType:
+		return soap_in_PointerTods__RSAKeyValueType(soap, NULL, NULL, "ds:RSAKeyValueType");
+	case SOAP_TYPE_PointerTods__DSAKeyValueType:
+		return soap_in_PointerTods__DSAKeyValueType(soap, NULL, NULL, "ds:DSAKeyValueType");
+	case SOAP_TYPE_PointerTods__TransformType:
+		return soap_in_PointerTods__TransformType(soap, NULL, NULL, "ds:TransformType");
+	case SOAP_TYPE_PointerTods__DigestMethodType:
+		return soap_in_PointerTods__DigestMethodType(soap, NULL, NULL, "ds:DigestMethodType");
+	case SOAP_TYPE_PointerTods__TransformsType:
+		return soap_in_PointerTods__TransformsType(soap, NULL, NULL, "ds:TransformsType");
+	case SOAP_TYPE_PointerToint:
+		return soap_in_PointerToint(soap, NULL, NULL, "xsd:int");
+	case SOAP_TYPE_PointerToPointerTods__ReferenceType:
+		return soap_in_PointerToPointerTods__ReferenceType(soap, NULL, NULL, "ds:ReferenceType");
+	case SOAP_TYPE_PointerTods__ReferenceType:
+		return soap_in_PointerTods__ReferenceType(soap, NULL, NULL, "ds:ReferenceType");
+	case SOAP_TYPE_PointerTods__SignatureMethodType:
+		return soap_in_PointerTods__SignatureMethodType(soap, NULL, NULL, "ds:SignatureMethodType");
+	case SOAP_TYPE_PointerTods__CanonicalizationMethodType:
+		return soap_in_PointerTods__CanonicalizationMethodType(soap, NULL, NULL, "ds:CanonicalizationMethodType");
+	case SOAP_TYPE_PointerTo_wsse__SecurityTokenReference:
+		return soap_in_PointerTo_wsse__SecurityTokenReference(soap, NULL, NULL, "wsse:SecurityTokenReference");
+	case SOAP_TYPE_PointerTods__X509DataType:
+		return soap_in_PointerTods__X509DataType(soap, NULL, NULL, "ds:X509DataType");
+	case SOAP_TYPE_PointerTods__RetrievalMethodType:
+		return soap_in_PointerTods__RetrievalMethodType(soap, NULL, NULL, "ds:RetrievalMethodType");
+	case SOAP_TYPE_PointerTods__KeyValueType:
+		return soap_in_PointerTods__KeyValueType(soap, NULL, NULL, "ds:KeyValueType");
+	case SOAP_TYPE_PointerTo_c14n__InclusiveNamespaces:
+		return soap_in_PointerTo_c14n__InclusiveNamespaces(soap, NULL, NULL, "c14n:InclusiveNamespaces");
+	case SOAP_TYPE_PointerTods__KeyInfoType:
+		return soap_in_PointerTods__KeyInfoType(soap, NULL, NULL, "ds:KeyInfoType");
+	case SOAP_TYPE_PointerTods__SignedInfoType:
+		return soap_in_PointerTods__SignedInfoType(soap, NULL, NULL, "ds:SignedInfoType");
+	case SOAP_TYPE_PointerTo_wsse__Embedded:
+		return soap_in_PointerTo_wsse__Embedded(soap, NULL, NULL, "wsse:Embedded");
+	case SOAP_TYPE_PointerTo_wsse__KeyIdentifier:
+		return soap_in_PointerTo_wsse__KeyIdentifier(soap, NULL, NULL, "wsse:KeyIdentifier");
+	case SOAP_TYPE_PointerTo_wsse__Reference:
+		return soap_in_PointerTo_wsse__Reference(soap, NULL, NULL, "wsse:Reference");
+	case SOAP_TYPE_PointerTo_wsse__Password:
+		return soap_in_PointerTo_wsse__Password(soap, NULL, NULL, "wsse:Password");
 	case SOAP_TYPE__QName:
 	{	char **s;
 		s = soap_in__QName(soap, NULL, NULL, "xsd:QName");
@@ -190,6 +365,172 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		{	*type = SOAP_TYPE_int;
 			return soap_in_int(soap, NULL, NULL, NULL);
 		}
+		if (!soap_match_tag(soap, t, "xsd:unsignedLong"))
+		{	*type = SOAP_TYPE_unsignedLONG64;
+			return soap_in_unsignedLONG64(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsa5:IsReferenceParameter"))
+		{	*type = SOAP_TYPE__wsa5__IsReferenceParameter;
+			return soap_in__wsa5__IsReferenceParameter(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsa5:FaultCodesType"))
+		{	*type = SOAP_TYPE_wsa5__FaultCodesType;
+			return soap_in_wsa5__FaultCodesType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsa5:RelationshipType"))
+		{	*type = SOAP_TYPE_wsa5__RelationshipType;
+			return soap_in_wsa5__RelationshipType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsse:FaultcodeEnum"))
+		{	*type = SOAP_TYPE_wsse__FaultcodeEnum;
+			return soap_in_wsse__FaultcodeEnum(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsu:tTimestampFault"))
+		{	*type = SOAP_TYPE_wsu__tTimestampFault;
+			return soap_in_wsu__tTimestampFault(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsa5:ProblemActionType"))
+		{	*type = SOAP_TYPE_wsa5__ProblemActionType;
+			return soap_in_wsa5__ProblemActionType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsa5:RelatesToType"))
+		{	*type = SOAP_TYPE_wsa5__RelatesToType;
+			return soap_in_wsa5__RelatesToType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsa5:MetadataType"))
+		{	*type = SOAP_TYPE_wsa5__MetadataType;
+			return soap_in_wsa5__MetadataType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsa5:ReferenceParametersType"))
+		{	*type = SOAP_TYPE_wsa5__ReferenceParametersType;
+			return soap_in_wsa5__ReferenceParametersType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsa5:EndpointReferenceType"))
+		{	*type = SOAP_TYPE_wsa5__EndpointReferenceType;
+			return soap_in_wsa5__EndpointReferenceType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xenc:EncryptionPropertyType"))
+		{	*type = SOAP_TYPE_xenc__EncryptionPropertyType;
+			return soap_in_xenc__EncryptionPropertyType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xenc:EncryptionPropertiesType"))
+		{	*type = SOAP_TYPE_xenc__EncryptionPropertiesType;
+			return soap_in_xenc__EncryptionPropertiesType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xenc:ReferenceType"))
+		{	*type = SOAP_TYPE_xenc__ReferenceType;
+			return soap_in_xenc__ReferenceType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xenc:AgreementMethodType"))
+		{	*type = SOAP_TYPE_xenc__AgreementMethodType;
+			return soap_in_xenc__AgreementMethodType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xenc:EncryptedKeyType"))
+		{	*type = SOAP_TYPE_xenc__EncryptedKeyType;
+			return soap_in_xenc__EncryptedKeyType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xenc:EncryptedDataType"))
+		{	*type = SOAP_TYPE_xenc__EncryptedDataType;
+			return soap_in_xenc__EncryptedDataType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xenc:TransformsType"))
+		{	*type = SOAP_TYPE_xenc__TransformsType;
+			return soap_in_xenc__TransformsType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xenc:CipherReferenceType"))
+		{	*type = SOAP_TYPE_xenc__CipherReferenceType;
+			return soap_in_xenc__CipherReferenceType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xenc:CipherDataType"))
+		{	*type = SOAP_TYPE_xenc__CipherDataType;
+			return soap_in_xenc__CipherDataType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xenc:EncryptionMethodType"))
+		{	*type = SOAP_TYPE_xenc__EncryptionMethodType;
+			return soap_in_xenc__EncryptionMethodType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xenc:EncryptedType"))
+		{	*type = SOAP_TYPE_xenc__EncryptedType;
+			return soap_in_xenc__EncryptedType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ds:RSAKeyValueType"))
+		{	*type = SOAP_TYPE_ds__RSAKeyValueType;
+			return soap_in_ds__RSAKeyValueType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ds:DSAKeyValueType"))
+		{	*type = SOAP_TYPE_ds__DSAKeyValueType;
+			return soap_in_ds__DSAKeyValueType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ds:X509IssuerSerialType"))
+		{	*type = SOAP_TYPE_ds__X509IssuerSerialType;
+			return soap_in_ds__X509IssuerSerialType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ds:X509DataType"))
+		{	*type = SOAP_TYPE_ds__X509DataType;
+			return soap_in_ds__X509DataType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ds:RetrievalMethodType"))
+		{	*type = SOAP_TYPE_ds__RetrievalMethodType;
+			return soap_in_ds__RetrievalMethodType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ds:KeyValueType"))
+		{	*type = SOAP_TYPE_ds__KeyValueType;
+			return soap_in_ds__KeyValueType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ds:DigestMethodType"))
+		{	*type = SOAP_TYPE_ds__DigestMethodType;
+			return soap_in_ds__DigestMethodType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ds:TransformType"))
+		{	*type = SOAP_TYPE_ds__TransformType;
+			return soap_in_ds__TransformType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ds:TransformsType"))
+		{	*type = SOAP_TYPE_ds__TransformsType;
+			return soap_in_ds__TransformsType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ds:ReferenceType"))
+		{	*type = SOAP_TYPE_ds__ReferenceType;
+			return soap_in_ds__ReferenceType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ds:SignatureMethodType"))
+		{	*type = SOAP_TYPE_ds__SignatureMethodType;
+			return soap_in_ds__SignatureMethodType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ds:CanonicalizationMethodType"))
+		{	*type = SOAP_TYPE_ds__CanonicalizationMethodType;
+			return soap_in_ds__CanonicalizationMethodType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ds:KeyInfoType"))
+		{	*type = SOAP_TYPE_ds__KeyInfoType;
+			return soap_in_ds__KeyInfoType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ds:SignedInfoType"))
+		{	*type = SOAP_TYPE_ds__SignedInfoType;
+			return soap_in_ds__SignedInfoType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ds:SignatureType"))
+		{	*type = SOAP_TYPE_ds__SignatureType;
+			return soap_in_ds__SignatureType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xsd:QName"))
+		{	char **s;
+			*type = SOAP_TYPE__wsa5__ProblemHeaderQName;
+			s = soap_in__wsa5__ProblemHeaderQName(soap, NULL, NULL, NULL);
+			return s ? *s : NULL;
+		}
+		if (!soap_match_tag(soap, t, "wsa5:FaultCodesOpenEnumType"))
+		{	char **s;
+			*type = SOAP_TYPE_wsa5__FaultCodesOpenEnumType;
+			s = soap_in_wsa5__FaultCodesOpenEnumType(soap, NULL, NULL, NULL);
+			return s ? *s : NULL;
+		}
+		if (!soap_match_tag(soap, t, "wsa5:RelationshipTypeOpenEnum"))
+		{	char **s;
+			*type = SOAP_TYPE_wsa5__RelationshipTypeOpenEnum;
+			s = soap_in_wsa5__RelationshipTypeOpenEnum(soap, NULL, NULL, NULL);
+			return s ? *s : NULL;
+		}
 		if (!soap_match_tag(soap, t, "xsd:QName"))
 		{	char **s;
 			*type = SOAP_TYPE__QName;
@@ -203,6 +544,150 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 			return s ? *s : NULL;
 		}
 		t = soap->tag;
+		if (!soap_match_tag(soap, t, "wsa5:RetryAfter"))
+		{	*type = SOAP_TYPE__wsa5__RetryAfter;
+			return soap_in__wsa5__RetryAfter(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsa5:ProblemAction"))
+		{	*type = SOAP_TYPE__wsa5__ProblemAction;
+			return soap_in__wsa5__ProblemAction(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsa5:FaultTo"))
+		{	*type = SOAP_TYPE__wsa5__FaultTo;
+			return soap_in__wsa5__FaultTo(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsa5:From"))
+		{	*type = SOAP_TYPE__wsa5__From;
+			return soap_in__wsa5__From(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsa5:ReplyTo"))
+		{	*type = SOAP_TYPE__wsa5__ReplyTo;
+			return soap_in__wsa5__ReplyTo(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsa5:RelatesTo"))
+		{	*type = SOAP_TYPE__wsa5__RelatesTo;
+			return soap_in__wsa5__RelatesTo(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsa5:Metadata"))
+		{	*type = SOAP_TYPE__wsa5__Metadata;
+			return soap_in__wsa5__Metadata(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsa5:ReferenceParameters"))
+		{	*type = SOAP_TYPE__wsa5__ReferenceParameters;
+			return soap_in__wsa5__ReferenceParameters(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsa5:EndpointReference"))
+		{	*type = SOAP_TYPE__wsa5__EndpointReference;
+			return soap_in__wsa5__EndpointReference(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsse:Security"))
+		{	*type = SOAP_TYPE__wsse__Security;
+			return soap_in__wsse__Security(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xenc:EncryptionProperty"))
+		{	*type = SOAP_TYPE__xenc__EncryptionProperty;
+			return soap_in__xenc__EncryptionProperty(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xenc:EncryptionProperties"))
+		{	*type = SOAP_TYPE__xenc__EncryptionProperties;
+			return soap_in__xenc__EncryptionProperties(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xenc:AgreementMethod"))
+		{	*type = SOAP_TYPE__xenc__AgreementMethod;
+			return soap_in__xenc__AgreementMethod(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xenc:EncryptedKey"))
+		{	*type = SOAP_TYPE__xenc__EncryptedKey;
+			return soap_in__xenc__EncryptedKey(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xenc:EncryptedData"))
+		{	*type = SOAP_TYPE__xenc__EncryptedData;
+			return soap_in__xenc__EncryptedData(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xenc:CipherReference"))
+		{	*type = SOAP_TYPE__xenc__CipherReference;
+			return soap_in__xenc__CipherReference(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xenc:CipherData"))
+		{	*type = SOAP_TYPE__xenc__CipherData;
+			return soap_in__xenc__CipherData(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xenc:ReferenceList"))
+		{	*type = SOAP_TYPE__xenc__ReferenceList;
+			return soap_in__xenc__ReferenceList(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ds:KeyInfo"))
+		{	*type = SOAP_TYPE__ds__KeyInfo;
+			return soap_in__ds__KeyInfo(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ds:Transform"))
+		{	*type = SOAP_TYPE__ds__Transform;
+			return soap_in__ds__Transform(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "c14n:InclusiveNamespaces"))
+		{	*type = SOAP_TYPE__c14n__InclusiveNamespaces;
+			return soap_in__c14n__InclusiveNamespaces(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ds:Signature"))
+		{	*type = SOAP_TYPE__ds__Signature;
+			return soap_in__ds__Signature(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsse:SecurityTokenReference"))
+		{	*type = SOAP_TYPE__wsse__SecurityTokenReference;
+			return soap_in__wsse__SecurityTokenReference(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsse:KeyIdentifier"))
+		{	*type = SOAP_TYPE__wsse__KeyIdentifier;
+			return soap_in__wsse__KeyIdentifier(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsse:Embedded"))
+		{	*type = SOAP_TYPE__wsse__Embedded;
+			return soap_in__wsse__Embedded(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsse:Reference"))
+		{	*type = SOAP_TYPE__wsse__Reference;
+			return soap_in__wsse__Reference(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsse:BinarySecurityToken"))
+		{	*type = SOAP_TYPE__wsse__BinarySecurityToken;
+			return soap_in__wsse__BinarySecurityToken(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsse:Password"))
+		{	*type = SOAP_TYPE__wsse__Password;
+			return soap_in__wsse__Password(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsse:UsernameToken"))
+		{	*type = SOAP_TYPE__wsse__UsernameToken;
+			return soap_in__wsse__UsernameToken(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsu:Timestamp"))
+		{	*type = SOAP_TYPE__wsu__Timestamp;
+			return soap_in__wsu__Timestamp(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "wsa5:ProblemIRI"))
+		{	char **s;
+			*type = SOAP_TYPE__wsa5__ProblemIRI;
+			s = soap_in__wsa5__ProblemIRI(soap, NULL, NULL, NULL);
+			return s ? *s : NULL;
+		}
+		if (!soap_match_tag(soap, t, "wsa5:Action"))
+		{	char **s;
+			*type = SOAP_TYPE__wsa5__Action;
+			s = soap_in__wsa5__Action(soap, NULL, NULL, NULL);
+			return s ? *s : NULL;
+		}
+		if (!soap_match_tag(soap, t, "wsa5:To"))
+		{	char **s;
+			*type = SOAP_TYPE__wsa5__To;
+			s = soap_in__wsa5__To(soap, NULL, NULL, NULL);
+			return s ? *s : NULL;
+		}
+		if (!soap_match_tag(soap, t, "wsa5:MessageID"))
+		{	char **s;
+			*type = SOAP_TYPE__wsa5__MessageID;
+			s = soap_in__wsa5__MessageID(soap, NULL, NULL, NULL);
+			return s ? *s : NULL;
+		}
 	}
 	}
 	soap->error = SOAP_TAG_MISMATCH;
@@ -264,6 +749,240 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_byte(soap, tag, id, (const char *)ptr, "xsd:byte");
 	case SOAP_TYPE_int:
 		return soap_out_int(soap, tag, id, (const int *)ptr, "xsd:int");
+	case SOAP_TYPE__wsa5__RetryAfter:
+		return soap_out__wsa5__RetryAfter(soap, "wsa5:RetryAfter", id, (const ULONG64 *)ptr, NULL);
+	case SOAP_TYPE_unsignedLONG64:
+		return soap_out_unsignedLONG64(soap, tag, id, (const ULONG64 *)ptr, "xsd:unsignedLong");
+	case SOAP_TYPE__wsa5__IsReferenceParameter:
+		return soap_out__wsa5__IsReferenceParameter(soap, tag, id, (const enum _wsa5__IsReferenceParameter *)ptr, "wsa5:IsReferenceParameter");
+	case SOAP_TYPE_wsa5__FaultCodesType:
+		return soap_out_wsa5__FaultCodesType(soap, tag, id, (const enum wsa5__FaultCodesType *)ptr, "wsa5:FaultCodesType");
+	case SOAP_TYPE_wsa5__RelationshipType:
+		return soap_out_wsa5__RelationshipType(soap, tag, id, (const enum wsa5__RelationshipType *)ptr, "wsa5:RelationshipType");
+	case SOAP_TYPE_wsse__FaultcodeEnum:
+		return soap_out_wsse__FaultcodeEnum(soap, tag, id, (const enum wsse__FaultcodeEnum *)ptr, "wsse:FaultcodeEnum");
+	case SOAP_TYPE_wsu__tTimestampFault:
+		return soap_out_wsu__tTimestampFault(soap, tag, id, (const enum wsu__tTimestampFault *)ptr, "wsu:tTimestampFault");
+	case SOAP_TYPE__wsa5__ProblemAction:
+		return soap_out__wsa5__ProblemAction(soap, "wsa5:ProblemAction", id, (const struct wsa5__ProblemActionType *)ptr, NULL);
+	case SOAP_TYPE__wsa5__FaultTo:
+		return soap_out__wsa5__FaultTo(soap, "wsa5:FaultTo", id, (const struct wsa5__EndpointReferenceType *)ptr, NULL);
+	case SOAP_TYPE__wsa5__From:
+		return soap_out__wsa5__From(soap, "wsa5:From", id, (const struct wsa5__EndpointReferenceType *)ptr, NULL);
+	case SOAP_TYPE__wsa5__ReplyTo:
+		return soap_out__wsa5__ReplyTo(soap, "wsa5:ReplyTo", id, (const struct wsa5__EndpointReferenceType *)ptr, NULL);
+	case SOAP_TYPE__wsa5__RelatesTo:
+		return soap_out__wsa5__RelatesTo(soap, "wsa5:RelatesTo", id, (const struct wsa5__RelatesToType *)ptr, NULL);
+	case SOAP_TYPE__wsa5__Metadata:
+		return soap_out__wsa5__Metadata(soap, "wsa5:Metadata", id, (const struct wsa5__MetadataType *)ptr, NULL);
+	case SOAP_TYPE__wsa5__ReferenceParameters:
+		return soap_out__wsa5__ReferenceParameters(soap, "wsa5:ReferenceParameters", id, (const struct wsa5__ReferenceParametersType *)ptr, NULL);
+	case SOAP_TYPE__wsa5__EndpointReference:
+		return soap_out__wsa5__EndpointReference(soap, "wsa5:EndpointReference", id, (const struct wsa5__EndpointReferenceType *)ptr, NULL);
+	case SOAP_TYPE_wsa5__ProblemActionType:
+		return soap_out_wsa5__ProblemActionType(soap, tag, id, (const struct wsa5__ProblemActionType *)ptr, "wsa5:ProblemActionType");
+	case SOAP_TYPE_wsa5__RelatesToType:
+		return soap_out_wsa5__RelatesToType(soap, tag, id, (const struct wsa5__RelatesToType *)ptr, "wsa5:RelatesToType");
+	case SOAP_TYPE_wsa5__MetadataType:
+		return soap_out_wsa5__MetadataType(soap, tag, id, (const struct wsa5__MetadataType *)ptr, "wsa5:MetadataType");
+	case SOAP_TYPE_wsa5__ReferenceParametersType:
+		return soap_out_wsa5__ReferenceParametersType(soap, tag, id, (const struct wsa5__ReferenceParametersType *)ptr, "wsa5:ReferenceParametersType");
+	case SOAP_TYPE_wsa5__EndpointReferenceType:
+		return soap_out_wsa5__EndpointReferenceType(soap, tag, id, (const struct wsa5__EndpointReferenceType *)ptr, "wsa5:EndpointReferenceType");
+	case SOAP_TYPE__wsse__Security:
+		return soap_out__wsse__Security(soap, "wsse:Security", id, (const struct _wsse__Security *)ptr, NULL);
+	case SOAP_TYPE__xenc__EncryptionProperty:
+		return soap_out__xenc__EncryptionProperty(soap, "xenc:EncryptionProperty", id, (const struct xenc__EncryptionPropertyType *)ptr, NULL);
+	case SOAP_TYPE__xenc__EncryptionProperties:
+		return soap_out__xenc__EncryptionProperties(soap, "xenc:EncryptionProperties", id, (const struct xenc__EncryptionPropertiesType *)ptr, NULL);
+	case SOAP_TYPE__xenc__AgreementMethod:
+		return soap_out__xenc__AgreementMethod(soap, "xenc:AgreementMethod", id, (const struct xenc__AgreementMethodType *)ptr, NULL);
+	case SOAP_TYPE__xenc__EncryptedKey:
+		return soap_out__xenc__EncryptedKey(soap, "xenc:EncryptedKey", id, (const struct xenc__EncryptedKeyType *)ptr, NULL);
+	case SOAP_TYPE__xenc__EncryptedData:
+		return soap_out__xenc__EncryptedData(soap, "xenc:EncryptedData", id, (const struct xenc__EncryptedDataType *)ptr, NULL);
+	case SOAP_TYPE__xenc__CipherReference:
+		return soap_out__xenc__CipherReference(soap, "xenc:CipherReference", id, (const struct xenc__CipherReferenceType *)ptr, NULL);
+	case SOAP_TYPE__xenc__CipherData:
+		return soap_out__xenc__CipherData(soap, "xenc:CipherData", id, (const struct xenc__CipherDataType *)ptr, NULL);
+	case SOAP_TYPE__xenc__ReferenceList:
+		return soap_out__xenc__ReferenceList(soap, "xenc:ReferenceList", id, (const struct _xenc__ReferenceList *)ptr, NULL);
+	case SOAP_TYPE_xenc__EncryptionPropertyType:
+		return soap_out_xenc__EncryptionPropertyType(soap, tag, id, (const struct xenc__EncryptionPropertyType *)ptr, "xenc:EncryptionPropertyType");
+	case SOAP_TYPE_xenc__EncryptionPropertiesType:
+		return soap_out_xenc__EncryptionPropertiesType(soap, tag, id, (const struct xenc__EncryptionPropertiesType *)ptr, "xenc:EncryptionPropertiesType");
+	case SOAP_TYPE_xenc__ReferenceType:
+		return soap_out_xenc__ReferenceType(soap, tag, id, (const struct xenc__ReferenceType *)ptr, "xenc:ReferenceType");
+	case SOAP_TYPE_xenc__AgreementMethodType:
+		return soap_out_xenc__AgreementMethodType(soap, tag, id, (const struct xenc__AgreementMethodType *)ptr, "xenc:AgreementMethodType");
+	case SOAP_TYPE_xenc__EncryptedKeyType:
+		return soap_out_xenc__EncryptedKeyType(soap, tag, id, (const struct xenc__EncryptedKeyType *)ptr, "xenc:EncryptedKeyType");
+	case SOAP_TYPE_xenc__EncryptedDataType:
+		return soap_out_xenc__EncryptedDataType(soap, tag, id, (const struct xenc__EncryptedDataType *)ptr, "xenc:EncryptedDataType");
+	case SOAP_TYPE_xenc__TransformsType:
+		return soap_out_xenc__TransformsType(soap, tag, id, (const struct xenc__TransformsType *)ptr, "xenc:TransformsType");
+	case SOAP_TYPE_xenc__CipherReferenceType:
+		return soap_out_xenc__CipherReferenceType(soap, tag, id, (const struct xenc__CipherReferenceType *)ptr, "xenc:CipherReferenceType");
+	case SOAP_TYPE_xenc__CipherDataType:
+		return soap_out_xenc__CipherDataType(soap, tag, id, (const struct xenc__CipherDataType *)ptr, "xenc:CipherDataType");
+	case SOAP_TYPE_xenc__EncryptionMethodType:
+		return soap_out_xenc__EncryptionMethodType(soap, tag, id, (const struct xenc__EncryptionMethodType *)ptr, "xenc:EncryptionMethodType");
+	case SOAP_TYPE_xenc__EncryptedType:
+		return soap_out_xenc__EncryptedType(soap, tag, id, (const struct xenc__EncryptedType *)ptr, "xenc:EncryptedType");
+	case SOAP_TYPE_ds__RSAKeyValueType:
+		return soap_out_ds__RSAKeyValueType(soap, tag, id, (const struct ds__RSAKeyValueType *)ptr, "ds:RSAKeyValueType");
+	case SOAP_TYPE_ds__DSAKeyValueType:
+		return soap_out_ds__DSAKeyValueType(soap, tag, id, (const struct ds__DSAKeyValueType *)ptr, "ds:DSAKeyValueType");
+	case SOAP_TYPE_ds__X509IssuerSerialType:
+		return soap_out_ds__X509IssuerSerialType(soap, tag, id, (const struct ds__X509IssuerSerialType *)ptr, "ds:X509IssuerSerialType");
+	case SOAP_TYPE__ds__KeyInfo:
+		return soap_out__ds__KeyInfo(soap, "ds:KeyInfo", id, (const struct ds__KeyInfoType *)ptr, NULL);
+	case SOAP_TYPE_ds__X509DataType:
+		return soap_out_ds__X509DataType(soap, tag, id, (const struct ds__X509DataType *)ptr, "ds:X509DataType");
+	case SOAP_TYPE_ds__RetrievalMethodType:
+		return soap_out_ds__RetrievalMethodType(soap, tag, id, (const struct ds__RetrievalMethodType *)ptr, "ds:RetrievalMethodType");
+	case SOAP_TYPE_ds__KeyValueType:
+		return soap_out_ds__KeyValueType(soap, tag, id, (const struct ds__KeyValueType *)ptr, "ds:KeyValueType");
+	case SOAP_TYPE_ds__DigestMethodType:
+		return soap_out_ds__DigestMethodType(soap, tag, id, (const struct ds__DigestMethodType *)ptr, "ds:DigestMethodType");
+	case SOAP_TYPE__ds__Transform:
+		return soap_out__ds__Transform(soap, "ds:Transform", id, (const struct ds__TransformType *)ptr, NULL);
+	case SOAP_TYPE_ds__TransformType:
+		return soap_out_ds__TransformType(soap, tag, id, (const struct ds__TransformType *)ptr, "ds:TransformType");
+	case SOAP_TYPE__c14n__InclusiveNamespaces:
+		return soap_out__c14n__InclusiveNamespaces(soap, "c14n:InclusiveNamespaces", id, (const struct _c14n__InclusiveNamespaces *)ptr, NULL);
+	case SOAP_TYPE_ds__TransformsType:
+		return soap_out_ds__TransformsType(soap, tag, id, (const struct ds__TransformsType *)ptr, "ds:TransformsType");
+	case SOAP_TYPE_ds__ReferenceType:
+		return soap_out_ds__ReferenceType(soap, tag, id, (const struct ds__ReferenceType *)ptr, "ds:ReferenceType");
+	case SOAP_TYPE_ds__SignatureMethodType:
+		return soap_out_ds__SignatureMethodType(soap, tag, id, (const struct ds__SignatureMethodType *)ptr, "ds:SignatureMethodType");
+	case SOAP_TYPE_ds__CanonicalizationMethodType:
+		return soap_out_ds__CanonicalizationMethodType(soap, tag, id, (const struct ds__CanonicalizationMethodType *)ptr, "ds:CanonicalizationMethodType");
+	case SOAP_TYPE__ds__Signature:
+		return soap_out__ds__Signature(soap, "ds:Signature", id, (const struct ds__SignatureType *)ptr, NULL);
+	case SOAP_TYPE_ds__KeyInfoType:
+		return soap_out_ds__KeyInfoType(soap, tag, id, (const struct ds__KeyInfoType *)ptr, "ds:KeyInfoType");
+	case SOAP_TYPE_ds__SignedInfoType:
+		return soap_out_ds__SignedInfoType(soap, tag, id, (const struct ds__SignedInfoType *)ptr, "ds:SignedInfoType");
+	case SOAP_TYPE_ds__SignatureType:
+		return soap_out_ds__SignatureType(soap, tag, id, (const struct ds__SignatureType *)ptr, "ds:SignatureType");
+	case SOAP_TYPE__wsse__SecurityTokenReference:
+		return soap_out__wsse__SecurityTokenReference(soap, "wsse:SecurityTokenReference", id, (const struct _wsse__SecurityTokenReference *)ptr, NULL);
+	case SOAP_TYPE__wsse__KeyIdentifier:
+		return soap_out__wsse__KeyIdentifier(soap, "wsse:KeyIdentifier", id, (const struct _wsse__KeyIdentifier *)ptr, NULL);
+	case SOAP_TYPE__wsse__Embedded:
+		return soap_out__wsse__Embedded(soap, "wsse:Embedded", id, (const struct _wsse__Embedded *)ptr, NULL);
+	case SOAP_TYPE__wsse__Reference:
+		return soap_out__wsse__Reference(soap, "wsse:Reference", id, (const struct _wsse__Reference *)ptr, NULL);
+	case SOAP_TYPE__wsse__BinarySecurityToken:
+		return soap_out__wsse__BinarySecurityToken(soap, "wsse:BinarySecurityToken", id, (const struct _wsse__BinarySecurityToken *)ptr, NULL);
+	case SOAP_TYPE__wsse__Password:
+		return soap_out__wsse__Password(soap, "wsse:Password", id, (const struct _wsse__Password *)ptr, NULL);
+	case SOAP_TYPE__wsse__UsernameToken:
+		return soap_out__wsse__UsernameToken(soap, "wsse:UsernameToken", id, (const struct _wsse__UsernameToken *)ptr, NULL);
+	case SOAP_TYPE__wsu__Timestamp:
+		return soap_out__wsu__Timestamp(soap, "wsu:Timestamp", id, (const struct _wsu__Timestamp *)ptr, NULL);
+	case SOAP_TYPE_PointerTo_wsa5__FaultTo:
+		return soap_out_PointerTo_wsa5__FaultTo(soap, tag, id, (struct wsa5__EndpointReferenceType *const*)ptr, "wsa5:FaultTo");
+	case SOAP_TYPE_PointerTo_wsa5__ReplyTo:
+		return soap_out_PointerTo_wsa5__ReplyTo(soap, tag, id, (struct wsa5__EndpointReferenceType *const*)ptr, "wsa5:ReplyTo");
+	case SOAP_TYPE_PointerTo_wsa5__From:
+		return soap_out_PointerTo_wsa5__From(soap, tag, id, (struct wsa5__EndpointReferenceType *const*)ptr, "wsa5:From");
+	case SOAP_TYPE_PointerTo_wsa5__RelatesTo:
+		return soap_out_PointerTo_wsa5__RelatesTo(soap, tag, id, (struct wsa5__RelatesToType *const*)ptr, "wsa5:RelatesTo");
+	case SOAP_TYPE__wsa5__ProblemIRI:
+		return soap_out_string(soap, "wsa5:ProblemIRI", id, (char*const*)&ptr, NULL);
+	case SOAP_TYPE__wsa5__ProblemHeaderQName:
+		return soap_out_string(soap, tag, id, (char*const*)&ptr, "xsd:QName");
+	case SOAP_TYPE__wsa5__Action:
+		return soap_out_string(soap, "wsa5:Action", id, (char*const*)&ptr, NULL);
+	case SOAP_TYPE__wsa5__To:
+		return soap_out_string(soap, "wsa5:To", id, (char*const*)&ptr, NULL);
+	case SOAP_TYPE__wsa5__MessageID:
+		return soap_out_string(soap, "wsa5:MessageID", id, (char*const*)&ptr, NULL);
+	case SOAP_TYPE_PointerTowsa5__MetadataType:
+		return soap_out_PointerTowsa5__MetadataType(soap, tag, id, (struct wsa5__MetadataType *const*)ptr, "wsa5:MetadataType");
+	case SOAP_TYPE_PointerTowsa5__ReferenceParametersType:
+		return soap_out_PointerTowsa5__ReferenceParametersType(soap, tag, id, (struct wsa5__ReferenceParametersType *const*)ptr, "wsa5:ReferenceParametersType");
+	case SOAP_TYPE_wsa5__FaultCodesOpenEnumType:
+		return soap_out_string(soap, tag, id, (char*const*)&ptr, "wsa5:FaultCodesOpenEnumType");
+	case SOAP_TYPE_wsa5__RelationshipTypeOpenEnum:
+		return soap_out_string(soap, tag, id, (char*const*)&ptr, "wsa5:RelationshipTypeOpenEnum");
+	case SOAP_TYPE_PointerTo_wsse__Security:
+		return soap_out_PointerTo_wsse__Security(soap, tag, id, (struct _wsse__Security *const*)ptr, "wsse:Security");
+	case SOAP_TYPE_PointerTods__SignatureType:
+		return soap_out_PointerTods__SignatureType(soap, tag, id, (struct ds__SignatureType *const*)ptr, "ds:SignatureType");
+	case SOAP_TYPE_PointerToxenc__EncryptedKeyType:
+		return soap_out_PointerToxenc__EncryptedKeyType(soap, tag, id, (struct xenc__EncryptedKeyType *const*)ptr, "xenc:EncryptedKeyType");
+	case SOAP_TYPE_PointerTo_wsse__BinarySecurityToken:
+		return soap_out_PointerTo_wsse__BinarySecurityToken(soap, tag, id, (struct _wsse__BinarySecurityToken *const*)ptr, "wsse:BinarySecurityToken");
+	case SOAP_TYPE_PointerTo_wsse__UsernameToken:
+		return soap_out_PointerTo_wsse__UsernameToken(soap, tag, id, (struct _wsse__UsernameToken *const*)ptr, "wsse:UsernameToken");
+	case SOAP_TYPE_PointerTo_wsu__Timestamp:
+		return soap_out_PointerTo_wsu__Timestamp(soap, tag, id, (struct _wsu__Timestamp *const*)ptr, "wsu:Timestamp");
+	case SOAP_TYPE_PointerTo_xenc__ReferenceList:
+		return soap_out_PointerTo_xenc__ReferenceList(soap, tag, id, (struct _xenc__ReferenceList *const*)ptr, "xenc:ReferenceList");
+	case SOAP_TYPE_PointerToxenc__ReferenceType:
+		return soap_out_PointerToxenc__ReferenceType(soap, tag, id, (struct xenc__ReferenceType *const*)ptr, "xenc:ReferenceType");
+	case SOAP_TYPE_PointerToxenc__EncryptionPropertyType:
+		return soap_out_PointerToxenc__EncryptionPropertyType(soap, tag, id, (struct xenc__EncryptionPropertyType *const*)ptr, "xenc:EncryptionPropertyType");
+	case SOAP_TYPE_PointerToxenc__TransformsType:
+		return soap_out_PointerToxenc__TransformsType(soap, tag, id, (struct xenc__TransformsType *const*)ptr, "xenc:TransformsType");
+	case SOAP_TYPE_PointerToxenc__CipherReferenceType:
+		return soap_out_PointerToxenc__CipherReferenceType(soap, tag, id, (struct xenc__CipherReferenceType *const*)ptr, "xenc:CipherReferenceType");
+	case SOAP_TYPE_PointerToxenc__EncryptionPropertiesType:
+		return soap_out_PointerToxenc__EncryptionPropertiesType(soap, tag, id, (struct xenc__EncryptionPropertiesType *const*)ptr, "xenc:EncryptionPropertiesType");
+	case SOAP_TYPE_PointerToxenc__CipherDataType:
+		return soap_out_PointerToxenc__CipherDataType(soap, tag, id, (struct xenc__CipherDataType *const*)ptr, "xenc:CipherDataType");
+	case SOAP_TYPE_PointerTo_ds__KeyInfo:
+		return soap_out_PointerTo_ds__KeyInfo(soap, tag, id, (struct ds__KeyInfoType *const*)ptr, "ds:KeyInfo");
+	case SOAP_TYPE_PointerToxenc__EncryptionMethodType:
+		return soap_out_PointerToxenc__EncryptionMethodType(soap, tag, id, (struct xenc__EncryptionMethodType *const*)ptr, "xenc:EncryptionMethodType");
+	case SOAP_TYPE_PointerTods__X509IssuerSerialType:
+		return soap_out_PointerTods__X509IssuerSerialType(soap, tag, id, (struct ds__X509IssuerSerialType *const*)ptr, "ds:X509IssuerSerialType");
+	case SOAP_TYPE_PointerTods__RSAKeyValueType:
+		return soap_out_PointerTods__RSAKeyValueType(soap, tag, id, (struct ds__RSAKeyValueType *const*)ptr, "ds:RSAKeyValueType");
+	case SOAP_TYPE_PointerTods__DSAKeyValueType:
+		return soap_out_PointerTods__DSAKeyValueType(soap, tag, id, (struct ds__DSAKeyValueType *const*)ptr, "ds:DSAKeyValueType");
+	case SOAP_TYPE_PointerTods__TransformType:
+		return soap_out_PointerTods__TransformType(soap, tag, id, (struct ds__TransformType *const*)ptr, "ds:TransformType");
+	case SOAP_TYPE_PointerTods__DigestMethodType:
+		return soap_out_PointerTods__DigestMethodType(soap, tag, id, (struct ds__DigestMethodType *const*)ptr, "ds:DigestMethodType");
+	case SOAP_TYPE_PointerTods__TransformsType:
+		return soap_out_PointerTods__TransformsType(soap, tag, id, (struct ds__TransformsType *const*)ptr, "ds:TransformsType");
+	case SOAP_TYPE_PointerToint:
+		return soap_out_PointerToint(soap, tag, id, (int *const*)ptr, "xsd:int");
+	case SOAP_TYPE_PointerToPointerTods__ReferenceType:
+		return soap_out_PointerToPointerTods__ReferenceType(soap, tag, id, (struct ds__ReferenceType **const*)ptr, "ds:ReferenceType");
+	case SOAP_TYPE_PointerTods__ReferenceType:
+		return soap_out_PointerTods__ReferenceType(soap, tag, id, (struct ds__ReferenceType *const*)ptr, "ds:ReferenceType");
+	case SOAP_TYPE_PointerTods__SignatureMethodType:
+		return soap_out_PointerTods__SignatureMethodType(soap, tag, id, (struct ds__SignatureMethodType *const*)ptr, "ds:SignatureMethodType");
+	case SOAP_TYPE_PointerTods__CanonicalizationMethodType:
+		return soap_out_PointerTods__CanonicalizationMethodType(soap, tag, id, (struct ds__CanonicalizationMethodType *const*)ptr, "ds:CanonicalizationMethodType");
+	case SOAP_TYPE_PointerTo_wsse__SecurityTokenReference:
+		return soap_out_PointerTo_wsse__SecurityTokenReference(soap, tag, id, (struct _wsse__SecurityTokenReference *const*)ptr, "wsse:SecurityTokenReference");
+	case SOAP_TYPE_PointerTods__X509DataType:
+		return soap_out_PointerTods__X509DataType(soap, tag, id, (struct ds__X509DataType *const*)ptr, "ds:X509DataType");
+	case SOAP_TYPE_PointerTods__RetrievalMethodType:
+		return soap_out_PointerTods__RetrievalMethodType(soap, tag, id, (struct ds__RetrievalMethodType *const*)ptr, "ds:RetrievalMethodType");
+	case SOAP_TYPE_PointerTods__KeyValueType:
+		return soap_out_PointerTods__KeyValueType(soap, tag, id, (struct ds__KeyValueType *const*)ptr, "ds:KeyValueType");
+	case SOAP_TYPE_PointerTo_c14n__InclusiveNamespaces:
+		return soap_out_PointerTo_c14n__InclusiveNamespaces(soap, tag, id, (struct _c14n__InclusiveNamespaces *const*)ptr, "c14n:InclusiveNamespaces");
+	case SOAP_TYPE_PointerTods__KeyInfoType:
+		return soap_out_PointerTods__KeyInfoType(soap, tag, id, (struct ds__KeyInfoType *const*)ptr, "ds:KeyInfoType");
+	case SOAP_TYPE_PointerTods__SignedInfoType:
+		return soap_out_PointerTods__SignedInfoType(soap, tag, id, (struct ds__SignedInfoType *const*)ptr, "ds:SignedInfoType");
+	case SOAP_TYPE_PointerTo_wsse__Embedded:
+		return soap_out_PointerTo_wsse__Embedded(soap, tag, id, (struct _wsse__Embedded *const*)ptr, "wsse:Embedded");
+	case SOAP_TYPE_PointerTo_wsse__KeyIdentifier:
+		return soap_out_PointerTo_wsse__KeyIdentifier(soap, tag, id, (struct _wsse__KeyIdentifier *const*)ptr, "wsse:KeyIdentifier");
+	case SOAP_TYPE_PointerTo_wsse__Reference:
+		return soap_out_PointerTo_wsse__Reference(soap, tag, id, (struct _wsse__Reference *const*)ptr, "wsse:Reference");
+	case SOAP_TYPE_PointerTo_wsse__Password:
+		return soap_out_PointerTo_wsse__Password(soap, tag, id, (struct _wsse__Password *const*)ptr, "wsse:Password");
 	case SOAP_TYPE__QName:
 		return soap_out_string(soap, tag, id, (char*const*)&ptr, "xsd:QName");
 	case SOAP_TYPE_string:
@@ -279,6 +998,342 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	(void)soap; (void)ptr; (void)type; /* appease -Wall -Werror */
 	switch (type)
 	{
+	case SOAP_TYPE__wsa5__ProblemAction:
+		soap_serialize__wsa5__ProblemAction(soap, (const struct wsa5__ProblemActionType *)ptr);
+		break;
+	case SOAP_TYPE__wsa5__FaultTo:
+		soap_serialize__wsa5__FaultTo(soap, (const struct wsa5__EndpointReferenceType *)ptr);
+		break;
+	case SOAP_TYPE__wsa5__From:
+		soap_serialize__wsa5__From(soap, (const struct wsa5__EndpointReferenceType *)ptr);
+		break;
+	case SOAP_TYPE__wsa5__ReplyTo:
+		soap_serialize__wsa5__ReplyTo(soap, (const struct wsa5__EndpointReferenceType *)ptr);
+		break;
+	case SOAP_TYPE__wsa5__RelatesTo:
+		soap_serialize__wsa5__RelatesTo(soap, (const struct wsa5__RelatesToType *)ptr);
+		break;
+	case SOAP_TYPE__wsa5__Metadata:
+		soap_serialize__wsa5__Metadata(soap, (const struct wsa5__MetadataType *)ptr);
+		break;
+	case SOAP_TYPE__wsa5__ReferenceParameters:
+		soap_serialize__wsa5__ReferenceParameters(soap, (const struct wsa5__ReferenceParametersType *)ptr);
+		break;
+	case SOAP_TYPE__wsa5__EndpointReference:
+		soap_serialize__wsa5__EndpointReference(soap, (const struct wsa5__EndpointReferenceType *)ptr);
+		break;
+	case SOAP_TYPE_wsa5__ProblemActionType:
+		soap_serialize_wsa5__ProblemActionType(soap, (const struct wsa5__ProblemActionType *)ptr);
+		break;
+	case SOAP_TYPE_wsa5__RelatesToType:
+		soap_serialize_wsa5__RelatesToType(soap, (const struct wsa5__RelatesToType *)ptr);
+		break;
+	case SOAP_TYPE_wsa5__MetadataType:
+		soap_serialize_wsa5__MetadataType(soap, (const struct wsa5__MetadataType *)ptr);
+		break;
+	case SOAP_TYPE_wsa5__ReferenceParametersType:
+		soap_serialize_wsa5__ReferenceParametersType(soap, (const struct wsa5__ReferenceParametersType *)ptr);
+		break;
+	case SOAP_TYPE_wsa5__EndpointReferenceType:
+		soap_serialize_wsa5__EndpointReferenceType(soap, (const struct wsa5__EndpointReferenceType *)ptr);
+		break;
+	case SOAP_TYPE__wsse__Security:
+		soap_serialize__wsse__Security(soap, (const struct _wsse__Security *)ptr);
+		break;
+	case SOAP_TYPE__xenc__EncryptionProperty:
+		soap_serialize__xenc__EncryptionProperty(soap, (const struct xenc__EncryptionPropertyType *)ptr);
+		break;
+	case SOAP_TYPE__xenc__EncryptionProperties:
+		soap_serialize__xenc__EncryptionProperties(soap, (const struct xenc__EncryptionPropertiesType *)ptr);
+		break;
+	case SOAP_TYPE__xenc__AgreementMethod:
+		soap_serialize__xenc__AgreementMethod(soap, (const struct xenc__AgreementMethodType *)ptr);
+		break;
+	case SOAP_TYPE__xenc__EncryptedKey:
+		soap_serialize__xenc__EncryptedKey(soap, (const struct xenc__EncryptedKeyType *)ptr);
+		break;
+	case SOAP_TYPE__xenc__EncryptedData:
+		soap_serialize__xenc__EncryptedData(soap, (const struct xenc__EncryptedDataType *)ptr);
+		break;
+	case SOAP_TYPE__xenc__CipherReference:
+		soap_serialize__xenc__CipherReference(soap, (const struct xenc__CipherReferenceType *)ptr);
+		break;
+	case SOAP_TYPE__xenc__CipherData:
+		soap_serialize__xenc__CipherData(soap, (const struct xenc__CipherDataType *)ptr);
+		break;
+	case SOAP_TYPE___xenc__union_ReferenceList:
+		soap_serialize___xenc__union_ReferenceList(soap, (const struct __xenc__union_ReferenceList *)ptr);
+		break;
+	case SOAP_TYPE__xenc__ReferenceList:
+		soap_serialize__xenc__ReferenceList(soap, (const struct _xenc__ReferenceList *)ptr);
+		break;
+	case SOAP_TYPE_xenc__EncryptionPropertyType:
+		soap_serialize_xenc__EncryptionPropertyType(soap, (const struct xenc__EncryptionPropertyType *)ptr);
+		break;
+	case SOAP_TYPE_xenc__EncryptionPropertiesType:
+		soap_serialize_xenc__EncryptionPropertiesType(soap, (const struct xenc__EncryptionPropertiesType *)ptr);
+		break;
+	case SOAP_TYPE_xenc__ReferenceType:
+		soap_serialize_xenc__ReferenceType(soap, (const struct xenc__ReferenceType *)ptr);
+		break;
+	case SOAP_TYPE_xenc__AgreementMethodType:
+		soap_serialize_xenc__AgreementMethodType(soap, (const struct xenc__AgreementMethodType *)ptr);
+		break;
+	case SOAP_TYPE_xenc__EncryptedKeyType:
+		soap_serialize_xenc__EncryptedKeyType(soap, (const struct xenc__EncryptedKeyType *)ptr);
+		break;
+	case SOAP_TYPE_xenc__EncryptedDataType:
+		soap_serialize_xenc__EncryptedDataType(soap, (const struct xenc__EncryptedDataType *)ptr);
+		break;
+	case SOAP_TYPE_xenc__TransformsType:
+		soap_serialize_xenc__TransformsType(soap, (const struct xenc__TransformsType *)ptr);
+		break;
+	case SOAP_TYPE_xenc__CipherReferenceType:
+		soap_serialize_xenc__CipherReferenceType(soap, (const struct xenc__CipherReferenceType *)ptr);
+		break;
+	case SOAP_TYPE_xenc__CipherDataType:
+		soap_serialize_xenc__CipherDataType(soap, (const struct xenc__CipherDataType *)ptr);
+		break;
+	case SOAP_TYPE_xenc__EncryptionMethodType:
+		soap_serialize_xenc__EncryptionMethodType(soap, (const struct xenc__EncryptionMethodType *)ptr);
+		break;
+	case SOAP_TYPE_xenc__EncryptedType:
+		soap_serialize_xenc__EncryptedType(soap, (const struct xenc__EncryptedType *)ptr);
+		break;
+	case SOAP_TYPE_ds__RSAKeyValueType:
+		soap_serialize_ds__RSAKeyValueType(soap, (const struct ds__RSAKeyValueType *)ptr);
+		break;
+	case SOAP_TYPE_ds__DSAKeyValueType:
+		soap_serialize_ds__DSAKeyValueType(soap, (const struct ds__DSAKeyValueType *)ptr);
+		break;
+	case SOAP_TYPE_ds__X509IssuerSerialType:
+		soap_serialize_ds__X509IssuerSerialType(soap, (const struct ds__X509IssuerSerialType *)ptr);
+		break;
+	case SOAP_TYPE__ds__KeyInfo:
+		soap_serialize__ds__KeyInfo(soap, (const struct ds__KeyInfoType *)ptr);
+		break;
+	case SOAP_TYPE_ds__X509DataType:
+		soap_serialize_ds__X509DataType(soap, (const struct ds__X509DataType *)ptr);
+		break;
+	case SOAP_TYPE_ds__RetrievalMethodType:
+		soap_serialize_ds__RetrievalMethodType(soap, (const struct ds__RetrievalMethodType *)ptr);
+		break;
+	case SOAP_TYPE_ds__KeyValueType:
+		soap_serialize_ds__KeyValueType(soap, (const struct ds__KeyValueType *)ptr);
+		break;
+	case SOAP_TYPE_ds__DigestMethodType:
+		soap_serialize_ds__DigestMethodType(soap, (const struct ds__DigestMethodType *)ptr);
+		break;
+	case SOAP_TYPE__ds__Transform:
+		soap_serialize__ds__Transform(soap, (const struct ds__TransformType *)ptr);
+		break;
+	case SOAP_TYPE_ds__TransformType:
+		soap_serialize_ds__TransformType(soap, (const struct ds__TransformType *)ptr);
+		break;
+	case SOAP_TYPE__c14n__InclusiveNamespaces:
+		soap_serialize__c14n__InclusiveNamespaces(soap, (const struct _c14n__InclusiveNamespaces *)ptr);
+		break;
+	case SOAP_TYPE_ds__TransformsType:
+		soap_serialize_ds__TransformsType(soap, (const struct ds__TransformsType *)ptr);
+		break;
+	case SOAP_TYPE_ds__ReferenceType:
+		soap_serialize_ds__ReferenceType(soap, (const struct ds__ReferenceType *)ptr);
+		break;
+	case SOAP_TYPE_ds__SignatureMethodType:
+		soap_serialize_ds__SignatureMethodType(soap, (const struct ds__SignatureMethodType *)ptr);
+		break;
+	case SOAP_TYPE_ds__CanonicalizationMethodType:
+		soap_serialize_ds__CanonicalizationMethodType(soap, (const struct ds__CanonicalizationMethodType *)ptr);
+		break;
+	case SOAP_TYPE__ds__Signature:
+		soap_serialize__ds__Signature(soap, (const struct ds__SignatureType *)ptr);
+		break;
+	case SOAP_TYPE_ds__KeyInfoType:
+		soap_serialize_ds__KeyInfoType(soap, (const struct ds__KeyInfoType *)ptr);
+		break;
+	case SOAP_TYPE_ds__SignedInfoType:
+		soap_serialize_ds__SignedInfoType(soap, (const struct ds__SignedInfoType *)ptr);
+		break;
+	case SOAP_TYPE_ds__SignatureType:
+		soap_serialize_ds__SignatureType(soap, (const struct ds__SignatureType *)ptr);
+		break;
+	case SOAP_TYPE__wsse__SecurityTokenReference:
+		soap_serialize__wsse__SecurityTokenReference(soap, (const struct _wsse__SecurityTokenReference *)ptr);
+		break;
+	case SOAP_TYPE__wsse__KeyIdentifier:
+		soap_serialize__wsse__KeyIdentifier(soap, (const struct _wsse__KeyIdentifier *)ptr);
+		break;
+	case SOAP_TYPE__wsse__Embedded:
+		soap_serialize__wsse__Embedded(soap, (const struct _wsse__Embedded *)ptr);
+		break;
+	case SOAP_TYPE__wsse__Reference:
+		soap_serialize__wsse__Reference(soap, (const struct _wsse__Reference *)ptr);
+		break;
+	case SOAP_TYPE__wsse__BinarySecurityToken:
+		soap_serialize__wsse__BinarySecurityToken(soap, (const struct _wsse__BinarySecurityToken *)ptr);
+		break;
+	case SOAP_TYPE__wsse__Password:
+		soap_serialize__wsse__Password(soap, (const struct _wsse__Password *)ptr);
+		break;
+	case SOAP_TYPE__wsse__UsernameToken:
+		soap_serialize__wsse__UsernameToken(soap, (const struct _wsse__UsernameToken *)ptr);
+		break;
+	case SOAP_TYPE__wsu__Timestamp:
+		soap_serialize__wsu__Timestamp(soap, (const struct _wsu__Timestamp *)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_wsa5__FaultTo:
+		soap_serialize_PointerTo_wsa5__FaultTo(soap, (struct wsa5__EndpointReferenceType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_wsa5__ReplyTo:
+		soap_serialize_PointerTo_wsa5__ReplyTo(soap, (struct wsa5__EndpointReferenceType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_wsa5__From:
+		soap_serialize_PointerTo_wsa5__From(soap, (struct wsa5__EndpointReferenceType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_wsa5__RelatesTo:
+		soap_serialize_PointerTo_wsa5__RelatesTo(soap, (struct wsa5__RelatesToType *const*)ptr);
+		break;
+	case SOAP_TYPE__wsa5__ProblemIRI:
+		soap_serialize_string(soap, (char*const*)&ptr);
+		break;
+	case SOAP_TYPE__wsa5__ProblemHeaderQName:
+		soap_serialize_string(soap, (char*const*)&ptr);
+		break;
+	case SOAP_TYPE__wsa5__Action:
+		soap_serialize_string(soap, (char*const*)&ptr);
+		break;
+	case SOAP_TYPE__wsa5__To:
+		soap_serialize_string(soap, (char*const*)&ptr);
+		break;
+	case SOAP_TYPE__wsa5__MessageID:
+		soap_serialize_string(soap, (char*const*)&ptr);
+		break;
+	case SOAP_TYPE_PointerTowsa5__MetadataType:
+		soap_serialize_PointerTowsa5__MetadataType(soap, (struct wsa5__MetadataType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTowsa5__ReferenceParametersType:
+		soap_serialize_PointerTowsa5__ReferenceParametersType(soap, (struct wsa5__ReferenceParametersType *const*)ptr);
+		break;
+	case SOAP_TYPE_wsa5__FaultCodesOpenEnumType:
+		soap_serialize_string(soap, (char*const*)&ptr);
+		break;
+	case SOAP_TYPE_wsa5__RelationshipTypeOpenEnum:
+		soap_serialize_string(soap, (char*const*)&ptr);
+		break;
+	case SOAP_TYPE_PointerTo_wsse__Security:
+		soap_serialize_PointerTo_wsse__Security(soap, (struct _wsse__Security *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTods__SignatureType:
+		soap_serialize_PointerTods__SignatureType(soap, (struct ds__SignatureType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerToxenc__EncryptedKeyType:
+		soap_serialize_PointerToxenc__EncryptedKeyType(soap, (struct xenc__EncryptedKeyType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_wsse__BinarySecurityToken:
+		soap_serialize_PointerTo_wsse__BinarySecurityToken(soap, (struct _wsse__BinarySecurityToken *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_wsse__UsernameToken:
+		soap_serialize_PointerTo_wsse__UsernameToken(soap, (struct _wsse__UsernameToken *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_wsu__Timestamp:
+		soap_serialize_PointerTo_wsu__Timestamp(soap, (struct _wsu__Timestamp *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_xenc__ReferenceList:
+		soap_serialize_PointerTo_xenc__ReferenceList(soap, (struct _xenc__ReferenceList *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo__xenc__union_ReferenceList:
+		soap_serialize_PointerTo__xenc__union_ReferenceList(soap, (struct __xenc__union_ReferenceList *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerToxenc__ReferenceType:
+		soap_serialize_PointerToxenc__ReferenceType(soap, (struct xenc__ReferenceType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerToxenc__EncryptionPropertyType:
+		soap_serialize_PointerToxenc__EncryptionPropertyType(soap, (struct xenc__EncryptionPropertyType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerToxenc__TransformsType:
+		soap_serialize_PointerToxenc__TransformsType(soap, (struct xenc__TransformsType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerToxenc__CipherReferenceType:
+		soap_serialize_PointerToxenc__CipherReferenceType(soap, (struct xenc__CipherReferenceType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerToxenc__EncryptionPropertiesType:
+		soap_serialize_PointerToxenc__EncryptionPropertiesType(soap, (struct xenc__EncryptionPropertiesType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerToxenc__CipherDataType:
+		soap_serialize_PointerToxenc__CipherDataType(soap, (struct xenc__CipherDataType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ds__KeyInfo:
+		soap_serialize_PointerTo_ds__KeyInfo(soap, (struct ds__KeyInfoType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerToxenc__EncryptionMethodType:
+		soap_serialize_PointerToxenc__EncryptionMethodType(soap, (struct xenc__EncryptionMethodType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTods__X509IssuerSerialType:
+		soap_serialize_PointerTods__X509IssuerSerialType(soap, (struct ds__X509IssuerSerialType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTods__RSAKeyValueType:
+		soap_serialize_PointerTods__RSAKeyValueType(soap, (struct ds__RSAKeyValueType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTods__DSAKeyValueType:
+		soap_serialize_PointerTods__DSAKeyValueType(soap, (struct ds__DSAKeyValueType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTods__TransformType:
+		soap_serialize_PointerTods__TransformType(soap, (struct ds__TransformType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTods__DigestMethodType:
+		soap_serialize_PointerTods__DigestMethodType(soap, (struct ds__DigestMethodType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTods__TransformsType:
+		soap_serialize_PointerTods__TransformsType(soap, (struct ds__TransformsType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerToint:
+		soap_serialize_PointerToint(soap, (int *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerToPointerTods__ReferenceType:
+		soap_serialize_PointerToPointerTods__ReferenceType(soap, (struct ds__ReferenceType **const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTods__ReferenceType:
+		soap_serialize_PointerTods__ReferenceType(soap, (struct ds__ReferenceType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTods__SignatureMethodType:
+		soap_serialize_PointerTods__SignatureMethodType(soap, (struct ds__SignatureMethodType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTods__CanonicalizationMethodType:
+		soap_serialize_PointerTods__CanonicalizationMethodType(soap, (struct ds__CanonicalizationMethodType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_wsse__SecurityTokenReference:
+		soap_serialize_PointerTo_wsse__SecurityTokenReference(soap, (struct _wsse__SecurityTokenReference *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTods__X509DataType:
+		soap_serialize_PointerTods__X509DataType(soap, (struct ds__X509DataType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTods__RetrievalMethodType:
+		soap_serialize_PointerTods__RetrievalMethodType(soap, (struct ds__RetrievalMethodType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTods__KeyValueType:
+		soap_serialize_PointerTods__KeyValueType(soap, (struct ds__KeyValueType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_c14n__InclusiveNamespaces:
+		soap_serialize_PointerTo_c14n__InclusiveNamespaces(soap, (struct _c14n__InclusiveNamespaces *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTods__KeyInfoType:
+		soap_serialize_PointerTods__KeyInfoType(soap, (struct ds__KeyInfoType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTods__SignedInfoType:
+		soap_serialize_PointerTods__SignedInfoType(soap, (struct ds__SignedInfoType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_wsse__Embedded:
+		soap_serialize_PointerTo_wsse__Embedded(soap, (struct _wsse__Embedded *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_wsse__KeyIdentifier:
+		soap_serialize_PointerTo_wsse__KeyIdentifier(soap, (struct _wsse__KeyIdentifier *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_wsse__Reference:
+		soap_serialize_PointerTo_wsse__Reference(soap, (struct _wsse__Reference *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_wsse__Password:
+		soap_serialize_PointerTo_wsse__Password(soap, (struct _wsse__Password *const*)ptr);
+		break;
 	case SOAP_TYPE__QName:
 		soap_serialize_string(soap, (char*const*)&ptr);
 		break;
@@ -358,6 +1413,468 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_put_int(struct soap *soap, const int *a, const ch
 SOAP_FMAC3 int * SOAP_FMAC4 soap_get_int(struct soap *soap, int *p, const char *tag, const char *type)
 {
 	if ((p = soap_in_int(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_unsignedLONG64(struct soap *soap, ULONG64 *a)
+{
+	(void)soap; /* appease -Wall -Werror */
+#ifdef SOAP_DEFAULT_unsignedLONG64
+	*a = SOAP_DEFAULT_unsignedLONG64;
+#else
+	*a = (ULONG64)0;
+#endif
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_unsignedLONG64(struct soap *soap, const char *tag, int id, const ULONG64 *a, const char *type)
+{
+	return soap_outULONG64(soap, tag, id, a, type, SOAP_TYPE_unsignedLONG64);
+}
+
+SOAP_FMAC3 ULONG64 * SOAP_FMAC4 soap_in_unsignedLONG64(struct soap *soap, const char *tag, ULONG64 *a, const char *type)
+{	ULONG64 *p;
+	p = soap_inULONG64(soap, tag, a, type, SOAP_TYPE_unsignedLONG64);
+	return p;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_unsignedLONG64(struct soap *soap, const ULONG64 *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_unsignedLONG64);
+	if (soap_out_unsignedLONG64(soap, tag?tag:"unsignedLong", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 ULONG64 * SOAP_FMAC4 soap_get_unsignedLONG64(struct soap *soap, ULONG64 *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_unsignedLONG64(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__wsa5__IsReferenceParameter(struct soap *soap, enum _wsa5__IsReferenceParameter *a)
+{
+	(void)soap; /* appease -Wall -Werror */
+#ifdef SOAP_DEFAULT__wsa5__IsReferenceParameter
+	*a = SOAP_DEFAULT__wsa5__IsReferenceParameter;
+#else
+	*a = (enum _wsa5__IsReferenceParameter)0;
+#endif
+}
+
+static const struct soap_code_map soap_codes__wsa5__IsReferenceParameter[] =
+{	{ (long)wsa5__false, "wsa5:false" },
+	{ (long)wsa5__true, "wsa5:true" },
+	{ 0, NULL }
+};
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap__wsa5__IsReferenceParameter2s(struct soap *soap, enum _wsa5__IsReferenceParameter n)
+{	const char *s = soap_code_str(soap_codes__wsa5__IsReferenceParameter, (long)n);
+	if (s)
+		return s;
+	return soap_long2s(soap, (long)n);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsa5__IsReferenceParameter(struct soap *soap, const char *tag, int id, const enum _wsa5__IsReferenceParameter *a, const char *type)
+{	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__wsa5__IsReferenceParameter), type) || soap_send(soap, soap__wsa5__IsReferenceParameter2s(soap, *a)))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2_wsa5__IsReferenceParameter(struct soap *soap, const char *s, enum _wsa5__IsReferenceParameter *a)
+{
+	const struct soap_code_map *map;
+	char *t;
+	if (!s)
+		return soap->error;
+	soap_s2QName(soap, s, &t, -1, -1);
+	map = soap_code(soap_codes__wsa5__IsReferenceParameter, t);
+	if (map)
+		*a = (enum _wsa5__IsReferenceParameter)map->code;
+	else
+	{	long n;
+		if (soap_s2long(soap, s, &n) || ((soap->mode & SOAP_XML_STRICT) && (n < 0 || n > 1)))
+			return soap->error = SOAP_TYPE;
+		*a = (enum _wsa5__IsReferenceParameter)n;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 enum _wsa5__IsReferenceParameter * SOAP_FMAC4 soap_in__wsa5__IsReferenceParameter(struct soap *soap, const char *tag, enum _wsa5__IsReferenceParameter *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (enum _wsa5__IsReferenceParameter *)soap_id_enter(soap, soap->id, a, SOAP_TYPE__wsa5__IsReferenceParameter, sizeof(enum _wsa5__IsReferenceParameter), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	if (soap->body && !*soap->href)
+	{	if (!a || soap_s2_wsa5__IsReferenceParameter(soap, soap_value(soap), a) || soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (enum _wsa5__IsReferenceParameter *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE__wsa5__IsReferenceParameter, 0, sizeof(enum _wsa5__IsReferenceParameter), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsa5__IsReferenceParameter(struct soap *soap, const enum _wsa5__IsReferenceParameter *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE__wsa5__IsReferenceParameter);
+	if (soap_out__wsa5__IsReferenceParameter(soap, tag?tag:"wsa5:IsReferenceParameter", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 enum _wsa5__IsReferenceParameter * SOAP_FMAC4 soap_get__wsa5__IsReferenceParameter(struct soap *soap, enum _wsa5__IsReferenceParameter *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__wsa5__IsReferenceParameter(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_wsa5__FaultCodesType(struct soap *soap, enum wsa5__FaultCodesType *a)
+{
+	(void)soap; /* appease -Wall -Werror */
+#ifdef SOAP_DEFAULT_wsa5__FaultCodesType
+	*a = SOAP_DEFAULT_wsa5__FaultCodesType;
+#else
+	*a = (enum wsa5__FaultCodesType)0;
+#endif
+}
+
+static const struct soap_code_map soap_codes_wsa5__FaultCodesType[] =
+{	{ (long)wsa5__InvalidAddressingHeader, "wsa5:InvalidAddressingHeader" },
+	{ (long)wsa5__InvalidAddress, "wsa5:InvalidAddress" },
+	{ (long)wsa5__InvalidEPR, "wsa5:InvalidEPR" },
+	{ (long)wsa5__InvalidCardinality, "wsa5:InvalidCardinality" },
+	{ (long)wsa5__MissingAddressInEPR, "wsa5:MissingAddressInEPR" },
+	{ (long)wsa5__DuplicateMessageID, "wsa5:DuplicateMessageID" },
+	{ (long)wsa5__ActionMismatch, "wsa5:ActionMismatch" },
+	{ (long)wsa5__MessageAddressingHeaderRequired, "wsa5:MessageAddressingHeaderRequired" },
+	{ (long)wsa5__DestinationUnreachable, "wsa5:DestinationUnreachable" },
+	{ (long)wsa5__ActionNotSupported, "wsa5:ActionNotSupported" },
+	{ (long)wsa5__EndpointUnavailable, "wsa5:EndpointUnavailable" },
+	{ 0, NULL }
+};
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_wsa5__FaultCodesType2s(struct soap *soap, enum wsa5__FaultCodesType n)
+{	const char *s = soap_code_str(soap_codes_wsa5__FaultCodesType, (long)n);
+	if (s)
+		return s;
+	return soap_long2s(soap, (long)n);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__FaultCodesType(struct soap *soap, const char *tag, int id, const enum wsa5__FaultCodesType *a, const char *type)
+{	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_wsa5__FaultCodesType), type) || soap_send(soap, soap_wsa5__FaultCodesType2s(soap, *a)))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2wsa5__FaultCodesType(struct soap *soap, const char *s, enum wsa5__FaultCodesType *a)
+{
+	const struct soap_code_map *map;
+	char *t;
+	if (!s)
+		return soap->error;
+	soap_s2QName(soap, s, &t, -1, -1);
+	map = soap_code(soap_codes_wsa5__FaultCodesType, t);
+	if (map)
+		*a = (enum wsa5__FaultCodesType)map->code;
+	else
+	{	long n;
+		if (soap_s2long(soap, s, &n) || ((soap->mode & SOAP_XML_STRICT) && (n < 0 || n > 10)))
+			return soap->error = SOAP_TYPE;
+		*a = (enum wsa5__FaultCodesType)n;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 enum wsa5__FaultCodesType * SOAP_FMAC4 soap_in_wsa5__FaultCodesType(struct soap *soap, const char *tag, enum wsa5__FaultCodesType *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (enum wsa5__FaultCodesType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_wsa5__FaultCodesType, sizeof(enum wsa5__FaultCodesType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	if (soap->body && !*soap->href)
+	{	if (!a || soap_s2wsa5__FaultCodesType(soap, soap_value(soap), a) || soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (enum wsa5__FaultCodesType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_wsa5__FaultCodesType, 0, sizeof(enum wsa5__FaultCodesType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsa5__FaultCodesType(struct soap *soap, const enum wsa5__FaultCodesType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_wsa5__FaultCodesType);
+	if (soap_out_wsa5__FaultCodesType(soap, tag?tag:"wsa5:FaultCodesType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 enum wsa5__FaultCodesType * SOAP_FMAC4 soap_get_wsa5__FaultCodesType(struct soap *soap, enum wsa5__FaultCodesType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_wsa5__FaultCodesType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_wsa5__RelationshipType(struct soap *soap, enum wsa5__RelationshipType *a)
+{
+	(void)soap; /* appease -Wall -Werror */
+#ifdef SOAP_DEFAULT_wsa5__RelationshipType
+	*a = SOAP_DEFAULT_wsa5__RelationshipType;
+#else
+	*a = (enum wsa5__RelationshipType)0;
+#endif
+}
+
+static const struct soap_code_map soap_codes_wsa5__RelationshipType[] =
+{	{ (long)http_x003a_x002f_x002fwww_x002ew3_x002eorg_x002f2005_x002f08_x002faddressing_x002freply, "http://www.w3.org/2005/08/addressing/reply" },
+	{ 0, NULL }
+};
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_wsa5__RelationshipType2s(struct soap *soap, enum wsa5__RelationshipType n)
+{	const char *s = soap_code_str(soap_codes_wsa5__RelationshipType, (long)n);
+	if (s)
+		return s;
+	return soap_long2s(soap, (long)n);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__RelationshipType(struct soap *soap, const char *tag, int id, const enum wsa5__RelationshipType *a, const char *type)
+{	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_wsa5__RelationshipType), type) || soap_send(soap, soap_wsa5__RelationshipType2s(soap, *a)))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2wsa5__RelationshipType(struct soap *soap, const char *s, enum wsa5__RelationshipType *a)
+{
+	const struct soap_code_map *map;
+	if (!s)
+		return soap->error;
+	map = soap_code(soap_codes_wsa5__RelationshipType, s);
+	if (map)
+		*a = (enum wsa5__RelationshipType)map->code;
+	else
+	{	long n;
+		if (soap_s2long(soap, s, &n) || ((soap->mode & SOAP_XML_STRICT) && (n < 0 || n > 0)))
+			return soap->error = SOAP_TYPE;
+		*a = (enum wsa5__RelationshipType)n;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 enum wsa5__RelationshipType * SOAP_FMAC4 soap_in_wsa5__RelationshipType(struct soap *soap, const char *tag, enum wsa5__RelationshipType *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (enum wsa5__RelationshipType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_wsa5__RelationshipType, sizeof(enum wsa5__RelationshipType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	if (soap->body && !*soap->href)
+	{	if (!a || soap_s2wsa5__RelationshipType(soap, soap_value(soap), a) || soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (enum wsa5__RelationshipType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_wsa5__RelationshipType, 0, sizeof(enum wsa5__RelationshipType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsa5__RelationshipType(struct soap *soap, const enum wsa5__RelationshipType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_wsa5__RelationshipType);
+	if (soap_out_wsa5__RelationshipType(soap, tag?tag:"wsa5:RelationshipType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 enum wsa5__RelationshipType * SOAP_FMAC4 soap_get_wsa5__RelationshipType(struct soap *soap, enum wsa5__RelationshipType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_wsa5__RelationshipType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_wsse__FaultcodeEnum(struct soap *soap, enum wsse__FaultcodeEnum *a)
+{
+	(void)soap; /* appease -Wall -Werror */
+#ifdef SOAP_DEFAULT_wsse__FaultcodeEnum
+	*a = SOAP_DEFAULT_wsse__FaultcodeEnum;
+#else
+	*a = (enum wsse__FaultcodeEnum)0;
+#endif
+}
+
+static const struct soap_code_map soap_codes_wsse__FaultcodeEnum[] =
+{	{ (long)wsse__UnsupportedSecurityToken, "wsse:UnsupportedSecurityToken" },
+	{ (long)wsse__UnsupportedAlgorithm, "wsse:UnsupportedAlgorithm" },
+	{ (long)wsse__InvalidSecurity, "wsse:InvalidSecurity" },
+	{ (long)wsse__InvalidSecurityToken, "wsse:InvalidSecurityToken" },
+	{ (long)wsse__FailedAuthentication, "wsse:FailedAuthentication" },
+	{ (long)wsse__FailedCheck, "wsse:FailedCheck" },
+	{ (long)wsse__SecurityTokenUnavailable, "wsse:SecurityTokenUnavailable" },
+	{ 0, NULL }
+};
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_wsse__FaultcodeEnum2s(struct soap *soap, enum wsse__FaultcodeEnum n)
+{	const char *s = soap_code_str(soap_codes_wsse__FaultcodeEnum, (long)n);
+	if (s)
+		return s;
+	return soap_long2s(soap, (long)n);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsse__FaultcodeEnum(struct soap *soap, const char *tag, int id, const enum wsse__FaultcodeEnum *a, const char *type)
+{	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_wsse__FaultcodeEnum), type) || soap_send(soap, soap_wsse__FaultcodeEnum2s(soap, *a)))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2wsse__FaultcodeEnum(struct soap *soap, const char *s, enum wsse__FaultcodeEnum *a)
+{
+	const struct soap_code_map *map;
+	char *t;
+	if (!s)
+		return soap->error;
+	soap_s2QName(soap, s, &t, -1, -1);
+	map = soap_code(soap_codes_wsse__FaultcodeEnum, t);
+	if (map)
+		*a = (enum wsse__FaultcodeEnum)map->code;
+	else
+	{	long n;
+		if (soap_s2long(soap, s, &n) || ((soap->mode & SOAP_XML_STRICT) && (n < 0 || n > 6)))
+			return soap->error = SOAP_TYPE;
+		*a = (enum wsse__FaultcodeEnum)n;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 enum wsse__FaultcodeEnum * SOAP_FMAC4 soap_in_wsse__FaultcodeEnum(struct soap *soap, const char *tag, enum wsse__FaultcodeEnum *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (enum wsse__FaultcodeEnum *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_wsse__FaultcodeEnum, sizeof(enum wsse__FaultcodeEnum), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	if (soap->body && !*soap->href)
+	{	if (!a || soap_s2wsse__FaultcodeEnum(soap, soap_value(soap), a) || soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (enum wsse__FaultcodeEnum *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_wsse__FaultcodeEnum, 0, sizeof(enum wsse__FaultcodeEnum), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsse__FaultcodeEnum(struct soap *soap, const enum wsse__FaultcodeEnum *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_wsse__FaultcodeEnum);
+	if (soap_out_wsse__FaultcodeEnum(soap, tag?tag:"wsse:FaultcodeEnum", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 enum wsse__FaultcodeEnum * SOAP_FMAC4 soap_get_wsse__FaultcodeEnum(struct soap *soap, enum wsse__FaultcodeEnum *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_wsse__FaultcodeEnum(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_wsu__tTimestampFault(struct soap *soap, enum wsu__tTimestampFault *a)
+{
+	(void)soap; /* appease -Wall -Werror */
+#ifdef SOAP_DEFAULT_wsu__tTimestampFault
+	*a = SOAP_DEFAULT_wsu__tTimestampFault;
+#else
+	*a = (enum wsu__tTimestampFault)0;
+#endif
+}
+
+static const struct soap_code_map soap_codes_wsu__tTimestampFault[] =
+{	{ (long)wsu__MessageExpired, "wsu:MessageExpired" },
+	{ 0, NULL }
+};
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_wsu__tTimestampFault2s(struct soap *soap, enum wsu__tTimestampFault n)
+{	const char *s = soap_code_str(soap_codes_wsu__tTimestampFault, (long)n);
+	if (s)
+		return s;
+	return soap_long2s(soap, (long)n);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsu__tTimestampFault(struct soap *soap, const char *tag, int id, const enum wsu__tTimestampFault *a, const char *type)
+{	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_wsu__tTimestampFault), type) || soap_send(soap, soap_wsu__tTimestampFault2s(soap, *a)))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2wsu__tTimestampFault(struct soap *soap, const char *s, enum wsu__tTimestampFault *a)
+{
+	const struct soap_code_map *map;
+	char *t;
+	if (!s)
+		return soap->error;
+	soap_s2QName(soap, s, &t, -1, -1);
+	map = soap_code(soap_codes_wsu__tTimestampFault, t);
+	if (map)
+		*a = (enum wsu__tTimestampFault)map->code;
+	else
+	{	long n;
+		if (soap_s2long(soap, s, &n) || ((soap->mode & SOAP_XML_STRICT) && (n < 0 || n > 0)))
+			return soap->error = SOAP_TYPE;
+		*a = (enum wsu__tTimestampFault)n;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 enum wsu__tTimestampFault * SOAP_FMAC4 soap_in_wsu__tTimestampFault(struct soap *soap, const char *tag, enum wsu__tTimestampFault *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (enum wsu__tTimestampFault *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_wsu__tTimestampFault, sizeof(enum wsu__tTimestampFault), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	if (soap->body && !*soap->href)
+	{	if (!a || soap_s2wsu__tTimestampFault(soap, soap_value(soap), a) || soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (enum wsu__tTimestampFault *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_wsu__tTimestampFault, 0, sizeof(enum wsu__tTimestampFault), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsu__tTimestampFault(struct soap *soap, const enum wsu__tTimestampFault *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_wsu__tTimestampFault);
+	if (soap_out_wsu__tTimestampFault(soap, tag?tag:"wsu:tTimestampFault", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 enum wsu__tTimestampFault * SOAP_FMAC4 soap_get_wsu__tTimestampFault(struct soap *soap, enum wsu__tTimestampFault *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_wsu__tTimestampFault(soap, tag, p, type)))
 		if (soap_getindependent(soap))
 			return NULL;
 	return p;
@@ -774,27 +2291,556 @@ SOAP_FMAC3 struct SOAP_ENV__Code * SOAP_FMAC4 soap_get_SOAP_ENV__Code(struct soa
 
 #endif
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_wsa5__ProblemActionType(struct soap *soap, struct wsa5__ProblemActionType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->Action);
+	soap_default_string(soap, &a->SoapAction);
+	a->__anyAttribute = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_wsa5__ProblemActionType(struct soap *soap, const struct wsa5__ProblemActionType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_string(soap, &a->Action);
+	soap_serialize_string(soap, &a->SoapAction);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__ProblemActionType(struct soap *soap, const char *tag, int id, const struct wsa5__ProblemActionType *a, const char *type)
+{
+	if (a->__anyAttribute)
+		soap_set_attr(soap, "-anyAttribute", a->__anyAttribute, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_wsa5__ProblemActionType), type))
+		return soap->error;
+	if (soap_out_string(soap, "wsa5:Action", -1, &a->Action, ""))
+		return soap->error;
+	if (soap_out_string(soap, "wsa5:SoapAction", -1, &a->SoapAction, ""))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct wsa5__ProblemActionType * SOAP_FMAC4 soap_in_wsa5__ProblemActionType(struct soap *soap, const char *tag, struct wsa5__ProblemActionType *a, const char *type)
+{
+	size_t soap_flag_Action = 1;
+	size_t soap_flag_SoapAction = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct wsa5__ProblemActionType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_wsa5__ProblemActionType, sizeof(struct wsa5__ProblemActionType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_wsa5__ProblemActionType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "-anyAttribute", 0), &a->__anyAttribute, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_Action && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "wsa5:Action", &a->Action, "xsd:string"))
+				{	soap_flag_Action--;
+					continue;
+				}
+			if (soap_flag_SoapAction && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "wsa5:SoapAction", &a->SoapAction, "xsd:string"))
+				{	soap_flag_SoapAction--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct wsa5__ProblemActionType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_wsa5__ProblemActionType, 0, sizeof(struct wsa5__ProblemActionType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsa5__ProblemActionType(struct soap *soap, const struct wsa5__ProblemActionType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_wsa5__ProblemActionType);
+	if (soap_out_wsa5__ProblemActionType(soap, tag?tag:"wsa5:ProblemActionType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct wsa5__ProblemActionType * SOAP_FMAC4 soap_get_wsa5__ProblemActionType(struct soap *soap, struct wsa5__ProblemActionType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_wsa5__ProblemActionType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_wsa5__RelatesToType(struct soap *soap, struct wsa5__RelatesToType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->__item);
+	soap_default_wsa5__RelationshipTypeOpenEnum(soap, &a->RelationshipType);
+	a->__anyAttribute = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_wsa5__RelatesToType(struct soap *soap, const struct wsa5__RelatesToType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_string(soap, &a->__item);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__RelatesToType(struct soap *soap, const char *tag, int id, const struct wsa5__RelatesToType *a, const char *type)
+{
+	if (a->RelationshipType)
+		soap_set_attr(soap, "RelationshipType", a->RelationshipType, 1);
+	if (a->__anyAttribute)
+		soap_set_attr(soap, "-anyAttribute", a->__anyAttribute, 1);
+	return soap_out_string(soap, tag, id, &a->__item, "");
+}
+
+SOAP_FMAC3 struct wsa5__RelatesToType * SOAP_FMAC4 soap_in_wsa5__RelatesToType(struct soap *soap, const char *tag, struct wsa5__RelatesToType *a, const char *type)
+{
+	(void)type; /* appease -Wall -Werror */
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!(a = (struct wsa5__RelatesToType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_wsa5__RelatesToType, sizeof(struct wsa5__RelatesToType), 0, NULL, NULL, NULL)))
+		return NULL;
+	soap_revert(soap);
+	*soap->id = '\0';
+	soap_default_wsa5__RelatesToType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "RelationshipType", 0), &a->RelationshipType, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "-anyAttribute", 0), &a->__anyAttribute, -1, -1))
+		return NULL;
+	if (!soap_in_string(soap, tag, &a->__item, "wsa5:RelatesToType"))
+		return NULL;
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsa5__RelatesToType(struct soap *soap, const struct wsa5__RelatesToType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_wsa5__RelatesToType);
+	if (soap_out_wsa5__RelatesToType(soap, tag?tag:"wsa5:RelatesToType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct wsa5__RelatesToType * SOAP_FMAC4 soap_get_wsa5__RelatesToType(struct soap *soap, struct wsa5__RelatesToType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_wsa5__RelatesToType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_wsa5__MetadataType(struct soap *soap, struct wsa5__MetadataType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->__size = 0;
+	a->__any = NULL;
+	a->__anyAttribute = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_wsa5__MetadataType(struct soap *soap, const struct wsa5__MetadataType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__MetadataType(struct soap *soap, const char *tag, int id, const struct wsa5__MetadataType *a, const char *type)
+{
+	if (a->__anyAttribute)
+		soap_set_attr(soap, "-anyAttribute", a->__anyAttribute, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_wsa5__MetadataType), type))
+		return soap->error;
+	if (a->__any)
+	{	int i;
+		for (i = 0; i < a->__size; i++)
+			soap_outliteral(soap, "-any", a->__any + i, NULL);
+	}
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct wsa5__MetadataType * SOAP_FMAC4 soap_in_wsa5__MetadataType(struct soap *soap, const char *tag, struct wsa5__MetadataType *a, const char *type)
+{
+	struct soap_blist *soap_blist___any = NULL;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct wsa5__MetadataType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_wsa5__MetadataType, sizeof(struct wsa5__MetadataType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_wsa5__MetadataType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "-anyAttribute", 0), &a->__anyAttribute, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap->error == SOAP_TAG_MISMATCH && !soap_peek_element(soap))
+			{	if (a->__any == NULL)
+				{	if (soap_blist___any == NULL)
+						soap_blist___any = soap_new_block(soap);
+					a->__any = (char **)soap_push_block(soap, soap_blist___any, sizeof(char *));
+					if (a->__any == NULL)
+						return NULL;
+					*a->__any = NULL;
+				}
+				if (soap_inliteral(soap, "-any", a->__any))
+				{	a->__size++;
+					a->__any = NULL;
+					continue;
+				}
+			}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (a->__any)
+			soap_pop_block(soap, soap_blist___any);
+		if (a->__size)
+			a->__any = (char **)soap_save_block(soap, soap_blist___any, NULL, 1);
+		else
+		{	a->__any = NULL;
+			if (soap_blist___any)
+				soap_end_block(soap, soap_blist___any);
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct wsa5__MetadataType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_wsa5__MetadataType, 0, sizeof(struct wsa5__MetadataType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsa5__MetadataType(struct soap *soap, const struct wsa5__MetadataType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_wsa5__MetadataType);
+	if (soap_out_wsa5__MetadataType(soap, tag?tag:"wsa5:MetadataType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct wsa5__MetadataType * SOAP_FMAC4 soap_get_wsa5__MetadataType(struct soap *soap, struct wsa5__MetadataType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_wsa5__MetadataType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_wsa5__ReferenceParametersType(struct soap *soap, struct wsa5__ReferenceParametersType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->__size = 0;
+	a->__any = NULL;
+	a->__anyAttribute = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_wsa5__ReferenceParametersType(struct soap *soap, const struct wsa5__ReferenceParametersType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__ReferenceParametersType(struct soap *soap, const char *tag, int id, const struct wsa5__ReferenceParametersType *a, const char *type)
+{
+	if (a->__anyAttribute)
+		soap_set_attr(soap, "-anyAttribute", a->__anyAttribute, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_wsa5__ReferenceParametersType), type))
+		return soap->error;
+	if (a->__any)
+	{	int i;
+		for (i = 0; i < a->__size; i++)
+			soap_outliteral(soap, "-any", a->__any + i, NULL);
+	}
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct wsa5__ReferenceParametersType * SOAP_FMAC4 soap_in_wsa5__ReferenceParametersType(struct soap *soap, const char *tag, struct wsa5__ReferenceParametersType *a, const char *type)
+{
+	struct soap_blist *soap_blist___any = NULL;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct wsa5__ReferenceParametersType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_wsa5__ReferenceParametersType, sizeof(struct wsa5__ReferenceParametersType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_wsa5__ReferenceParametersType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "-anyAttribute", 0), &a->__anyAttribute, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap->error == SOAP_TAG_MISMATCH && !soap_peek_element(soap))
+			{	if (a->__any == NULL)
+				{	if (soap_blist___any == NULL)
+						soap_blist___any = soap_new_block(soap);
+					a->__any = (char **)soap_push_block(soap, soap_blist___any, sizeof(char *));
+					if (a->__any == NULL)
+						return NULL;
+					*a->__any = NULL;
+				}
+				if (soap_inliteral(soap, "-any", a->__any))
+				{	a->__size++;
+					a->__any = NULL;
+					continue;
+				}
+			}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (a->__any)
+			soap_pop_block(soap, soap_blist___any);
+		if (a->__size)
+			a->__any = (char **)soap_save_block(soap, soap_blist___any, NULL, 1);
+		else
+		{	a->__any = NULL;
+			if (soap_blist___any)
+				soap_end_block(soap, soap_blist___any);
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct wsa5__ReferenceParametersType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_wsa5__ReferenceParametersType, 0, sizeof(struct wsa5__ReferenceParametersType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsa5__ReferenceParametersType(struct soap *soap, const struct wsa5__ReferenceParametersType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_wsa5__ReferenceParametersType);
+	if (soap_out_wsa5__ReferenceParametersType(soap, tag?tag:"wsa5:ReferenceParametersType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct wsa5__ReferenceParametersType * SOAP_FMAC4 soap_get_wsa5__ReferenceParametersType(struct soap *soap, struct wsa5__ReferenceParametersType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_wsa5__ReferenceParametersType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_wsa5__EndpointReferenceType(struct soap *soap, struct wsa5__EndpointReferenceType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->Address);
+	a->ReferenceParameters = NULL;
+	a->Metadata = NULL;
+	a->__size = 0;
+	a->__any = NULL;
+	a->__anyAttribute = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_wsa5__EndpointReferenceType(struct soap *soap, const struct wsa5__EndpointReferenceType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_string(soap, &a->Address);
+	soap_serialize_PointerTowsa5__ReferenceParametersType(soap, &a->ReferenceParameters);
+	soap_serialize_PointerTowsa5__MetadataType(soap, &a->Metadata);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__EndpointReferenceType(struct soap *soap, const char *tag, int id, const struct wsa5__EndpointReferenceType *a, const char *type)
+{
+	if (a->__anyAttribute)
+		soap_set_attr(soap, "-anyAttribute", a->__anyAttribute, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_wsa5__EndpointReferenceType), type))
+		return soap->error;
+	if (a->Address)
+	{	if (soap_out_string(soap, "wsa5:Address", -1, &a->Address, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "wsa5:Address"))
+		return soap->error;
+	if (soap_out_PointerTowsa5__ReferenceParametersType(soap, "wsa5:ReferenceParameters", -1, &a->ReferenceParameters, ""))
+		return soap->error;
+	if (soap_out_PointerTowsa5__MetadataType(soap, "wsa5:Metadata", -1, &a->Metadata, ""))
+		return soap->error;
+	if (a->__any)
+	{	int i;
+		for (i = 0; i < a->__size; i++)
+			soap_outliteral(soap, "-any", a->__any + i, NULL);
+	}
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct wsa5__EndpointReferenceType * SOAP_FMAC4 soap_in_wsa5__EndpointReferenceType(struct soap *soap, const char *tag, struct wsa5__EndpointReferenceType *a, const char *type)
+{
+	size_t soap_flag_Address = 1;
+	size_t soap_flag_ReferenceParameters = 1;
+	size_t soap_flag_Metadata = 1;
+	struct soap_blist *soap_blist___any = NULL;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct wsa5__EndpointReferenceType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_wsa5__EndpointReferenceType, sizeof(struct wsa5__EndpointReferenceType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_wsa5__EndpointReferenceType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "-anyAttribute", 0), &a->__anyAttribute, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_Address && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "wsa5:Address", &a->Address, "xsd:string"))
+				{	soap_flag_Address--;
+					continue;
+				}
+			if (soap_flag_ReferenceParameters && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTowsa5__ReferenceParametersType(soap, "wsa5:ReferenceParameters", &a->ReferenceParameters, "wsa5:ReferenceParametersType"))
+				{	soap_flag_ReferenceParameters--;
+					continue;
+				}
+			if (soap_flag_Metadata && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTowsa5__MetadataType(soap, "wsa5:Metadata", &a->Metadata, "wsa5:MetadataType"))
+				{	soap_flag_Metadata--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH && !soap_peek_element(soap))
+			{	if (a->__any == NULL)
+				{	if (soap_blist___any == NULL)
+						soap_blist___any = soap_new_block(soap);
+					a->__any = (char **)soap_push_block(soap, soap_blist___any, sizeof(char *));
+					if (a->__any == NULL)
+						return NULL;
+					*a->__any = NULL;
+				}
+				if (soap_inliteral(soap, "-any", a->__any))
+				{	a->__size++;
+					a->__any = NULL;
+					continue;
+				}
+			}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (a->__any)
+			soap_pop_block(soap, soap_blist___any);
+		if (a->__size)
+			a->__any = (char **)soap_save_block(soap, soap_blist___any, NULL, 1);
+		else
+		{	a->__any = NULL;
+			if (soap_blist___any)
+				soap_end_block(soap, soap_blist___any);
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct wsa5__EndpointReferenceType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_wsa5__EndpointReferenceType, 0, sizeof(struct wsa5__EndpointReferenceType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_Address > 0))
+	{	soap->error = SOAP_OCCURS;
+		return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsa5__EndpointReferenceType(struct soap *soap, const struct wsa5__EndpointReferenceType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_wsa5__EndpointReferenceType);
+	if (soap_out_wsa5__EndpointReferenceType(soap, tag?tag:"wsa5:EndpointReferenceType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct wsa5__EndpointReferenceType * SOAP_FMAC4 soap_get_wsa5__EndpointReferenceType(struct soap *soap, struct wsa5__EndpointReferenceType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_wsa5__EndpointReferenceType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
 #ifndef WITH_NOGLOBAL
 
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Header(struct soap *soap, struct SOAP_ENV__Header *a)
 {
 	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->wsse__Security = NULL;
+	soap_default__wsa5__MessageID(soap, &a->wsa5__MessageID);
+	a->wsa5__RelatesTo = NULL;
+	a->wsa5__From = NULL;
+	a->wsa5__ReplyTo = NULL;
+	a->wsa5__FaultTo = NULL;
+	soap_default__wsa5__To(soap, &a->wsa5__To);
+	soap_default__wsa5__Action(soap, &a->wsa5__Action);
 }
 
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Header(struct soap *soap, const struct SOAP_ENV__Header *a)
 {
 	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_PointerTo_wsse__Security(soap, &a->wsse__Security);
+	soap_serialize__wsa5__MessageID(soap, &a->wsa5__MessageID);
+	soap_serialize_PointerTo_wsa5__RelatesTo(soap, &a->wsa5__RelatesTo);
+	soap_serialize_PointerTo_wsa5__From(soap, &a->wsa5__From);
+	soap_serialize_PointerTo_wsa5__ReplyTo(soap, &a->wsa5__ReplyTo);
+	soap_serialize_PointerTo_wsa5__FaultTo(soap, &a->wsa5__FaultTo);
+	soap_serialize__wsa5__To(soap, &a->wsa5__To);
+	soap_serialize__wsa5__Action(soap, &a->wsa5__Action);
 }
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_SOAP_ENV__Header(struct soap *soap, const char *tag, int id, const struct SOAP_ENV__Header *a, const char *type)
 {
 	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_SOAP_ENV__Header), type))
 		return soap->error;
+	soap->mustUnderstand = 1;
+	if (soap_out_PointerTo_wsse__Security(soap, "wsse:Security", -1, &a->wsse__Security, ""))
+		return soap->error;
+	if (soap_out__wsa5__MessageID(soap, "wsa5:MessageID", -1, &a->wsa5__MessageID, ""))
+		return soap->error;
+	if (soap_out_PointerTo_wsa5__RelatesTo(soap, "wsa5:RelatesTo", -1, &a->wsa5__RelatesTo, ""))
+		return soap->error;
+	if (soap_out_PointerTo_wsa5__From(soap, "wsa5:From", -1, &a->wsa5__From, ""))
+		return soap->error;
+	soap->mustUnderstand = 1;
+	if (soap_out_PointerTo_wsa5__ReplyTo(soap, "wsa5:ReplyTo", -1, &a->wsa5__ReplyTo, ""))
+		return soap->error;
+	soap->mustUnderstand = 1;
+	if (soap_out_PointerTo_wsa5__FaultTo(soap, "wsa5:FaultTo", -1, &a->wsa5__FaultTo, ""))
+		return soap->error;
+	soap->mustUnderstand = 1;
+	if (soap_out__wsa5__To(soap, "wsa5:To", -1, &a->wsa5__To, ""))
+		return soap->error;
+	soap->mustUnderstand = 1;
+	if (soap_out__wsa5__Action(soap, "wsa5:Action", -1, &a->wsa5__Action, ""))
+		return soap->error;
 	return soap_element_end_out(soap, tag);
 }
 
 SOAP_FMAC3 struct SOAP_ENV__Header * SOAP_FMAC4 soap_in_SOAP_ENV__Header(struct soap *soap, const char *tag, struct SOAP_ENV__Header *a, const char *type)
 {
+	size_t soap_flag_wsse__Security = 1;
+	size_t soap_flag_wsa5__MessageID = 1;
+	size_t soap_flag_wsa5__RelatesTo = 1;
+	size_t soap_flag_wsa5__From = 1;
+	size_t soap_flag_wsa5__ReplyTo = 1;
+	size_t soap_flag_wsa5__FaultTo = 1;
+	size_t soap_flag_wsa5__To = 1;
+	size_t soap_flag_wsa5__Action = 1;
 	if (soap_element_begin_in(soap, tag, 0, type))
 		return NULL;
 	a = (struct SOAP_ENV__Header *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_SOAP_ENV__Header, sizeof(struct SOAP_ENV__Header), 0, NULL, NULL, NULL);
@@ -805,6 +2851,46 @@ SOAP_FMAC3 struct SOAP_ENV__Header * SOAP_FMAC4 soap_in_SOAP_ENV__Header(struct 
 	{
 		for (;;)
 		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_wsse__Security && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_wsse__Security(soap, "wsse:Security", &a->wsse__Security, ""))
+				{	soap_flag_wsse__Security--;
+					continue;
+				}
+			if (soap_flag_wsa5__MessageID && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in__wsa5__MessageID(soap, "wsa5:MessageID", &a->wsa5__MessageID, ""))
+				{	soap_flag_wsa5__MessageID--;
+					continue;
+				}
+			if (soap_flag_wsa5__RelatesTo && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_wsa5__RelatesTo(soap, "wsa5:RelatesTo", &a->wsa5__RelatesTo, ""))
+				{	soap_flag_wsa5__RelatesTo--;
+					continue;
+				}
+			if (soap_flag_wsa5__From && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_wsa5__From(soap, "wsa5:From", &a->wsa5__From, ""))
+				{	soap_flag_wsa5__From--;
+					continue;
+				}
+			if (soap_flag_wsa5__ReplyTo && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_wsa5__ReplyTo(soap, "wsa5:ReplyTo", &a->wsa5__ReplyTo, ""))
+				{	soap_flag_wsa5__ReplyTo--;
+					continue;
+				}
+			if (soap_flag_wsa5__FaultTo && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_wsa5__FaultTo(soap, "wsa5:FaultTo", &a->wsa5__FaultTo, ""))
+				{	soap_flag_wsa5__FaultTo--;
+					continue;
+				}
+			if (soap_flag_wsa5__To && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in__wsa5__To(soap, "wsa5:To", &a->wsa5__To, ""))
+				{	soap_flag_wsa5__To--;
+					continue;
+				}
+			if (soap_flag_wsa5__Action && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in__wsa5__Action(soap, "wsa5:Action", &a->wsa5__Action, ""))
+				{	soap_flag_wsa5__Action--;
+					continue;
+				}
 			if (soap->error == SOAP_TAG_MISMATCH)
 				soap->error = soap_ignore_element(soap);
 			if (soap->error == SOAP_NO_TAG)
@@ -840,6 +2926,3674 @@ SOAP_FMAC3 struct SOAP_ENV__Header * SOAP_FMAC4 soap_get_SOAP_ENV__Header(struct
 }
 
 #endif
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__wsse__Security(struct soap *soap, struct _wsse__Security *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->wsu__Timestamp = NULL;
+	a->UsernameToken = NULL;
+	a->BinarySecurityToken = NULL;
+	a->xenc__EncryptedKey = NULL;
+	a->xenc__ReferenceList = NULL;
+	a->ds__Signature = NULL;
+	soap_default_string(soap, &a->SOAP_ENV__actor);
+	soap_default_string(soap, &a->SOAP_ENV__role);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__wsse__Security(struct soap *soap, const struct _wsse__Security *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_PointerTo_wsu__Timestamp(soap, &a->wsu__Timestamp);
+	soap_serialize_PointerTo_wsse__UsernameToken(soap, &a->UsernameToken);
+	soap_serialize_PointerTo_wsse__BinarySecurityToken(soap, &a->BinarySecurityToken);
+	soap_serialize_PointerToxenc__EncryptedKeyType(soap, &a->xenc__EncryptedKey);
+	soap_serialize_PointerTo_xenc__ReferenceList(soap, &a->xenc__ReferenceList);
+	soap_serialize_PointerTods__SignatureType(soap, &a->ds__Signature);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsse__Security(struct soap *soap, const char *tag, int id, const struct _wsse__Security *a, const char *type)
+{
+	if (a->SOAP_ENV__actor)
+		soap_set_attr(soap, "SOAP-ENV:actor", a->SOAP_ENV__actor, 1);
+	if (a->SOAP_ENV__role)
+		soap_set_attr(soap, "SOAP-ENV:role", a->SOAP_ENV__role, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__wsse__Security), type))
+		return soap->error;
+	if (soap_out_PointerTo_wsu__Timestamp(soap, "wsu:Timestamp", -1, &a->wsu__Timestamp, ""))
+		return soap->error;
+	if (soap_out_PointerTo_wsse__UsernameToken(soap, "wsse:UsernameToken", -1, &a->UsernameToken, ""))
+		return soap->error;
+	if (soap_out_PointerTo_wsse__BinarySecurityToken(soap, "wsse:BinarySecurityToken", -1, &a->BinarySecurityToken, ""))
+		return soap->error;
+	if (soap_out_PointerToxenc__EncryptedKeyType(soap, "xenc:EncryptedKey", -1, &a->xenc__EncryptedKey, ""))
+		return soap->error;
+	if (soap_out_PointerTo_xenc__ReferenceList(soap, "xenc:ReferenceList", -1, &a->xenc__ReferenceList, ""))
+		return soap->error;
+	if (soap_out_PointerTods__SignatureType(soap, "ds:Signature", -1, &a->ds__Signature, ""))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct _wsse__Security * SOAP_FMAC4 soap_in__wsse__Security(struct soap *soap, const char *tag, struct _wsse__Security *a, const char *type)
+{
+	size_t soap_flag_wsu__Timestamp = 1;
+	size_t soap_flag_UsernameToken = 1;
+	size_t soap_flag_BinarySecurityToken = 1;
+	size_t soap_flag_xenc__EncryptedKey = 1;
+	size_t soap_flag_xenc__ReferenceList = 1;
+	size_t soap_flag_ds__Signature = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct _wsse__Security *)soap_id_enter(soap, soap->id, a, SOAP_TYPE__wsse__Security, sizeof(struct _wsse__Security), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default__wsse__Security(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "SOAP-ENV:actor", 0), &a->SOAP_ENV__actor, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "SOAP-ENV:role", 0), &a->SOAP_ENV__role, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_wsu__Timestamp && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_wsu__Timestamp(soap, "wsu:Timestamp", &a->wsu__Timestamp, ""))
+				{	soap_flag_wsu__Timestamp--;
+					continue;
+				}
+			if (soap_flag_UsernameToken && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_wsse__UsernameToken(soap, "wsse:UsernameToken", &a->UsernameToken, ""))
+				{	soap_flag_UsernameToken--;
+					continue;
+				}
+			if (soap_flag_BinarySecurityToken && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_wsse__BinarySecurityToken(soap, "wsse:BinarySecurityToken", &a->BinarySecurityToken, ""))
+				{	soap_flag_BinarySecurityToken--;
+					continue;
+				}
+			if (soap_flag_xenc__EncryptedKey && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerToxenc__EncryptedKeyType(soap, "xenc:EncryptedKey", &a->xenc__EncryptedKey, "xenc:EncryptedKeyType"))
+				{	soap_flag_xenc__EncryptedKey--;
+					continue;
+				}
+			if (soap_flag_xenc__ReferenceList && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_xenc__ReferenceList(soap, "xenc:ReferenceList", &a->xenc__ReferenceList, ""))
+				{	soap_flag_xenc__ReferenceList--;
+					continue;
+				}
+			if (soap_flag_ds__Signature && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTods__SignatureType(soap, "ds:Signature", &a->ds__Signature, "ds:SignatureType"))
+				{	soap_flag_ds__Signature--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct _wsse__Security *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE__wsse__Security, 0, sizeof(struct _wsse__Security), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsse__Security(struct soap *soap, const struct _wsse__Security *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE__wsse__Security);
+	if (soap_out__wsse__Security(soap, tag?tag:"wsse:Security", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _wsse__Security * SOAP_FMAC4 soap_get__wsse__Security(struct soap *soap, struct _wsse__Security *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__wsse__Security(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___xenc__union_ReferenceList(struct soap *soap, struct __xenc__union_ReferenceList *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->DataReference = NULL;
+	a->KeyReference = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___xenc__union_ReferenceList(struct soap *soap, const struct __xenc__union_ReferenceList *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_PointerToxenc__ReferenceType(soap, &a->DataReference);
+	soap_serialize_PointerToxenc__ReferenceType(soap, &a->KeyReference);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___xenc__union_ReferenceList(struct soap *soap, const char *tag, int id, const struct __xenc__union_ReferenceList *a, const char *type)
+{
+	if (soap_out_PointerToxenc__ReferenceType(soap, "xenc:DataReference", -1, &a->DataReference, ""))
+		return soap->error;
+	if (soap_out_PointerToxenc__ReferenceType(soap, "xenc:KeyReference", -1, &a->KeyReference, ""))
+		return soap->error;
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __xenc__union_ReferenceList * SOAP_FMAC4 soap_in___xenc__union_ReferenceList(struct soap *soap, const char *tag, struct __xenc__union_ReferenceList *a, const char *type)
+{
+	size_t soap_flag_DataReference = 1;
+	size_t soap_flag_KeyReference = 1;
+	short soap_flag;
+	a = (struct __xenc__union_ReferenceList *)soap_id_enter(soap, "", a, SOAP_TYPE___xenc__union_ReferenceList, sizeof(struct __xenc__union_ReferenceList), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default___xenc__union_ReferenceList(soap, a);
+		for (soap_flag = 0;; soap_flag = 1)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_DataReference && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerToxenc__ReferenceType(soap, "xenc:DataReference", &a->DataReference, "xenc:ReferenceType"))
+				{	soap_flag_DataReference--;
+					continue;
+				}
+			if (soap_flag_KeyReference && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerToxenc__ReferenceType(soap, "xenc:KeyReference", &a->KeyReference, "xenc:ReferenceType"))
+				{	soap_flag_KeyReference--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				if (soap_flag)
+				{	soap->error = SOAP_OK;
+					break;
+				}
+			if (soap_flag && soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___xenc__union_ReferenceList(struct soap *soap, const struct __xenc__union_ReferenceList *a, const char *tag, const char *type)
+{
+	register int id = 0;
+	if (soap_out___xenc__union_ReferenceList(soap, tag?tag:"-xenc:union-ReferenceList", id, a, type))
+		return soap->error;
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __xenc__union_ReferenceList * SOAP_FMAC4 soap_get___xenc__union_ReferenceList(struct soap *soap, struct __xenc__union_ReferenceList *p, const char *tag, const char *type)
+{
+	if ((p = soap_in___xenc__union_ReferenceList(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__xenc__ReferenceList(struct soap *soap, struct _xenc__ReferenceList *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->__size_ReferenceList = 0;
+	a->__union_ReferenceList = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__xenc__ReferenceList(struct soap *soap, const struct _xenc__ReferenceList *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	if (a->__union_ReferenceList)
+	{	int i;
+		for (i = 0; i < a->__size_ReferenceList; i++)
+		{
+			soap_serialize___xenc__union_ReferenceList(soap, a->__union_ReferenceList + i);
+		}
+	}
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__xenc__ReferenceList(struct soap *soap, const char *tag, int id, const struct _xenc__ReferenceList *a, const char *type)
+{
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__xenc__ReferenceList), type))
+		return soap->error;
+	if (a->__union_ReferenceList)
+	{	int i;
+		for (i = 0; i < a->__size_ReferenceList; i++)
+			if (soap_out___xenc__union_ReferenceList(soap, "-union-ReferenceList", -1, a->__union_ReferenceList + i, ""))
+				return soap->error;
+	}
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct _xenc__ReferenceList * SOAP_FMAC4 soap_in__xenc__ReferenceList(struct soap *soap, const char *tag, struct _xenc__ReferenceList *a, const char *type)
+{
+	struct soap_blist *soap_blist___union_ReferenceList = NULL;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct _xenc__ReferenceList *)soap_id_enter(soap, soap->id, a, SOAP_TYPE__xenc__ReferenceList, sizeof(struct _xenc__ReferenceList), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default__xenc__ReferenceList(soap, a);
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap->error == SOAP_TAG_MISMATCH && !soap_peek_element(soap))
+			{	if (a->__union_ReferenceList == NULL)
+				{	if (soap_blist___union_ReferenceList == NULL)
+						soap_blist___union_ReferenceList = soap_new_block(soap);
+					a->__union_ReferenceList = (struct __xenc__union_ReferenceList *)soap_push_block(soap, soap_blist___union_ReferenceList, sizeof(struct __xenc__union_ReferenceList));
+					if (a->__union_ReferenceList == NULL)
+						return NULL;
+					soap_default___xenc__union_ReferenceList(soap, a->__union_ReferenceList);
+				}
+				if (soap_in___xenc__union_ReferenceList(soap, "-union-ReferenceList", a->__union_ReferenceList, "-xenc:union-ReferenceList"))
+				{	a->__size_ReferenceList++;
+					a->__union_ReferenceList = NULL;
+					continue;
+				}
+			}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (a->__union_ReferenceList)
+			soap_pop_block(soap, soap_blist___union_ReferenceList);
+		if (a->__size_ReferenceList)
+			a->__union_ReferenceList = (struct __xenc__union_ReferenceList *)soap_save_block(soap, soap_blist___union_ReferenceList, NULL, 1);
+		else
+		{	a->__union_ReferenceList = NULL;
+			if (soap_blist___union_ReferenceList)
+				soap_end_block(soap, soap_blist___union_ReferenceList);
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct _xenc__ReferenceList *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE__xenc__ReferenceList, 0, sizeof(struct _xenc__ReferenceList), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	if ((soap->mode & SOAP_XML_STRICT) && (a->__size_ReferenceList < 1))
+	{	soap->error = SOAP_OCCURS;
+		return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__xenc__ReferenceList(struct soap *soap, const struct _xenc__ReferenceList *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE__xenc__ReferenceList);
+	if (soap_out__xenc__ReferenceList(soap, tag?tag:"xenc:ReferenceList", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _xenc__ReferenceList * SOAP_FMAC4 soap_get__xenc__ReferenceList(struct soap *soap, struct _xenc__ReferenceList *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__xenc__ReferenceList(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__EncryptionPropertyType(struct soap *soap, struct xenc__EncryptionPropertyType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->Target);
+	soap_default_string(soap, &a->Id);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__EncryptionPropertyType(struct soap *soap, const struct xenc__EncryptionPropertyType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__EncryptionPropertyType(struct soap *soap, const char *tag, int id, const struct xenc__EncryptionPropertyType *a, const char *type)
+{
+	if (a->Target)
+		soap_set_attr(soap, "Target", a->Target, 1);
+	if (a->Id)
+		soap_set_attr(soap, "Id", a->Id, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_xenc__EncryptionPropertyType), type))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct xenc__EncryptionPropertyType * SOAP_FMAC4 soap_in_xenc__EncryptionPropertyType(struct soap *soap, const char *tag, struct xenc__EncryptionPropertyType *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct xenc__EncryptionPropertyType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_xenc__EncryptionPropertyType, sizeof(struct xenc__EncryptionPropertyType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_xenc__EncryptionPropertyType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "Target", 0), &a->Target, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "Id", 0), &a->Id, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct xenc__EncryptionPropertyType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_xenc__EncryptionPropertyType, 0, sizeof(struct xenc__EncryptionPropertyType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__EncryptionPropertyType(struct soap *soap, const struct xenc__EncryptionPropertyType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_xenc__EncryptionPropertyType);
+	if (soap_out_xenc__EncryptionPropertyType(soap, tag?tag:"xenc:EncryptionPropertyType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct xenc__EncryptionPropertyType * SOAP_FMAC4 soap_get_xenc__EncryptionPropertyType(struct soap *soap, struct xenc__EncryptionPropertyType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_xenc__EncryptionPropertyType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__EncryptionPropertiesType(struct soap *soap, struct xenc__EncryptionPropertiesType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->__sizeEncryptionProperty = 0;
+	a->EncryptionProperty = NULL;
+	soap_default_string(soap, &a->Id);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__EncryptionPropertiesType(struct soap *soap, const struct xenc__EncryptionPropertiesType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	if (a->EncryptionProperty)
+	{	int i;
+		for (i = 0; i < a->__sizeEncryptionProperty; i++)
+		{
+			soap_embedded(soap, a->EncryptionProperty + i, SOAP_TYPE_xenc__EncryptionPropertyType);
+			soap_serialize_xenc__EncryptionPropertyType(soap, a->EncryptionProperty + i);
+		}
+	}
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__EncryptionPropertiesType(struct soap *soap, const char *tag, int id, const struct xenc__EncryptionPropertiesType *a, const char *type)
+{
+	if (a->Id)
+		soap_set_attr(soap, "Id", a->Id, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_xenc__EncryptionPropertiesType), type))
+		return soap->error;
+	if (a->EncryptionProperty)
+	{	int i;
+		for (i = 0; i < a->__sizeEncryptionProperty; i++)
+			if (soap_out_xenc__EncryptionPropertyType(soap, "xenc:EncryptionProperty", -1, a->EncryptionProperty + i, ""))
+				return soap->error;
+	}
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct xenc__EncryptionPropertiesType * SOAP_FMAC4 soap_in_xenc__EncryptionPropertiesType(struct soap *soap, const char *tag, struct xenc__EncryptionPropertiesType *a, const char *type)
+{
+	struct soap_blist *soap_blist_EncryptionProperty = NULL;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct xenc__EncryptionPropertiesType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_xenc__EncryptionPropertiesType, sizeof(struct xenc__EncryptionPropertiesType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_xenc__EncryptionPropertiesType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "Id", 0), &a->Id, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap->error == SOAP_TAG_MISMATCH && !soap_element_begin_in(soap, "xenc:EncryptionProperty", 1, NULL))
+			{	if (a->EncryptionProperty == NULL)
+				{	if (soap_blist_EncryptionProperty == NULL)
+						soap_blist_EncryptionProperty = soap_new_block(soap);
+					a->EncryptionProperty = (struct xenc__EncryptionPropertyType *)soap_push_block(soap, soap_blist_EncryptionProperty, sizeof(struct xenc__EncryptionPropertyType));
+					if (a->EncryptionProperty == NULL)
+						return NULL;
+					soap_default_xenc__EncryptionPropertyType(soap, a->EncryptionProperty);
+				}
+				soap_revert(soap);
+				if (soap_in_xenc__EncryptionPropertyType(soap, "xenc:EncryptionProperty", a->EncryptionProperty, "xenc:EncryptionPropertyType"))
+				{	a->__sizeEncryptionProperty++;
+					a->EncryptionProperty = NULL;
+					continue;
+				}
+			}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (a->EncryptionProperty)
+			soap_pop_block(soap, soap_blist_EncryptionProperty);
+		if (a->__sizeEncryptionProperty)
+			a->EncryptionProperty = (struct xenc__EncryptionPropertyType *)soap_save_block(soap, soap_blist_EncryptionProperty, NULL, 1);
+		else
+		{	a->EncryptionProperty = NULL;
+			if (soap_blist_EncryptionProperty)
+				soap_end_block(soap, soap_blist_EncryptionProperty);
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct xenc__EncryptionPropertiesType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_xenc__EncryptionPropertiesType, 0, sizeof(struct xenc__EncryptionPropertiesType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	if ((soap->mode & SOAP_XML_STRICT) && (a->__sizeEncryptionProperty < 1))
+	{	soap->error = SOAP_OCCURS;
+		return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__EncryptionPropertiesType(struct soap *soap, const struct xenc__EncryptionPropertiesType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_xenc__EncryptionPropertiesType);
+	if (soap_out_xenc__EncryptionPropertiesType(soap, tag?tag:"xenc:EncryptionPropertiesType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct xenc__EncryptionPropertiesType * SOAP_FMAC4 soap_get_xenc__EncryptionPropertiesType(struct soap *soap, struct xenc__EncryptionPropertiesType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_xenc__EncryptionPropertiesType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__ReferenceType(struct soap *soap, struct xenc__ReferenceType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->URI);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__ReferenceType(struct soap *soap, const struct xenc__ReferenceType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__ReferenceType(struct soap *soap, const char *tag, int id, const struct xenc__ReferenceType *a, const char *type)
+{
+	if (a->URI)
+		soap_set_attr(soap, "URI", a->URI, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_xenc__ReferenceType), type))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct xenc__ReferenceType * SOAP_FMAC4 soap_in_xenc__ReferenceType(struct soap *soap, const char *tag, struct xenc__ReferenceType *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct xenc__ReferenceType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_xenc__ReferenceType, sizeof(struct xenc__ReferenceType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_xenc__ReferenceType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "URI", 1), &a->URI, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct xenc__ReferenceType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_xenc__ReferenceType, 0, sizeof(struct xenc__ReferenceType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__ReferenceType(struct soap *soap, const struct xenc__ReferenceType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_xenc__ReferenceType);
+	if (soap_out_xenc__ReferenceType(soap, tag?tag:"xenc:ReferenceType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct xenc__ReferenceType * SOAP_FMAC4 soap_get_xenc__ReferenceType(struct soap *soap, struct xenc__ReferenceType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_xenc__ReferenceType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__AgreementMethodType(struct soap *soap, struct xenc__AgreementMethodType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->KA_Nonce);
+	a->OriginatorKeyInfo = NULL;
+	a->RecipientKeyInfo = NULL;
+	soap_default_string(soap, &a->Algorithm);
+	a->__mixed = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__AgreementMethodType(struct soap *soap, const struct xenc__AgreementMethodType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_string(soap, &a->KA_Nonce);
+	soap_serialize_PointerTods__KeyInfoType(soap, &a->OriginatorKeyInfo);
+	soap_serialize_PointerTods__KeyInfoType(soap, &a->RecipientKeyInfo);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__AgreementMethodType(struct soap *soap, const char *tag, int id, const struct xenc__AgreementMethodType *a, const char *type)
+{
+	if (a->Algorithm)
+		soap_set_attr(soap, "Algorithm", a->Algorithm, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_xenc__AgreementMethodType), type))
+		return soap->error;
+	if (soap_out_string(soap, "xenc:KA-Nonce", -1, &a->KA_Nonce, ""))
+		return soap->error;
+	if (soap_out_PointerTods__KeyInfoType(soap, "xenc:OriginatorKeyInfo", -1, &a->OriginatorKeyInfo, ""))
+		return soap->error;
+	if (soap_out_PointerTods__KeyInfoType(soap, "xenc:RecipientKeyInfo", -1, &a->RecipientKeyInfo, ""))
+		return soap->error;
+	soap_outliteral(soap, "-mixed", &a->__mixed, NULL);
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct xenc__AgreementMethodType * SOAP_FMAC4 soap_in_xenc__AgreementMethodType(struct soap *soap, const char *tag, struct xenc__AgreementMethodType *a, const char *type)
+{
+	size_t soap_flag_KA_Nonce = 1;
+	size_t soap_flag_OriginatorKeyInfo = 1;
+	size_t soap_flag_RecipientKeyInfo = 1;
+	size_t soap_flag___mixed = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct xenc__AgreementMethodType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_xenc__AgreementMethodType, sizeof(struct xenc__AgreementMethodType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_xenc__AgreementMethodType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "Algorithm", 1), &a->Algorithm, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_KA_Nonce && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "xenc:KA-Nonce", &a->KA_Nonce, "xsd:string"))
+				{	soap_flag_KA_Nonce--;
+					continue;
+				}
+			if (soap_flag_OriginatorKeyInfo && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTods__KeyInfoType(soap, "xenc:OriginatorKeyInfo", &a->OriginatorKeyInfo, "ds:KeyInfoType"))
+				{	soap_flag_OriginatorKeyInfo--;
+					continue;
+				}
+			if (soap_flag_RecipientKeyInfo && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTods__KeyInfoType(soap, "xenc:RecipientKeyInfo", &a->RecipientKeyInfo, "ds:KeyInfoType"))
+				{	soap_flag_RecipientKeyInfo--;
+					continue;
+				}
+			if (soap_flag___mixed && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_inliteral(soap, "-mixed", &a->__mixed))
+				{	soap_flag___mixed--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct xenc__AgreementMethodType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_xenc__AgreementMethodType, 0, sizeof(struct xenc__AgreementMethodType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__AgreementMethodType(struct soap *soap, const struct xenc__AgreementMethodType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_xenc__AgreementMethodType);
+	if (soap_out_xenc__AgreementMethodType(soap, tag?tag:"xenc:AgreementMethodType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct xenc__AgreementMethodType * SOAP_FMAC4 soap_get_xenc__AgreementMethodType(struct soap *soap, struct xenc__AgreementMethodType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_xenc__AgreementMethodType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__EncryptedKeyType(struct soap *soap, struct xenc__EncryptedKeyType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->EncryptionMethod = NULL;
+	a->ds__KeyInfo = NULL;
+	a->CipherData = NULL;
+	a->EncryptionProperties = NULL;
+	soap_default_string(soap, &a->Id);
+	soap_default_string(soap, &a->Type);
+	soap_default_string(soap, &a->MimeType);
+	soap_default_string(soap, &a->Encoding);
+	a->ReferenceList = NULL;
+	soap_default_string(soap, &a->CarriedKeyName);
+	soap_default_string(soap, &a->Recipient);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__EncryptedKeyType(struct soap *soap, const struct xenc__EncryptedKeyType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_PointerToxenc__EncryptionMethodType(soap, &a->EncryptionMethod);
+	soap_serialize_PointerTo_ds__KeyInfo(soap, &a->ds__KeyInfo);
+	soap_serialize_PointerToxenc__CipherDataType(soap, &a->CipherData);
+	soap_serialize_PointerToxenc__EncryptionPropertiesType(soap, &a->EncryptionProperties);
+	soap_serialize_PointerTo_xenc__ReferenceList(soap, &a->ReferenceList);
+	soap_serialize_string(soap, &a->CarriedKeyName);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__EncryptedKeyType(struct soap *soap, const char *tag, int id, const struct xenc__EncryptedKeyType *a, const char *type)
+{
+	if (a->Id)
+		soap_set_attr(soap, "Id", a->Id, 1);
+	if (a->Type)
+		soap_set_attr(soap, "Type", a->Type, 1);
+	if (a->MimeType)
+		soap_set_attr(soap, "MimeType", a->MimeType, 1);
+	if (a->Encoding)
+		soap_set_attr(soap, "Encoding", a->Encoding, 1);
+	if (a->Recipient)
+		soap_set_attr(soap, "Recipient", a->Recipient, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_xenc__EncryptedKeyType), type))
+		return soap->error;
+	if (soap_out_PointerToxenc__EncryptionMethodType(soap, "xenc:EncryptionMethod", -1, &a->EncryptionMethod, ""))
+		return soap->error;
+	if (soap_out_PointerTo_ds__KeyInfo(soap, "ds:KeyInfo", -1, &a->ds__KeyInfo, ""))
+		return soap->error;
+	if (a->CipherData)
+	{	if (soap_out_PointerToxenc__CipherDataType(soap, "xenc:CipherData", -1, &a->CipherData, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "xenc:CipherData"))
+		return soap->error;
+	if (soap_out_PointerToxenc__EncryptionPropertiesType(soap, "xenc:EncryptionProperties", -1, &a->EncryptionProperties, ""))
+		return soap->error;
+	if (soap_out_PointerTo_xenc__ReferenceList(soap, "xenc:ReferenceList", -1, &a->ReferenceList, ""))
+		return soap->error;
+	if (soap_out_string(soap, "xenc:CarriedKeyName", -1, &a->CarriedKeyName, ""))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct xenc__EncryptedKeyType * SOAP_FMAC4 soap_in_xenc__EncryptedKeyType(struct soap *soap, const char *tag, struct xenc__EncryptedKeyType *a, const char *type)
+{
+	size_t soap_flag_EncryptionMethod = 1;
+	size_t soap_flag_ds__KeyInfo = 1;
+	size_t soap_flag_CipherData = 1;
+	size_t soap_flag_EncryptionProperties = 1;
+	size_t soap_flag_ReferenceList = 1;
+	size_t soap_flag_CarriedKeyName = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct xenc__EncryptedKeyType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_xenc__EncryptedKeyType, sizeof(struct xenc__EncryptedKeyType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_xenc__EncryptedKeyType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "Id", 0), &a->Id, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "Type", 0), &a->Type, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "MimeType", 0), &a->MimeType, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "Encoding", 0), &a->Encoding, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "Recipient", 0), &a->Recipient, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_EncryptionMethod && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerToxenc__EncryptionMethodType(soap, "xenc:EncryptionMethod", &a->EncryptionMethod, "xenc:EncryptionMethodType"))
+				{	soap_flag_EncryptionMethod--;
+					continue;
+				}
+			if (soap_flag_ds__KeyInfo && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_ds__KeyInfo(soap, "ds:KeyInfo", &a->ds__KeyInfo, ""))
+				{	soap_flag_ds__KeyInfo--;
+					continue;
+				}
+			if (soap_flag_CipherData && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerToxenc__CipherDataType(soap, "xenc:CipherData", &a->CipherData, "xenc:CipherDataType"))
+				{	soap_flag_CipherData--;
+					continue;
+				}
+			if (soap_flag_EncryptionProperties && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerToxenc__EncryptionPropertiesType(soap, "xenc:EncryptionProperties", &a->EncryptionProperties, "xenc:EncryptionPropertiesType"))
+				{	soap_flag_EncryptionProperties--;
+					continue;
+				}
+			if (soap_flag_ReferenceList && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_xenc__ReferenceList(soap, "xenc:ReferenceList", &a->ReferenceList, ""))
+				{	soap_flag_ReferenceList--;
+					continue;
+				}
+			if (soap_flag_CarriedKeyName && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "xenc:CarriedKeyName", &a->CarriedKeyName, "xsd:string"))
+				{	soap_flag_CarriedKeyName--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct xenc__EncryptedKeyType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_xenc__EncryptedKeyType, 0, sizeof(struct xenc__EncryptedKeyType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_CipherData > 0))
+	{	soap->error = SOAP_OCCURS;
+		return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__EncryptedKeyType(struct soap *soap, const struct xenc__EncryptedKeyType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_xenc__EncryptedKeyType);
+	if (soap_out_xenc__EncryptedKeyType(soap, tag?tag:"xenc:EncryptedKeyType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct xenc__EncryptedKeyType * SOAP_FMAC4 soap_get_xenc__EncryptedKeyType(struct soap *soap, struct xenc__EncryptedKeyType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_xenc__EncryptedKeyType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__EncryptedDataType(struct soap *soap, struct xenc__EncryptedDataType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->EncryptionMethod = NULL;
+	a->ds__KeyInfo = NULL;
+	a->CipherData = NULL;
+	a->EncryptionProperties = NULL;
+	soap_default_string(soap, &a->Id);
+	soap_default_string(soap, &a->Type);
+	soap_default_string(soap, &a->MimeType);
+	soap_default_string(soap, &a->Encoding);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__EncryptedDataType(struct soap *soap, const struct xenc__EncryptedDataType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_PointerToxenc__EncryptionMethodType(soap, &a->EncryptionMethod);
+	soap_serialize_PointerTo_ds__KeyInfo(soap, &a->ds__KeyInfo);
+	soap_serialize_PointerToxenc__CipherDataType(soap, &a->CipherData);
+	soap_serialize_PointerToxenc__EncryptionPropertiesType(soap, &a->EncryptionProperties);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__EncryptedDataType(struct soap *soap, const char *tag, int id, const struct xenc__EncryptedDataType *a, const char *type)
+{
+	if (a->Id)
+		soap_set_attr(soap, "Id", a->Id, 1);
+	if (a->Type)
+		soap_set_attr(soap, "Type", a->Type, 1);
+	if (a->MimeType)
+		soap_set_attr(soap, "MimeType", a->MimeType, 1);
+	if (a->Encoding)
+		soap_set_attr(soap, "Encoding", a->Encoding, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_xenc__EncryptedDataType), type))
+		return soap->error;
+	if (soap_out_PointerToxenc__EncryptionMethodType(soap, "xenc:EncryptionMethod", -1, &a->EncryptionMethod, ""))
+		return soap->error;
+	if (soap_out_PointerTo_ds__KeyInfo(soap, "ds:KeyInfo", -1, &a->ds__KeyInfo, ""))
+		return soap->error;
+	if (a->CipherData)
+	{	if (soap_out_PointerToxenc__CipherDataType(soap, "xenc:CipherData", -1, &a->CipherData, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "xenc:CipherData"))
+		return soap->error;
+	if (soap_out_PointerToxenc__EncryptionPropertiesType(soap, "xenc:EncryptionProperties", -1, &a->EncryptionProperties, ""))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct xenc__EncryptedDataType * SOAP_FMAC4 soap_in_xenc__EncryptedDataType(struct soap *soap, const char *tag, struct xenc__EncryptedDataType *a, const char *type)
+{
+	size_t soap_flag_EncryptionMethod = 1;
+	size_t soap_flag_ds__KeyInfo = 1;
+	size_t soap_flag_CipherData = 1;
+	size_t soap_flag_EncryptionProperties = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct xenc__EncryptedDataType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_xenc__EncryptedDataType, sizeof(struct xenc__EncryptedDataType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_xenc__EncryptedDataType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "Id", 0), &a->Id, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "Type", 0), &a->Type, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "MimeType", 0), &a->MimeType, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "Encoding", 0), &a->Encoding, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_EncryptionMethod && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerToxenc__EncryptionMethodType(soap, "xenc:EncryptionMethod", &a->EncryptionMethod, "xenc:EncryptionMethodType"))
+				{	soap_flag_EncryptionMethod--;
+					continue;
+				}
+			if (soap_flag_ds__KeyInfo && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_ds__KeyInfo(soap, "ds:KeyInfo", &a->ds__KeyInfo, ""))
+				{	soap_flag_ds__KeyInfo--;
+					continue;
+				}
+			if (soap_flag_CipherData && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerToxenc__CipherDataType(soap, "xenc:CipherData", &a->CipherData, "xenc:CipherDataType"))
+				{	soap_flag_CipherData--;
+					continue;
+				}
+			if (soap_flag_EncryptionProperties && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerToxenc__EncryptionPropertiesType(soap, "xenc:EncryptionProperties", &a->EncryptionProperties, "xenc:EncryptionPropertiesType"))
+				{	soap_flag_EncryptionProperties--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct xenc__EncryptedDataType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_xenc__EncryptedDataType, 0, sizeof(struct xenc__EncryptedDataType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_CipherData > 0))
+	{	soap->error = SOAP_OCCURS;
+		return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__EncryptedDataType(struct soap *soap, const struct xenc__EncryptedDataType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_xenc__EncryptedDataType);
+	if (soap_out_xenc__EncryptedDataType(soap, tag?tag:"xenc:EncryptedDataType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct xenc__EncryptedDataType * SOAP_FMAC4 soap_get_xenc__EncryptedDataType(struct soap *soap, struct xenc__EncryptedDataType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_xenc__EncryptedDataType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__TransformsType(struct soap *soap, struct xenc__TransformsType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default__ds__Transform(soap, &a->ds__Transform);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__TransformsType(struct soap *soap, const struct xenc__TransformsType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize__ds__Transform(soap, &a->ds__Transform);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__TransformsType(struct soap *soap, const char *tag, int id, const struct xenc__TransformsType *a, const char *type)
+{
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_xenc__TransformsType), type))
+		return soap->error;
+	if (soap_out__ds__Transform(soap, "ds:Transform", -1, &a->ds__Transform, ""))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct xenc__TransformsType * SOAP_FMAC4 soap_in_xenc__TransformsType(struct soap *soap, const char *tag, struct xenc__TransformsType *a, const char *type)
+{
+	size_t soap_flag_ds__Transform = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct xenc__TransformsType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_xenc__TransformsType, sizeof(struct xenc__TransformsType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_xenc__TransformsType(soap, a);
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_ds__Transform && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in__ds__Transform(soap, "ds:Transform", &a->ds__Transform, ""))
+				{	soap_flag_ds__Transform--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct xenc__TransformsType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_xenc__TransformsType, 0, sizeof(struct xenc__TransformsType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_ds__Transform > 0))
+	{	soap->error = SOAP_OCCURS;
+		return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__TransformsType(struct soap *soap, const struct xenc__TransformsType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_xenc__TransformsType);
+	if (soap_out_xenc__TransformsType(soap, tag?tag:"xenc:TransformsType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct xenc__TransformsType * SOAP_FMAC4 soap_get_xenc__TransformsType(struct soap *soap, struct xenc__TransformsType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_xenc__TransformsType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__CipherReferenceType(struct soap *soap, struct xenc__CipherReferenceType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->Transforms = NULL;
+	soap_default_string(soap, &a->URI);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__CipherReferenceType(struct soap *soap, const struct xenc__CipherReferenceType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_PointerToxenc__TransformsType(soap, &a->Transforms);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__CipherReferenceType(struct soap *soap, const char *tag, int id, const struct xenc__CipherReferenceType *a, const char *type)
+{
+	if (a->URI)
+		soap_set_attr(soap, "URI", a->URI, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_xenc__CipherReferenceType), type))
+		return soap->error;
+	if (soap_out_PointerToxenc__TransformsType(soap, "xenc:Transforms", -1, &a->Transforms, ""))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct xenc__CipherReferenceType * SOAP_FMAC4 soap_in_xenc__CipherReferenceType(struct soap *soap, const char *tag, struct xenc__CipherReferenceType *a, const char *type)
+{
+	size_t soap_flag_Transforms = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct xenc__CipherReferenceType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_xenc__CipherReferenceType, sizeof(struct xenc__CipherReferenceType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_xenc__CipherReferenceType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "URI", 1), &a->URI, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_Transforms && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerToxenc__TransformsType(soap, "xenc:Transforms", &a->Transforms, "xenc:TransformsType"))
+				{	soap_flag_Transforms--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct xenc__CipherReferenceType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_xenc__CipherReferenceType, 0, sizeof(struct xenc__CipherReferenceType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__CipherReferenceType(struct soap *soap, const struct xenc__CipherReferenceType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_xenc__CipherReferenceType);
+	if (soap_out_xenc__CipherReferenceType(soap, tag?tag:"xenc:CipherReferenceType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct xenc__CipherReferenceType * SOAP_FMAC4 soap_get_xenc__CipherReferenceType(struct soap *soap, struct xenc__CipherReferenceType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_xenc__CipherReferenceType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__CipherDataType(struct soap *soap, struct xenc__CipherDataType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->CipherValue);
+	a->CipherReference = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__CipherDataType(struct soap *soap, const struct xenc__CipherDataType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_string(soap, &a->CipherValue);
+	soap_serialize_PointerToxenc__CipherReferenceType(soap, &a->CipherReference);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__CipherDataType(struct soap *soap, const char *tag, int id, const struct xenc__CipherDataType *a, const char *type)
+{
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_xenc__CipherDataType), type))
+		return soap->error;
+	if (soap_out_string(soap, "xenc:CipherValue", -1, &a->CipherValue, ""))
+		return soap->error;
+	if (soap_out_PointerToxenc__CipherReferenceType(soap, "xenc:CipherReference", -1, &a->CipherReference, ""))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct xenc__CipherDataType * SOAP_FMAC4 soap_in_xenc__CipherDataType(struct soap *soap, const char *tag, struct xenc__CipherDataType *a, const char *type)
+{
+	size_t soap_flag_CipherValue = 1;
+	size_t soap_flag_CipherReference = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct xenc__CipherDataType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_xenc__CipherDataType, sizeof(struct xenc__CipherDataType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_xenc__CipherDataType(soap, a);
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_CipherValue && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "xenc:CipherValue", &a->CipherValue, "xsd:string"))
+				{	soap_flag_CipherValue--;
+					continue;
+				}
+			if (soap_flag_CipherReference && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerToxenc__CipherReferenceType(soap, "xenc:CipherReference", &a->CipherReference, "xenc:CipherReferenceType"))
+				{	soap_flag_CipherReference--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct xenc__CipherDataType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_xenc__CipherDataType, 0, sizeof(struct xenc__CipherDataType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__CipherDataType(struct soap *soap, const struct xenc__CipherDataType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_xenc__CipherDataType);
+	if (soap_out_xenc__CipherDataType(soap, tag?tag:"xenc:CipherDataType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct xenc__CipherDataType * SOAP_FMAC4 soap_get_xenc__CipherDataType(struct soap *soap, struct xenc__CipherDataType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_xenc__CipherDataType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__EncryptionMethodType(struct soap *soap, struct xenc__EncryptionMethodType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->KeySize = NULL;
+	soap_default_string(soap, &a->OAEPparams);
+	soap_default_string(soap, &a->Algorithm);
+	a->__mixed = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__EncryptionMethodType(struct soap *soap, const struct xenc__EncryptionMethodType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_PointerToint(soap, &a->KeySize);
+	soap_serialize_string(soap, &a->OAEPparams);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__EncryptionMethodType(struct soap *soap, const char *tag, int id, const struct xenc__EncryptionMethodType *a, const char *type)
+{
+	if (a->Algorithm)
+		soap_set_attr(soap, "Algorithm", a->Algorithm, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_xenc__EncryptionMethodType), type))
+		return soap->error;
+	if (soap_out_PointerToint(soap, "xenc:KeySize", -1, &a->KeySize, ""))
+		return soap->error;
+	if (soap_out_string(soap, "xenc:OAEPparams", -1, &a->OAEPparams, ""))
+		return soap->error;
+	soap_outliteral(soap, "-mixed", &a->__mixed, NULL);
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct xenc__EncryptionMethodType * SOAP_FMAC4 soap_in_xenc__EncryptionMethodType(struct soap *soap, const char *tag, struct xenc__EncryptionMethodType *a, const char *type)
+{
+	size_t soap_flag_KeySize = 1;
+	size_t soap_flag_OAEPparams = 1;
+	size_t soap_flag___mixed = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct xenc__EncryptionMethodType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_xenc__EncryptionMethodType, sizeof(struct xenc__EncryptionMethodType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_xenc__EncryptionMethodType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "Algorithm", 1), &a->Algorithm, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_KeySize && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerToint(soap, "xenc:KeySize", &a->KeySize, "xsd:int"))
+				{	soap_flag_KeySize--;
+					continue;
+				}
+			if (soap_flag_OAEPparams && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "xenc:OAEPparams", &a->OAEPparams, "xsd:string"))
+				{	soap_flag_OAEPparams--;
+					continue;
+				}
+			if (soap_flag___mixed && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_inliteral(soap, "-mixed", &a->__mixed))
+				{	soap_flag___mixed--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct xenc__EncryptionMethodType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_xenc__EncryptionMethodType, 0, sizeof(struct xenc__EncryptionMethodType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__EncryptionMethodType(struct soap *soap, const struct xenc__EncryptionMethodType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_xenc__EncryptionMethodType);
+	if (soap_out_xenc__EncryptionMethodType(soap, tag?tag:"xenc:EncryptionMethodType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct xenc__EncryptionMethodType * SOAP_FMAC4 soap_get_xenc__EncryptionMethodType(struct soap *soap, struct xenc__EncryptionMethodType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_xenc__EncryptionMethodType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__EncryptedType(struct soap *soap, struct xenc__EncryptedType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->EncryptionMethod = NULL;
+	a->ds__KeyInfo = NULL;
+	a->CipherData = NULL;
+	a->EncryptionProperties = NULL;
+	soap_default_string(soap, &a->Id);
+	soap_default_string(soap, &a->Type);
+	soap_default_string(soap, &a->MimeType);
+	soap_default_string(soap, &a->Encoding);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__EncryptedType(struct soap *soap, const struct xenc__EncryptedType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_PointerToxenc__EncryptionMethodType(soap, &a->EncryptionMethod);
+	soap_serialize_PointerTo_ds__KeyInfo(soap, &a->ds__KeyInfo);
+	soap_serialize_PointerToxenc__CipherDataType(soap, &a->CipherData);
+	soap_serialize_PointerToxenc__EncryptionPropertiesType(soap, &a->EncryptionProperties);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__EncryptedType(struct soap *soap, const char *tag, int id, const struct xenc__EncryptedType *a, const char *type)
+{
+	if (a->Id)
+		soap_set_attr(soap, "Id", a->Id, 1);
+	if (a->Type)
+		soap_set_attr(soap, "Type", a->Type, 1);
+	if (a->MimeType)
+		soap_set_attr(soap, "MimeType", a->MimeType, 1);
+	if (a->Encoding)
+		soap_set_attr(soap, "Encoding", a->Encoding, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_xenc__EncryptedType), type))
+		return soap->error;
+	if (soap_out_PointerToxenc__EncryptionMethodType(soap, "xenc:EncryptionMethod", -1, &a->EncryptionMethod, ""))
+		return soap->error;
+	if (soap_out_PointerTo_ds__KeyInfo(soap, "ds:KeyInfo", -1, &a->ds__KeyInfo, ""))
+		return soap->error;
+	if (a->CipherData)
+	{	if (soap_out_PointerToxenc__CipherDataType(soap, "xenc:CipherData", -1, &a->CipherData, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "xenc:CipherData"))
+		return soap->error;
+	if (soap_out_PointerToxenc__EncryptionPropertiesType(soap, "xenc:EncryptionProperties", -1, &a->EncryptionProperties, ""))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct xenc__EncryptedType * SOAP_FMAC4 soap_in_xenc__EncryptedType(struct soap *soap, const char *tag, struct xenc__EncryptedType *a, const char *type)
+{
+	size_t soap_flag_EncryptionMethod = 1;
+	size_t soap_flag_ds__KeyInfo = 1;
+	size_t soap_flag_CipherData = 1;
+	size_t soap_flag_EncryptionProperties = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct xenc__EncryptedType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_xenc__EncryptedType, sizeof(struct xenc__EncryptedType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_xenc__EncryptedType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "Id", 0), &a->Id, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "Type", 0), &a->Type, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "MimeType", 0), &a->MimeType, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "Encoding", 0), &a->Encoding, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_EncryptionMethod && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerToxenc__EncryptionMethodType(soap, "xenc:EncryptionMethod", &a->EncryptionMethod, "xenc:EncryptionMethodType"))
+				{	soap_flag_EncryptionMethod--;
+					continue;
+				}
+			if (soap_flag_ds__KeyInfo && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_ds__KeyInfo(soap, "ds:KeyInfo", &a->ds__KeyInfo, ""))
+				{	soap_flag_ds__KeyInfo--;
+					continue;
+				}
+			if (soap_flag_CipherData && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerToxenc__CipherDataType(soap, "xenc:CipherData", &a->CipherData, "xenc:CipherDataType"))
+				{	soap_flag_CipherData--;
+					continue;
+				}
+			if (soap_flag_EncryptionProperties && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerToxenc__EncryptionPropertiesType(soap, "xenc:EncryptionProperties", &a->EncryptionProperties, "xenc:EncryptionPropertiesType"))
+				{	soap_flag_EncryptionProperties--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct xenc__EncryptedType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_xenc__EncryptedType, 0, sizeof(struct xenc__EncryptedType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_CipherData > 0))
+	{	soap->error = SOAP_OCCURS;
+		return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__EncryptedType(struct soap *soap, const struct xenc__EncryptedType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_xenc__EncryptedType);
+	if (soap_out_xenc__EncryptedType(soap, tag?tag:"xenc:EncryptedType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct xenc__EncryptedType * SOAP_FMAC4 soap_get_xenc__EncryptedType(struct soap *soap, struct xenc__EncryptedType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_xenc__EncryptedType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__RSAKeyValueType(struct soap *soap, struct ds__RSAKeyValueType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->Modulus);
+	soap_default_string(soap, &a->Exponent);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__RSAKeyValueType(struct soap *soap, const struct ds__RSAKeyValueType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_string(soap, &a->Modulus);
+	soap_serialize_string(soap, &a->Exponent);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__RSAKeyValueType(struct soap *soap, const char *tag, int id, const struct ds__RSAKeyValueType *a, const char *type)
+{
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__RSAKeyValueType), type))
+		return soap->error;
+	if (a->Modulus)
+	{	if (soap_out_string(soap, "ds:Modulus", -1, &a->Modulus, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "ds:Modulus"))
+		return soap->error;
+	if (a->Exponent)
+	{	if (soap_out_string(soap, "ds:Exponent", -1, &a->Exponent, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "ds:Exponent"))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ds__RSAKeyValueType * SOAP_FMAC4 soap_in_ds__RSAKeyValueType(struct soap *soap, const char *tag, struct ds__RSAKeyValueType *a, const char *type)
+{
+	size_t soap_flag_Modulus = 1;
+	size_t soap_flag_Exponent = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct ds__RSAKeyValueType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ds__RSAKeyValueType, sizeof(struct ds__RSAKeyValueType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_ds__RSAKeyValueType(soap, a);
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_Modulus && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ds:Modulus", &a->Modulus, "xsd:string"))
+				{	soap_flag_Modulus--;
+					continue;
+				}
+			if (soap_flag_Exponent && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ds:Exponent", &a->Exponent, "xsd:string"))
+				{	soap_flag_Exponent--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__RSAKeyValueType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ds__RSAKeyValueType, 0, sizeof(struct ds__RSAKeyValueType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_Modulus > 0 || soap_flag_Exponent > 0))
+	{	soap->error = SOAP_OCCURS;
+		return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__RSAKeyValueType(struct soap *soap, const struct ds__RSAKeyValueType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ds__RSAKeyValueType);
+	if (soap_out_ds__RSAKeyValueType(soap, tag?tag:"ds:RSAKeyValueType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__RSAKeyValueType * SOAP_FMAC4 soap_get_ds__RSAKeyValueType(struct soap *soap, struct ds__RSAKeyValueType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ds__RSAKeyValueType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__DSAKeyValueType(struct soap *soap, struct ds__DSAKeyValueType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->G);
+	soap_default_string(soap, &a->Y);
+	soap_default_string(soap, &a->J);
+	soap_default_string(soap, &a->P);
+	soap_default_string(soap, &a->Q);
+	soap_default_string(soap, &a->Seed);
+	soap_default_string(soap, &a->PgenCounter);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__DSAKeyValueType(struct soap *soap, const struct ds__DSAKeyValueType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_string(soap, &a->G);
+	soap_serialize_string(soap, &a->Y);
+	soap_serialize_string(soap, &a->J);
+	soap_serialize_string(soap, &a->P);
+	soap_serialize_string(soap, &a->Q);
+	soap_serialize_string(soap, &a->Seed);
+	soap_serialize_string(soap, &a->PgenCounter);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__DSAKeyValueType(struct soap *soap, const char *tag, int id, const struct ds__DSAKeyValueType *a, const char *type)
+{
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__DSAKeyValueType), type))
+		return soap->error;
+	if (soap_out_string(soap, "ds:G", -1, &a->G, ""))
+		return soap->error;
+	if (a->Y)
+	{	if (soap_out_string(soap, "ds:Y", -1, &a->Y, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "ds:Y"))
+		return soap->error;
+	if (soap_out_string(soap, "ds:J", -1, &a->J, ""))
+		return soap->error;
+	if (a->P)
+	{	if (soap_out_string(soap, "ds:P", -1, &a->P, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "ds:P"))
+		return soap->error;
+	if (a->Q)
+	{	if (soap_out_string(soap, "ds:Q", -1, &a->Q, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "ds:Q"))
+		return soap->error;
+	if (a->Seed)
+	{	if (soap_out_string(soap, "ds:Seed", -1, &a->Seed, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "ds:Seed"))
+		return soap->error;
+	if (a->PgenCounter)
+	{	if (soap_out_string(soap, "ds:PgenCounter", -1, &a->PgenCounter, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "ds:PgenCounter"))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ds__DSAKeyValueType * SOAP_FMAC4 soap_in_ds__DSAKeyValueType(struct soap *soap, const char *tag, struct ds__DSAKeyValueType *a, const char *type)
+{
+	size_t soap_flag_G = 1;
+	size_t soap_flag_Y = 1;
+	size_t soap_flag_J = 1;
+	size_t soap_flag_P = 1;
+	size_t soap_flag_Q = 1;
+	size_t soap_flag_Seed = 1;
+	size_t soap_flag_PgenCounter = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct ds__DSAKeyValueType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ds__DSAKeyValueType, sizeof(struct ds__DSAKeyValueType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_ds__DSAKeyValueType(soap, a);
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_G && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ds:G", &a->G, "xsd:string"))
+				{	soap_flag_G--;
+					continue;
+				}
+			if (soap_flag_Y && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ds:Y", &a->Y, "xsd:string"))
+				{	soap_flag_Y--;
+					continue;
+				}
+			if (soap_flag_J && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ds:J", &a->J, "xsd:string"))
+				{	soap_flag_J--;
+					continue;
+				}
+			if (soap_flag_P && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ds:P", &a->P, "xsd:string"))
+				{	soap_flag_P--;
+					continue;
+				}
+			if (soap_flag_Q && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ds:Q", &a->Q, "xsd:string"))
+				{	soap_flag_Q--;
+					continue;
+				}
+			if (soap_flag_Seed && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ds:Seed", &a->Seed, "xsd:string"))
+				{	soap_flag_Seed--;
+					continue;
+				}
+			if (soap_flag_PgenCounter && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ds:PgenCounter", &a->PgenCounter, "xsd:string"))
+				{	soap_flag_PgenCounter--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__DSAKeyValueType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ds__DSAKeyValueType, 0, sizeof(struct ds__DSAKeyValueType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_Y > 0 || soap_flag_P > 0 || soap_flag_Q > 0 || soap_flag_Seed > 0 || soap_flag_PgenCounter > 0))
+	{	soap->error = SOAP_OCCURS;
+		return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__DSAKeyValueType(struct soap *soap, const struct ds__DSAKeyValueType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ds__DSAKeyValueType);
+	if (soap_out_ds__DSAKeyValueType(soap, tag?tag:"ds:DSAKeyValueType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__DSAKeyValueType * SOAP_FMAC4 soap_get_ds__DSAKeyValueType(struct soap *soap, struct ds__DSAKeyValueType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ds__DSAKeyValueType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__X509IssuerSerialType(struct soap *soap, struct ds__X509IssuerSerialType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->X509IssuerName);
+	soap_default_int(soap, &a->X509SerialNumber);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__X509IssuerSerialType(struct soap *soap, const struct ds__X509IssuerSerialType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_string(soap, &a->X509IssuerName);
+	soap_embedded(soap, &a->X509SerialNumber, SOAP_TYPE_int);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__X509IssuerSerialType(struct soap *soap, const char *tag, int id, const struct ds__X509IssuerSerialType *a, const char *type)
+{
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__X509IssuerSerialType), type))
+		return soap->error;
+	if (a->X509IssuerName)
+	{	if (soap_out_string(soap, "ds:X509IssuerName", -1, &a->X509IssuerName, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "ds:X509IssuerName"))
+		return soap->error;
+	if (soap_out_int(soap, "ds:X509SerialNumber", -1, &a->X509SerialNumber, ""))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ds__X509IssuerSerialType * SOAP_FMAC4 soap_in_ds__X509IssuerSerialType(struct soap *soap, const char *tag, struct ds__X509IssuerSerialType *a, const char *type)
+{
+	size_t soap_flag_X509IssuerName = 1;
+	size_t soap_flag_X509SerialNumber = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct ds__X509IssuerSerialType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ds__X509IssuerSerialType, sizeof(struct ds__X509IssuerSerialType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_ds__X509IssuerSerialType(soap, a);
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_X509IssuerName && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ds:X509IssuerName", &a->X509IssuerName, "xsd:string"))
+				{	soap_flag_X509IssuerName--;
+					continue;
+				}
+			if (soap_flag_X509SerialNumber && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_int(soap, "ds:X509SerialNumber", &a->X509SerialNumber, "xsd:int"))
+				{	soap_flag_X509SerialNumber--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__X509IssuerSerialType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ds__X509IssuerSerialType, 0, sizeof(struct ds__X509IssuerSerialType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_X509IssuerName > 0 || soap_flag_X509SerialNumber > 0))
+	{	soap->error = SOAP_OCCURS;
+		return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__X509IssuerSerialType(struct soap *soap, const struct ds__X509IssuerSerialType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ds__X509IssuerSerialType);
+	if (soap_out_ds__X509IssuerSerialType(soap, tag?tag:"ds:X509IssuerSerialType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__X509IssuerSerialType * SOAP_FMAC4 soap_get_ds__X509IssuerSerialType(struct soap *soap, struct ds__X509IssuerSerialType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ds__X509IssuerSerialType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__X509DataType(struct soap *soap, struct ds__X509DataType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->X509IssuerSerial = NULL;
+	soap_default_string(soap, &a->X509SKI);
+	soap_default_string(soap, &a->X509SubjectName);
+	soap_default_string(soap, &a->X509Certificate);
+	soap_default_string(soap, &a->X509CRL);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__X509DataType(struct soap *soap, const struct ds__X509DataType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_PointerTods__X509IssuerSerialType(soap, &a->X509IssuerSerial);
+	soap_serialize_string(soap, &a->X509SKI);
+	soap_serialize_string(soap, &a->X509SubjectName);
+	soap_serialize_string(soap, &a->X509Certificate);
+	soap_serialize_string(soap, &a->X509CRL);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__X509DataType(struct soap *soap, const char *tag, int id, const struct ds__X509DataType *a, const char *type)
+{
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__X509DataType), type))
+		return soap->error;
+	if (a->X509IssuerSerial)
+	{	if (soap_out_PointerTods__X509IssuerSerialType(soap, "ds:X509IssuerSerial", -1, &a->X509IssuerSerial, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "ds:X509IssuerSerial"))
+		return soap->error;
+	if (a->X509SKI)
+	{	if (soap_out_string(soap, "ds:X509SKI", -1, &a->X509SKI, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "ds:X509SKI"))
+		return soap->error;
+	if (a->X509SubjectName)
+	{	if (soap_out_string(soap, "ds:X509SubjectName", -1, &a->X509SubjectName, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "ds:X509SubjectName"))
+		return soap->error;
+	if (a->X509Certificate)
+	{	if (soap_out_string(soap, "ds:X509Certificate", -1, &a->X509Certificate, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "ds:X509Certificate"))
+		return soap->error;
+	if (a->X509CRL)
+	{	if (soap_out_string(soap, "ds:X509CRL", -1, &a->X509CRL, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "ds:X509CRL"))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ds__X509DataType * SOAP_FMAC4 soap_in_ds__X509DataType(struct soap *soap, const char *tag, struct ds__X509DataType *a, const char *type)
+{
+	size_t soap_flag_X509IssuerSerial = 1;
+	size_t soap_flag_X509SKI = 1;
+	size_t soap_flag_X509SubjectName = 1;
+	size_t soap_flag_X509Certificate = 1;
+	size_t soap_flag_X509CRL = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct ds__X509DataType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ds__X509DataType, sizeof(struct ds__X509DataType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_ds__X509DataType(soap, a);
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_X509IssuerSerial && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTods__X509IssuerSerialType(soap, "ds:X509IssuerSerial", &a->X509IssuerSerial, "ds:X509IssuerSerialType"))
+				{	soap_flag_X509IssuerSerial--;
+					continue;
+				}
+			if (soap_flag_X509SKI && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ds:X509SKI", &a->X509SKI, "xsd:string"))
+				{	soap_flag_X509SKI--;
+					continue;
+				}
+			if (soap_flag_X509SubjectName && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ds:X509SubjectName", &a->X509SubjectName, "xsd:string"))
+				{	soap_flag_X509SubjectName--;
+					continue;
+				}
+			if (soap_flag_X509Certificate && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ds:X509Certificate", &a->X509Certificate, "xsd:string"))
+				{	soap_flag_X509Certificate--;
+					continue;
+				}
+			if (soap_flag_X509CRL && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ds:X509CRL", &a->X509CRL, "xsd:string"))
+				{	soap_flag_X509CRL--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__X509DataType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ds__X509DataType, 0, sizeof(struct ds__X509DataType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_X509IssuerSerial > 0 || soap_flag_X509SKI > 0 || soap_flag_X509SubjectName > 0 || soap_flag_X509Certificate > 0 || soap_flag_X509CRL > 0))
+	{	soap->error = SOAP_OCCURS;
+		return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__X509DataType(struct soap *soap, const struct ds__X509DataType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ds__X509DataType);
+	if (soap_out_ds__X509DataType(soap, tag?tag:"ds:X509DataType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__X509DataType * SOAP_FMAC4 soap_get_ds__X509DataType(struct soap *soap, struct ds__X509DataType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ds__X509DataType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__RetrievalMethodType(struct soap *soap, struct ds__RetrievalMethodType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->Transforms = NULL;
+	soap_default_string(soap, &a->URI);
+	soap_default_string(soap, &a->Type);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__RetrievalMethodType(struct soap *soap, const struct ds__RetrievalMethodType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_PointerTods__TransformsType(soap, &a->Transforms);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__RetrievalMethodType(struct soap *soap, const char *tag, int id, const struct ds__RetrievalMethodType *a, const char *type)
+{
+	if (a->URI)
+		soap_set_attr(soap, "URI", a->URI, 1);
+	if (a->Type)
+		soap_set_attr(soap, "Type", a->Type, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__RetrievalMethodType), type))
+		return soap->error;
+	if (soap_out_PointerTods__TransformsType(soap, "ds:Transforms", -1, &a->Transforms, ""))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ds__RetrievalMethodType * SOAP_FMAC4 soap_in_ds__RetrievalMethodType(struct soap *soap, const char *tag, struct ds__RetrievalMethodType *a, const char *type)
+{
+	size_t soap_flag_Transforms = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct ds__RetrievalMethodType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ds__RetrievalMethodType, sizeof(struct ds__RetrievalMethodType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_ds__RetrievalMethodType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "URI", 0), &a->URI, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "Type", 0), &a->Type, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_Transforms && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTods__TransformsType(soap, "ds:Transforms", &a->Transforms, "ds:TransformsType"))
+				{	soap_flag_Transforms--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__RetrievalMethodType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ds__RetrievalMethodType, 0, sizeof(struct ds__RetrievalMethodType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__RetrievalMethodType(struct soap *soap, const struct ds__RetrievalMethodType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ds__RetrievalMethodType);
+	if (soap_out_ds__RetrievalMethodType(soap, tag?tag:"ds:RetrievalMethodType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__RetrievalMethodType * SOAP_FMAC4 soap_get_ds__RetrievalMethodType(struct soap *soap, struct ds__RetrievalMethodType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ds__RetrievalMethodType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__KeyValueType(struct soap *soap, struct ds__KeyValueType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->DSAKeyValue = NULL;
+	a->RSAKeyValue = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__KeyValueType(struct soap *soap, const struct ds__KeyValueType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_PointerTods__DSAKeyValueType(soap, &a->DSAKeyValue);
+	soap_serialize_PointerTods__RSAKeyValueType(soap, &a->RSAKeyValue);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__KeyValueType(struct soap *soap, const char *tag, int id, const struct ds__KeyValueType *a, const char *type)
+{
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__KeyValueType), type))
+		return soap->error;
+	if (a->DSAKeyValue)
+	{	if (soap_out_PointerTods__DSAKeyValueType(soap, "ds:DSAKeyValue", -1, &a->DSAKeyValue, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "ds:DSAKeyValue"))
+		return soap->error;
+	if (a->RSAKeyValue)
+	{	if (soap_out_PointerTods__RSAKeyValueType(soap, "ds:RSAKeyValue", -1, &a->RSAKeyValue, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "ds:RSAKeyValue"))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ds__KeyValueType * SOAP_FMAC4 soap_in_ds__KeyValueType(struct soap *soap, const char *tag, struct ds__KeyValueType *a, const char *type)
+{
+	size_t soap_flag_DSAKeyValue = 1;
+	size_t soap_flag_RSAKeyValue = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct ds__KeyValueType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ds__KeyValueType, sizeof(struct ds__KeyValueType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_ds__KeyValueType(soap, a);
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_DSAKeyValue && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTods__DSAKeyValueType(soap, "ds:DSAKeyValue", &a->DSAKeyValue, "ds:DSAKeyValueType"))
+				{	soap_flag_DSAKeyValue--;
+					continue;
+				}
+			if (soap_flag_RSAKeyValue && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTods__RSAKeyValueType(soap, "ds:RSAKeyValue", &a->RSAKeyValue, "ds:RSAKeyValueType"))
+				{	soap_flag_RSAKeyValue--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__KeyValueType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ds__KeyValueType, 0, sizeof(struct ds__KeyValueType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_DSAKeyValue > 0 || soap_flag_RSAKeyValue > 0))
+	{	soap->error = SOAP_OCCURS;
+		return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__KeyValueType(struct soap *soap, const struct ds__KeyValueType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ds__KeyValueType);
+	if (soap_out_ds__KeyValueType(soap, tag?tag:"ds:KeyValueType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__KeyValueType * SOAP_FMAC4 soap_get_ds__KeyValueType(struct soap *soap, struct ds__KeyValueType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ds__KeyValueType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__DigestMethodType(struct soap *soap, struct ds__DigestMethodType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->Algorithm);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__DigestMethodType(struct soap *soap, const struct ds__DigestMethodType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__DigestMethodType(struct soap *soap, const char *tag, int id, const struct ds__DigestMethodType *a, const char *type)
+{
+	if (a->Algorithm)
+		soap_set_attr(soap, "Algorithm", a->Algorithm, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__DigestMethodType), type))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ds__DigestMethodType * SOAP_FMAC4 soap_in_ds__DigestMethodType(struct soap *soap, const char *tag, struct ds__DigestMethodType *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct ds__DigestMethodType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ds__DigestMethodType, sizeof(struct ds__DigestMethodType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_ds__DigestMethodType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "Algorithm", 1), &a->Algorithm, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__DigestMethodType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ds__DigestMethodType, 0, sizeof(struct ds__DigestMethodType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__DigestMethodType(struct soap *soap, const struct ds__DigestMethodType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ds__DigestMethodType);
+	if (soap_out_ds__DigestMethodType(soap, tag?tag:"ds:DigestMethodType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__DigestMethodType * SOAP_FMAC4 soap_get_ds__DigestMethodType(struct soap *soap, struct ds__DigestMethodType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ds__DigestMethodType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__TransformType(struct soap *soap, struct ds__TransformType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->c14n__InclusiveNamespaces = NULL;
+	a->__any = NULL;
+	soap_default_string(soap, &a->Algorithm);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__TransformType(struct soap *soap, const struct ds__TransformType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_PointerTo_c14n__InclusiveNamespaces(soap, &a->c14n__InclusiveNamespaces);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__TransformType(struct soap *soap, const char *tag, int id, const struct ds__TransformType *a, const char *type)
+{
+	if (a->Algorithm)
+		soap_set_attr(soap, "Algorithm", a->Algorithm, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__TransformType), type))
+		return soap->error;
+	if (soap_out_PointerTo_c14n__InclusiveNamespaces(soap, "c14n:InclusiveNamespaces", -1, &a->c14n__InclusiveNamespaces, ""))
+		return soap->error;
+	soap_outliteral(soap, "-any", &a->__any, NULL);
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ds__TransformType * SOAP_FMAC4 soap_in_ds__TransformType(struct soap *soap, const char *tag, struct ds__TransformType *a, const char *type)
+{
+	size_t soap_flag_c14n__InclusiveNamespaces = 1;
+	size_t soap_flag___any = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct ds__TransformType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ds__TransformType, sizeof(struct ds__TransformType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_ds__TransformType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "Algorithm", 0), &a->Algorithm, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_c14n__InclusiveNamespaces && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_c14n__InclusiveNamespaces(soap, "c14n:InclusiveNamespaces", &a->c14n__InclusiveNamespaces, ""))
+				{	soap_flag_c14n__InclusiveNamespaces--;
+					continue;
+				}
+			if (soap_flag___any && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_inliteral(soap, "-any", &a->__any))
+				{	soap_flag___any--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__TransformType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ds__TransformType, 0, sizeof(struct ds__TransformType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__TransformType(struct soap *soap, const struct ds__TransformType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ds__TransformType);
+	if (soap_out_ds__TransformType(soap, tag?tag:"ds:TransformType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__TransformType * SOAP_FMAC4 soap_get_ds__TransformType(struct soap *soap, struct ds__TransformType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ds__TransformType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__c14n__InclusiveNamespaces(struct soap *soap, struct _c14n__InclusiveNamespaces *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->PrefixList);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__c14n__InclusiveNamespaces(struct soap *soap, const struct _c14n__InclusiveNamespaces *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__c14n__InclusiveNamespaces(struct soap *soap, const char *tag, int id, const struct _c14n__InclusiveNamespaces *a, const char *type)
+{
+	if (a->PrefixList)
+		soap_set_attr(soap, "PrefixList", a->PrefixList, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__c14n__InclusiveNamespaces), type))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct _c14n__InclusiveNamespaces * SOAP_FMAC4 soap_in__c14n__InclusiveNamespaces(struct soap *soap, const char *tag, struct _c14n__InclusiveNamespaces *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct _c14n__InclusiveNamespaces *)soap_id_enter(soap, soap->id, a, SOAP_TYPE__c14n__InclusiveNamespaces, sizeof(struct _c14n__InclusiveNamespaces), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default__c14n__InclusiveNamespaces(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "PrefixList", 0), &a->PrefixList, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct _c14n__InclusiveNamespaces *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE__c14n__InclusiveNamespaces, 0, sizeof(struct _c14n__InclusiveNamespaces), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__c14n__InclusiveNamespaces(struct soap *soap, const struct _c14n__InclusiveNamespaces *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE__c14n__InclusiveNamespaces);
+	if (soap_out__c14n__InclusiveNamespaces(soap, tag?tag:"c14n:InclusiveNamespaces", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _c14n__InclusiveNamespaces * SOAP_FMAC4 soap_get__c14n__InclusiveNamespaces(struct soap *soap, struct _c14n__InclusiveNamespaces *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__c14n__InclusiveNamespaces(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__TransformsType(struct soap *soap, struct ds__TransformsType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->__sizeTransform = 0;
+	a->Transform = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__TransformsType(struct soap *soap, const struct ds__TransformsType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	if (a->Transform)
+	{	int i;
+		for (i = 0; i < a->__sizeTransform; i++)
+		{
+			soap_embedded(soap, a->Transform + i, SOAP_TYPE_ds__TransformType);
+			soap_serialize_ds__TransformType(soap, a->Transform + i);
+		}
+	}
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__TransformsType(struct soap *soap, const char *tag, int id, const struct ds__TransformsType *a, const char *type)
+{
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__TransformsType), type))
+		return soap->error;
+	if (a->Transform)
+	{	int i;
+		for (i = 0; i < a->__sizeTransform; i++)
+			if (soap_out_ds__TransformType(soap, "ds:Transform", -1, a->Transform + i, ""))
+				return soap->error;
+	}
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ds__TransformsType * SOAP_FMAC4 soap_in_ds__TransformsType(struct soap *soap, const char *tag, struct ds__TransformsType *a, const char *type)
+{
+	struct soap_blist *soap_blist_Transform = NULL;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct ds__TransformsType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ds__TransformsType, sizeof(struct ds__TransformsType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_ds__TransformsType(soap, a);
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap->error == SOAP_TAG_MISMATCH && !soap_element_begin_in(soap, "ds:Transform", 1, NULL))
+			{	if (a->Transform == NULL)
+				{	if (soap_blist_Transform == NULL)
+						soap_blist_Transform = soap_new_block(soap);
+					a->Transform = (struct ds__TransformType *)soap_push_block(soap, soap_blist_Transform, sizeof(struct ds__TransformType));
+					if (a->Transform == NULL)
+						return NULL;
+					soap_default_ds__TransformType(soap, a->Transform);
+				}
+				soap_revert(soap);
+				if (soap_in_ds__TransformType(soap, "ds:Transform", a->Transform, "ds:TransformType"))
+				{	a->__sizeTransform++;
+					a->Transform = NULL;
+					continue;
+				}
+			}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (a->Transform)
+			soap_pop_block(soap, soap_blist_Transform);
+		if (a->__sizeTransform)
+			a->Transform = (struct ds__TransformType *)soap_save_block(soap, soap_blist_Transform, NULL, 1);
+		else
+		{	a->Transform = NULL;
+			if (soap_blist_Transform)
+				soap_end_block(soap, soap_blist_Transform);
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__TransformsType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ds__TransformsType, 0, sizeof(struct ds__TransformsType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__TransformsType(struct soap *soap, const struct ds__TransformsType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ds__TransformsType);
+	if (soap_out_ds__TransformsType(soap, tag?tag:"ds:TransformsType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__TransformsType * SOAP_FMAC4 soap_get_ds__TransformsType(struct soap *soap, struct ds__TransformsType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ds__TransformsType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__ReferenceType(struct soap *soap, struct ds__ReferenceType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->Transforms = NULL;
+	a->DigestMethod = NULL;
+	soap_default_string(soap, &a->DigestValue);
+	soap_default_string(soap, &a->Id);
+	soap_default_string(soap, &a->URI);
+	soap_default_string(soap, &a->Type);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__ReferenceType(struct soap *soap, const struct ds__ReferenceType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_PointerTods__TransformsType(soap, &a->Transforms);
+	soap_serialize_PointerTods__DigestMethodType(soap, &a->DigestMethod);
+	soap_serialize_string(soap, &a->DigestValue);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__ReferenceType(struct soap *soap, const char *tag, int id, const struct ds__ReferenceType *a, const char *type)
+{
+	if (a->Id)
+		soap_set_attr(soap, "Id", a->Id, 1);
+	if (a->URI)
+		soap_set_attr(soap, "URI", a->URI, 1);
+	if (a->Type)
+		soap_set_attr(soap, "Type", a->Type, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__ReferenceType), type))
+		return soap->error;
+	if (soap_out_PointerTods__TransformsType(soap, "ds:Transforms", -1, &a->Transforms, ""))
+		return soap->error;
+	if (a->DigestMethod)
+	{	if (soap_out_PointerTods__DigestMethodType(soap, "ds:DigestMethod", -1, &a->DigestMethod, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "ds:DigestMethod"))
+		return soap->error;
+	if (a->DigestValue)
+	{	if (soap_out_string(soap, "ds:DigestValue", -1, &a->DigestValue, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "ds:DigestValue"))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ds__ReferenceType * SOAP_FMAC4 soap_in_ds__ReferenceType(struct soap *soap, const char *tag, struct ds__ReferenceType *a, const char *type)
+{
+	size_t soap_flag_Transforms = 1;
+	size_t soap_flag_DigestMethod = 1;
+	size_t soap_flag_DigestValue = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct ds__ReferenceType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ds__ReferenceType, sizeof(struct ds__ReferenceType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_ds__ReferenceType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "Id", 0), &a->Id, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "URI", 0), &a->URI, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "Type", 0), &a->Type, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_Transforms && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTods__TransformsType(soap, "ds:Transforms", &a->Transforms, "ds:TransformsType"))
+				{	soap_flag_Transforms--;
+					continue;
+				}
+			if (soap_flag_DigestMethod && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTods__DigestMethodType(soap, "ds:DigestMethod", &a->DigestMethod, "ds:DigestMethodType"))
+				{	soap_flag_DigestMethod--;
+					continue;
+				}
+			if (soap_flag_DigestValue && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ds:DigestValue", &a->DigestValue, "xsd:string"))
+				{	soap_flag_DigestValue--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__ReferenceType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ds__ReferenceType, 0, sizeof(struct ds__ReferenceType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_DigestMethod > 0 || soap_flag_DigestValue > 0))
+	{	soap->error = SOAP_OCCURS;
+		return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__ReferenceType(struct soap *soap, const struct ds__ReferenceType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ds__ReferenceType);
+	if (soap_out_ds__ReferenceType(soap, tag?tag:"ds:ReferenceType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__ReferenceType * SOAP_FMAC4 soap_get_ds__ReferenceType(struct soap *soap, struct ds__ReferenceType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ds__ReferenceType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__SignatureMethodType(struct soap *soap, struct ds__SignatureMethodType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->HMACOutputLength = NULL;
+	soap_default_string(soap, &a->Algorithm);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__SignatureMethodType(struct soap *soap, const struct ds__SignatureMethodType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_PointerToint(soap, &a->HMACOutputLength);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__SignatureMethodType(struct soap *soap, const char *tag, int id, const struct ds__SignatureMethodType *a, const char *type)
+{
+	if (a->Algorithm)
+		soap_set_attr(soap, "Algorithm", a->Algorithm, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__SignatureMethodType), type))
+		return soap->error;
+	if (soap_out_PointerToint(soap, "ds:HMACOutputLength", -1, &a->HMACOutputLength, ""))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ds__SignatureMethodType * SOAP_FMAC4 soap_in_ds__SignatureMethodType(struct soap *soap, const char *tag, struct ds__SignatureMethodType *a, const char *type)
+{
+	size_t soap_flag_HMACOutputLength = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct ds__SignatureMethodType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ds__SignatureMethodType, sizeof(struct ds__SignatureMethodType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_ds__SignatureMethodType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "Algorithm", 1), &a->Algorithm, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_HMACOutputLength && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerToint(soap, "ds:HMACOutputLength", &a->HMACOutputLength, "xsd:int"))
+				{	soap_flag_HMACOutputLength--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__SignatureMethodType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ds__SignatureMethodType, 0, sizeof(struct ds__SignatureMethodType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__SignatureMethodType(struct soap *soap, const struct ds__SignatureMethodType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ds__SignatureMethodType);
+	if (soap_out_ds__SignatureMethodType(soap, tag?tag:"ds:SignatureMethodType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__SignatureMethodType * SOAP_FMAC4 soap_get_ds__SignatureMethodType(struct soap *soap, struct ds__SignatureMethodType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ds__SignatureMethodType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__CanonicalizationMethodType(struct soap *soap, struct ds__CanonicalizationMethodType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->Algorithm);
+	a->c14n__InclusiveNamespaces = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__CanonicalizationMethodType(struct soap *soap, const struct ds__CanonicalizationMethodType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_PointerTo_c14n__InclusiveNamespaces(soap, &a->c14n__InclusiveNamespaces);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__CanonicalizationMethodType(struct soap *soap, const char *tag, int id, const struct ds__CanonicalizationMethodType *a, const char *type)
+{
+	if (a->Algorithm)
+		soap_set_attr(soap, "Algorithm", a->Algorithm, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__CanonicalizationMethodType), type))
+		return soap->error;
+	if (soap_out_PointerTo_c14n__InclusiveNamespaces(soap, "c14n:InclusiveNamespaces", -1, &a->c14n__InclusiveNamespaces, ""))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ds__CanonicalizationMethodType * SOAP_FMAC4 soap_in_ds__CanonicalizationMethodType(struct soap *soap, const char *tag, struct ds__CanonicalizationMethodType *a, const char *type)
+{
+	size_t soap_flag_c14n__InclusiveNamespaces = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct ds__CanonicalizationMethodType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ds__CanonicalizationMethodType, sizeof(struct ds__CanonicalizationMethodType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_ds__CanonicalizationMethodType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "Algorithm", 1), &a->Algorithm, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_c14n__InclusiveNamespaces && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_c14n__InclusiveNamespaces(soap, "c14n:InclusiveNamespaces", &a->c14n__InclusiveNamespaces, ""))
+				{	soap_flag_c14n__InclusiveNamespaces--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__CanonicalizationMethodType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ds__CanonicalizationMethodType, 0, sizeof(struct ds__CanonicalizationMethodType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__CanonicalizationMethodType(struct soap *soap, const struct ds__CanonicalizationMethodType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ds__CanonicalizationMethodType);
+	if (soap_out_ds__CanonicalizationMethodType(soap, tag?tag:"ds:CanonicalizationMethodType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__CanonicalizationMethodType * SOAP_FMAC4 soap_get_ds__CanonicalizationMethodType(struct soap *soap, struct ds__CanonicalizationMethodType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ds__CanonicalizationMethodType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__KeyInfoType(struct soap *soap, struct ds__KeyInfoType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->KeyName);
+	a->KeyValue = NULL;
+	a->RetrievalMethod = NULL;
+	a->X509Data = NULL;
+	a->wsse__SecurityTokenReference = NULL;
+	soap_default_string(soap, &a->Id);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__KeyInfoType(struct soap *soap, const struct ds__KeyInfoType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_string(soap, &a->KeyName);
+	soap_serialize_PointerTods__KeyValueType(soap, &a->KeyValue);
+	soap_serialize_PointerTods__RetrievalMethodType(soap, &a->RetrievalMethod);
+	soap_serialize_PointerTods__X509DataType(soap, &a->X509Data);
+	soap_serialize_PointerTo_wsse__SecurityTokenReference(soap, &a->wsse__SecurityTokenReference);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__KeyInfoType(struct soap *soap, const char *tag, int id, const struct ds__KeyInfoType *a, const char *type)
+{
+	if (a->Id)
+		soap_set_attr(soap, "Id", a->Id, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__KeyInfoType), type))
+		return soap->error;
+	if (soap_out_string(soap, "ds:KeyName", -1, &a->KeyName, ""))
+		return soap->error;
+	if (soap_out_PointerTods__KeyValueType(soap, "ds:KeyValue", -1, &a->KeyValue, ""))
+		return soap->error;
+	if (soap_out_PointerTods__RetrievalMethodType(soap, "ds:RetrievalMethod", -1, &a->RetrievalMethod, ""))
+		return soap->error;
+	if (soap_out_PointerTods__X509DataType(soap, "ds:X509Data", -1, &a->X509Data, ""))
+		return soap->error;
+	if (soap_out_PointerTo_wsse__SecurityTokenReference(soap, "wsse:SecurityTokenReference", -1, &a->wsse__SecurityTokenReference, ""))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ds__KeyInfoType * SOAP_FMAC4 soap_in_ds__KeyInfoType(struct soap *soap, const char *tag, struct ds__KeyInfoType *a, const char *type)
+{
+	size_t soap_flag_KeyName = 1;
+	size_t soap_flag_KeyValue = 1;
+	size_t soap_flag_RetrievalMethod = 1;
+	size_t soap_flag_X509Data = 1;
+	size_t soap_flag_wsse__SecurityTokenReference = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct ds__KeyInfoType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ds__KeyInfoType, sizeof(struct ds__KeyInfoType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_ds__KeyInfoType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "Id", 0), &a->Id, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_KeyName && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ds:KeyName", &a->KeyName, "xsd:string"))
+				{	soap_flag_KeyName--;
+					continue;
+				}
+			if (soap_flag_KeyValue && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTods__KeyValueType(soap, "ds:KeyValue", &a->KeyValue, "ds:KeyValueType"))
+				{	soap_flag_KeyValue--;
+					continue;
+				}
+			if (soap_flag_RetrievalMethod && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTods__RetrievalMethodType(soap, "ds:RetrievalMethod", &a->RetrievalMethod, "ds:RetrievalMethodType"))
+				{	soap_flag_RetrievalMethod--;
+					continue;
+				}
+			if (soap_flag_X509Data && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTods__X509DataType(soap, "ds:X509Data", &a->X509Data, "ds:X509DataType"))
+				{	soap_flag_X509Data--;
+					continue;
+				}
+			if (soap_flag_wsse__SecurityTokenReference && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_wsse__SecurityTokenReference(soap, "wsse:SecurityTokenReference", &a->wsse__SecurityTokenReference, ""))
+				{	soap_flag_wsse__SecurityTokenReference--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__KeyInfoType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ds__KeyInfoType, 0, sizeof(struct ds__KeyInfoType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__KeyInfoType(struct soap *soap, const struct ds__KeyInfoType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ds__KeyInfoType);
+	if (soap_out_ds__KeyInfoType(soap, tag?tag:"ds:KeyInfoType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__KeyInfoType * SOAP_FMAC4 soap_get_ds__KeyInfoType(struct soap *soap, struct ds__KeyInfoType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ds__KeyInfoType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__SignedInfoType(struct soap *soap, struct ds__SignedInfoType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->CanonicalizationMethod = NULL;
+	a->SignatureMethod = NULL;
+	a->__sizeReference = 0;
+	a->Reference = NULL;
+	soap_default_string(soap, &a->Id);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__SignedInfoType(struct soap *soap, const struct ds__SignedInfoType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_PointerTods__CanonicalizationMethodType(soap, &a->CanonicalizationMethod);
+	soap_serialize_PointerTods__SignatureMethodType(soap, &a->SignatureMethod);
+	if (a->Reference)
+	{	int i;
+		for (i = 0; i < a->__sizeReference; i++)
+		{
+			soap_serialize_PointerTods__ReferenceType(soap, a->Reference + i);
+		}
+	}
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__SignedInfoType(struct soap *soap, const char *tag, int id, const struct ds__SignedInfoType *a, const char *type)
+{
+	if (a->Id)
+		soap_set_attr(soap, "Id", a->Id, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__SignedInfoType), type))
+		return soap->error;
+	if (a->CanonicalizationMethod)
+	{	if (soap_out_PointerTods__CanonicalizationMethodType(soap, "ds:CanonicalizationMethod", -1, &a->CanonicalizationMethod, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "ds:CanonicalizationMethod"))
+		return soap->error;
+	if (a->SignatureMethod)
+	{	if (soap_out_PointerTods__SignatureMethodType(soap, "ds:SignatureMethod", -1, &a->SignatureMethod, ""))
+			return soap->error;
+	}
+	else if (soap_element_nil(soap, "ds:SignatureMethod"))
+		return soap->error;
+	if (a->Reference)
+	{	int i;
+		for (i = 0; i < a->__sizeReference; i++)
+			if (soap_out_PointerTods__ReferenceType(soap, "ds:Reference", -1, a->Reference + i, ""))
+				return soap->error;
+	}
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ds__SignedInfoType * SOAP_FMAC4 soap_in_ds__SignedInfoType(struct soap *soap, const char *tag, struct ds__SignedInfoType *a, const char *type)
+{
+	size_t soap_flag_CanonicalizationMethod = 1;
+	size_t soap_flag_SignatureMethod = 1;
+	struct soap_blist *soap_blist_Reference = NULL;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct ds__SignedInfoType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ds__SignedInfoType, sizeof(struct ds__SignedInfoType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_ds__SignedInfoType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "Id", 0), &a->Id, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_CanonicalizationMethod && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTods__CanonicalizationMethodType(soap, "ds:CanonicalizationMethod", &a->CanonicalizationMethod, "ds:CanonicalizationMethodType"))
+				{	soap_flag_CanonicalizationMethod--;
+					continue;
+				}
+			if (soap_flag_SignatureMethod && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTods__SignatureMethodType(soap, "ds:SignatureMethod", &a->SignatureMethod, "ds:SignatureMethodType"))
+				{	soap_flag_SignatureMethod--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH && !soap_element_begin_in(soap, "ds:Reference", 1, NULL))
+			{	if (a->Reference == NULL)
+				{	if (soap_blist_Reference == NULL)
+						soap_blist_Reference = soap_new_block(soap);
+					a->Reference = (struct ds__ReferenceType **)soap_push_block(soap, soap_blist_Reference, sizeof(struct ds__ReferenceType *));
+					if (a->Reference == NULL)
+						return NULL;
+					*a->Reference = NULL;
+				}
+				soap_revert(soap);
+				if (soap_in_PointerTods__ReferenceType(soap, "ds:Reference", a->Reference, "ds:ReferenceType"))
+				{	a->__sizeReference++;
+					a->Reference = NULL;
+					continue;
+				}
+			}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (a->Reference)
+			soap_pop_block(soap, soap_blist_Reference);
+		if (a->__sizeReference)
+			a->Reference = (struct ds__ReferenceType **)soap_save_block(soap, soap_blist_Reference, NULL, 1);
+		else
+		{	a->Reference = NULL;
+			if (soap_blist_Reference)
+				soap_end_block(soap, soap_blist_Reference);
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__SignedInfoType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ds__SignedInfoType, 0, sizeof(struct ds__SignedInfoType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_CanonicalizationMethod > 0 || soap_flag_SignatureMethod > 0))
+	{	soap->error = SOAP_OCCURS;
+		return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__SignedInfoType(struct soap *soap, const struct ds__SignedInfoType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ds__SignedInfoType);
+	if (soap_out_ds__SignedInfoType(soap, tag?tag:"ds:SignedInfoType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__SignedInfoType * SOAP_FMAC4 soap_get_ds__SignedInfoType(struct soap *soap, struct ds__SignedInfoType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ds__SignedInfoType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__SignatureType(struct soap *soap, struct ds__SignatureType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->SignedInfo = NULL;
+	soap_default_string(soap, &a->SignatureValue);
+	a->KeyInfo = NULL;
+	soap_default_string(soap, &a->Id);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__SignatureType(struct soap *soap, const struct ds__SignatureType *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_PointerTods__SignedInfoType(soap, &a->SignedInfo);
+	soap_serialize_string(soap, &a->SignatureValue);
+	soap_serialize_PointerTods__KeyInfoType(soap, &a->KeyInfo);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__SignatureType(struct soap *soap, const char *tag, int id, const struct ds__SignatureType *a, const char *type)
+{
+	if (a->Id)
+		soap_set_attr(soap, "Id", a->Id, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ds__SignatureType), type))
+		return soap->error;
+	if (soap_out_PointerTods__SignedInfoType(soap, "ds:SignedInfo", -1, &a->SignedInfo, ""))
+		return soap->error;
+	if (soap_out_string(soap, "ds:SignatureValue", -1, &a->SignatureValue, ""))
+		return soap->error;
+	if (soap_out_PointerTods__KeyInfoType(soap, "ds:KeyInfo", -1, &a->KeyInfo, ""))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ds__SignatureType * SOAP_FMAC4 soap_in_ds__SignatureType(struct soap *soap, const char *tag, struct ds__SignatureType *a, const char *type)
+{
+	size_t soap_flag_SignedInfo = 1;
+	size_t soap_flag_SignatureValue = 1;
+	size_t soap_flag_KeyInfo = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct ds__SignatureType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ds__SignatureType, sizeof(struct ds__SignatureType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default_ds__SignatureType(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "Id", 0), &a->Id, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_SignedInfo && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTods__SignedInfoType(soap, "ds:SignedInfo", &a->SignedInfo, "ds:SignedInfoType"))
+				{	soap_flag_SignedInfo--;
+					continue;
+				}
+			if (soap_flag_SignatureValue && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ds:SignatureValue", &a->SignatureValue, "xsd:string"))
+				{	soap_flag_SignatureValue--;
+					continue;
+				}
+			if (soap_flag_KeyInfo && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTods__KeyInfoType(soap, "ds:KeyInfo", &a->KeyInfo, "ds:KeyInfoType"))
+				{	soap_flag_KeyInfo--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__SignatureType *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ds__SignatureType, 0, sizeof(struct ds__SignatureType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__SignatureType(struct soap *soap, const struct ds__SignatureType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ds__SignatureType);
+	if (soap_out_ds__SignatureType(soap, tag?tag:"ds:SignatureType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__SignatureType * SOAP_FMAC4 soap_get_ds__SignatureType(struct soap *soap, struct ds__SignatureType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ds__SignatureType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__wsse__SecurityTokenReference(struct soap *soap, struct _wsse__SecurityTokenReference *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->Reference = NULL;
+	a->KeyIdentifier = NULL;
+	a->Embedded = NULL;
+	soap_default_string(soap, &a->wsu__Id);
+	soap_default_string(soap, &a->Usage);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__wsse__SecurityTokenReference(struct soap *soap, const struct _wsse__SecurityTokenReference *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_PointerTo_wsse__Reference(soap, &a->Reference);
+	soap_serialize_PointerTo_wsse__KeyIdentifier(soap, &a->KeyIdentifier);
+	soap_serialize_PointerTo_wsse__Embedded(soap, &a->Embedded);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsse__SecurityTokenReference(struct soap *soap, const char *tag, int id, const struct _wsse__SecurityTokenReference *a, const char *type)
+{
+	if (a->wsu__Id)
+		soap_set_attr(soap, "wsu:Id", a->wsu__Id, 1);
+	if (a->Usage)
+		soap_set_attr(soap, "Usage", a->Usage, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__wsse__SecurityTokenReference), type))
+		return soap->error;
+	if (soap_out_PointerTo_wsse__Reference(soap, "wsse:Reference", -1, &a->Reference, ""))
+		return soap->error;
+	if (soap_out_PointerTo_wsse__KeyIdentifier(soap, "wsse:KeyIdentifier", -1, &a->KeyIdentifier, ""))
+		return soap->error;
+	if (soap_out_PointerTo_wsse__Embedded(soap, "wsse:Embedded", -1, &a->Embedded, ""))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct _wsse__SecurityTokenReference * SOAP_FMAC4 soap_in__wsse__SecurityTokenReference(struct soap *soap, const char *tag, struct _wsse__SecurityTokenReference *a, const char *type)
+{
+	size_t soap_flag_Reference = 1;
+	size_t soap_flag_KeyIdentifier = 1;
+	size_t soap_flag_Embedded = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct _wsse__SecurityTokenReference *)soap_id_enter(soap, soap->id, a, SOAP_TYPE__wsse__SecurityTokenReference, sizeof(struct _wsse__SecurityTokenReference), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default__wsse__SecurityTokenReference(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "wsu:Id", 0), &a->wsu__Id, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "Usage", 0), &a->Usage, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_Reference && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_wsse__Reference(soap, "wsse:Reference", &a->Reference, ""))
+				{	soap_flag_Reference--;
+					continue;
+				}
+			if (soap_flag_KeyIdentifier && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_wsse__KeyIdentifier(soap, "wsse:KeyIdentifier", &a->KeyIdentifier, ""))
+				{	soap_flag_KeyIdentifier--;
+					continue;
+				}
+			if (soap_flag_Embedded && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_wsse__Embedded(soap, "wsse:Embedded", &a->Embedded, ""))
+				{	soap_flag_Embedded--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct _wsse__SecurityTokenReference *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE__wsse__SecurityTokenReference, 0, sizeof(struct _wsse__SecurityTokenReference), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsse__SecurityTokenReference(struct soap *soap, const struct _wsse__SecurityTokenReference *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE__wsse__SecurityTokenReference);
+	if (soap_out__wsse__SecurityTokenReference(soap, tag?tag:"wsse:SecurityTokenReference", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _wsse__SecurityTokenReference * SOAP_FMAC4 soap_get__wsse__SecurityTokenReference(struct soap *soap, struct _wsse__SecurityTokenReference *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__wsse__SecurityTokenReference(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__wsse__KeyIdentifier(struct soap *soap, struct _wsse__KeyIdentifier *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->__item);
+	soap_default_string(soap, &a->wsu__Id);
+	soap_default_string(soap, &a->ValueType);
+	soap_default_string(soap, &a->EncodingType);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__wsse__KeyIdentifier(struct soap *soap, const struct _wsse__KeyIdentifier *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_string(soap, &a->__item);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsse__KeyIdentifier(struct soap *soap, const char *tag, int id, const struct _wsse__KeyIdentifier *a, const char *type)
+{
+	if (a->wsu__Id)
+		soap_set_attr(soap, "wsu:Id", a->wsu__Id, 1);
+	if (a->ValueType)
+		soap_set_attr(soap, "ValueType", a->ValueType, 1);
+	if (a->EncodingType)
+		soap_set_attr(soap, "EncodingType", a->EncodingType, 1);
+	return soap_out_string(soap, tag, id, &a->__item, "");
+}
+
+SOAP_FMAC3 struct _wsse__KeyIdentifier * SOAP_FMAC4 soap_in__wsse__KeyIdentifier(struct soap *soap, const char *tag, struct _wsse__KeyIdentifier *a, const char *type)
+{
+	(void)type; /* appease -Wall -Werror */
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!(a = (struct _wsse__KeyIdentifier *)soap_id_enter(soap, soap->id, a, SOAP_TYPE__wsse__KeyIdentifier, sizeof(struct _wsse__KeyIdentifier), 0, NULL, NULL, NULL)))
+		return NULL;
+	soap_revert(soap);
+	*soap->id = '\0';
+	soap_default__wsse__KeyIdentifier(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "wsu:Id", 0), &a->wsu__Id, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "ValueType", 0), &a->ValueType, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "EncodingType", 0), &a->EncodingType, -1, -1))
+		return NULL;
+	if (!soap_in_string(soap, tag, &a->__item, ""))
+		return NULL;
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsse__KeyIdentifier(struct soap *soap, const struct _wsse__KeyIdentifier *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE__wsse__KeyIdentifier);
+	if (soap_out__wsse__KeyIdentifier(soap, tag?tag:"wsse:KeyIdentifier", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _wsse__KeyIdentifier * SOAP_FMAC4 soap_get__wsse__KeyIdentifier(struct soap *soap, struct _wsse__KeyIdentifier *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__wsse__KeyIdentifier(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__wsse__Embedded(struct soap *soap, struct _wsse__Embedded *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->wsu__Id);
+	soap_default_string(soap, &a->ValueType);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__wsse__Embedded(struct soap *soap, const struct _wsse__Embedded *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsse__Embedded(struct soap *soap, const char *tag, int id, const struct _wsse__Embedded *a, const char *type)
+{
+	if (a->wsu__Id)
+		soap_set_attr(soap, "wsu:Id", a->wsu__Id, 1);
+	if (a->ValueType)
+		soap_set_attr(soap, "ValueType", a->ValueType, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__wsse__Embedded), type))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct _wsse__Embedded * SOAP_FMAC4 soap_in__wsse__Embedded(struct soap *soap, const char *tag, struct _wsse__Embedded *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct _wsse__Embedded *)soap_id_enter(soap, soap->id, a, SOAP_TYPE__wsse__Embedded, sizeof(struct _wsse__Embedded), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default__wsse__Embedded(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "wsu:Id", 0), &a->wsu__Id, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "ValueType", 0), &a->ValueType, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct _wsse__Embedded *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE__wsse__Embedded, 0, sizeof(struct _wsse__Embedded), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsse__Embedded(struct soap *soap, const struct _wsse__Embedded *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE__wsse__Embedded);
+	if (soap_out__wsse__Embedded(soap, tag?tag:"wsse:Embedded", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _wsse__Embedded * SOAP_FMAC4 soap_get__wsse__Embedded(struct soap *soap, struct _wsse__Embedded *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__wsse__Embedded(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__wsse__Reference(struct soap *soap, struct _wsse__Reference *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->URI);
+	soap_default_string(soap, &a->ValueType);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__wsse__Reference(struct soap *soap, const struct _wsse__Reference *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsse__Reference(struct soap *soap, const char *tag, int id, const struct _wsse__Reference *a, const char *type)
+{
+	if (a->URI)
+		soap_set_attr(soap, "URI", a->URI, 1);
+	if (a->ValueType)
+		soap_set_attr(soap, "ValueType", a->ValueType, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__wsse__Reference), type))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct _wsse__Reference * SOAP_FMAC4 soap_in__wsse__Reference(struct soap *soap, const char *tag, struct _wsse__Reference *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct _wsse__Reference *)soap_id_enter(soap, soap->id, a, SOAP_TYPE__wsse__Reference, sizeof(struct _wsse__Reference), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default__wsse__Reference(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "URI", 0), &a->URI, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "ValueType", 0), &a->ValueType, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct _wsse__Reference *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE__wsse__Reference, 0, sizeof(struct _wsse__Reference), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsse__Reference(struct soap *soap, const struct _wsse__Reference *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE__wsse__Reference);
+	if (soap_out__wsse__Reference(soap, tag?tag:"wsse:Reference", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _wsse__Reference * SOAP_FMAC4 soap_get__wsse__Reference(struct soap *soap, struct _wsse__Reference *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__wsse__Reference(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__wsse__BinarySecurityToken(struct soap *soap, struct _wsse__BinarySecurityToken *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->__item);
+	soap_default_string(soap, &a->wsu__Id);
+	soap_default_string(soap, &a->ValueType);
+	soap_default_string(soap, &a->EncodingType);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__wsse__BinarySecurityToken(struct soap *soap, const struct _wsse__BinarySecurityToken *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_string(soap, &a->__item);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsse__BinarySecurityToken(struct soap *soap, const char *tag, int id, const struct _wsse__BinarySecurityToken *a, const char *type)
+{
+	if (a->wsu__Id)
+		soap_set_attr(soap, "wsu:Id", a->wsu__Id, 1);
+	if (a->ValueType)
+		soap_set_attr(soap, "ValueType", a->ValueType, 1);
+	if (a->EncodingType)
+		soap_set_attr(soap, "EncodingType", a->EncodingType, 1);
+	return soap_out_string(soap, tag, id, &a->__item, "");
+}
+
+SOAP_FMAC3 struct _wsse__BinarySecurityToken * SOAP_FMAC4 soap_in__wsse__BinarySecurityToken(struct soap *soap, const char *tag, struct _wsse__BinarySecurityToken *a, const char *type)
+{
+	(void)type; /* appease -Wall -Werror */
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!(a = (struct _wsse__BinarySecurityToken *)soap_id_enter(soap, soap->id, a, SOAP_TYPE__wsse__BinarySecurityToken, sizeof(struct _wsse__BinarySecurityToken), 0, NULL, NULL, NULL)))
+		return NULL;
+	soap_revert(soap);
+	*soap->id = '\0';
+	soap_default__wsse__BinarySecurityToken(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "wsu:Id", 0), &a->wsu__Id, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "ValueType", 0), &a->ValueType, -1, -1))
+		return NULL;
+	if (soap_s2string(soap, soap_attr_value(soap, "EncodingType", 0), &a->EncodingType, -1, -1))
+		return NULL;
+	if (!soap_in_string(soap, tag, &a->__item, ""))
+		return NULL;
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsse__BinarySecurityToken(struct soap *soap, const struct _wsse__BinarySecurityToken *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE__wsse__BinarySecurityToken);
+	if (soap_out__wsse__BinarySecurityToken(soap, tag?tag:"wsse:BinarySecurityToken", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _wsse__BinarySecurityToken * SOAP_FMAC4 soap_get__wsse__BinarySecurityToken(struct soap *soap, struct _wsse__BinarySecurityToken *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__wsse__BinarySecurityToken(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__wsse__Password(struct soap *soap, struct _wsse__Password *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->__item);
+	soap_default_string(soap, &a->Type);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__wsse__Password(struct soap *soap, const struct _wsse__Password *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_string(soap, &a->__item);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsse__Password(struct soap *soap, const char *tag, int id, const struct _wsse__Password *a, const char *type)
+{
+	if (a->Type)
+		soap_set_attr(soap, "Type", a->Type, 1);
+	return soap_out_string(soap, tag, id, &a->__item, "");
+}
+
+SOAP_FMAC3 struct _wsse__Password * SOAP_FMAC4 soap_in__wsse__Password(struct soap *soap, const char *tag, struct _wsse__Password *a, const char *type)
+{
+	(void)type; /* appease -Wall -Werror */
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!(a = (struct _wsse__Password *)soap_id_enter(soap, soap->id, a, SOAP_TYPE__wsse__Password, sizeof(struct _wsse__Password), 0, NULL, NULL, NULL)))
+		return NULL;
+	soap_revert(soap);
+	*soap->id = '\0';
+	soap_default__wsse__Password(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "Type", 0), &a->Type, -1, -1))
+		return NULL;
+	if (!soap_in_string(soap, tag, &a->__item, ""))
+		return NULL;
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsse__Password(struct soap *soap, const struct _wsse__Password *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE__wsse__Password);
+	if (soap_out__wsse__Password(soap, tag?tag:"wsse:Password", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _wsse__Password * SOAP_FMAC4 soap_get__wsse__Password(struct soap *soap, struct _wsse__Password *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__wsse__Password(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__wsse__UsernameToken(struct soap *soap, struct _wsse__UsernameToken *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->Username);
+	a->Password = NULL;
+	soap_default_string(soap, &a->Nonce);
+	soap_default_string(soap, &a->wsu__Created);
+	soap_default_string(soap, &a->wsu__Id);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__wsse__UsernameToken(struct soap *soap, const struct _wsse__UsernameToken *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_string(soap, &a->Username);
+	soap_serialize_PointerTo_wsse__Password(soap, &a->Password);
+	soap_serialize_string(soap, &a->Nonce);
+	soap_serialize_string(soap, &a->wsu__Created);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsse__UsernameToken(struct soap *soap, const char *tag, int id, const struct _wsse__UsernameToken *a, const char *type)
+{
+	if (a->wsu__Id)
+		soap_set_attr(soap, "wsu:Id", a->wsu__Id, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__wsse__UsernameToken), type))
+		return soap->error;
+	if (soap_out_string(soap, "wsse:Username", -1, &a->Username, ""))
+		return soap->error;
+	if (soap_out_PointerTo_wsse__Password(soap, "wsse:Password", -1, &a->Password, ""))
+		return soap->error;
+	if (soap_out_string(soap, "wsse:Nonce", -1, &a->Nonce, ""))
+		return soap->error;
+	if (soap_out_string(soap, "wsu:Created", -1, &a->wsu__Created, ""))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct _wsse__UsernameToken * SOAP_FMAC4 soap_in__wsse__UsernameToken(struct soap *soap, const char *tag, struct _wsse__UsernameToken *a, const char *type)
+{
+	size_t soap_flag_Username = 1;
+	size_t soap_flag_Password = 1;
+	size_t soap_flag_Nonce = 1;
+	size_t soap_flag_wsu__Created = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct _wsse__UsernameToken *)soap_id_enter(soap, soap->id, a, SOAP_TYPE__wsse__UsernameToken, sizeof(struct _wsse__UsernameToken), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default__wsse__UsernameToken(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "wsu:Id", 0), &a->wsu__Id, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_Username && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "wsse:Username", &a->Username, "xsd:string"))
+				{	soap_flag_Username--;
+					continue;
+				}
+			if (soap_flag_Password && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_wsse__Password(soap, "wsse:Password", &a->Password, ""))
+				{	soap_flag_Password--;
+					continue;
+				}
+			if (soap_flag_Nonce && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "wsse:Nonce", &a->Nonce, "xsd:string"))
+				{	soap_flag_Nonce--;
+					continue;
+				}
+			if (soap_flag_wsu__Created && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "wsu:Created", &a->wsu__Created, "xsd:string"))
+				{	soap_flag_wsu__Created--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct _wsse__UsernameToken *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE__wsse__UsernameToken, 0, sizeof(struct _wsse__UsernameToken), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsse__UsernameToken(struct soap *soap, const struct _wsse__UsernameToken *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE__wsse__UsernameToken);
+	if (soap_out__wsse__UsernameToken(soap, tag?tag:"wsse:UsernameToken", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _wsse__UsernameToken * SOAP_FMAC4 soap_get__wsse__UsernameToken(struct soap *soap, struct _wsse__UsernameToken *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__wsse__UsernameToken(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__wsu__Timestamp(struct soap *soap, struct _wsu__Timestamp *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_string(soap, &a->wsu__Id);
+	soap_default_string(soap, &a->Created);
+	soap_default_string(soap, &a->Expires);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__wsu__Timestamp(struct soap *soap, const struct _wsu__Timestamp *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_serialize_string(soap, &a->Created);
+	soap_serialize_string(soap, &a->Expires);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsu__Timestamp(struct soap *soap, const char *tag, int id, const struct _wsu__Timestamp *a, const char *type)
+{
+	if (a->wsu__Id)
+		soap_set_attr(soap, "wsu:Id", a->wsu__Id, 1);
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__wsu__Timestamp), type))
+		return soap->error;
+	if (soap_out_string(soap, "wsu:Created", -1, &a->Created, ""))
+		return soap->error;
+	if (soap_out_string(soap, "wsu:Expires", -1, &a->Expires, ""))
+		return soap->error;
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct _wsu__Timestamp * SOAP_FMAC4 soap_in__wsu__Timestamp(struct soap *soap, const char *tag, struct _wsu__Timestamp *a, const char *type)
+{
+	size_t soap_flag_Created = 1;
+	size_t soap_flag_Expires = 1;
+	if (soap_element_begin_in(soap, tag, 0, type))
+		return NULL;
+	a = (struct _wsu__Timestamp *)soap_id_enter(soap, soap->id, a, SOAP_TYPE__wsu__Timestamp, sizeof(struct _wsu__Timestamp), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default__wsu__Timestamp(soap, a);
+	if (soap_s2string(soap, soap_attr_value(soap, "wsu:Id", 0), &a->wsu__Id, -1, -1))
+		return NULL;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_Created && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "wsu:Created", &a->Created, "xsd:string"))
+				{	soap_flag_Created--;
+					continue;
+				}
+			if (soap_flag_Expires && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "wsu:Expires", &a->Expires, "xsd:string"))
+				{	soap_flag_Expires--;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (struct _wsu__Timestamp *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE__wsu__Timestamp, 0, sizeof(struct _wsu__Timestamp), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsu__Timestamp(struct soap *soap, const struct _wsu__Timestamp *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE__wsu__Timestamp);
+	if (soap_out__wsu__Timestamp(soap, tag?tag:"wsu:Timestamp", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _wsu__Timestamp * SOAP_FMAC4 soap_get__wsu__Timestamp(struct soap *soap, struct _wsu__Timestamp *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__wsu__Timestamp(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
 
 #ifndef WITH_NOGLOBAL
 
@@ -1005,6 +6759,2330 @@ SOAP_FMAC3 struct SOAP_ENV__Code ** SOAP_FMAC4 soap_get_PointerToSOAP_ENV__Code(
 }
 
 #endif
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsa5__FaultTo(struct soap *soap, struct wsa5__EndpointReferenceType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__wsa5__FaultTo))
+		soap_serialize__wsa5__FaultTo(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsa5__FaultTo(struct soap *soap, const char *tag, int id, struct wsa5__EndpointReferenceType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__wsa5__FaultTo);
+	if (id < 0)
+		return soap->error;
+	return soap_out__wsa5__FaultTo(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct wsa5__EndpointReferenceType ** SOAP_FMAC4 soap_in_PointerTo_wsa5__FaultTo(struct soap *soap, const char *tag, struct wsa5__EndpointReferenceType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct wsa5__EndpointReferenceType **)soap_malloc(soap, sizeof(struct wsa5__EndpointReferenceType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in__wsa5__FaultTo(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct wsa5__EndpointReferenceType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__wsa5__FaultTo, sizeof(struct wsa5__EndpointReferenceType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsa5__FaultTo(struct soap *soap, struct wsa5__EndpointReferenceType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_wsa5__FaultTo);
+	if (soap_out_PointerTo_wsa5__FaultTo(soap, tag?tag:"wsa5:FaultTo", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct wsa5__EndpointReferenceType ** SOAP_FMAC4 soap_get_PointerTo_wsa5__FaultTo(struct soap *soap, struct wsa5__EndpointReferenceType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_wsa5__FaultTo(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsa5__ReplyTo(struct soap *soap, struct wsa5__EndpointReferenceType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__wsa5__ReplyTo))
+		soap_serialize__wsa5__ReplyTo(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsa5__ReplyTo(struct soap *soap, const char *tag, int id, struct wsa5__EndpointReferenceType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__wsa5__ReplyTo);
+	if (id < 0)
+		return soap->error;
+	return soap_out__wsa5__ReplyTo(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct wsa5__EndpointReferenceType ** SOAP_FMAC4 soap_in_PointerTo_wsa5__ReplyTo(struct soap *soap, const char *tag, struct wsa5__EndpointReferenceType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct wsa5__EndpointReferenceType **)soap_malloc(soap, sizeof(struct wsa5__EndpointReferenceType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in__wsa5__ReplyTo(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct wsa5__EndpointReferenceType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__wsa5__ReplyTo, sizeof(struct wsa5__EndpointReferenceType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsa5__ReplyTo(struct soap *soap, struct wsa5__EndpointReferenceType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_wsa5__ReplyTo);
+	if (soap_out_PointerTo_wsa5__ReplyTo(soap, tag?tag:"wsa5:ReplyTo", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct wsa5__EndpointReferenceType ** SOAP_FMAC4 soap_get_PointerTo_wsa5__ReplyTo(struct soap *soap, struct wsa5__EndpointReferenceType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_wsa5__ReplyTo(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsa5__From(struct soap *soap, struct wsa5__EndpointReferenceType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__wsa5__From))
+		soap_serialize__wsa5__From(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsa5__From(struct soap *soap, const char *tag, int id, struct wsa5__EndpointReferenceType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__wsa5__From);
+	if (id < 0)
+		return soap->error;
+	return soap_out__wsa5__From(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct wsa5__EndpointReferenceType ** SOAP_FMAC4 soap_in_PointerTo_wsa5__From(struct soap *soap, const char *tag, struct wsa5__EndpointReferenceType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct wsa5__EndpointReferenceType **)soap_malloc(soap, sizeof(struct wsa5__EndpointReferenceType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in__wsa5__From(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct wsa5__EndpointReferenceType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__wsa5__From, sizeof(struct wsa5__EndpointReferenceType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsa5__From(struct soap *soap, struct wsa5__EndpointReferenceType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_wsa5__From);
+	if (soap_out_PointerTo_wsa5__From(soap, tag?tag:"wsa5:From", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct wsa5__EndpointReferenceType ** SOAP_FMAC4 soap_get_PointerTo_wsa5__From(struct soap *soap, struct wsa5__EndpointReferenceType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_wsa5__From(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsa5__RelatesTo(struct soap *soap, struct wsa5__RelatesToType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__wsa5__RelatesTo))
+		soap_serialize__wsa5__RelatesTo(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsa5__RelatesTo(struct soap *soap, const char *tag, int id, struct wsa5__RelatesToType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__wsa5__RelatesTo);
+	if (id < 0)
+		return soap->error;
+	return soap_out__wsa5__RelatesTo(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct wsa5__RelatesToType ** SOAP_FMAC4 soap_in_PointerTo_wsa5__RelatesTo(struct soap *soap, const char *tag, struct wsa5__RelatesToType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct wsa5__RelatesToType **)soap_malloc(soap, sizeof(struct wsa5__RelatesToType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in__wsa5__RelatesTo(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct wsa5__RelatesToType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__wsa5__RelatesTo, sizeof(struct wsa5__RelatesToType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsa5__RelatesTo(struct soap *soap, struct wsa5__RelatesToType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_wsa5__RelatesTo);
+	if (soap_out_PointerTo_wsa5__RelatesTo(soap, tag?tag:"wsa5:RelatesTo", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct wsa5__RelatesToType ** SOAP_FMAC4 soap_get_PointerTo_wsa5__RelatesTo(struct soap *soap, struct wsa5__RelatesToType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_wsa5__RelatesTo(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsa5__ProblemHeaderQName(struct soap *soap, const char *tag, int id, char *const*a, const char *type)
+{
+	return soap_outstring(soap, tag, id, a, type, SOAP_TYPE__wsa5__ProblemHeaderQName);
+}
+
+SOAP_FMAC3 char * * SOAP_FMAC4 soap_in__wsa5__ProblemHeaderQName(struct soap *soap, const char *tag, char **a, const char *type)
+{	char **p;
+	p = soap_instring(soap, tag, a, type, SOAP_TYPE__wsa5__ProblemHeaderQName, 2, -1, -1);
+	return p;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsa5__ProblemHeaderQName(struct soap *soap, char *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE__wsa5__ProblemHeaderQName);
+	if (soap_out__wsa5__ProblemHeaderQName(soap, tag?tag:"byte", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 char ** SOAP_FMAC4 soap_get__wsa5__ProblemHeaderQName(struct soap *soap, char **p, const char *tag, const char *type)
+{
+	if ((p = soap_in__wsa5__ProblemHeaderQName(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTowsa5__MetadataType(struct soap *soap, struct wsa5__MetadataType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_wsa5__MetadataType))
+		soap_serialize_wsa5__MetadataType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTowsa5__MetadataType(struct soap *soap, const char *tag, int id, struct wsa5__MetadataType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_wsa5__MetadataType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_wsa5__MetadataType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct wsa5__MetadataType ** SOAP_FMAC4 soap_in_PointerTowsa5__MetadataType(struct soap *soap, const char *tag, struct wsa5__MetadataType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct wsa5__MetadataType **)soap_malloc(soap, sizeof(struct wsa5__MetadataType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_wsa5__MetadataType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct wsa5__MetadataType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_wsa5__MetadataType, sizeof(struct wsa5__MetadataType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTowsa5__MetadataType(struct soap *soap, struct wsa5__MetadataType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTowsa5__MetadataType);
+	if (soap_out_PointerTowsa5__MetadataType(soap, tag?tag:"wsa5:MetadataType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct wsa5__MetadataType ** SOAP_FMAC4 soap_get_PointerTowsa5__MetadataType(struct soap *soap, struct wsa5__MetadataType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTowsa5__MetadataType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTowsa5__ReferenceParametersType(struct soap *soap, struct wsa5__ReferenceParametersType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_wsa5__ReferenceParametersType))
+		soap_serialize_wsa5__ReferenceParametersType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTowsa5__ReferenceParametersType(struct soap *soap, const char *tag, int id, struct wsa5__ReferenceParametersType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_wsa5__ReferenceParametersType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_wsa5__ReferenceParametersType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct wsa5__ReferenceParametersType ** SOAP_FMAC4 soap_in_PointerTowsa5__ReferenceParametersType(struct soap *soap, const char *tag, struct wsa5__ReferenceParametersType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct wsa5__ReferenceParametersType **)soap_malloc(soap, sizeof(struct wsa5__ReferenceParametersType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_wsa5__ReferenceParametersType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct wsa5__ReferenceParametersType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_wsa5__ReferenceParametersType, sizeof(struct wsa5__ReferenceParametersType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTowsa5__ReferenceParametersType(struct soap *soap, struct wsa5__ReferenceParametersType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTowsa5__ReferenceParametersType);
+	if (soap_out_PointerTowsa5__ReferenceParametersType(soap, tag?tag:"wsa5:ReferenceParametersType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct wsa5__ReferenceParametersType ** SOAP_FMAC4 soap_get_PointerTowsa5__ReferenceParametersType(struct soap *soap, struct wsa5__ReferenceParametersType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTowsa5__ReferenceParametersType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__FaultCodesOpenEnumType(struct soap *soap, const char *tag, int id, char *const*a, const char *type)
+{
+	return soap_outstring(soap, tag, id, a, type, SOAP_TYPE_wsa5__FaultCodesOpenEnumType);
+}
+
+SOAP_FMAC3 char * * SOAP_FMAC4 soap_in_wsa5__FaultCodesOpenEnumType(struct soap *soap, const char *tag, char **a, const char *type)
+{	char **p;
+	p = soap_instring(soap, tag, a, type, SOAP_TYPE_wsa5__FaultCodesOpenEnumType, 1, -1, -1);
+	return p;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsa5__FaultCodesOpenEnumType(struct soap *soap, char *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_wsa5__FaultCodesOpenEnumType);
+	if (soap_out_wsa5__FaultCodesOpenEnumType(soap, tag?tag:"byte", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 char ** SOAP_FMAC4 soap_get_wsa5__FaultCodesOpenEnumType(struct soap *soap, char **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_wsa5__FaultCodesOpenEnumType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__RelationshipTypeOpenEnum(struct soap *soap, const char *tag, int id, char *const*a, const char *type)
+{
+	return soap_outstring(soap, tag, id, a, type, SOAP_TYPE_wsa5__RelationshipTypeOpenEnum);
+}
+
+SOAP_FMAC3 char * * SOAP_FMAC4 soap_in_wsa5__RelationshipTypeOpenEnum(struct soap *soap, const char *tag, char **a, const char *type)
+{	char **p;
+	p = soap_instring(soap, tag, a, type, SOAP_TYPE_wsa5__RelationshipTypeOpenEnum, 1, -1, -1);
+	return p;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsa5__RelationshipTypeOpenEnum(struct soap *soap, char *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_wsa5__RelationshipTypeOpenEnum);
+	if (soap_out_wsa5__RelationshipTypeOpenEnum(soap, tag?tag:"byte", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 char ** SOAP_FMAC4 soap_get_wsa5__RelationshipTypeOpenEnum(struct soap *soap, char **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_wsa5__RelationshipTypeOpenEnum(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsse__Security(struct soap *soap, struct _wsse__Security *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__wsse__Security))
+		soap_serialize__wsse__Security(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsse__Security(struct soap *soap, const char *tag, int id, struct _wsse__Security *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__wsse__Security);
+	if (id < 0)
+		return soap->error;
+	return soap_out__wsse__Security(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct _wsse__Security ** SOAP_FMAC4 soap_in_PointerTo_wsse__Security(struct soap *soap, const char *tag, struct _wsse__Security **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct _wsse__Security **)soap_malloc(soap, sizeof(struct _wsse__Security *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in__wsse__Security(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct _wsse__Security **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__wsse__Security, sizeof(struct _wsse__Security), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsse__Security(struct soap *soap, struct _wsse__Security *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_wsse__Security);
+	if (soap_out_PointerTo_wsse__Security(soap, tag?tag:"wsse:Security", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _wsse__Security ** SOAP_FMAC4 soap_get_PointerTo_wsse__Security(struct soap *soap, struct _wsse__Security **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_wsse__Security(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__SignatureType(struct soap *soap, struct ds__SignatureType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ds__SignatureType))
+		soap_serialize_ds__SignatureType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__SignatureType(struct soap *soap, const char *tag, int id, struct ds__SignatureType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ds__SignatureType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ds__SignatureType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ds__SignatureType ** SOAP_FMAC4 soap_in_PointerTods__SignatureType(struct soap *soap, const char *tag, struct ds__SignatureType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ds__SignatureType **)soap_malloc(soap, sizeof(struct ds__SignatureType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ds__SignatureType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__SignatureType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ds__SignatureType, sizeof(struct ds__SignatureType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__SignatureType(struct soap *soap, struct ds__SignatureType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTods__SignatureType);
+	if (soap_out_PointerTods__SignatureType(soap, tag?tag:"ds:SignatureType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__SignatureType ** SOAP_FMAC4 soap_get_PointerTods__SignatureType(struct soap *soap, struct ds__SignatureType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTods__SignatureType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxenc__EncryptedKeyType(struct soap *soap, struct xenc__EncryptedKeyType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_xenc__EncryptedKeyType))
+		soap_serialize_xenc__EncryptedKeyType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToxenc__EncryptedKeyType(struct soap *soap, const char *tag, int id, struct xenc__EncryptedKeyType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_xenc__EncryptedKeyType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_xenc__EncryptedKeyType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct xenc__EncryptedKeyType ** SOAP_FMAC4 soap_in_PointerToxenc__EncryptedKeyType(struct soap *soap, const char *tag, struct xenc__EncryptedKeyType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct xenc__EncryptedKeyType **)soap_malloc(soap, sizeof(struct xenc__EncryptedKeyType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_xenc__EncryptedKeyType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct xenc__EncryptedKeyType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_xenc__EncryptedKeyType, sizeof(struct xenc__EncryptedKeyType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxenc__EncryptedKeyType(struct soap *soap, struct xenc__EncryptedKeyType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToxenc__EncryptedKeyType);
+	if (soap_out_PointerToxenc__EncryptedKeyType(soap, tag?tag:"xenc:EncryptedKeyType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct xenc__EncryptedKeyType ** SOAP_FMAC4 soap_get_PointerToxenc__EncryptedKeyType(struct soap *soap, struct xenc__EncryptedKeyType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToxenc__EncryptedKeyType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsse__BinarySecurityToken(struct soap *soap, struct _wsse__BinarySecurityToken *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__wsse__BinarySecurityToken))
+		soap_serialize__wsse__BinarySecurityToken(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsse__BinarySecurityToken(struct soap *soap, const char *tag, int id, struct _wsse__BinarySecurityToken *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__wsse__BinarySecurityToken);
+	if (id < 0)
+		return soap->error;
+	return soap_out__wsse__BinarySecurityToken(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct _wsse__BinarySecurityToken ** SOAP_FMAC4 soap_in_PointerTo_wsse__BinarySecurityToken(struct soap *soap, const char *tag, struct _wsse__BinarySecurityToken **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct _wsse__BinarySecurityToken **)soap_malloc(soap, sizeof(struct _wsse__BinarySecurityToken *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in__wsse__BinarySecurityToken(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct _wsse__BinarySecurityToken **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__wsse__BinarySecurityToken, sizeof(struct _wsse__BinarySecurityToken), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsse__BinarySecurityToken(struct soap *soap, struct _wsse__BinarySecurityToken *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_wsse__BinarySecurityToken);
+	if (soap_out_PointerTo_wsse__BinarySecurityToken(soap, tag?tag:"wsse:BinarySecurityToken", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _wsse__BinarySecurityToken ** SOAP_FMAC4 soap_get_PointerTo_wsse__BinarySecurityToken(struct soap *soap, struct _wsse__BinarySecurityToken **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_wsse__BinarySecurityToken(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsse__UsernameToken(struct soap *soap, struct _wsse__UsernameToken *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__wsse__UsernameToken))
+		soap_serialize__wsse__UsernameToken(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsse__UsernameToken(struct soap *soap, const char *tag, int id, struct _wsse__UsernameToken *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__wsse__UsernameToken);
+	if (id < 0)
+		return soap->error;
+	return soap_out__wsse__UsernameToken(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct _wsse__UsernameToken ** SOAP_FMAC4 soap_in_PointerTo_wsse__UsernameToken(struct soap *soap, const char *tag, struct _wsse__UsernameToken **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct _wsse__UsernameToken **)soap_malloc(soap, sizeof(struct _wsse__UsernameToken *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in__wsse__UsernameToken(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct _wsse__UsernameToken **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__wsse__UsernameToken, sizeof(struct _wsse__UsernameToken), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsse__UsernameToken(struct soap *soap, struct _wsse__UsernameToken *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_wsse__UsernameToken);
+	if (soap_out_PointerTo_wsse__UsernameToken(soap, tag?tag:"wsse:UsernameToken", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _wsse__UsernameToken ** SOAP_FMAC4 soap_get_PointerTo_wsse__UsernameToken(struct soap *soap, struct _wsse__UsernameToken **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_wsse__UsernameToken(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsu__Timestamp(struct soap *soap, struct _wsu__Timestamp *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__wsu__Timestamp))
+		soap_serialize__wsu__Timestamp(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsu__Timestamp(struct soap *soap, const char *tag, int id, struct _wsu__Timestamp *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__wsu__Timestamp);
+	if (id < 0)
+		return soap->error;
+	return soap_out__wsu__Timestamp(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct _wsu__Timestamp ** SOAP_FMAC4 soap_in_PointerTo_wsu__Timestamp(struct soap *soap, const char *tag, struct _wsu__Timestamp **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct _wsu__Timestamp **)soap_malloc(soap, sizeof(struct _wsu__Timestamp *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in__wsu__Timestamp(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct _wsu__Timestamp **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__wsu__Timestamp, sizeof(struct _wsu__Timestamp), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsu__Timestamp(struct soap *soap, struct _wsu__Timestamp *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_wsu__Timestamp);
+	if (soap_out_PointerTo_wsu__Timestamp(soap, tag?tag:"wsu:Timestamp", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _wsu__Timestamp ** SOAP_FMAC4 soap_get_PointerTo_wsu__Timestamp(struct soap *soap, struct _wsu__Timestamp **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_wsu__Timestamp(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_xenc__ReferenceList(struct soap *soap, struct _xenc__ReferenceList *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__xenc__ReferenceList))
+		soap_serialize__xenc__ReferenceList(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_xenc__ReferenceList(struct soap *soap, const char *tag, int id, struct _xenc__ReferenceList *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__xenc__ReferenceList);
+	if (id < 0)
+		return soap->error;
+	return soap_out__xenc__ReferenceList(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct _xenc__ReferenceList ** SOAP_FMAC4 soap_in_PointerTo_xenc__ReferenceList(struct soap *soap, const char *tag, struct _xenc__ReferenceList **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct _xenc__ReferenceList **)soap_malloc(soap, sizeof(struct _xenc__ReferenceList *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in__xenc__ReferenceList(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct _xenc__ReferenceList **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__xenc__ReferenceList, sizeof(struct _xenc__ReferenceList), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_xenc__ReferenceList(struct soap *soap, struct _xenc__ReferenceList *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_xenc__ReferenceList);
+	if (soap_out_PointerTo_xenc__ReferenceList(soap, tag?tag:"xenc:ReferenceList", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _xenc__ReferenceList ** SOAP_FMAC4 soap_get_PointerTo_xenc__ReferenceList(struct soap *soap, struct _xenc__ReferenceList **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_xenc__ReferenceList(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo__xenc__union_ReferenceList(struct soap *soap, struct __xenc__union_ReferenceList *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE___xenc__union_ReferenceList))
+		soap_serialize___xenc__union_ReferenceList(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo__xenc__union_ReferenceList(struct soap *soap, const char *tag, int id, struct __xenc__union_ReferenceList *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE___xenc__union_ReferenceList);
+	if (id < 0)
+		return soap->error;
+	return soap_out___xenc__union_ReferenceList(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct __xenc__union_ReferenceList ** SOAP_FMAC4 soap_in_PointerTo__xenc__union_ReferenceList(struct soap *soap, const char *tag, struct __xenc__union_ReferenceList **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct __xenc__union_ReferenceList **)soap_malloc(soap, sizeof(struct __xenc__union_ReferenceList *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in___xenc__union_ReferenceList(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct __xenc__union_ReferenceList **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE___xenc__union_ReferenceList, sizeof(struct __xenc__union_ReferenceList), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo__xenc__union_ReferenceList(struct soap *soap, struct __xenc__union_ReferenceList *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo__xenc__union_ReferenceList);
+	if (soap_out_PointerTo__xenc__union_ReferenceList(soap, tag?tag:"-xenc:union-ReferenceList", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct __xenc__union_ReferenceList ** SOAP_FMAC4 soap_get_PointerTo__xenc__union_ReferenceList(struct soap *soap, struct __xenc__union_ReferenceList **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo__xenc__union_ReferenceList(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxenc__ReferenceType(struct soap *soap, struct xenc__ReferenceType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_xenc__ReferenceType))
+		soap_serialize_xenc__ReferenceType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToxenc__ReferenceType(struct soap *soap, const char *tag, int id, struct xenc__ReferenceType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_xenc__ReferenceType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_xenc__ReferenceType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct xenc__ReferenceType ** SOAP_FMAC4 soap_in_PointerToxenc__ReferenceType(struct soap *soap, const char *tag, struct xenc__ReferenceType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct xenc__ReferenceType **)soap_malloc(soap, sizeof(struct xenc__ReferenceType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_xenc__ReferenceType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct xenc__ReferenceType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_xenc__ReferenceType, sizeof(struct xenc__ReferenceType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxenc__ReferenceType(struct soap *soap, struct xenc__ReferenceType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToxenc__ReferenceType);
+	if (soap_out_PointerToxenc__ReferenceType(soap, tag?tag:"xenc:ReferenceType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct xenc__ReferenceType ** SOAP_FMAC4 soap_get_PointerToxenc__ReferenceType(struct soap *soap, struct xenc__ReferenceType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToxenc__ReferenceType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxenc__EncryptionPropertyType(struct soap *soap, struct xenc__EncryptionPropertyType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_xenc__EncryptionPropertyType))
+		soap_serialize_xenc__EncryptionPropertyType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToxenc__EncryptionPropertyType(struct soap *soap, const char *tag, int id, struct xenc__EncryptionPropertyType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_xenc__EncryptionPropertyType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_xenc__EncryptionPropertyType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct xenc__EncryptionPropertyType ** SOAP_FMAC4 soap_in_PointerToxenc__EncryptionPropertyType(struct soap *soap, const char *tag, struct xenc__EncryptionPropertyType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct xenc__EncryptionPropertyType **)soap_malloc(soap, sizeof(struct xenc__EncryptionPropertyType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_xenc__EncryptionPropertyType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct xenc__EncryptionPropertyType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_xenc__EncryptionPropertyType, sizeof(struct xenc__EncryptionPropertyType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxenc__EncryptionPropertyType(struct soap *soap, struct xenc__EncryptionPropertyType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToxenc__EncryptionPropertyType);
+	if (soap_out_PointerToxenc__EncryptionPropertyType(soap, tag?tag:"xenc:EncryptionPropertyType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct xenc__EncryptionPropertyType ** SOAP_FMAC4 soap_get_PointerToxenc__EncryptionPropertyType(struct soap *soap, struct xenc__EncryptionPropertyType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToxenc__EncryptionPropertyType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxenc__TransformsType(struct soap *soap, struct xenc__TransformsType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_xenc__TransformsType))
+		soap_serialize_xenc__TransformsType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToxenc__TransformsType(struct soap *soap, const char *tag, int id, struct xenc__TransformsType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_xenc__TransformsType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_xenc__TransformsType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct xenc__TransformsType ** SOAP_FMAC4 soap_in_PointerToxenc__TransformsType(struct soap *soap, const char *tag, struct xenc__TransformsType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct xenc__TransformsType **)soap_malloc(soap, sizeof(struct xenc__TransformsType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_xenc__TransformsType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct xenc__TransformsType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_xenc__TransformsType, sizeof(struct xenc__TransformsType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxenc__TransformsType(struct soap *soap, struct xenc__TransformsType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToxenc__TransformsType);
+	if (soap_out_PointerToxenc__TransformsType(soap, tag?tag:"xenc:TransformsType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct xenc__TransformsType ** SOAP_FMAC4 soap_get_PointerToxenc__TransformsType(struct soap *soap, struct xenc__TransformsType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToxenc__TransformsType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxenc__CipherReferenceType(struct soap *soap, struct xenc__CipherReferenceType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_xenc__CipherReferenceType))
+		soap_serialize_xenc__CipherReferenceType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToxenc__CipherReferenceType(struct soap *soap, const char *tag, int id, struct xenc__CipherReferenceType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_xenc__CipherReferenceType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_xenc__CipherReferenceType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct xenc__CipherReferenceType ** SOAP_FMAC4 soap_in_PointerToxenc__CipherReferenceType(struct soap *soap, const char *tag, struct xenc__CipherReferenceType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct xenc__CipherReferenceType **)soap_malloc(soap, sizeof(struct xenc__CipherReferenceType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_xenc__CipherReferenceType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct xenc__CipherReferenceType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_xenc__CipherReferenceType, sizeof(struct xenc__CipherReferenceType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxenc__CipherReferenceType(struct soap *soap, struct xenc__CipherReferenceType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToxenc__CipherReferenceType);
+	if (soap_out_PointerToxenc__CipherReferenceType(soap, tag?tag:"xenc:CipherReferenceType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct xenc__CipherReferenceType ** SOAP_FMAC4 soap_get_PointerToxenc__CipherReferenceType(struct soap *soap, struct xenc__CipherReferenceType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToxenc__CipherReferenceType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxenc__EncryptionPropertiesType(struct soap *soap, struct xenc__EncryptionPropertiesType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_xenc__EncryptionPropertiesType))
+		soap_serialize_xenc__EncryptionPropertiesType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToxenc__EncryptionPropertiesType(struct soap *soap, const char *tag, int id, struct xenc__EncryptionPropertiesType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_xenc__EncryptionPropertiesType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_xenc__EncryptionPropertiesType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct xenc__EncryptionPropertiesType ** SOAP_FMAC4 soap_in_PointerToxenc__EncryptionPropertiesType(struct soap *soap, const char *tag, struct xenc__EncryptionPropertiesType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct xenc__EncryptionPropertiesType **)soap_malloc(soap, sizeof(struct xenc__EncryptionPropertiesType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_xenc__EncryptionPropertiesType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct xenc__EncryptionPropertiesType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_xenc__EncryptionPropertiesType, sizeof(struct xenc__EncryptionPropertiesType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxenc__EncryptionPropertiesType(struct soap *soap, struct xenc__EncryptionPropertiesType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToxenc__EncryptionPropertiesType);
+	if (soap_out_PointerToxenc__EncryptionPropertiesType(soap, tag?tag:"xenc:EncryptionPropertiesType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct xenc__EncryptionPropertiesType ** SOAP_FMAC4 soap_get_PointerToxenc__EncryptionPropertiesType(struct soap *soap, struct xenc__EncryptionPropertiesType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToxenc__EncryptionPropertiesType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxenc__CipherDataType(struct soap *soap, struct xenc__CipherDataType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_xenc__CipherDataType))
+		soap_serialize_xenc__CipherDataType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToxenc__CipherDataType(struct soap *soap, const char *tag, int id, struct xenc__CipherDataType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_xenc__CipherDataType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_xenc__CipherDataType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct xenc__CipherDataType ** SOAP_FMAC4 soap_in_PointerToxenc__CipherDataType(struct soap *soap, const char *tag, struct xenc__CipherDataType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct xenc__CipherDataType **)soap_malloc(soap, sizeof(struct xenc__CipherDataType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_xenc__CipherDataType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct xenc__CipherDataType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_xenc__CipherDataType, sizeof(struct xenc__CipherDataType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxenc__CipherDataType(struct soap *soap, struct xenc__CipherDataType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToxenc__CipherDataType);
+	if (soap_out_PointerToxenc__CipherDataType(soap, tag?tag:"xenc:CipherDataType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct xenc__CipherDataType ** SOAP_FMAC4 soap_get_PointerToxenc__CipherDataType(struct soap *soap, struct xenc__CipherDataType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToxenc__CipherDataType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ds__KeyInfo(struct soap *soap, struct ds__KeyInfoType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ds__KeyInfo))
+		soap_serialize__ds__KeyInfo(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ds__KeyInfo(struct soap *soap, const char *tag, int id, struct ds__KeyInfoType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ds__KeyInfo);
+	if (id < 0)
+		return soap->error;
+	return soap_out__ds__KeyInfo(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ds__KeyInfoType ** SOAP_FMAC4 soap_in_PointerTo_ds__KeyInfo(struct soap *soap, const char *tag, struct ds__KeyInfoType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ds__KeyInfoType **)soap_malloc(soap, sizeof(struct ds__KeyInfoType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in__ds__KeyInfo(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__KeyInfoType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ds__KeyInfo, sizeof(struct ds__KeyInfoType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ds__KeyInfo(struct soap *soap, struct ds__KeyInfoType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ds__KeyInfo);
+	if (soap_out_PointerTo_ds__KeyInfo(soap, tag?tag:"ds:KeyInfo", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__KeyInfoType ** SOAP_FMAC4 soap_get_PointerTo_ds__KeyInfo(struct soap *soap, struct ds__KeyInfoType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ds__KeyInfo(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxenc__EncryptionMethodType(struct soap *soap, struct xenc__EncryptionMethodType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_xenc__EncryptionMethodType))
+		soap_serialize_xenc__EncryptionMethodType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToxenc__EncryptionMethodType(struct soap *soap, const char *tag, int id, struct xenc__EncryptionMethodType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_xenc__EncryptionMethodType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_xenc__EncryptionMethodType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct xenc__EncryptionMethodType ** SOAP_FMAC4 soap_in_PointerToxenc__EncryptionMethodType(struct soap *soap, const char *tag, struct xenc__EncryptionMethodType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct xenc__EncryptionMethodType **)soap_malloc(soap, sizeof(struct xenc__EncryptionMethodType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_xenc__EncryptionMethodType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct xenc__EncryptionMethodType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_xenc__EncryptionMethodType, sizeof(struct xenc__EncryptionMethodType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxenc__EncryptionMethodType(struct soap *soap, struct xenc__EncryptionMethodType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToxenc__EncryptionMethodType);
+	if (soap_out_PointerToxenc__EncryptionMethodType(soap, tag?tag:"xenc:EncryptionMethodType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct xenc__EncryptionMethodType ** SOAP_FMAC4 soap_get_PointerToxenc__EncryptionMethodType(struct soap *soap, struct xenc__EncryptionMethodType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToxenc__EncryptionMethodType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__X509IssuerSerialType(struct soap *soap, struct ds__X509IssuerSerialType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ds__X509IssuerSerialType))
+		soap_serialize_ds__X509IssuerSerialType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__X509IssuerSerialType(struct soap *soap, const char *tag, int id, struct ds__X509IssuerSerialType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ds__X509IssuerSerialType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ds__X509IssuerSerialType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ds__X509IssuerSerialType ** SOAP_FMAC4 soap_in_PointerTods__X509IssuerSerialType(struct soap *soap, const char *tag, struct ds__X509IssuerSerialType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ds__X509IssuerSerialType **)soap_malloc(soap, sizeof(struct ds__X509IssuerSerialType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ds__X509IssuerSerialType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__X509IssuerSerialType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ds__X509IssuerSerialType, sizeof(struct ds__X509IssuerSerialType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__X509IssuerSerialType(struct soap *soap, struct ds__X509IssuerSerialType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTods__X509IssuerSerialType);
+	if (soap_out_PointerTods__X509IssuerSerialType(soap, tag?tag:"ds:X509IssuerSerialType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__X509IssuerSerialType ** SOAP_FMAC4 soap_get_PointerTods__X509IssuerSerialType(struct soap *soap, struct ds__X509IssuerSerialType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTods__X509IssuerSerialType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__RSAKeyValueType(struct soap *soap, struct ds__RSAKeyValueType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ds__RSAKeyValueType))
+		soap_serialize_ds__RSAKeyValueType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__RSAKeyValueType(struct soap *soap, const char *tag, int id, struct ds__RSAKeyValueType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ds__RSAKeyValueType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ds__RSAKeyValueType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ds__RSAKeyValueType ** SOAP_FMAC4 soap_in_PointerTods__RSAKeyValueType(struct soap *soap, const char *tag, struct ds__RSAKeyValueType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ds__RSAKeyValueType **)soap_malloc(soap, sizeof(struct ds__RSAKeyValueType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ds__RSAKeyValueType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__RSAKeyValueType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ds__RSAKeyValueType, sizeof(struct ds__RSAKeyValueType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__RSAKeyValueType(struct soap *soap, struct ds__RSAKeyValueType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTods__RSAKeyValueType);
+	if (soap_out_PointerTods__RSAKeyValueType(soap, tag?tag:"ds:RSAKeyValueType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__RSAKeyValueType ** SOAP_FMAC4 soap_get_PointerTods__RSAKeyValueType(struct soap *soap, struct ds__RSAKeyValueType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTods__RSAKeyValueType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__DSAKeyValueType(struct soap *soap, struct ds__DSAKeyValueType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ds__DSAKeyValueType))
+		soap_serialize_ds__DSAKeyValueType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__DSAKeyValueType(struct soap *soap, const char *tag, int id, struct ds__DSAKeyValueType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ds__DSAKeyValueType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ds__DSAKeyValueType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ds__DSAKeyValueType ** SOAP_FMAC4 soap_in_PointerTods__DSAKeyValueType(struct soap *soap, const char *tag, struct ds__DSAKeyValueType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ds__DSAKeyValueType **)soap_malloc(soap, sizeof(struct ds__DSAKeyValueType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ds__DSAKeyValueType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__DSAKeyValueType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ds__DSAKeyValueType, sizeof(struct ds__DSAKeyValueType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__DSAKeyValueType(struct soap *soap, struct ds__DSAKeyValueType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTods__DSAKeyValueType);
+	if (soap_out_PointerTods__DSAKeyValueType(soap, tag?tag:"ds:DSAKeyValueType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__DSAKeyValueType ** SOAP_FMAC4 soap_get_PointerTods__DSAKeyValueType(struct soap *soap, struct ds__DSAKeyValueType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTods__DSAKeyValueType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__TransformType(struct soap *soap, struct ds__TransformType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ds__TransformType))
+		soap_serialize_ds__TransformType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__TransformType(struct soap *soap, const char *tag, int id, struct ds__TransformType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ds__TransformType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ds__TransformType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ds__TransformType ** SOAP_FMAC4 soap_in_PointerTods__TransformType(struct soap *soap, const char *tag, struct ds__TransformType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ds__TransformType **)soap_malloc(soap, sizeof(struct ds__TransformType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ds__TransformType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__TransformType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ds__TransformType, sizeof(struct ds__TransformType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__TransformType(struct soap *soap, struct ds__TransformType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTods__TransformType);
+	if (soap_out_PointerTods__TransformType(soap, tag?tag:"ds:TransformType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__TransformType ** SOAP_FMAC4 soap_get_PointerTods__TransformType(struct soap *soap, struct ds__TransformType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTods__TransformType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__DigestMethodType(struct soap *soap, struct ds__DigestMethodType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ds__DigestMethodType))
+		soap_serialize_ds__DigestMethodType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__DigestMethodType(struct soap *soap, const char *tag, int id, struct ds__DigestMethodType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ds__DigestMethodType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ds__DigestMethodType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ds__DigestMethodType ** SOAP_FMAC4 soap_in_PointerTods__DigestMethodType(struct soap *soap, const char *tag, struct ds__DigestMethodType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ds__DigestMethodType **)soap_malloc(soap, sizeof(struct ds__DigestMethodType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ds__DigestMethodType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__DigestMethodType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ds__DigestMethodType, sizeof(struct ds__DigestMethodType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__DigestMethodType(struct soap *soap, struct ds__DigestMethodType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTods__DigestMethodType);
+	if (soap_out_PointerTods__DigestMethodType(soap, tag?tag:"ds:DigestMethodType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__DigestMethodType ** SOAP_FMAC4 soap_get_PointerTods__DigestMethodType(struct soap *soap, struct ds__DigestMethodType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTods__DigestMethodType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__TransformsType(struct soap *soap, struct ds__TransformsType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ds__TransformsType))
+		soap_serialize_ds__TransformsType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__TransformsType(struct soap *soap, const char *tag, int id, struct ds__TransformsType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ds__TransformsType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ds__TransformsType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ds__TransformsType ** SOAP_FMAC4 soap_in_PointerTods__TransformsType(struct soap *soap, const char *tag, struct ds__TransformsType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ds__TransformsType **)soap_malloc(soap, sizeof(struct ds__TransformsType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ds__TransformsType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__TransformsType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ds__TransformsType, sizeof(struct ds__TransformsType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__TransformsType(struct soap *soap, struct ds__TransformsType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTods__TransformsType);
+	if (soap_out_PointerTods__TransformsType(soap, tag?tag:"ds:TransformsType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__TransformsType ** SOAP_FMAC4 soap_get_PointerTods__TransformsType(struct soap *soap, struct ds__TransformsType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTods__TransformsType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToint(struct soap *soap, int *const*a)
+{
+	soap_reference(soap, *a, SOAP_TYPE_int);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToint(struct soap *soap, const char *tag, int id, int *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_int);
+	if (id < 0)
+		return soap->error;
+	return soap_out_int(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 int ** SOAP_FMAC4 soap_in_PointerToint(struct soap *soap, const char *tag, int **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (int **)soap_malloc(soap, sizeof(int *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_int(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (int **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_int, sizeof(int), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToint(struct soap *soap, int *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToint);
+	if (soap_out_PointerToint(soap, tag?tag:"int", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int ** SOAP_FMAC4 soap_get_PointerToint(struct soap *soap, int **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToint(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTods__ReferenceType(struct soap *soap, struct ds__ReferenceType **const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_PointerTods__ReferenceType))
+		soap_serialize_PointerTods__ReferenceType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTods__ReferenceType(struct soap *soap, const char *tag, int id, struct ds__ReferenceType **const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTods__ReferenceType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_PointerTods__ReferenceType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ds__ReferenceType *** SOAP_FMAC4 soap_in_PointerToPointerTods__ReferenceType(struct soap *soap, const char *tag, struct ds__ReferenceType ***a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ds__ReferenceType ***)soap_malloc(soap, sizeof(struct ds__ReferenceType **))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_PointerTods__ReferenceType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__ReferenceType ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTods__ReferenceType, sizeof(struct ds__ReferenceType *), 1);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTods__ReferenceType(struct soap *soap, struct ds__ReferenceType **const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTods__ReferenceType);
+	if (soap_out_PointerToPointerTods__ReferenceType(soap, tag?tag:"ds:ReferenceType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__ReferenceType *** SOAP_FMAC4 soap_get_PointerToPointerTods__ReferenceType(struct soap *soap, struct ds__ReferenceType ***p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerToPointerTods__ReferenceType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__ReferenceType(struct soap *soap, struct ds__ReferenceType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ds__ReferenceType))
+		soap_serialize_ds__ReferenceType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__ReferenceType(struct soap *soap, const char *tag, int id, struct ds__ReferenceType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ds__ReferenceType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ds__ReferenceType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ds__ReferenceType ** SOAP_FMAC4 soap_in_PointerTods__ReferenceType(struct soap *soap, const char *tag, struct ds__ReferenceType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ds__ReferenceType **)soap_malloc(soap, sizeof(struct ds__ReferenceType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ds__ReferenceType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__ReferenceType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ds__ReferenceType, sizeof(struct ds__ReferenceType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__ReferenceType(struct soap *soap, struct ds__ReferenceType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTods__ReferenceType);
+	if (soap_out_PointerTods__ReferenceType(soap, tag?tag:"ds:ReferenceType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__ReferenceType ** SOAP_FMAC4 soap_get_PointerTods__ReferenceType(struct soap *soap, struct ds__ReferenceType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTods__ReferenceType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__SignatureMethodType(struct soap *soap, struct ds__SignatureMethodType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ds__SignatureMethodType))
+		soap_serialize_ds__SignatureMethodType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__SignatureMethodType(struct soap *soap, const char *tag, int id, struct ds__SignatureMethodType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ds__SignatureMethodType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ds__SignatureMethodType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ds__SignatureMethodType ** SOAP_FMAC4 soap_in_PointerTods__SignatureMethodType(struct soap *soap, const char *tag, struct ds__SignatureMethodType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ds__SignatureMethodType **)soap_malloc(soap, sizeof(struct ds__SignatureMethodType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ds__SignatureMethodType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__SignatureMethodType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ds__SignatureMethodType, sizeof(struct ds__SignatureMethodType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__SignatureMethodType(struct soap *soap, struct ds__SignatureMethodType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTods__SignatureMethodType);
+	if (soap_out_PointerTods__SignatureMethodType(soap, tag?tag:"ds:SignatureMethodType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__SignatureMethodType ** SOAP_FMAC4 soap_get_PointerTods__SignatureMethodType(struct soap *soap, struct ds__SignatureMethodType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTods__SignatureMethodType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__CanonicalizationMethodType(struct soap *soap, struct ds__CanonicalizationMethodType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ds__CanonicalizationMethodType))
+		soap_serialize_ds__CanonicalizationMethodType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__CanonicalizationMethodType(struct soap *soap, const char *tag, int id, struct ds__CanonicalizationMethodType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ds__CanonicalizationMethodType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ds__CanonicalizationMethodType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ds__CanonicalizationMethodType ** SOAP_FMAC4 soap_in_PointerTods__CanonicalizationMethodType(struct soap *soap, const char *tag, struct ds__CanonicalizationMethodType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ds__CanonicalizationMethodType **)soap_malloc(soap, sizeof(struct ds__CanonicalizationMethodType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ds__CanonicalizationMethodType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__CanonicalizationMethodType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ds__CanonicalizationMethodType, sizeof(struct ds__CanonicalizationMethodType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__CanonicalizationMethodType(struct soap *soap, struct ds__CanonicalizationMethodType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTods__CanonicalizationMethodType);
+	if (soap_out_PointerTods__CanonicalizationMethodType(soap, tag?tag:"ds:CanonicalizationMethodType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__CanonicalizationMethodType ** SOAP_FMAC4 soap_get_PointerTods__CanonicalizationMethodType(struct soap *soap, struct ds__CanonicalizationMethodType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTods__CanonicalizationMethodType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsse__SecurityTokenReference(struct soap *soap, struct _wsse__SecurityTokenReference *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__wsse__SecurityTokenReference))
+		soap_serialize__wsse__SecurityTokenReference(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsse__SecurityTokenReference(struct soap *soap, const char *tag, int id, struct _wsse__SecurityTokenReference *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__wsse__SecurityTokenReference);
+	if (id < 0)
+		return soap->error;
+	return soap_out__wsse__SecurityTokenReference(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct _wsse__SecurityTokenReference ** SOAP_FMAC4 soap_in_PointerTo_wsse__SecurityTokenReference(struct soap *soap, const char *tag, struct _wsse__SecurityTokenReference **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct _wsse__SecurityTokenReference **)soap_malloc(soap, sizeof(struct _wsse__SecurityTokenReference *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in__wsse__SecurityTokenReference(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct _wsse__SecurityTokenReference **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__wsse__SecurityTokenReference, sizeof(struct _wsse__SecurityTokenReference), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsse__SecurityTokenReference(struct soap *soap, struct _wsse__SecurityTokenReference *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_wsse__SecurityTokenReference);
+	if (soap_out_PointerTo_wsse__SecurityTokenReference(soap, tag?tag:"wsse:SecurityTokenReference", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _wsse__SecurityTokenReference ** SOAP_FMAC4 soap_get_PointerTo_wsse__SecurityTokenReference(struct soap *soap, struct _wsse__SecurityTokenReference **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_wsse__SecurityTokenReference(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__X509DataType(struct soap *soap, struct ds__X509DataType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ds__X509DataType))
+		soap_serialize_ds__X509DataType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__X509DataType(struct soap *soap, const char *tag, int id, struct ds__X509DataType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ds__X509DataType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ds__X509DataType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ds__X509DataType ** SOAP_FMAC4 soap_in_PointerTods__X509DataType(struct soap *soap, const char *tag, struct ds__X509DataType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ds__X509DataType **)soap_malloc(soap, sizeof(struct ds__X509DataType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ds__X509DataType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__X509DataType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ds__X509DataType, sizeof(struct ds__X509DataType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__X509DataType(struct soap *soap, struct ds__X509DataType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTods__X509DataType);
+	if (soap_out_PointerTods__X509DataType(soap, tag?tag:"ds:X509DataType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__X509DataType ** SOAP_FMAC4 soap_get_PointerTods__X509DataType(struct soap *soap, struct ds__X509DataType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTods__X509DataType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__RetrievalMethodType(struct soap *soap, struct ds__RetrievalMethodType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ds__RetrievalMethodType))
+		soap_serialize_ds__RetrievalMethodType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__RetrievalMethodType(struct soap *soap, const char *tag, int id, struct ds__RetrievalMethodType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ds__RetrievalMethodType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ds__RetrievalMethodType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ds__RetrievalMethodType ** SOAP_FMAC4 soap_in_PointerTods__RetrievalMethodType(struct soap *soap, const char *tag, struct ds__RetrievalMethodType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ds__RetrievalMethodType **)soap_malloc(soap, sizeof(struct ds__RetrievalMethodType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ds__RetrievalMethodType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__RetrievalMethodType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ds__RetrievalMethodType, sizeof(struct ds__RetrievalMethodType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__RetrievalMethodType(struct soap *soap, struct ds__RetrievalMethodType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTods__RetrievalMethodType);
+	if (soap_out_PointerTods__RetrievalMethodType(soap, tag?tag:"ds:RetrievalMethodType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__RetrievalMethodType ** SOAP_FMAC4 soap_get_PointerTods__RetrievalMethodType(struct soap *soap, struct ds__RetrievalMethodType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTods__RetrievalMethodType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__KeyValueType(struct soap *soap, struct ds__KeyValueType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ds__KeyValueType))
+		soap_serialize_ds__KeyValueType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__KeyValueType(struct soap *soap, const char *tag, int id, struct ds__KeyValueType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ds__KeyValueType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ds__KeyValueType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ds__KeyValueType ** SOAP_FMAC4 soap_in_PointerTods__KeyValueType(struct soap *soap, const char *tag, struct ds__KeyValueType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ds__KeyValueType **)soap_malloc(soap, sizeof(struct ds__KeyValueType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ds__KeyValueType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__KeyValueType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ds__KeyValueType, sizeof(struct ds__KeyValueType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__KeyValueType(struct soap *soap, struct ds__KeyValueType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTods__KeyValueType);
+	if (soap_out_PointerTods__KeyValueType(soap, tag?tag:"ds:KeyValueType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__KeyValueType ** SOAP_FMAC4 soap_get_PointerTods__KeyValueType(struct soap *soap, struct ds__KeyValueType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTods__KeyValueType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_c14n__InclusiveNamespaces(struct soap *soap, struct _c14n__InclusiveNamespaces *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__c14n__InclusiveNamespaces))
+		soap_serialize__c14n__InclusiveNamespaces(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_c14n__InclusiveNamespaces(struct soap *soap, const char *tag, int id, struct _c14n__InclusiveNamespaces *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__c14n__InclusiveNamespaces);
+	if (id < 0)
+		return soap->error;
+	return soap_out__c14n__InclusiveNamespaces(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct _c14n__InclusiveNamespaces ** SOAP_FMAC4 soap_in_PointerTo_c14n__InclusiveNamespaces(struct soap *soap, const char *tag, struct _c14n__InclusiveNamespaces **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct _c14n__InclusiveNamespaces **)soap_malloc(soap, sizeof(struct _c14n__InclusiveNamespaces *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in__c14n__InclusiveNamespaces(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct _c14n__InclusiveNamespaces **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__c14n__InclusiveNamespaces, sizeof(struct _c14n__InclusiveNamespaces), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_c14n__InclusiveNamespaces(struct soap *soap, struct _c14n__InclusiveNamespaces *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_c14n__InclusiveNamespaces);
+	if (soap_out_PointerTo_c14n__InclusiveNamespaces(soap, tag?tag:"c14n:InclusiveNamespaces", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _c14n__InclusiveNamespaces ** SOAP_FMAC4 soap_get_PointerTo_c14n__InclusiveNamespaces(struct soap *soap, struct _c14n__InclusiveNamespaces **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_c14n__InclusiveNamespaces(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__KeyInfoType(struct soap *soap, struct ds__KeyInfoType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ds__KeyInfoType))
+		soap_serialize_ds__KeyInfoType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__KeyInfoType(struct soap *soap, const char *tag, int id, struct ds__KeyInfoType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ds__KeyInfoType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ds__KeyInfoType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ds__KeyInfoType ** SOAP_FMAC4 soap_in_PointerTods__KeyInfoType(struct soap *soap, const char *tag, struct ds__KeyInfoType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ds__KeyInfoType **)soap_malloc(soap, sizeof(struct ds__KeyInfoType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ds__KeyInfoType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__KeyInfoType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ds__KeyInfoType, sizeof(struct ds__KeyInfoType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__KeyInfoType(struct soap *soap, struct ds__KeyInfoType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTods__KeyInfoType);
+	if (soap_out_PointerTods__KeyInfoType(soap, tag?tag:"ds:KeyInfoType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__KeyInfoType ** SOAP_FMAC4 soap_get_PointerTods__KeyInfoType(struct soap *soap, struct ds__KeyInfoType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTods__KeyInfoType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__SignedInfoType(struct soap *soap, struct ds__SignedInfoType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ds__SignedInfoType))
+		soap_serialize_ds__SignedInfoType(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__SignedInfoType(struct soap *soap, const char *tag, int id, struct ds__SignedInfoType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ds__SignedInfoType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ds__SignedInfoType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ds__SignedInfoType ** SOAP_FMAC4 soap_in_PointerTods__SignedInfoType(struct soap *soap, const char *tag, struct ds__SignedInfoType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct ds__SignedInfoType **)soap_malloc(soap, sizeof(struct ds__SignedInfoType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ds__SignedInfoType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct ds__SignedInfoType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ds__SignedInfoType, sizeof(struct ds__SignedInfoType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__SignedInfoType(struct soap *soap, struct ds__SignedInfoType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTods__SignedInfoType);
+	if (soap_out_PointerTods__SignedInfoType(soap, tag?tag:"ds:SignedInfoType", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ds__SignedInfoType ** SOAP_FMAC4 soap_get_PointerTods__SignedInfoType(struct soap *soap, struct ds__SignedInfoType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTods__SignedInfoType(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsse__Embedded(struct soap *soap, struct _wsse__Embedded *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__wsse__Embedded))
+		soap_serialize__wsse__Embedded(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsse__Embedded(struct soap *soap, const char *tag, int id, struct _wsse__Embedded *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__wsse__Embedded);
+	if (id < 0)
+		return soap->error;
+	return soap_out__wsse__Embedded(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct _wsse__Embedded ** SOAP_FMAC4 soap_in_PointerTo_wsse__Embedded(struct soap *soap, const char *tag, struct _wsse__Embedded **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct _wsse__Embedded **)soap_malloc(soap, sizeof(struct _wsse__Embedded *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in__wsse__Embedded(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct _wsse__Embedded **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__wsse__Embedded, sizeof(struct _wsse__Embedded), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsse__Embedded(struct soap *soap, struct _wsse__Embedded *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_wsse__Embedded);
+	if (soap_out_PointerTo_wsse__Embedded(soap, tag?tag:"wsse:Embedded", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _wsse__Embedded ** SOAP_FMAC4 soap_get_PointerTo_wsse__Embedded(struct soap *soap, struct _wsse__Embedded **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_wsse__Embedded(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsse__KeyIdentifier(struct soap *soap, struct _wsse__KeyIdentifier *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__wsse__KeyIdentifier))
+		soap_serialize__wsse__KeyIdentifier(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsse__KeyIdentifier(struct soap *soap, const char *tag, int id, struct _wsse__KeyIdentifier *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__wsse__KeyIdentifier);
+	if (id < 0)
+		return soap->error;
+	return soap_out__wsse__KeyIdentifier(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct _wsse__KeyIdentifier ** SOAP_FMAC4 soap_in_PointerTo_wsse__KeyIdentifier(struct soap *soap, const char *tag, struct _wsse__KeyIdentifier **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct _wsse__KeyIdentifier **)soap_malloc(soap, sizeof(struct _wsse__KeyIdentifier *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in__wsse__KeyIdentifier(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct _wsse__KeyIdentifier **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__wsse__KeyIdentifier, sizeof(struct _wsse__KeyIdentifier), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsse__KeyIdentifier(struct soap *soap, struct _wsse__KeyIdentifier *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_wsse__KeyIdentifier);
+	if (soap_out_PointerTo_wsse__KeyIdentifier(soap, tag?tag:"wsse:KeyIdentifier", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _wsse__KeyIdentifier ** SOAP_FMAC4 soap_get_PointerTo_wsse__KeyIdentifier(struct soap *soap, struct _wsse__KeyIdentifier **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_wsse__KeyIdentifier(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsse__Reference(struct soap *soap, struct _wsse__Reference *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__wsse__Reference))
+		soap_serialize__wsse__Reference(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsse__Reference(struct soap *soap, const char *tag, int id, struct _wsse__Reference *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__wsse__Reference);
+	if (id < 0)
+		return soap->error;
+	return soap_out__wsse__Reference(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct _wsse__Reference ** SOAP_FMAC4 soap_in_PointerTo_wsse__Reference(struct soap *soap, const char *tag, struct _wsse__Reference **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct _wsse__Reference **)soap_malloc(soap, sizeof(struct _wsse__Reference *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in__wsse__Reference(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct _wsse__Reference **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__wsse__Reference, sizeof(struct _wsse__Reference), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsse__Reference(struct soap *soap, struct _wsse__Reference *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_wsse__Reference);
+	if (soap_out_PointerTo_wsse__Reference(soap, tag?tag:"wsse:Reference", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _wsse__Reference ** SOAP_FMAC4 soap_get_PointerTo_wsse__Reference(struct soap *soap, struct _wsse__Reference **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_wsse__Reference(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsse__Password(struct soap *soap, struct _wsse__Password *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__wsse__Password))
+		soap_serialize__wsse__Password(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsse__Password(struct soap *soap, const char *tag, int id, struct _wsse__Password *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__wsse__Password);
+	if (id < 0)
+		return soap->error;
+	return soap_out__wsse__Password(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct _wsse__Password ** SOAP_FMAC4 soap_in_PointerTo_wsse__Password(struct soap *soap, const char *tag, struct _wsse__Password **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!a)
+		if (!(a = (struct _wsse__Password **)soap_malloc(soap, sizeof(struct _wsse__Password *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in__wsse__Password(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (struct _wsse__Password **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__wsse__Password, sizeof(struct _wsse__Password), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsse__Password(struct soap *soap, struct _wsse__Password *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_wsse__Password);
+	if (soap_out_PointerTo_wsse__Password(soap, tag?tag:"wsse:Password", id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct _wsse__Password ** SOAP_FMAC4 soap_get_PointerTo_wsse__Password(struct soap *soap, struct _wsse__Password **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_wsse__Password(soap, tag, p, type)))
+		if (soap_getindependent(soap))
+			return NULL;
+	return p;
+}
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__QName(struct soap *soap, const char *tag, int id, char *const*a, const char *type)
 {

@@ -141,7 +141,7 @@ int main(int argc, char* argv[])
 			printf("error in oscars_cancelReservation\n");
 	}
 	else
-		usage(argv[1]);
+		usage(argv[0]);
 	
 	xspd_stop_soap_ssl(&oscars_soap);
 
