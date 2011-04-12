@@ -6,7 +6,7 @@ int xspd_copy_soap_context(xspdSoapContext *src, xspdSoapContext *dst) {
 }
 
 int xspd_start_soap_ssl(xspdSoapContext *sc, int soap_ssl_flags) {
-	struct soap *soap;
+	struct soap *soap = (struct soap*)malloc(sizeof(struct soap));
 	soap_init(soap);
 	soap_set_namespaces(soap, sc->namespaces);
 	soap_ssl_init();
@@ -36,8 +36,9 @@ int xspd_start_soap_ssl(xspdSoapContext *sc, int soap_ssl_flags) {
 
 int xspd_stop_soap_ssl(xspdSoapContext *sc) {
 	if (sc->soap){
-		soap_end(sc->soap);
-		soap_done(sc->soap);
+		//soap_end(sc->soap);
+		//soap_done(sc->soap);
+		free(sc->soap);
 		CRYPTO_thread_cleanup(); 
 	}
 	return 0;
@@ -53,8 +54,9 @@ int xspd_start_soap(xspdSoapContext *sc) {
 
 int xspd_stop_soap(xspdSoapContext *sc) {
 	if (sc->soap) {
-		soap_end(sc->soap);
-		soap_done(sc->soap);
+		//soap_end(sc->soap);
+		//soap_done(sc->soap);
+		free(sc->soap);
 	}
         return 0;
 }

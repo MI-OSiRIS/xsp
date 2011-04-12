@@ -60,10 +60,181 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_put_int(struct soap*, const int *, const char*, c
 
 SOAP_FMAC3 int * SOAP_FMAC4 soap_get_int(struct soap*, int *, const char*, const char*);
 
+/* _wsa5__RetryAfter is a typedef element/attribute synonym for unsignedLONG64 */
+
+#ifndef SOAP_TYPE__wsa5__RetryAfter
+#define SOAP_TYPE__wsa5__RetryAfter (119)
+#endif
+
+#define soap_default__wsa5__RetryAfter(soap, a) soap_default_unsignedLONG64(soap, a)
+
+
+#define soap_out__wsa5__RetryAfter soap_out_unsignedLONG64
+
+
+#define soap_in__wsa5__RetryAfter soap_in_unsignedLONG64
+
+
+#ifndef soap_write__wsa5__RetryAfter
+#define soap_write__wsa5__RetryAfter(soap, data) ( soap_begin_send(soap) || soap_put__wsa5__RetryAfter(soap, data, "wsa5:RetryAfter", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__wsa5__RetryAfter soap_put_unsignedLONG64
+
+
+#ifndef soap_read__wsa5__RetryAfter
+#define soap_read__wsa5__RetryAfter(soap, data) ( soap_begin_recv(soap) || !soap_get__wsa5__RetryAfter(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__wsa5__RetryAfter soap_get_unsignedLONG64
+
+
+#ifndef SOAP_TYPE_unsignedLONG64
+#define SOAP_TYPE_unsignedLONG64 (118)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_unsignedLONG64(struct soap*, ULONG64 *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_unsignedLONG64(struct soap*, const char*, int, const ULONG64 *, const char*);
+SOAP_FMAC3 ULONG64 * SOAP_FMAC4 soap_in_unsignedLONG64(struct soap*, const char*, ULONG64 *, const char*);
+
+#ifndef soap_write_unsignedLONG64
+#define soap_write_unsignedLONG64(soap, data) ( soap_begin_send(soap) || soap_put_unsignedLONG64(soap, data, "unsignedLong", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_unsignedLONG64(struct soap*, const ULONG64 *, const char*, const char*);
+
+#ifndef soap_read_unsignedLONG64
+#define soap_read_unsignedLONG64(soap, data) ( soap_begin_recv(soap) || !soap_get_unsignedLONG64(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 ULONG64 * SOAP_FMAC4 soap_get_unsignedLONG64(struct soap*, ULONG64 *, const char*, const char*);
+
+#ifndef SOAP_TYPE__wsa5__IsReferenceParameter
+#define SOAP_TYPE__wsa5__IsReferenceParameter (123)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__wsa5__IsReferenceParameter(struct soap*, enum _wsa5__IsReferenceParameter *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsa5__IsReferenceParameter(struct soap*, const char*, int, const enum _wsa5__IsReferenceParameter *, const char*);
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap__wsa5__IsReferenceParameter2s(struct soap*, enum _wsa5__IsReferenceParameter);
+SOAP_FMAC3 enum _wsa5__IsReferenceParameter * SOAP_FMAC4 soap_in__wsa5__IsReferenceParameter(struct soap*, const char*, enum _wsa5__IsReferenceParameter *, const char*);
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2_wsa5__IsReferenceParameter(struct soap*, const char*, enum _wsa5__IsReferenceParameter *);
+
+#ifndef soap_write__wsa5__IsReferenceParameter
+#define soap_write__wsa5__IsReferenceParameter(soap, data) ( soap_begin_send(soap) || soap_put__wsa5__IsReferenceParameter(soap, data, "wsa5:IsReferenceParameter", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsa5__IsReferenceParameter(struct soap*, const enum _wsa5__IsReferenceParameter *, const char*, const char*);
+
+#ifndef soap_read__wsa5__IsReferenceParameter
+#define soap_read__wsa5__IsReferenceParameter(soap, data) ( soap_begin_recv(soap) || !soap_get__wsa5__IsReferenceParameter(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 enum _wsa5__IsReferenceParameter * SOAP_FMAC4 soap_get__wsa5__IsReferenceParameter(struct soap*, enum _wsa5__IsReferenceParameter *, const char*, const char*);
+
+#ifndef SOAP_TYPE_wsa5__FaultCodesType
+#define SOAP_TYPE_wsa5__FaultCodesType (104)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_wsa5__FaultCodesType(struct soap*, enum wsa5__FaultCodesType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__FaultCodesType(struct soap*, const char*, int, const enum wsa5__FaultCodesType *, const char*);
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_wsa5__FaultCodesType2s(struct soap*, enum wsa5__FaultCodesType);
+SOAP_FMAC3 enum wsa5__FaultCodesType * SOAP_FMAC4 soap_in_wsa5__FaultCodesType(struct soap*, const char*, enum wsa5__FaultCodesType *, const char*);
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2wsa5__FaultCodesType(struct soap*, const char*, enum wsa5__FaultCodesType *);
+
+#ifndef soap_write_wsa5__FaultCodesType
+#define soap_write_wsa5__FaultCodesType(soap, data) ( soap_begin_send(soap) || soap_put_wsa5__FaultCodesType(soap, data, "wsa5:FaultCodesType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsa5__FaultCodesType(struct soap*, const enum wsa5__FaultCodesType *, const char*, const char*);
+
+#ifndef soap_read_wsa5__FaultCodesType
+#define soap_read_wsa5__FaultCodesType(soap, data) ( soap_begin_recv(soap) || !soap_get_wsa5__FaultCodesType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 enum wsa5__FaultCodesType * SOAP_FMAC4 soap_get_wsa5__FaultCodesType(struct soap*, enum wsa5__FaultCodesType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_wsa5__RelationshipType
+#define SOAP_TYPE_wsa5__RelationshipType (103)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_wsa5__RelationshipType(struct soap*, enum wsa5__RelationshipType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__RelationshipType(struct soap*, const char*, int, const enum wsa5__RelationshipType *, const char*);
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_wsa5__RelationshipType2s(struct soap*, enum wsa5__RelationshipType);
+SOAP_FMAC3 enum wsa5__RelationshipType * SOAP_FMAC4 soap_in_wsa5__RelationshipType(struct soap*, const char*, enum wsa5__RelationshipType *, const char*);
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2wsa5__RelationshipType(struct soap*, const char*, enum wsa5__RelationshipType *);
+
+#ifndef soap_write_wsa5__RelationshipType
+#define soap_write_wsa5__RelationshipType(soap, data) ( soap_begin_send(soap) || soap_put_wsa5__RelationshipType(soap, data, "wsa5:RelationshipType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsa5__RelationshipType(struct soap*, const enum wsa5__RelationshipType *, const char*, const char*);
+
+#ifndef soap_read_wsa5__RelationshipType
+#define soap_read_wsa5__RelationshipType(soap, data) ( soap_begin_recv(soap) || !soap_get_wsa5__RelationshipType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 enum wsa5__RelationshipType * SOAP_FMAC4 soap_get_wsa5__RelationshipType(struct soap*, enum wsa5__RelationshipType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_wsse__FaultcodeEnum
+#define SOAP_TYPE_wsse__FaultcodeEnum (9)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_wsse__FaultcodeEnum(struct soap*, enum wsse__FaultcodeEnum *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsse__FaultcodeEnum(struct soap*, const char*, int, const enum wsse__FaultcodeEnum *, const char*);
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_wsse__FaultcodeEnum2s(struct soap*, enum wsse__FaultcodeEnum);
+SOAP_FMAC3 enum wsse__FaultcodeEnum * SOAP_FMAC4 soap_in_wsse__FaultcodeEnum(struct soap*, const char*, enum wsse__FaultcodeEnum *, const char*);
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2wsse__FaultcodeEnum(struct soap*, const char*, enum wsse__FaultcodeEnum *);
+
+#ifndef soap_write_wsse__FaultcodeEnum
+#define soap_write_wsse__FaultcodeEnum(soap, data) ( soap_begin_send(soap) || soap_put_wsse__FaultcodeEnum(soap, data, "wsse:FaultcodeEnum", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsse__FaultcodeEnum(struct soap*, const enum wsse__FaultcodeEnum *, const char*, const char*);
+
+#ifndef soap_read_wsse__FaultcodeEnum
+#define soap_read_wsse__FaultcodeEnum(soap, data) ( soap_begin_recv(soap) || !soap_get_wsse__FaultcodeEnum(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 enum wsse__FaultcodeEnum * SOAP_FMAC4 soap_get_wsse__FaultcodeEnum(struct soap*, enum wsse__FaultcodeEnum *, const char*, const char*);
+
+#ifndef SOAP_TYPE_wsu__tTimestampFault
+#define SOAP_TYPE_wsu__tTimestampFault (7)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_wsu__tTimestampFault(struct soap*, enum wsu__tTimestampFault *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsu__tTimestampFault(struct soap*, const char*, int, const enum wsu__tTimestampFault *, const char*);
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_wsu__tTimestampFault2s(struct soap*, enum wsu__tTimestampFault);
+SOAP_FMAC3 enum wsu__tTimestampFault * SOAP_FMAC4 soap_in_wsu__tTimestampFault(struct soap*, const char*, enum wsu__tTimestampFault *, const char*);
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2wsu__tTimestampFault(struct soap*, const char*, enum wsu__tTimestampFault *);
+
+#ifndef soap_write_wsu__tTimestampFault
+#define soap_write_wsu__tTimestampFault(soap, data) ( soap_begin_send(soap) || soap_put_wsu__tTimestampFault(soap, data, "wsu:tTimestampFault", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsu__tTimestampFault(struct soap*, const enum wsu__tTimestampFault *, const char*, const char*);
+
+#ifndef soap_read_wsu__tTimestampFault
+#define soap_read_wsu__tTimestampFault(soap, data) ( soap_begin_recv(soap) || !soap_get_wsu__tTimestampFault(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 enum wsu__tTimestampFault * SOAP_FMAC4 soap_get_wsu__tTimestampFault(struct soap*, enum wsu__tTimestampFault *, const char*, const char*);
+
 #ifndef WITH_NOGLOBAL
 
 #ifndef SOAP_TYPE_SOAP_ENV__Fault
-#define SOAP_TYPE_SOAP_ENV__Fault (14)
+#define SOAP_TYPE_SOAP_ENV__Fault (134)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Fault(struct soap*, struct SOAP_ENV__Fault *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Fault(struct soap*, const struct SOAP_ENV__Fault *);
@@ -88,7 +259,7 @@ SOAP_FMAC3 struct SOAP_ENV__Fault * SOAP_FMAC4 soap_get_SOAP_ENV__Fault(struct s
 #ifndef WITH_NOGLOBAL
 
 #ifndef SOAP_TYPE_SOAP_ENV__Reason
-#define SOAP_TYPE_SOAP_ENV__Reason (13)
+#define SOAP_TYPE_SOAP_ENV__Reason (133)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Reason(struct soap*, struct SOAP_ENV__Reason *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Reason(struct soap*, const struct SOAP_ENV__Reason *);
@@ -113,7 +284,7 @@ SOAP_FMAC3 struct SOAP_ENV__Reason * SOAP_FMAC4 soap_get_SOAP_ENV__Reason(struct
 #ifndef WITH_NOGLOBAL
 
 #ifndef SOAP_TYPE_SOAP_ENV__Detail
-#define SOAP_TYPE_SOAP_ENV__Detail (10)
+#define SOAP_TYPE_SOAP_ENV__Detail (130)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Detail(struct soap*, struct SOAP_ENV__Detail *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Detail(struct soap*, const struct SOAP_ENV__Detail *);
@@ -138,7 +309,7 @@ SOAP_FMAC3 struct SOAP_ENV__Detail * SOAP_FMAC4 soap_get_SOAP_ENV__Detail(struct
 #ifndef WITH_NOGLOBAL
 
 #ifndef SOAP_TYPE_SOAP_ENV__Code
-#define SOAP_TYPE_SOAP_ENV__Code (8)
+#define SOAP_TYPE_SOAP_ENV__Code (128)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Code(struct soap*, struct SOAP_ENV__Code *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Code(struct soap*, const struct SOAP_ENV__Code *);
@@ -160,10 +331,387 @@ SOAP_FMAC3 struct SOAP_ENV__Code * SOAP_FMAC4 soap_get_SOAP_ENV__Code(struct soa
 
 #endif
 
+/* _wsa5__ProblemAction is a typedef element/attribute synonym for wsa5__ProblemActionType */
+
+#ifndef SOAP_TYPE__wsa5__ProblemAction
+#define SOAP_TYPE__wsa5__ProblemAction (122)
+#endif
+
+#define soap_default__wsa5__ProblemAction(soap, a) soap_default_wsa5__ProblemActionType(soap, a)
+
+
+#define soap_serialize__wsa5__ProblemAction(soap, a) soap_serialize_wsa5__ProblemActionType(soap, a)
+
+
+#define soap_out__wsa5__ProblemAction soap_out_wsa5__ProblemActionType
+
+
+#define soap_in__wsa5__ProblemAction soap_in_wsa5__ProblemActionType
+
+
+#ifndef soap_write__wsa5__ProblemAction
+#define soap_write__wsa5__ProblemAction(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsa5__ProblemAction(soap, data), 0) || soap_put__wsa5__ProblemAction(soap, data, "wsa5:ProblemAction", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__wsa5__ProblemAction soap_put_wsa5__ProblemActionType
+
+
+#ifndef soap_read__wsa5__ProblemAction
+#define soap_read__wsa5__ProblemAction(soap, data) ( soap_begin_recv(soap) || !soap_get__wsa5__ProblemAction(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__wsa5__ProblemAction soap_get_wsa5__ProblemActionType
+
+
+/* _wsa5__FaultTo is a typedef element/attribute synonym for wsa5__EndpointReferenceType */
+
+#ifndef SOAP_TYPE__wsa5__FaultTo
+#define SOAP_TYPE__wsa5__FaultTo (115)
+#endif
+
+#define soap_default__wsa5__FaultTo(soap, a) soap_default_wsa5__EndpointReferenceType(soap, a)
+
+
+#define soap_serialize__wsa5__FaultTo(soap, a) soap_serialize_wsa5__EndpointReferenceType(soap, a)
+
+
+#define soap_out__wsa5__FaultTo soap_out_wsa5__EndpointReferenceType
+
+
+#define soap_in__wsa5__FaultTo soap_in_wsa5__EndpointReferenceType
+
+
+#ifndef soap_write__wsa5__FaultTo
+#define soap_write__wsa5__FaultTo(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsa5__FaultTo(soap, data), 0) || soap_put__wsa5__FaultTo(soap, data, "wsa5:FaultTo", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__wsa5__FaultTo soap_put_wsa5__EndpointReferenceType
+
+
+#ifndef soap_read__wsa5__FaultTo
+#define soap_read__wsa5__FaultTo(soap, data) ( soap_begin_recv(soap) || !soap_get__wsa5__FaultTo(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__wsa5__FaultTo soap_get_wsa5__EndpointReferenceType
+
+
+/* _wsa5__From is a typedef element/attribute synonym for wsa5__EndpointReferenceType */
+
+#ifndef SOAP_TYPE__wsa5__From
+#define SOAP_TYPE__wsa5__From (114)
+#endif
+
+#define soap_default__wsa5__From(soap, a) soap_default_wsa5__EndpointReferenceType(soap, a)
+
+
+#define soap_serialize__wsa5__From(soap, a) soap_serialize_wsa5__EndpointReferenceType(soap, a)
+
+
+#define soap_out__wsa5__From soap_out_wsa5__EndpointReferenceType
+
+
+#define soap_in__wsa5__From soap_in_wsa5__EndpointReferenceType
+
+
+#ifndef soap_write__wsa5__From
+#define soap_write__wsa5__From(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsa5__From(soap, data), 0) || soap_put__wsa5__From(soap, data, "wsa5:From", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__wsa5__From soap_put_wsa5__EndpointReferenceType
+
+
+#ifndef soap_read__wsa5__From
+#define soap_read__wsa5__From(soap, data) ( soap_begin_recv(soap) || !soap_get__wsa5__From(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__wsa5__From soap_get_wsa5__EndpointReferenceType
+
+
+/* _wsa5__ReplyTo is a typedef element/attribute synonym for wsa5__EndpointReferenceType */
+
+#ifndef SOAP_TYPE__wsa5__ReplyTo
+#define SOAP_TYPE__wsa5__ReplyTo (113)
+#endif
+
+#define soap_default__wsa5__ReplyTo(soap, a) soap_default_wsa5__EndpointReferenceType(soap, a)
+
+
+#define soap_serialize__wsa5__ReplyTo(soap, a) soap_serialize_wsa5__EndpointReferenceType(soap, a)
+
+
+#define soap_out__wsa5__ReplyTo soap_out_wsa5__EndpointReferenceType
+
+
+#define soap_in__wsa5__ReplyTo soap_in_wsa5__EndpointReferenceType
+
+
+#ifndef soap_write__wsa5__ReplyTo
+#define soap_write__wsa5__ReplyTo(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsa5__ReplyTo(soap, data), 0) || soap_put__wsa5__ReplyTo(soap, data, "wsa5:ReplyTo", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__wsa5__ReplyTo soap_put_wsa5__EndpointReferenceType
+
+
+#ifndef soap_read__wsa5__ReplyTo
+#define soap_read__wsa5__ReplyTo(soap, data) ( soap_begin_recv(soap) || !soap_get__wsa5__ReplyTo(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__wsa5__ReplyTo soap_get_wsa5__EndpointReferenceType
+
+
+/* _wsa5__RelatesTo is a typedef element/attribute synonym for wsa5__RelatesToType */
+
+#ifndef SOAP_TYPE__wsa5__RelatesTo
+#define SOAP_TYPE__wsa5__RelatesTo (112)
+#endif
+
+#define soap_default__wsa5__RelatesTo(soap, a) soap_default_wsa5__RelatesToType(soap, a)
+
+
+#define soap_serialize__wsa5__RelatesTo(soap, a) soap_serialize_wsa5__RelatesToType(soap, a)
+
+
+#define soap_out__wsa5__RelatesTo soap_out_wsa5__RelatesToType
+
+
+#define soap_in__wsa5__RelatesTo soap_in_wsa5__RelatesToType
+
+
+#ifndef soap_write__wsa5__RelatesTo
+#define soap_write__wsa5__RelatesTo(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsa5__RelatesTo(soap, data), 0) || soap_put__wsa5__RelatesTo(soap, data, "wsa5:RelatesTo", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__wsa5__RelatesTo soap_put_wsa5__RelatesToType
+
+
+#ifndef soap_read__wsa5__RelatesTo
+#define soap_read__wsa5__RelatesTo(soap, data) ( soap_begin_recv(soap) || !soap_get__wsa5__RelatesTo(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__wsa5__RelatesTo soap_get_wsa5__RelatesToType
+
+
+/* _wsa5__Metadata is a typedef element/attribute synonym for wsa5__MetadataType */
+
+#ifndef SOAP_TYPE__wsa5__Metadata
+#define SOAP_TYPE__wsa5__Metadata (110)
+#endif
+
+#define soap_default__wsa5__Metadata(soap, a) soap_default_wsa5__MetadataType(soap, a)
+
+
+#define soap_serialize__wsa5__Metadata(soap, a) soap_serialize_wsa5__MetadataType(soap, a)
+
+
+#define soap_out__wsa5__Metadata soap_out_wsa5__MetadataType
+
+
+#define soap_in__wsa5__Metadata soap_in_wsa5__MetadataType
+
+
+#ifndef soap_write__wsa5__Metadata
+#define soap_write__wsa5__Metadata(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsa5__Metadata(soap, data), 0) || soap_put__wsa5__Metadata(soap, data, "wsa5:Metadata", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__wsa5__Metadata soap_put_wsa5__MetadataType
+
+
+#ifndef soap_read__wsa5__Metadata
+#define soap_read__wsa5__Metadata(soap, data) ( soap_begin_recv(soap) || !soap_get__wsa5__Metadata(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__wsa5__Metadata soap_get_wsa5__MetadataType
+
+
+/* _wsa5__ReferenceParameters is a typedef element/attribute synonym for wsa5__ReferenceParametersType */
+
+#ifndef SOAP_TYPE__wsa5__ReferenceParameters
+#define SOAP_TYPE__wsa5__ReferenceParameters (109)
+#endif
+
+#define soap_default__wsa5__ReferenceParameters(soap, a) soap_default_wsa5__ReferenceParametersType(soap, a)
+
+
+#define soap_serialize__wsa5__ReferenceParameters(soap, a) soap_serialize_wsa5__ReferenceParametersType(soap, a)
+
+
+#define soap_out__wsa5__ReferenceParameters soap_out_wsa5__ReferenceParametersType
+
+
+#define soap_in__wsa5__ReferenceParameters soap_in_wsa5__ReferenceParametersType
+
+
+#ifndef soap_write__wsa5__ReferenceParameters
+#define soap_write__wsa5__ReferenceParameters(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsa5__ReferenceParameters(soap, data), 0) || soap_put__wsa5__ReferenceParameters(soap, data, "wsa5:ReferenceParameters", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__wsa5__ReferenceParameters soap_put_wsa5__ReferenceParametersType
+
+
+#ifndef soap_read__wsa5__ReferenceParameters
+#define soap_read__wsa5__ReferenceParameters(soap, data) ( soap_begin_recv(soap) || !soap_get__wsa5__ReferenceParameters(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__wsa5__ReferenceParameters soap_get_wsa5__ReferenceParametersType
+
+
+/* _wsa5__EndpointReference is a typedef element/attribute synonym for wsa5__EndpointReferenceType */
+
+#ifndef SOAP_TYPE__wsa5__EndpointReference
+#define SOAP_TYPE__wsa5__EndpointReference (108)
+#endif
+
+#define soap_default__wsa5__EndpointReference(soap, a) soap_default_wsa5__EndpointReferenceType(soap, a)
+
+
+#define soap_serialize__wsa5__EndpointReference(soap, a) soap_serialize_wsa5__EndpointReferenceType(soap, a)
+
+
+#define soap_out__wsa5__EndpointReference soap_out_wsa5__EndpointReferenceType
+
+
+#define soap_in__wsa5__EndpointReference soap_in_wsa5__EndpointReferenceType
+
+
+#ifndef soap_write__wsa5__EndpointReference
+#define soap_write__wsa5__EndpointReference(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsa5__EndpointReference(soap, data), 0) || soap_put__wsa5__EndpointReference(soap, data, "wsa5:EndpointReference", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__wsa5__EndpointReference soap_put_wsa5__EndpointReferenceType
+
+
+#ifndef soap_read__wsa5__EndpointReference
+#define soap_read__wsa5__EndpointReference(soap, data) ( soap_begin_recv(soap) || !soap_get__wsa5__EndpointReference(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__wsa5__EndpointReference soap_get_wsa5__EndpointReferenceType
+
+
+#ifndef SOAP_TYPE_wsa5__ProblemActionType
+#define SOAP_TYPE_wsa5__ProblemActionType (100)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_wsa5__ProblemActionType(struct soap*, struct wsa5__ProblemActionType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_wsa5__ProblemActionType(struct soap*, const struct wsa5__ProblemActionType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__ProblemActionType(struct soap*, const char*, int, const struct wsa5__ProblemActionType *, const char*);
+SOAP_FMAC3 struct wsa5__ProblemActionType * SOAP_FMAC4 soap_in_wsa5__ProblemActionType(struct soap*, const char*, struct wsa5__ProblemActionType *, const char*);
+
+#ifndef soap_write_wsa5__ProblemActionType
+#define soap_write_wsa5__ProblemActionType(soap, data) ( soap_begin_send(soap) || (soap_serialize_wsa5__ProblemActionType(soap, data), 0) || soap_put_wsa5__ProblemActionType(soap, data, "wsa5:ProblemActionType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsa5__ProblemActionType(struct soap*, const struct wsa5__ProblemActionType *, const char*, const char*);
+
+#ifndef soap_read_wsa5__ProblemActionType
+#define soap_read_wsa5__ProblemActionType(soap, data) ( soap_begin_recv(soap) || !soap_get_wsa5__ProblemActionType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct wsa5__ProblemActionType * SOAP_FMAC4 soap_get_wsa5__ProblemActionType(struct soap*, struct wsa5__ProblemActionType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_wsa5__RelatesToType
+#define SOAP_TYPE_wsa5__RelatesToType (99)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_wsa5__RelatesToType(struct soap*, struct wsa5__RelatesToType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_wsa5__RelatesToType(struct soap*, const struct wsa5__RelatesToType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__RelatesToType(struct soap*, const char*, int, const struct wsa5__RelatesToType *, const char*);
+SOAP_FMAC3 struct wsa5__RelatesToType * SOAP_FMAC4 soap_in_wsa5__RelatesToType(struct soap*, const char*, struct wsa5__RelatesToType *, const char*);
+
+#ifndef soap_write_wsa5__RelatesToType
+#define soap_write_wsa5__RelatesToType(soap, data) ( soap_begin_send(soap) || (soap_serialize_wsa5__RelatesToType(soap, data), 0) || soap_put_wsa5__RelatesToType(soap, data, "wsa5:RelatesToType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsa5__RelatesToType(struct soap*, const struct wsa5__RelatesToType *, const char*, const char*);
+
+#ifndef soap_read_wsa5__RelatesToType
+#define soap_read_wsa5__RelatesToType(soap, data) ( soap_begin_recv(soap) || !soap_get_wsa5__RelatesToType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct wsa5__RelatesToType * SOAP_FMAC4 soap_get_wsa5__RelatesToType(struct soap*, struct wsa5__RelatesToType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_wsa5__MetadataType
+#define SOAP_TYPE_wsa5__MetadataType (98)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_wsa5__MetadataType(struct soap*, struct wsa5__MetadataType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_wsa5__MetadataType(struct soap*, const struct wsa5__MetadataType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__MetadataType(struct soap*, const char*, int, const struct wsa5__MetadataType *, const char*);
+SOAP_FMAC3 struct wsa5__MetadataType * SOAP_FMAC4 soap_in_wsa5__MetadataType(struct soap*, const char*, struct wsa5__MetadataType *, const char*);
+
+#ifndef soap_write_wsa5__MetadataType
+#define soap_write_wsa5__MetadataType(soap, data) ( soap_begin_send(soap) || (soap_serialize_wsa5__MetadataType(soap, data), 0) || soap_put_wsa5__MetadataType(soap, data, "wsa5:MetadataType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsa5__MetadataType(struct soap*, const struct wsa5__MetadataType *, const char*, const char*);
+
+#ifndef soap_read_wsa5__MetadataType
+#define soap_read_wsa5__MetadataType(soap, data) ( soap_begin_recv(soap) || !soap_get_wsa5__MetadataType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct wsa5__MetadataType * SOAP_FMAC4 soap_get_wsa5__MetadataType(struct soap*, struct wsa5__MetadataType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_wsa5__ReferenceParametersType
+#define SOAP_TYPE_wsa5__ReferenceParametersType (97)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_wsa5__ReferenceParametersType(struct soap*, struct wsa5__ReferenceParametersType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_wsa5__ReferenceParametersType(struct soap*, const struct wsa5__ReferenceParametersType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__ReferenceParametersType(struct soap*, const char*, int, const struct wsa5__ReferenceParametersType *, const char*);
+SOAP_FMAC3 struct wsa5__ReferenceParametersType * SOAP_FMAC4 soap_in_wsa5__ReferenceParametersType(struct soap*, const char*, struct wsa5__ReferenceParametersType *, const char*);
+
+#ifndef soap_write_wsa5__ReferenceParametersType
+#define soap_write_wsa5__ReferenceParametersType(soap, data) ( soap_begin_send(soap) || (soap_serialize_wsa5__ReferenceParametersType(soap, data), 0) || soap_put_wsa5__ReferenceParametersType(soap, data, "wsa5:ReferenceParametersType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsa5__ReferenceParametersType(struct soap*, const struct wsa5__ReferenceParametersType *, const char*, const char*);
+
+#ifndef soap_read_wsa5__ReferenceParametersType
+#define soap_read_wsa5__ReferenceParametersType(soap, data) ( soap_begin_recv(soap) || !soap_get_wsa5__ReferenceParametersType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct wsa5__ReferenceParametersType * SOAP_FMAC4 soap_get_wsa5__ReferenceParametersType(struct soap*, struct wsa5__ReferenceParametersType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_wsa5__EndpointReferenceType
+#define SOAP_TYPE_wsa5__EndpointReferenceType (96)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_wsa5__EndpointReferenceType(struct soap*, struct wsa5__EndpointReferenceType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_wsa5__EndpointReferenceType(struct soap*, const struct wsa5__EndpointReferenceType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__EndpointReferenceType(struct soap*, const char*, int, const struct wsa5__EndpointReferenceType *, const char*);
+SOAP_FMAC3 struct wsa5__EndpointReferenceType * SOAP_FMAC4 soap_in_wsa5__EndpointReferenceType(struct soap*, const char*, struct wsa5__EndpointReferenceType *, const char*);
+
+#ifndef soap_write_wsa5__EndpointReferenceType
+#define soap_write_wsa5__EndpointReferenceType(soap, data) ( soap_begin_send(soap) || (soap_serialize_wsa5__EndpointReferenceType(soap, data), 0) || soap_put_wsa5__EndpointReferenceType(soap, data, "wsa5:EndpointReferenceType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsa5__EndpointReferenceType(struct soap*, const struct wsa5__EndpointReferenceType *, const char*, const char*);
+
+#ifndef soap_read_wsa5__EndpointReferenceType
+#define soap_read_wsa5__EndpointReferenceType(soap, data) ( soap_begin_recv(soap) || !soap_get_wsa5__EndpointReferenceType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct wsa5__EndpointReferenceType * SOAP_FMAC4 soap_get_wsa5__EndpointReferenceType(struct soap*, struct wsa5__EndpointReferenceType *, const char*, const char*);
+
 #ifndef WITH_NOGLOBAL
 
 #ifndef SOAP_TYPE_SOAP_ENV__Header
-#define SOAP_TYPE_SOAP_ENV__Header (7)
+#define SOAP_TYPE_SOAP_ENV__Header (94)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Header(struct soap*, struct SOAP_ENV__Header *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Header(struct soap*, const struct SOAP_ENV__Header *);
@@ -185,10 +733,1148 @@ SOAP_FMAC3 struct SOAP_ENV__Header * SOAP_FMAC4 soap_get_SOAP_ENV__Header(struct
 
 #endif
 
+#ifndef SOAP_TYPE__wsse__Security
+#define SOAP_TYPE__wsse__Security (88)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__wsse__Security(struct soap*, struct _wsse__Security *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__wsse__Security(struct soap*, const struct _wsse__Security *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsse__Security(struct soap*, const char*, int, const struct _wsse__Security *, const char*);
+SOAP_FMAC3 struct _wsse__Security * SOAP_FMAC4 soap_in__wsse__Security(struct soap*, const char*, struct _wsse__Security *, const char*);
+
+#ifndef soap_write__wsse__Security
+#define soap_write__wsse__Security(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsse__Security(soap, data), 0) || soap_put__wsse__Security(soap, data, "wsse:Security", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsse__Security(struct soap*, const struct _wsse__Security *, const char*, const char*);
+
+#ifndef soap_read__wsse__Security
+#define soap_read__wsse__Security(soap, data) ( soap_begin_recv(soap) || !soap_get__wsse__Security(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _wsse__Security * SOAP_FMAC4 soap_get__wsse__Security(struct soap*, struct _wsse__Security *, const char*, const char*);
+
+/* _xenc__EncryptionProperty is a typedef element/attribute synonym for xenc__EncryptionPropertyType */
+
+#ifndef SOAP_TYPE__xenc__EncryptionProperty
+#define SOAP_TYPE__xenc__EncryptionProperty (87)
+#endif
+
+#define soap_default__xenc__EncryptionProperty(soap, a) soap_default_xenc__EncryptionPropertyType(soap, a)
+
+
+#define soap_serialize__xenc__EncryptionProperty(soap, a) soap_serialize_xenc__EncryptionPropertyType(soap, a)
+
+
+#define soap_out__xenc__EncryptionProperty soap_out_xenc__EncryptionPropertyType
+
+
+#define soap_in__xenc__EncryptionProperty soap_in_xenc__EncryptionPropertyType
+
+
+#ifndef soap_write__xenc__EncryptionProperty
+#define soap_write__xenc__EncryptionProperty(soap, data) ( soap_begin_send(soap) || (soap_serialize__xenc__EncryptionProperty(soap, data), 0) || soap_put__xenc__EncryptionProperty(soap, data, "xenc:EncryptionProperty", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__xenc__EncryptionProperty soap_put_xenc__EncryptionPropertyType
+
+
+#ifndef soap_read__xenc__EncryptionProperty
+#define soap_read__xenc__EncryptionProperty(soap, data) ( soap_begin_recv(soap) || !soap_get__xenc__EncryptionProperty(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__xenc__EncryptionProperty soap_get_xenc__EncryptionPropertyType
+
+
+/* _xenc__EncryptionProperties is a typedef element/attribute synonym for xenc__EncryptionPropertiesType */
+
+#ifndef SOAP_TYPE__xenc__EncryptionProperties
+#define SOAP_TYPE__xenc__EncryptionProperties (86)
+#endif
+
+#define soap_default__xenc__EncryptionProperties(soap, a) soap_default_xenc__EncryptionPropertiesType(soap, a)
+
+
+#define soap_serialize__xenc__EncryptionProperties(soap, a) soap_serialize_xenc__EncryptionPropertiesType(soap, a)
+
+
+#define soap_out__xenc__EncryptionProperties soap_out_xenc__EncryptionPropertiesType
+
+
+#define soap_in__xenc__EncryptionProperties soap_in_xenc__EncryptionPropertiesType
+
+
+#ifndef soap_write__xenc__EncryptionProperties
+#define soap_write__xenc__EncryptionProperties(soap, data) ( soap_begin_send(soap) || (soap_serialize__xenc__EncryptionProperties(soap, data), 0) || soap_put__xenc__EncryptionProperties(soap, data, "xenc:EncryptionProperties", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__xenc__EncryptionProperties soap_put_xenc__EncryptionPropertiesType
+
+
+#ifndef soap_read__xenc__EncryptionProperties
+#define soap_read__xenc__EncryptionProperties(soap, data) ( soap_begin_recv(soap) || !soap_get__xenc__EncryptionProperties(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__xenc__EncryptionProperties soap_get_xenc__EncryptionPropertiesType
+
+
+/* _xenc__AgreementMethod is a typedef element/attribute synonym for xenc__AgreementMethodType */
+
+#ifndef SOAP_TYPE__xenc__AgreementMethod
+#define SOAP_TYPE__xenc__AgreementMethod (85)
+#endif
+
+#define soap_default__xenc__AgreementMethod(soap, a) soap_default_xenc__AgreementMethodType(soap, a)
+
+
+#define soap_serialize__xenc__AgreementMethod(soap, a) soap_serialize_xenc__AgreementMethodType(soap, a)
+
+
+#define soap_out__xenc__AgreementMethod soap_out_xenc__AgreementMethodType
+
+
+#define soap_in__xenc__AgreementMethod soap_in_xenc__AgreementMethodType
+
+
+#ifndef soap_write__xenc__AgreementMethod
+#define soap_write__xenc__AgreementMethod(soap, data) ( soap_begin_send(soap) || (soap_serialize__xenc__AgreementMethod(soap, data), 0) || soap_put__xenc__AgreementMethod(soap, data, "xenc:AgreementMethod", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__xenc__AgreementMethod soap_put_xenc__AgreementMethodType
+
+
+#ifndef soap_read__xenc__AgreementMethod
+#define soap_read__xenc__AgreementMethod(soap, data) ( soap_begin_recv(soap) || !soap_get__xenc__AgreementMethod(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__xenc__AgreementMethod soap_get_xenc__AgreementMethodType
+
+
+/* _xenc__EncryptedKey is a typedef element/attribute synonym for xenc__EncryptedKeyType */
+
+#ifndef SOAP_TYPE__xenc__EncryptedKey
+#define SOAP_TYPE__xenc__EncryptedKey (84)
+#endif
+
+#define soap_default__xenc__EncryptedKey(soap, a) soap_default_xenc__EncryptedKeyType(soap, a)
+
+
+#define soap_serialize__xenc__EncryptedKey(soap, a) soap_serialize_xenc__EncryptedKeyType(soap, a)
+
+
+#define soap_out__xenc__EncryptedKey soap_out_xenc__EncryptedKeyType
+
+
+#define soap_in__xenc__EncryptedKey soap_in_xenc__EncryptedKeyType
+
+
+#ifndef soap_write__xenc__EncryptedKey
+#define soap_write__xenc__EncryptedKey(soap, data) ( soap_begin_send(soap) || (soap_serialize__xenc__EncryptedKey(soap, data), 0) || soap_put__xenc__EncryptedKey(soap, data, "xenc:EncryptedKey", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__xenc__EncryptedKey soap_put_xenc__EncryptedKeyType
+
+
+#ifndef soap_read__xenc__EncryptedKey
+#define soap_read__xenc__EncryptedKey(soap, data) ( soap_begin_recv(soap) || !soap_get__xenc__EncryptedKey(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__xenc__EncryptedKey soap_get_xenc__EncryptedKeyType
+
+
+/* _xenc__EncryptedData is a typedef element/attribute synonym for xenc__EncryptedDataType */
+
+#ifndef SOAP_TYPE__xenc__EncryptedData
+#define SOAP_TYPE__xenc__EncryptedData (83)
+#endif
+
+#define soap_default__xenc__EncryptedData(soap, a) soap_default_xenc__EncryptedDataType(soap, a)
+
+
+#define soap_serialize__xenc__EncryptedData(soap, a) soap_serialize_xenc__EncryptedDataType(soap, a)
+
+
+#define soap_out__xenc__EncryptedData soap_out_xenc__EncryptedDataType
+
+
+#define soap_in__xenc__EncryptedData soap_in_xenc__EncryptedDataType
+
+
+#ifndef soap_write__xenc__EncryptedData
+#define soap_write__xenc__EncryptedData(soap, data) ( soap_begin_send(soap) || (soap_serialize__xenc__EncryptedData(soap, data), 0) || soap_put__xenc__EncryptedData(soap, data, "xenc:EncryptedData", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__xenc__EncryptedData soap_put_xenc__EncryptedDataType
+
+
+#ifndef soap_read__xenc__EncryptedData
+#define soap_read__xenc__EncryptedData(soap, data) ( soap_begin_recv(soap) || !soap_get__xenc__EncryptedData(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__xenc__EncryptedData soap_get_xenc__EncryptedDataType
+
+
+/* _xenc__CipherReference is a typedef element/attribute synonym for xenc__CipherReferenceType */
+
+#ifndef SOAP_TYPE__xenc__CipherReference
+#define SOAP_TYPE__xenc__CipherReference (82)
+#endif
+
+#define soap_default__xenc__CipherReference(soap, a) soap_default_xenc__CipherReferenceType(soap, a)
+
+
+#define soap_serialize__xenc__CipherReference(soap, a) soap_serialize_xenc__CipherReferenceType(soap, a)
+
+
+#define soap_out__xenc__CipherReference soap_out_xenc__CipherReferenceType
+
+
+#define soap_in__xenc__CipherReference soap_in_xenc__CipherReferenceType
+
+
+#ifndef soap_write__xenc__CipherReference
+#define soap_write__xenc__CipherReference(soap, data) ( soap_begin_send(soap) || (soap_serialize__xenc__CipherReference(soap, data), 0) || soap_put__xenc__CipherReference(soap, data, "xenc:CipherReference", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__xenc__CipherReference soap_put_xenc__CipherReferenceType
+
+
+#ifndef soap_read__xenc__CipherReference
+#define soap_read__xenc__CipherReference(soap, data) ( soap_begin_recv(soap) || !soap_get__xenc__CipherReference(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__xenc__CipherReference soap_get_xenc__CipherReferenceType
+
+
+/* _xenc__CipherData is a typedef element/attribute synonym for xenc__CipherDataType */
+
+#ifndef SOAP_TYPE__xenc__CipherData
+#define SOAP_TYPE__xenc__CipherData (81)
+#endif
+
+#define soap_default__xenc__CipherData(soap, a) soap_default_xenc__CipherDataType(soap, a)
+
+
+#define soap_serialize__xenc__CipherData(soap, a) soap_serialize_xenc__CipherDataType(soap, a)
+
+
+#define soap_out__xenc__CipherData soap_out_xenc__CipherDataType
+
+
+#define soap_in__xenc__CipherData soap_in_xenc__CipherDataType
+
+
+#ifndef soap_write__xenc__CipherData
+#define soap_write__xenc__CipherData(soap, data) ( soap_begin_send(soap) || (soap_serialize__xenc__CipherData(soap, data), 0) || soap_put__xenc__CipherData(soap, data, "xenc:CipherData", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__xenc__CipherData soap_put_xenc__CipherDataType
+
+
+#ifndef soap_read__xenc__CipherData
+#define soap_read__xenc__CipherData(soap, data) ( soap_begin_recv(soap) || !soap_get__xenc__CipherData(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__xenc__CipherData soap_get_xenc__CipherDataType
+
+
+#ifndef SOAP_TYPE___xenc__union_ReferenceList
+#define SOAP_TYPE___xenc__union_ReferenceList (77)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___xenc__union_ReferenceList(struct soap*, struct __xenc__union_ReferenceList *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___xenc__union_ReferenceList(struct soap*, const struct __xenc__union_ReferenceList *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___xenc__union_ReferenceList(struct soap*, const char*, int, const struct __xenc__union_ReferenceList *, const char*);
+SOAP_FMAC3 struct __xenc__union_ReferenceList * SOAP_FMAC4 soap_in___xenc__union_ReferenceList(struct soap*, const char*, struct __xenc__union_ReferenceList *, const char*);
+
+#ifndef soap_write___xenc__union_ReferenceList
+#define soap_write___xenc__union_ReferenceList(soap, data) ( soap_begin_send(soap) || (soap_serialize___xenc__union_ReferenceList(soap, data), 0) || soap_put___xenc__union_ReferenceList(soap, data, "-xenc:union-ReferenceList", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___xenc__union_ReferenceList(struct soap*, const struct __xenc__union_ReferenceList *, const char*, const char*);
+
+#ifndef soap_read___xenc__union_ReferenceList
+#define soap_read___xenc__union_ReferenceList(soap, data) ( soap_begin_recv(soap) || !soap_get___xenc__union_ReferenceList(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct __xenc__union_ReferenceList * SOAP_FMAC4 soap_get___xenc__union_ReferenceList(struct soap*, struct __xenc__union_ReferenceList *, const char*, const char*);
+
+#ifndef SOAP_TYPE__xenc__ReferenceList
+#define SOAP_TYPE__xenc__ReferenceList (69)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__xenc__ReferenceList(struct soap*, struct _xenc__ReferenceList *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__xenc__ReferenceList(struct soap*, const struct _xenc__ReferenceList *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__xenc__ReferenceList(struct soap*, const char*, int, const struct _xenc__ReferenceList *, const char*);
+SOAP_FMAC3 struct _xenc__ReferenceList * SOAP_FMAC4 soap_in__xenc__ReferenceList(struct soap*, const char*, struct _xenc__ReferenceList *, const char*);
+
+#ifndef soap_write__xenc__ReferenceList
+#define soap_write__xenc__ReferenceList(soap, data) ( soap_begin_send(soap) || (soap_serialize__xenc__ReferenceList(soap, data), 0) || soap_put__xenc__ReferenceList(soap, data, "xenc:ReferenceList", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__xenc__ReferenceList(struct soap*, const struct _xenc__ReferenceList *, const char*, const char*);
+
+#ifndef soap_read__xenc__ReferenceList
+#define soap_read__xenc__ReferenceList(soap, data) ( soap_begin_recv(soap) || !soap_get__xenc__ReferenceList(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _xenc__ReferenceList * SOAP_FMAC4 soap_get__xenc__ReferenceList(struct soap*, struct _xenc__ReferenceList *, const char*, const char*);
+
+#ifndef SOAP_TYPE_xenc__EncryptionPropertyType
+#define SOAP_TYPE_xenc__EncryptionPropertyType (68)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__EncryptionPropertyType(struct soap*, struct xenc__EncryptionPropertyType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__EncryptionPropertyType(struct soap*, const struct xenc__EncryptionPropertyType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__EncryptionPropertyType(struct soap*, const char*, int, const struct xenc__EncryptionPropertyType *, const char*);
+SOAP_FMAC3 struct xenc__EncryptionPropertyType * SOAP_FMAC4 soap_in_xenc__EncryptionPropertyType(struct soap*, const char*, struct xenc__EncryptionPropertyType *, const char*);
+
+#ifndef soap_write_xenc__EncryptionPropertyType
+#define soap_write_xenc__EncryptionPropertyType(soap, data) ( soap_begin_send(soap) || (soap_serialize_xenc__EncryptionPropertyType(soap, data), 0) || soap_put_xenc__EncryptionPropertyType(soap, data, "xenc:EncryptionPropertyType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__EncryptionPropertyType(struct soap*, const struct xenc__EncryptionPropertyType *, const char*, const char*);
+
+#ifndef soap_read_xenc__EncryptionPropertyType
+#define soap_read_xenc__EncryptionPropertyType(soap, data) ( soap_begin_recv(soap) || !soap_get_xenc__EncryptionPropertyType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct xenc__EncryptionPropertyType * SOAP_FMAC4 soap_get_xenc__EncryptionPropertyType(struct soap*, struct xenc__EncryptionPropertyType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_xenc__EncryptionPropertiesType
+#define SOAP_TYPE_xenc__EncryptionPropertiesType (67)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__EncryptionPropertiesType(struct soap*, struct xenc__EncryptionPropertiesType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__EncryptionPropertiesType(struct soap*, const struct xenc__EncryptionPropertiesType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__EncryptionPropertiesType(struct soap*, const char*, int, const struct xenc__EncryptionPropertiesType *, const char*);
+SOAP_FMAC3 struct xenc__EncryptionPropertiesType * SOAP_FMAC4 soap_in_xenc__EncryptionPropertiesType(struct soap*, const char*, struct xenc__EncryptionPropertiesType *, const char*);
+
+#ifndef soap_write_xenc__EncryptionPropertiesType
+#define soap_write_xenc__EncryptionPropertiesType(soap, data) ( soap_begin_send(soap) || (soap_serialize_xenc__EncryptionPropertiesType(soap, data), 0) || soap_put_xenc__EncryptionPropertiesType(soap, data, "xenc:EncryptionPropertiesType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__EncryptionPropertiesType(struct soap*, const struct xenc__EncryptionPropertiesType *, const char*, const char*);
+
+#ifndef soap_read_xenc__EncryptionPropertiesType
+#define soap_read_xenc__EncryptionPropertiesType(soap, data) ( soap_begin_recv(soap) || !soap_get_xenc__EncryptionPropertiesType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct xenc__EncryptionPropertiesType * SOAP_FMAC4 soap_get_xenc__EncryptionPropertiesType(struct soap*, struct xenc__EncryptionPropertiesType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_xenc__ReferenceType
+#define SOAP_TYPE_xenc__ReferenceType (66)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__ReferenceType(struct soap*, struct xenc__ReferenceType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__ReferenceType(struct soap*, const struct xenc__ReferenceType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__ReferenceType(struct soap*, const char*, int, const struct xenc__ReferenceType *, const char*);
+SOAP_FMAC3 struct xenc__ReferenceType * SOAP_FMAC4 soap_in_xenc__ReferenceType(struct soap*, const char*, struct xenc__ReferenceType *, const char*);
+
+#ifndef soap_write_xenc__ReferenceType
+#define soap_write_xenc__ReferenceType(soap, data) ( soap_begin_send(soap) || (soap_serialize_xenc__ReferenceType(soap, data), 0) || soap_put_xenc__ReferenceType(soap, data, "xenc:ReferenceType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__ReferenceType(struct soap*, const struct xenc__ReferenceType *, const char*, const char*);
+
+#ifndef soap_read_xenc__ReferenceType
+#define soap_read_xenc__ReferenceType(soap, data) ( soap_begin_recv(soap) || !soap_get_xenc__ReferenceType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct xenc__ReferenceType * SOAP_FMAC4 soap_get_xenc__ReferenceType(struct soap*, struct xenc__ReferenceType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_xenc__AgreementMethodType
+#define SOAP_TYPE_xenc__AgreementMethodType (65)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__AgreementMethodType(struct soap*, struct xenc__AgreementMethodType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__AgreementMethodType(struct soap*, const struct xenc__AgreementMethodType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__AgreementMethodType(struct soap*, const char*, int, const struct xenc__AgreementMethodType *, const char*);
+SOAP_FMAC3 struct xenc__AgreementMethodType * SOAP_FMAC4 soap_in_xenc__AgreementMethodType(struct soap*, const char*, struct xenc__AgreementMethodType *, const char*);
+
+#ifndef soap_write_xenc__AgreementMethodType
+#define soap_write_xenc__AgreementMethodType(soap, data) ( soap_begin_send(soap) || (soap_serialize_xenc__AgreementMethodType(soap, data), 0) || soap_put_xenc__AgreementMethodType(soap, data, "xenc:AgreementMethodType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__AgreementMethodType(struct soap*, const struct xenc__AgreementMethodType *, const char*, const char*);
+
+#ifndef soap_read_xenc__AgreementMethodType
+#define soap_read_xenc__AgreementMethodType(soap, data) ( soap_begin_recv(soap) || !soap_get_xenc__AgreementMethodType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct xenc__AgreementMethodType * SOAP_FMAC4 soap_get_xenc__AgreementMethodType(struct soap*, struct xenc__AgreementMethodType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_xenc__EncryptedKeyType
+#define SOAP_TYPE_xenc__EncryptedKeyType (64)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__EncryptedKeyType(struct soap*, struct xenc__EncryptedKeyType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__EncryptedKeyType(struct soap*, const struct xenc__EncryptedKeyType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__EncryptedKeyType(struct soap*, const char*, int, const struct xenc__EncryptedKeyType *, const char*);
+SOAP_FMAC3 struct xenc__EncryptedKeyType * SOAP_FMAC4 soap_in_xenc__EncryptedKeyType(struct soap*, const char*, struct xenc__EncryptedKeyType *, const char*);
+
+#ifndef soap_write_xenc__EncryptedKeyType
+#define soap_write_xenc__EncryptedKeyType(soap, data) ( soap_begin_send(soap) || (soap_serialize_xenc__EncryptedKeyType(soap, data), 0) || soap_put_xenc__EncryptedKeyType(soap, data, "xenc:EncryptedKeyType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__EncryptedKeyType(struct soap*, const struct xenc__EncryptedKeyType *, const char*, const char*);
+
+#ifndef soap_read_xenc__EncryptedKeyType
+#define soap_read_xenc__EncryptedKeyType(soap, data) ( soap_begin_recv(soap) || !soap_get_xenc__EncryptedKeyType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct xenc__EncryptedKeyType * SOAP_FMAC4 soap_get_xenc__EncryptedKeyType(struct soap*, struct xenc__EncryptedKeyType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_xenc__EncryptedDataType
+#define SOAP_TYPE_xenc__EncryptedDataType (63)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__EncryptedDataType(struct soap*, struct xenc__EncryptedDataType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__EncryptedDataType(struct soap*, const struct xenc__EncryptedDataType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__EncryptedDataType(struct soap*, const char*, int, const struct xenc__EncryptedDataType *, const char*);
+SOAP_FMAC3 struct xenc__EncryptedDataType * SOAP_FMAC4 soap_in_xenc__EncryptedDataType(struct soap*, const char*, struct xenc__EncryptedDataType *, const char*);
+
+#ifndef soap_write_xenc__EncryptedDataType
+#define soap_write_xenc__EncryptedDataType(soap, data) ( soap_begin_send(soap) || (soap_serialize_xenc__EncryptedDataType(soap, data), 0) || soap_put_xenc__EncryptedDataType(soap, data, "xenc:EncryptedDataType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__EncryptedDataType(struct soap*, const struct xenc__EncryptedDataType *, const char*, const char*);
+
+#ifndef soap_read_xenc__EncryptedDataType
+#define soap_read_xenc__EncryptedDataType(soap, data) ( soap_begin_recv(soap) || !soap_get_xenc__EncryptedDataType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct xenc__EncryptedDataType * SOAP_FMAC4 soap_get_xenc__EncryptedDataType(struct soap*, struct xenc__EncryptedDataType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_xenc__TransformsType
+#define SOAP_TYPE_xenc__TransformsType (62)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__TransformsType(struct soap*, struct xenc__TransformsType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__TransformsType(struct soap*, const struct xenc__TransformsType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__TransformsType(struct soap*, const char*, int, const struct xenc__TransformsType *, const char*);
+SOAP_FMAC3 struct xenc__TransformsType * SOAP_FMAC4 soap_in_xenc__TransformsType(struct soap*, const char*, struct xenc__TransformsType *, const char*);
+
+#ifndef soap_write_xenc__TransformsType
+#define soap_write_xenc__TransformsType(soap, data) ( soap_begin_send(soap) || (soap_serialize_xenc__TransformsType(soap, data), 0) || soap_put_xenc__TransformsType(soap, data, "xenc:TransformsType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__TransformsType(struct soap*, const struct xenc__TransformsType *, const char*, const char*);
+
+#ifndef soap_read_xenc__TransformsType
+#define soap_read_xenc__TransformsType(soap, data) ( soap_begin_recv(soap) || !soap_get_xenc__TransformsType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct xenc__TransformsType * SOAP_FMAC4 soap_get_xenc__TransformsType(struct soap*, struct xenc__TransformsType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_xenc__CipherReferenceType
+#define SOAP_TYPE_xenc__CipherReferenceType (61)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__CipherReferenceType(struct soap*, struct xenc__CipherReferenceType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__CipherReferenceType(struct soap*, const struct xenc__CipherReferenceType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__CipherReferenceType(struct soap*, const char*, int, const struct xenc__CipherReferenceType *, const char*);
+SOAP_FMAC3 struct xenc__CipherReferenceType * SOAP_FMAC4 soap_in_xenc__CipherReferenceType(struct soap*, const char*, struct xenc__CipherReferenceType *, const char*);
+
+#ifndef soap_write_xenc__CipherReferenceType
+#define soap_write_xenc__CipherReferenceType(soap, data) ( soap_begin_send(soap) || (soap_serialize_xenc__CipherReferenceType(soap, data), 0) || soap_put_xenc__CipherReferenceType(soap, data, "xenc:CipherReferenceType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__CipherReferenceType(struct soap*, const struct xenc__CipherReferenceType *, const char*, const char*);
+
+#ifndef soap_read_xenc__CipherReferenceType
+#define soap_read_xenc__CipherReferenceType(soap, data) ( soap_begin_recv(soap) || !soap_get_xenc__CipherReferenceType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct xenc__CipherReferenceType * SOAP_FMAC4 soap_get_xenc__CipherReferenceType(struct soap*, struct xenc__CipherReferenceType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_xenc__CipherDataType
+#define SOAP_TYPE_xenc__CipherDataType (60)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__CipherDataType(struct soap*, struct xenc__CipherDataType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__CipherDataType(struct soap*, const struct xenc__CipherDataType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__CipherDataType(struct soap*, const char*, int, const struct xenc__CipherDataType *, const char*);
+SOAP_FMAC3 struct xenc__CipherDataType * SOAP_FMAC4 soap_in_xenc__CipherDataType(struct soap*, const char*, struct xenc__CipherDataType *, const char*);
+
+#ifndef soap_write_xenc__CipherDataType
+#define soap_write_xenc__CipherDataType(soap, data) ( soap_begin_send(soap) || (soap_serialize_xenc__CipherDataType(soap, data), 0) || soap_put_xenc__CipherDataType(soap, data, "xenc:CipherDataType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__CipherDataType(struct soap*, const struct xenc__CipherDataType *, const char*, const char*);
+
+#ifndef soap_read_xenc__CipherDataType
+#define soap_read_xenc__CipherDataType(soap, data) ( soap_begin_recv(soap) || !soap_get_xenc__CipherDataType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct xenc__CipherDataType * SOAP_FMAC4 soap_get_xenc__CipherDataType(struct soap*, struct xenc__CipherDataType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_xenc__EncryptionMethodType
+#define SOAP_TYPE_xenc__EncryptionMethodType (59)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__EncryptionMethodType(struct soap*, struct xenc__EncryptionMethodType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__EncryptionMethodType(struct soap*, const struct xenc__EncryptionMethodType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__EncryptionMethodType(struct soap*, const char*, int, const struct xenc__EncryptionMethodType *, const char*);
+SOAP_FMAC3 struct xenc__EncryptionMethodType * SOAP_FMAC4 soap_in_xenc__EncryptionMethodType(struct soap*, const char*, struct xenc__EncryptionMethodType *, const char*);
+
+#ifndef soap_write_xenc__EncryptionMethodType
+#define soap_write_xenc__EncryptionMethodType(soap, data) ( soap_begin_send(soap) || (soap_serialize_xenc__EncryptionMethodType(soap, data), 0) || soap_put_xenc__EncryptionMethodType(soap, data, "xenc:EncryptionMethodType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__EncryptionMethodType(struct soap*, const struct xenc__EncryptionMethodType *, const char*, const char*);
+
+#ifndef soap_read_xenc__EncryptionMethodType
+#define soap_read_xenc__EncryptionMethodType(soap, data) ( soap_begin_recv(soap) || !soap_get_xenc__EncryptionMethodType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct xenc__EncryptionMethodType * SOAP_FMAC4 soap_get_xenc__EncryptionMethodType(struct soap*, struct xenc__EncryptionMethodType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_xenc__EncryptedType
+#define SOAP_TYPE_xenc__EncryptedType (58)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xenc__EncryptedType(struct soap*, struct xenc__EncryptedType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xenc__EncryptedType(struct soap*, const struct xenc__EncryptedType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xenc__EncryptedType(struct soap*, const char*, int, const struct xenc__EncryptedType *, const char*);
+SOAP_FMAC3 struct xenc__EncryptedType * SOAP_FMAC4 soap_in_xenc__EncryptedType(struct soap*, const char*, struct xenc__EncryptedType *, const char*);
+
+#ifndef soap_write_xenc__EncryptedType
+#define soap_write_xenc__EncryptedType(soap, data) ( soap_begin_send(soap) || (soap_serialize_xenc__EncryptedType(soap, data), 0) || soap_put_xenc__EncryptedType(soap, data, "xenc:EncryptedType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xenc__EncryptedType(struct soap*, const struct xenc__EncryptedType *, const char*, const char*);
+
+#ifndef soap_read_xenc__EncryptedType
+#define soap_read_xenc__EncryptedType(soap, data) ( soap_begin_recv(soap) || !soap_get_xenc__EncryptedType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct xenc__EncryptedType * SOAP_FMAC4 soap_get_xenc__EncryptedType(struct soap*, struct xenc__EncryptedType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_ds__RSAKeyValueType
+#define SOAP_TYPE_ds__RSAKeyValueType (46)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__RSAKeyValueType(struct soap*, struct ds__RSAKeyValueType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__RSAKeyValueType(struct soap*, const struct ds__RSAKeyValueType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__RSAKeyValueType(struct soap*, const char*, int, const struct ds__RSAKeyValueType *, const char*);
+SOAP_FMAC3 struct ds__RSAKeyValueType * SOAP_FMAC4 soap_in_ds__RSAKeyValueType(struct soap*, const char*, struct ds__RSAKeyValueType *, const char*);
+
+#ifndef soap_write_ds__RSAKeyValueType
+#define soap_write_ds__RSAKeyValueType(soap, data) ( soap_begin_send(soap) || (soap_serialize_ds__RSAKeyValueType(soap, data), 0) || soap_put_ds__RSAKeyValueType(soap, data, "ds:RSAKeyValueType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__RSAKeyValueType(struct soap*, const struct ds__RSAKeyValueType *, const char*, const char*);
+
+#ifndef soap_read_ds__RSAKeyValueType
+#define soap_read_ds__RSAKeyValueType(soap, data) ( soap_begin_recv(soap) || !soap_get_ds__RSAKeyValueType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__RSAKeyValueType * SOAP_FMAC4 soap_get_ds__RSAKeyValueType(struct soap*, struct ds__RSAKeyValueType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_ds__DSAKeyValueType
+#define SOAP_TYPE_ds__DSAKeyValueType (45)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__DSAKeyValueType(struct soap*, struct ds__DSAKeyValueType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__DSAKeyValueType(struct soap*, const struct ds__DSAKeyValueType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__DSAKeyValueType(struct soap*, const char*, int, const struct ds__DSAKeyValueType *, const char*);
+SOAP_FMAC3 struct ds__DSAKeyValueType * SOAP_FMAC4 soap_in_ds__DSAKeyValueType(struct soap*, const char*, struct ds__DSAKeyValueType *, const char*);
+
+#ifndef soap_write_ds__DSAKeyValueType
+#define soap_write_ds__DSAKeyValueType(soap, data) ( soap_begin_send(soap) || (soap_serialize_ds__DSAKeyValueType(soap, data), 0) || soap_put_ds__DSAKeyValueType(soap, data, "ds:DSAKeyValueType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__DSAKeyValueType(struct soap*, const struct ds__DSAKeyValueType *, const char*, const char*);
+
+#ifndef soap_read_ds__DSAKeyValueType
+#define soap_read_ds__DSAKeyValueType(soap, data) ( soap_begin_recv(soap) || !soap_get_ds__DSAKeyValueType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__DSAKeyValueType * SOAP_FMAC4 soap_get_ds__DSAKeyValueType(struct soap*, struct ds__DSAKeyValueType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_ds__X509IssuerSerialType
+#define SOAP_TYPE_ds__X509IssuerSerialType (44)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__X509IssuerSerialType(struct soap*, struct ds__X509IssuerSerialType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__X509IssuerSerialType(struct soap*, const struct ds__X509IssuerSerialType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__X509IssuerSerialType(struct soap*, const char*, int, const struct ds__X509IssuerSerialType *, const char*);
+SOAP_FMAC3 struct ds__X509IssuerSerialType * SOAP_FMAC4 soap_in_ds__X509IssuerSerialType(struct soap*, const char*, struct ds__X509IssuerSerialType *, const char*);
+
+#ifndef soap_write_ds__X509IssuerSerialType
+#define soap_write_ds__X509IssuerSerialType(soap, data) ( soap_begin_send(soap) || (soap_serialize_ds__X509IssuerSerialType(soap, data), 0) || soap_put_ds__X509IssuerSerialType(soap, data, "ds:X509IssuerSerialType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__X509IssuerSerialType(struct soap*, const struct ds__X509IssuerSerialType *, const char*, const char*);
+
+#ifndef soap_read_ds__X509IssuerSerialType
+#define soap_read_ds__X509IssuerSerialType(soap, data) ( soap_begin_recv(soap) || !soap_get_ds__X509IssuerSerialType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__X509IssuerSerialType * SOAP_FMAC4 soap_get_ds__X509IssuerSerialType(struct soap*, struct ds__X509IssuerSerialType *, const char*, const char*);
+
+/* _ds__KeyInfo is a typedef element/attribute synonym for ds__KeyInfoType */
+
+#ifndef SOAP_TYPE__ds__KeyInfo
+#define SOAP_TYPE__ds__KeyInfo (43)
+#endif
+
+#define soap_default__ds__KeyInfo(soap, a) soap_default_ds__KeyInfoType(soap, a)
+
+
+#define soap_serialize__ds__KeyInfo(soap, a) soap_serialize_ds__KeyInfoType(soap, a)
+
+
+#define soap_out__ds__KeyInfo soap_out_ds__KeyInfoType
+
+
+#define soap_in__ds__KeyInfo soap_in_ds__KeyInfoType
+
+
+#ifndef soap_write__ds__KeyInfo
+#define soap_write__ds__KeyInfo(soap, data) ( soap_begin_send(soap) || (soap_serialize__ds__KeyInfo(soap, data), 0) || soap_put__ds__KeyInfo(soap, data, "ds:KeyInfo", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__ds__KeyInfo soap_put_ds__KeyInfoType
+
+
+#ifndef soap_read__ds__KeyInfo
+#define soap_read__ds__KeyInfo(soap, data) ( soap_begin_recv(soap) || !soap_get__ds__KeyInfo(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__ds__KeyInfo soap_get_ds__KeyInfoType
+
+
+#ifndef SOAP_TYPE_ds__X509DataType
+#define SOAP_TYPE_ds__X509DataType (40)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__X509DataType(struct soap*, struct ds__X509DataType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__X509DataType(struct soap*, const struct ds__X509DataType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__X509DataType(struct soap*, const char*, int, const struct ds__X509DataType *, const char*);
+SOAP_FMAC3 struct ds__X509DataType * SOAP_FMAC4 soap_in_ds__X509DataType(struct soap*, const char*, struct ds__X509DataType *, const char*);
+
+#ifndef soap_write_ds__X509DataType
+#define soap_write_ds__X509DataType(soap, data) ( soap_begin_send(soap) || (soap_serialize_ds__X509DataType(soap, data), 0) || soap_put_ds__X509DataType(soap, data, "ds:X509DataType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__X509DataType(struct soap*, const struct ds__X509DataType *, const char*, const char*);
+
+#ifndef soap_read_ds__X509DataType
+#define soap_read_ds__X509DataType(soap, data) ( soap_begin_recv(soap) || !soap_get_ds__X509DataType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__X509DataType * SOAP_FMAC4 soap_get_ds__X509DataType(struct soap*, struct ds__X509DataType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_ds__RetrievalMethodType
+#define SOAP_TYPE_ds__RetrievalMethodType (38)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__RetrievalMethodType(struct soap*, struct ds__RetrievalMethodType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__RetrievalMethodType(struct soap*, const struct ds__RetrievalMethodType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__RetrievalMethodType(struct soap*, const char*, int, const struct ds__RetrievalMethodType *, const char*);
+SOAP_FMAC3 struct ds__RetrievalMethodType * SOAP_FMAC4 soap_in_ds__RetrievalMethodType(struct soap*, const char*, struct ds__RetrievalMethodType *, const char*);
+
+#ifndef soap_write_ds__RetrievalMethodType
+#define soap_write_ds__RetrievalMethodType(soap, data) ( soap_begin_send(soap) || (soap_serialize_ds__RetrievalMethodType(soap, data), 0) || soap_put_ds__RetrievalMethodType(soap, data, "ds:RetrievalMethodType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__RetrievalMethodType(struct soap*, const struct ds__RetrievalMethodType *, const char*, const char*);
+
+#ifndef soap_read_ds__RetrievalMethodType
+#define soap_read_ds__RetrievalMethodType(soap, data) ( soap_begin_recv(soap) || !soap_get_ds__RetrievalMethodType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__RetrievalMethodType * SOAP_FMAC4 soap_get_ds__RetrievalMethodType(struct soap*, struct ds__RetrievalMethodType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_ds__KeyValueType
+#define SOAP_TYPE_ds__KeyValueType (36)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__KeyValueType(struct soap*, struct ds__KeyValueType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__KeyValueType(struct soap*, const struct ds__KeyValueType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__KeyValueType(struct soap*, const char*, int, const struct ds__KeyValueType *, const char*);
+SOAP_FMAC3 struct ds__KeyValueType * SOAP_FMAC4 soap_in_ds__KeyValueType(struct soap*, const char*, struct ds__KeyValueType *, const char*);
+
+#ifndef soap_write_ds__KeyValueType
+#define soap_write_ds__KeyValueType(soap, data) ( soap_begin_send(soap) || (soap_serialize_ds__KeyValueType(soap, data), 0) || soap_put_ds__KeyValueType(soap, data, "ds:KeyValueType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__KeyValueType(struct soap*, const struct ds__KeyValueType *, const char*, const char*);
+
+#ifndef soap_read_ds__KeyValueType
+#define soap_read_ds__KeyValueType(soap, data) ( soap_begin_recv(soap) || !soap_get_ds__KeyValueType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__KeyValueType * SOAP_FMAC4 soap_get_ds__KeyValueType(struct soap*, struct ds__KeyValueType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_ds__DigestMethodType
+#define SOAP_TYPE_ds__DigestMethodType (35)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__DigestMethodType(struct soap*, struct ds__DigestMethodType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__DigestMethodType(struct soap*, const struct ds__DigestMethodType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__DigestMethodType(struct soap*, const char*, int, const struct ds__DigestMethodType *, const char*);
+SOAP_FMAC3 struct ds__DigestMethodType * SOAP_FMAC4 soap_in_ds__DigestMethodType(struct soap*, const char*, struct ds__DigestMethodType *, const char*);
+
+#ifndef soap_write_ds__DigestMethodType
+#define soap_write_ds__DigestMethodType(soap, data) ( soap_begin_send(soap) || (soap_serialize_ds__DigestMethodType(soap, data), 0) || soap_put_ds__DigestMethodType(soap, data, "ds:DigestMethodType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__DigestMethodType(struct soap*, const struct ds__DigestMethodType *, const char*, const char*);
+
+#ifndef soap_read_ds__DigestMethodType
+#define soap_read_ds__DigestMethodType(soap, data) ( soap_begin_recv(soap) || !soap_get_ds__DigestMethodType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__DigestMethodType * SOAP_FMAC4 soap_get_ds__DigestMethodType(struct soap*, struct ds__DigestMethodType *, const char*, const char*);
+
+/* _ds__Transform is a typedef element/attribute synonym for ds__TransformType */
+
+#ifndef SOAP_TYPE__ds__Transform
+#define SOAP_TYPE__ds__Transform (34)
+#endif
+
+#define soap_default__ds__Transform(soap, a) soap_default_ds__TransformType(soap, a)
+
+
+#define soap_serialize__ds__Transform(soap, a) soap_serialize_ds__TransformType(soap, a)
+
+
+#define soap_out__ds__Transform soap_out_ds__TransformType
+
+
+#define soap_in__ds__Transform soap_in_ds__TransformType
+
+
+#ifndef soap_write__ds__Transform
+#define soap_write__ds__Transform(soap, data) ( soap_begin_send(soap) || (soap_serialize__ds__Transform(soap, data), 0) || soap_put__ds__Transform(soap, data, "ds:Transform", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__ds__Transform soap_put_ds__TransformType
+
+
+#ifndef soap_read__ds__Transform
+#define soap_read__ds__Transform(soap, data) ( soap_begin_recv(soap) || !soap_get__ds__Transform(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__ds__Transform soap_get_ds__TransformType
+
+
+#ifndef SOAP_TYPE_ds__TransformType
+#define SOAP_TYPE_ds__TransformType (32)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__TransformType(struct soap*, struct ds__TransformType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__TransformType(struct soap*, const struct ds__TransformType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__TransformType(struct soap*, const char*, int, const struct ds__TransformType *, const char*);
+SOAP_FMAC3 struct ds__TransformType * SOAP_FMAC4 soap_in_ds__TransformType(struct soap*, const char*, struct ds__TransformType *, const char*);
+
+#ifndef soap_write_ds__TransformType
+#define soap_write_ds__TransformType(soap, data) ( soap_begin_send(soap) || (soap_serialize_ds__TransformType(soap, data), 0) || soap_put_ds__TransformType(soap, data, "ds:TransformType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__TransformType(struct soap*, const struct ds__TransformType *, const char*, const char*);
+
+#ifndef soap_read_ds__TransformType
+#define soap_read_ds__TransformType(soap, data) ( soap_begin_recv(soap) || !soap_get_ds__TransformType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__TransformType * SOAP_FMAC4 soap_get_ds__TransformType(struct soap*, struct ds__TransformType *, const char*, const char*);
+
+#ifndef SOAP_TYPE__c14n__InclusiveNamespaces
+#define SOAP_TYPE__c14n__InclusiveNamespaces (31)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__c14n__InclusiveNamespaces(struct soap*, struct _c14n__InclusiveNamespaces *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__c14n__InclusiveNamespaces(struct soap*, const struct _c14n__InclusiveNamespaces *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__c14n__InclusiveNamespaces(struct soap*, const char*, int, const struct _c14n__InclusiveNamespaces *, const char*);
+SOAP_FMAC3 struct _c14n__InclusiveNamespaces * SOAP_FMAC4 soap_in__c14n__InclusiveNamespaces(struct soap*, const char*, struct _c14n__InclusiveNamespaces *, const char*);
+
+#ifndef soap_write__c14n__InclusiveNamespaces
+#define soap_write__c14n__InclusiveNamespaces(soap, data) ( soap_begin_send(soap) || (soap_serialize__c14n__InclusiveNamespaces(soap, data), 0) || soap_put__c14n__InclusiveNamespaces(soap, data, "c14n:InclusiveNamespaces", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__c14n__InclusiveNamespaces(struct soap*, const struct _c14n__InclusiveNamespaces *, const char*, const char*);
+
+#ifndef soap_read__c14n__InclusiveNamespaces
+#define soap_read__c14n__InclusiveNamespaces(soap, data) ( soap_begin_recv(soap) || !soap_get__c14n__InclusiveNamespaces(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _c14n__InclusiveNamespaces * SOAP_FMAC4 soap_get__c14n__InclusiveNamespaces(struct soap*, struct _c14n__InclusiveNamespaces *, const char*, const char*);
+
+#ifndef SOAP_TYPE_ds__TransformsType
+#define SOAP_TYPE_ds__TransformsType (30)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__TransformsType(struct soap*, struct ds__TransformsType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__TransformsType(struct soap*, const struct ds__TransformsType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__TransformsType(struct soap*, const char*, int, const struct ds__TransformsType *, const char*);
+SOAP_FMAC3 struct ds__TransformsType * SOAP_FMAC4 soap_in_ds__TransformsType(struct soap*, const char*, struct ds__TransformsType *, const char*);
+
+#ifndef soap_write_ds__TransformsType
+#define soap_write_ds__TransformsType(soap, data) ( soap_begin_send(soap) || (soap_serialize_ds__TransformsType(soap, data), 0) || soap_put_ds__TransformsType(soap, data, "ds:TransformsType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__TransformsType(struct soap*, const struct ds__TransformsType *, const char*, const char*);
+
+#ifndef soap_read_ds__TransformsType
+#define soap_read_ds__TransformsType(soap, data) ( soap_begin_recv(soap) || !soap_get_ds__TransformsType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__TransformsType * SOAP_FMAC4 soap_get_ds__TransformsType(struct soap*, struct ds__TransformsType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_ds__ReferenceType
+#define SOAP_TYPE_ds__ReferenceType (29)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__ReferenceType(struct soap*, struct ds__ReferenceType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__ReferenceType(struct soap*, const struct ds__ReferenceType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__ReferenceType(struct soap*, const char*, int, const struct ds__ReferenceType *, const char*);
+SOAP_FMAC3 struct ds__ReferenceType * SOAP_FMAC4 soap_in_ds__ReferenceType(struct soap*, const char*, struct ds__ReferenceType *, const char*);
+
+#ifndef soap_write_ds__ReferenceType
+#define soap_write_ds__ReferenceType(soap, data) ( soap_begin_send(soap) || (soap_serialize_ds__ReferenceType(soap, data), 0) || soap_put_ds__ReferenceType(soap, data, "ds:ReferenceType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__ReferenceType(struct soap*, const struct ds__ReferenceType *, const char*, const char*);
+
+#ifndef soap_read_ds__ReferenceType
+#define soap_read_ds__ReferenceType(soap, data) ( soap_begin_recv(soap) || !soap_get_ds__ReferenceType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__ReferenceType * SOAP_FMAC4 soap_get_ds__ReferenceType(struct soap*, struct ds__ReferenceType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_ds__SignatureMethodType
+#define SOAP_TYPE_ds__SignatureMethodType (28)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__SignatureMethodType(struct soap*, struct ds__SignatureMethodType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__SignatureMethodType(struct soap*, const struct ds__SignatureMethodType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__SignatureMethodType(struct soap*, const char*, int, const struct ds__SignatureMethodType *, const char*);
+SOAP_FMAC3 struct ds__SignatureMethodType * SOAP_FMAC4 soap_in_ds__SignatureMethodType(struct soap*, const char*, struct ds__SignatureMethodType *, const char*);
+
+#ifndef soap_write_ds__SignatureMethodType
+#define soap_write_ds__SignatureMethodType(soap, data) ( soap_begin_send(soap) || (soap_serialize_ds__SignatureMethodType(soap, data), 0) || soap_put_ds__SignatureMethodType(soap, data, "ds:SignatureMethodType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__SignatureMethodType(struct soap*, const struct ds__SignatureMethodType *, const char*, const char*);
+
+#ifndef soap_read_ds__SignatureMethodType
+#define soap_read_ds__SignatureMethodType(soap, data) ( soap_begin_recv(soap) || !soap_get_ds__SignatureMethodType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__SignatureMethodType * SOAP_FMAC4 soap_get_ds__SignatureMethodType(struct soap*, struct ds__SignatureMethodType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_ds__CanonicalizationMethodType
+#define SOAP_TYPE_ds__CanonicalizationMethodType (27)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__CanonicalizationMethodType(struct soap*, struct ds__CanonicalizationMethodType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__CanonicalizationMethodType(struct soap*, const struct ds__CanonicalizationMethodType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__CanonicalizationMethodType(struct soap*, const char*, int, const struct ds__CanonicalizationMethodType *, const char*);
+SOAP_FMAC3 struct ds__CanonicalizationMethodType * SOAP_FMAC4 soap_in_ds__CanonicalizationMethodType(struct soap*, const char*, struct ds__CanonicalizationMethodType *, const char*);
+
+#ifndef soap_write_ds__CanonicalizationMethodType
+#define soap_write_ds__CanonicalizationMethodType(soap, data) ( soap_begin_send(soap) || (soap_serialize_ds__CanonicalizationMethodType(soap, data), 0) || soap_put_ds__CanonicalizationMethodType(soap, data, "ds:CanonicalizationMethodType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__CanonicalizationMethodType(struct soap*, const struct ds__CanonicalizationMethodType *, const char*, const char*);
+
+#ifndef soap_read_ds__CanonicalizationMethodType
+#define soap_read_ds__CanonicalizationMethodType(soap, data) ( soap_begin_recv(soap) || !soap_get_ds__CanonicalizationMethodType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__CanonicalizationMethodType * SOAP_FMAC4 soap_get_ds__CanonicalizationMethodType(struct soap*, struct ds__CanonicalizationMethodType *, const char*, const char*);
+
+/* _ds__Signature is a typedef element/attribute synonym for ds__SignatureType */
+
+#ifndef SOAP_TYPE__ds__Signature
+#define SOAP_TYPE__ds__Signature (26)
+#endif
+
+#define soap_default__ds__Signature(soap, a) soap_default_ds__SignatureType(soap, a)
+
+
+#define soap_serialize__ds__Signature(soap, a) soap_serialize_ds__SignatureType(soap, a)
+
+
+#define soap_out__ds__Signature soap_out_ds__SignatureType
+
+
+#define soap_in__ds__Signature soap_in_ds__SignatureType
+
+
+#ifndef soap_write__ds__Signature
+#define soap_write__ds__Signature(soap, data) ( soap_begin_send(soap) || (soap_serialize__ds__Signature(soap, data), 0) || soap_put__ds__Signature(soap, data, "ds:Signature", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__ds__Signature soap_put_ds__SignatureType
+
+
+#ifndef soap_read__ds__Signature
+#define soap_read__ds__Signature(soap, data) ( soap_begin_recv(soap) || !soap_get__ds__Signature(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__ds__Signature soap_get_ds__SignatureType
+
+
+#ifndef SOAP_TYPE_ds__KeyInfoType
+#define SOAP_TYPE_ds__KeyInfoType (24)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__KeyInfoType(struct soap*, struct ds__KeyInfoType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__KeyInfoType(struct soap*, const struct ds__KeyInfoType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__KeyInfoType(struct soap*, const char*, int, const struct ds__KeyInfoType *, const char*);
+SOAP_FMAC3 struct ds__KeyInfoType * SOAP_FMAC4 soap_in_ds__KeyInfoType(struct soap*, const char*, struct ds__KeyInfoType *, const char*);
+
+#ifndef soap_write_ds__KeyInfoType
+#define soap_write_ds__KeyInfoType(soap, data) ( soap_begin_send(soap) || (soap_serialize_ds__KeyInfoType(soap, data), 0) || soap_put_ds__KeyInfoType(soap, data, "ds:KeyInfoType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__KeyInfoType(struct soap*, const struct ds__KeyInfoType *, const char*, const char*);
+
+#ifndef soap_read_ds__KeyInfoType
+#define soap_read_ds__KeyInfoType(soap, data) ( soap_begin_recv(soap) || !soap_get_ds__KeyInfoType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__KeyInfoType * SOAP_FMAC4 soap_get_ds__KeyInfoType(struct soap*, struct ds__KeyInfoType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_ds__SignedInfoType
+#define SOAP_TYPE_ds__SignedInfoType (22)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__SignedInfoType(struct soap*, struct ds__SignedInfoType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__SignedInfoType(struct soap*, const struct ds__SignedInfoType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__SignedInfoType(struct soap*, const char*, int, const struct ds__SignedInfoType *, const char*);
+SOAP_FMAC3 struct ds__SignedInfoType * SOAP_FMAC4 soap_in_ds__SignedInfoType(struct soap*, const char*, struct ds__SignedInfoType *, const char*);
+
+#ifndef soap_write_ds__SignedInfoType
+#define soap_write_ds__SignedInfoType(soap, data) ( soap_begin_send(soap) || (soap_serialize_ds__SignedInfoType(soap, data), 0) || soap_put_ds__SignedInfoType(soap, data, "ds:SignedInfoType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__SignedInfoType(struct soap*, const struct ds__SignedInfoType *, const char*, const char*);
+
+#ifndef soap_read_ds__SignedInfoType
+#define soap_read_ds__SignedInfoType(soap, data) ( soap_begin_recv(soap) || !soap_get_ds__SignedInfoType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__SignedInfoType * SOAP_FMAC4 soap_get_ds__SignedInfoType(struct soap*, struct ds__SignedInfoType *, const char*, const char*);
+
+#ifndef SOAP_TYPE_ds__SignatureType
+#define SOAP_TYPE_ds__SignatureType (21)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ds__SignatureType(struct soap*, struct ds__SignatureType *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ds__SignatureType(struct soap*, const struct ds__SignatureType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ds__SignatureType(struct soap*, const char*, int, const struct ds__SignatureType *, const char*);
+SOAP_FMAC3 struct ds__SignatureType * SOAP_FMAC4 soap_in_ds__SignatureType(struct soap*, const char*, struct ds__SignatureType *, const char*);
+
+#ifndef soap_write_ds__SignatureType
+#define soap_write_ds__SignatureType(soap, data) ( soap_begin_send(soap) || (soap_serialize_ds__SignatureType(soap, data), 0) || soap_put_ds__SignatureType(soap, data, "ds:SignatureType", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ds__SignatureType(struct soap*, const struct ds__SignatureType *, const char*, const char*);
+
+#ifndef soap_read_ds__SignatureType
+#define soap_read_ds__SignatureType(soap, data) ( soap_begin_recv(soap) || !soap_get_ds__SignatureType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__SignatureType * SOAP_FMAC4 soap_get_ds__SignatureType(struct soap*, struct ds__SignatureType *, const char*, const char*);
+
+#ifndef SOAP_TYPE__wsse__SecurityTokenReference
+#define SOAP_TYPE__wsse__SecurityTokenReference (17)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__wsse__SecurityTokenReference(struct soap*, struct _wsse__SecurityTokenReference *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__wsse__SecurityTokenReference(struct soap*, const struct _wsse__SecurityTokenReference *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsse__SecurityTokenReference(struct soap*, const char*, int, const struct _wsse__SecurityTokenReference *, const char*);
+SOAP_FMAC3 struct _wsse__SecurityTokenReference * SOAP_FMAC4 soap_in__wsse__SecurityTokenReference(struct soap*, const char*, struct _wsse__SecurityTokenReference *, const char*);
+
+#ifndef soap_write__wsse__SecurityTokenReference
+#define soap_write__wsse__SecurityTokenReference(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsse__SecurityTokenReference(soap, data), 0) || soap_put__wsse__SecurityTokenReference(soap, data, "wsse:SecurityTokenReference", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsse__SecurityTokenReference(struct soap*, const struct _wsse__SecurityTokenReference *, const char*, const char*);
+
+#ifndef soap_read__wsse__SecurityTokenReference
+#define soap_read__wsse__SecurityTokenReference(soap, data) ( soap_begin_recv(soap) || !soap_get__wsse__SecurityTokenReference(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _wsse__SecurityTokenReference * SOAP_FMAC4 soap_get__wsse__SecurityTokenReference(struct soap*, struct _wsse__SecurityTokenReference *, const char*, const char*);
+
+#ifndef SOAP_TYPE__wsse__KeyIdentifier
+#define SOAP_TYPE__wsse__KeyIdentifier (16)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__wsse__KeyIdentifier(struct soap*, struct _wsse__KeyIdentifier *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__wsse__KeyIdentifier(struct soap*, const struct _wsse__KeyIdentifier *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsse__KeyIdentifier(struct soap*, const char*, int, const struct _wsse__KeyIdentifier *, const char*);
+SOAP_FMAC3 struct _wsse__KeyIdentifier * SOAP_FMAC4 soap_in__wsse__KeyIdentifier(struct soap*, const char*, struct _wsse__KeyIdentifier *, const char*);
+
+#ifndef soap_write__wsse__KeyIdentifier
+#define soap_write__wsse__KeyIdentifier(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsse__KeyIdentifier(soap, data), 0) || soap_put__wsse__KeyIdentifier(soap, data, "wsse:KeyIdentifier", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsse__KeyIdentifier(struct soap*, const struct _wsse__KeyIdentifier *, const char*, const char*);
+
+#ifndef soap_read__wsse__KeyIdentifier
+#define soap_read__wsse__KeyIdentifier(soap, data) ( soap_begin_recv(soap) || !soap_get__wsse__KeyIdentifier(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _wsse__KeyIdentifier * SOAP_FMAC4 soap_get__wsse__KeyIdentifier(struct soap*, struct _wsse__KeyIdentifier *, const char*, const char*);
+
+#ifndef SOAP_TYPE__wsse__Embedded
+#define SOAP_TYPE__wsse__Embedded (15)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__wsse__Embedded(struct soap*, struct _wsse__Embedded *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__wsse__Embedded(struct soap*, const struct _wsse__Embedded *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsse__Embedded(struct soap*, const char*, int, const struct _wsse__Embedded *, const char*);
+SOAP_FMAC3 struct _wsse__Embedded * SOAP_FMAC4 soap_in__wsse__Embedded(struct soap*, const char*, struct _wsse__Embedded *, const char*);
+
+#ifndef soap_write__wsse__Embedded
+#define soap_write__wsse__Embedded(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsse__Embedded(soap, data), 0) || soap_put__wsse__Embedded(soap, data, "wsse:Embedded", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsse__Embedded(struct soap*, const struct _wsse__Embedded *, const char*, const char*);
+
+#ifndef soap_read__wsse__Embedded
+#define soap_read__wsse__Embedded(soap, data) ( soap_begin_recv(soap) || !soap_get__wsse__Embedded(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _wsse__Embedded * SOAP_FMAC4 soap_get__wsse__Embedded(struct soap*, struct _wsse__Embedded *, const char*, const char*);
+
+#ifndef SOAP_TYPE__wsse__Reference
+#define SOAP_TYPE__wsse__Reference (14)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__wsse__Reference(struct soap*, struct _wsse__Reference *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__wsse__Reference(struct soap*, const struct _wsse__Reference *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsse__Reference(struct soap*, const char*, int, const struct _wsse__Reference *, const char*);
+SOAP_FMAC3 struct _wsse__Reference * SOAP_FMAC4 soap_in__wsse__Reference(struct soap*, const char*, struct _wsse__Reference *, const char*);
+
+#ifndef soap_write__wsse__Reference
+#define soap_write__wsse__Reference(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsse__Reference(soap, data), 0) || soap_put__wsse__Reference(soap, data, "wsse:Reference", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsse__Reference(struct soap*, const struct _wsse__Reference *, const char*, const char*);
+
+#ifndef soap_read__wsse__Reference
+#define soap_read__wsse__Reference(soap, data) ( soap_begin_recv(soap) || !soap_get__wsse__Reference(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _wsse__Reference * SOAP_FMAC4 soap_get__wsse__Reference(struct soap*, struct _wsse__Reference *, const char*, const char*);
+
+#ifndef SOAP_TYPE__wsse__BinarySecurityToken
+#define SOAP_TYPE__wsse__BinarySecurityToken (13)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__wsse__BinarySecurityToken(struct soap*, struct _wsse__BinarySecurityToken *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__wsse__BinarySecurityToken(struct soap*, const struct _wsse__BinarySecurityToken *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsse__BinarySecurityToken(struct soap*, const char*, int, const struct _wsse__BinarySecurityToken *, const char*);
+SOAP_FMAC3 struct _wsse__BinarySecurityToken * SOAP_FMAC4 soap_in__wsse__BinarySecurityToken(struct soap*, const char*, struct _wsse__BinarySecurityToken *, const char*);
+
+#ifndef soap_write__wsse__BinarySecurityToken
+#define soap_write__wsse__BinarySecurityToken(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsse__BinarySecurityToken(soap, data), 0) || soap_put__wsse__BinarySecurityToken(soap, data, "wsse:BinarySecurityToken", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsse__BinarySecurityToken(struct soap*, const struct _wsse__BinarySecurityToken *, const char*, const char*);
+
+#ifndef soap_read__wsse__BinarySecurityToken
+#define soap_read__wsse__BinarySecurityToken(soap, data) ( soap_begin_recv(soap) || !soap_get__wsse__BinarySecurityToken(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _wsse__BinarySecurityToken * SOAP_FMAC4 soap_get__wsse__BinarySecurityToken(struct soap*, struct _wsse__BinarySecurityToken *, const char*, const char*);
+
+#ifndef SOAP_TYPE__wsse__Password
+#define SOAP_TYPE__wsse__Password (11)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__wsse__Password(struct soap*, struct _wsse__Password *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__wsse__Password(struct soap*, const struct _wsse__Password *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsse__Password(struct soap*, const char*, int, const struct _wsse__Password *, const char*);
+SOAP_FMAC3 struct _wsse__Password * SOAP_FMAC4 soap_in__wsse__Password(struct soap*, const char*, struct _wsse__Password *, const char*);
+
+#ifndef soap_write__wsse__Password
+#define soap_write__wsse__Password(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsse__Password(soap, data), 0) || soap_put__wsse__Password(soap, data, "wsse:Password", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsse__Password(struct soap*, const struct _wsse__Password *, const char*, const char*);
+
+#ifndef soap_read__wsse__Password
+#define soap_read__wsse__Password(soap, data) ( soap_begin_recv(soap) || !soap_get__wsse__Password(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _wsse__Password * SOAP_FMAC4 soap_get__wsse__Password(struct soap*, struct _wsse__Password *, const char*, const char*);
+
+#ifndef SOAP_TYPE__wsse__UsernameToken
+#define SOAP_TYPE__wsse__UsernameToken (10)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__wsse__UsernameToken(struct soap*, struct _wsse__UsernameToken *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__wsse__UsernameToken(struct soap*, const struct _wsse__UsernameToken *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsse__UsernameToken(struct soap*, const char*, int, const struct _wsse__UsernameToken *, const char*);
+SOAP_FMAC3 struct _wsse__UsernameToken * SOAP_FMAC4 soap_in__wsse__UsernameToken(struct soap*, const char*, struct _wsse__UsernameToken *, const char*);
+
+#ifndef soap_write__wsse__UsernameToken
+#define soap_write__wsse__UsernameToken(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsse__UsernameToken(soap, data), 0) || soap_put__wsse__UsernameToken(soap, data, "wsse:UsernameToken", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsse__UsernameToken(struct soap*, const struct _wsse__UsernameToken *, const char*, const char*);
+
+#ifndef soap_read__wsse__UsernameToken
+#define soap_read__wsse__UsernameToken(soap, data) ( soap_begin_recv(soap) || !soap_get__wsse__UsernameToken(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _wsse__UsernameToken * SOAP_FMAC4 soap_get__wsse__UsernameToken(struct soap*, struct _wsse__UsernameToken *, const char*, const char*);
+
+#ifndef SOAP_TYPE__wsu__Timestamp
+#define SOAP_TYPE__wsu__Timestamp (8)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default__wsu__Timestamp(struct soap*, struct _wsu__Timestamp *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize__wsu__Timestamp(struct soap*, const struct _wsu__Timestamp *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsu__Timestamp(struct soap*, const char*, int, const struct _wsu__Timestamp *, const char*);
+SOAP_FMAC3 struct _wsu__Timestamp * SOAP_FMAC4 soap_in__wsu__Timestamp(struct soap*, const char*, struct _wsu__Timestamp *, const char*);
+
+#ifndef soap_write__wsu__Timestamp
+#define soap_write__wsu__Timestamp(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsu__Timestamp(soap, data), 0) || soap_put__wsu__Timestamp(soap, data, "wsu:Timestamp", NULL) || soap_end_send(soap) )
+#endif
+
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsu__Timestamp(struct soap*, const struct _wsu__Timestamp *, const char*, const char*);
+
+#ifndef soap_read__wsu__Timestamp
+#define soap_read__wsu__Timestamp(soap, data) ( soap_begin_recv(soap) || !soap_get__wsu__Timestamp(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _wsu__Timestamp * SOAP_FMAC4 soap_get__wsu__Timestamp(struct soap*, struct _wsu__Timestamp *, const char*, const char*);
+
 #ifndef WITH_NOGLOBAL
 
 #ifndef SOAP_TYPE_PointerToSOAP_ENV__Reason
-#define SOAP_TYPE_PointerToSOAP_ENV__Reason (16)
+#define SOAP_TYPE_PointerToSOAP_ENV__Reason (136)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToSOAP_ENV__Reason(struct soap*, struct SOAP_ENV__Reason *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToSOAP_ENV__Reason(struct soap*, const char *, int, struct SOAP_ENV__Reason *const*, const char *);
@@ -211,7 +1897,7 @@ SOAP_FMAC3 struct SOAP_ENV__Reason ** SOAP_FMAC4 soap_get_PointerToSOAP_ENV__Rea
 #ifndef WITH_NOGLOBAL
 
 #ifndef SOAP_TYPE_PointerToSOAP_ENV__Detail
-#define SOAP_TYPE_PointerToSOAP_ENV__Detail (15)
+#define SOAP_TYPE_PointerToSOAP_ENV__Detail (135)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToSOAP_ENV__Detail(struct soap*, struct SOAP_ENV__Detail *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToSOAP_ENV__Detail(struct soap*, const char *, int, struct SOAP_ENV__Detail *const*, const char *);
@@ -234,7 +1920,7 @@ SOAP_FMAC3 struct SOAP_ENV__Detail ** SOAP_FMAC4 soap_get_PointerToSOAP_ENV__Det
 #ifndef WITH_NOGLOBAL
 
 #ifndef SOAP_TYPE_PointerToSOAP_ENV__Code
-#define SOAP_TYPE_PointerToSOAP_ENV__Code (9)
+#define SOAP_TYPE_PointerToSOAP_ENV__Code (129)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToSOAP_ENV__Code(struct soap*, struct SOAP_ENV__Code *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToSOAP_ENV__Code(struct soap*, const char *, int, struct SOAP_ENV__Code *const*, const char *);
@@ -253,6 +1939,1050 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToSOAP_ENV__Code(struct soap*, struct 
 SOAP_FMAC3 struct SOAP_ENV__Code ** SOAP_FMAC4 soap_get_PointerToSOAP_ENV__Code(struct soap*, struct SOAP_ENV__Code **, const char*, const char*);
 
 #endif
+
+#ifndef SOAP_TYPE_PointerTo_wsa5__FaultTo
+#define SOAP_TYPE_PointerTo_wsa5__FaultTo (127)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsa5__FaultTo(struct soap*, struct wsa5__EndpointReferenceType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsa5__FaultTo(struct soap*, const char *, int, struct wsa5__EndpointReferenceType *const*, const char *);
+SOAP_FMAC3 struct wsa5__EndpointReferenceType ** SOAP_FMAC4 soap_in_PointerTo_wsa5__FaultTo(struct soap*, const char*, struct wsa5__EndpointReferenceType **, const char*);
+
+#ifndef soap_write_PointerTo_wsa5__FaultTo
+#define soap_write_PointerTo_wsa5__FaultTo(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTo_wsa5__FaultTo(soap, data), 0) || soap_put_PointerTo_wsa5__FaultTo(soap, data, "wsa5:FaultTo", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsa5__FaultTo(struct soap*, struct wsa5__EndpointReferenceType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTo_wsa5__FaultTo
+#define soap_read_PointerTo_wsa5__FaultTo(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTo_wsa5__FaultTo(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct wsa5__EndpointReferenceType ** SOAP_FMAC4 soap_get_PointerTo_wsa5__FaultTo(struct soap*, struct wsa5__EndpointReferenceType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_wsa5__ReplyTo
+#define SOAP_TYPE_PointerTo_wsa5__ReplyTo (126)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsa5__ReplyTo(struct soap*, struct wsa5__EndpointReferenceType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsa5__ReplyTo(struct soap*, const char *, int, struct wsa5__EndpointReferenceType *const*, const char *);
+SOAP_FMAC3 struct wsa5__EndpointReferenceType ** SOAP_FMAC4 soap_in_PointerTo_wsa5__ReplyTo(struct soap*, const char*, struct wsa5__EndpointReferenceType **, const char*);
+
+#ifndef soap_write_PointerTo_wsa5__ReplyTo
+#define soap_write_PointerTo_wsa5__ReplyTo(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTo_wsa5__ReplyTo(soap, data), 0) || soap_put_PointerTo_wsa5__ReplyTo(soap, data, "wsa5:ReplyTo", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsa5__ReplyTo(struct soap*, struct wsa5__EndpointReferenceType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTo_wsa5__ReplyTo
+#define soap_read_PointerTo_wsa5__ReplyTo(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTo_wsa5__ReplyTo(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct wsa5__EndpointReferenceType ** SOAP_FMAC4 soap_get_PointerTo_wsa5__ReplyTo(struct soap*, struct wsa5__EndpointReferenceType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_wsa5__From
+#define SOAP_TYPE_PointerTo_wsa5__From (125)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsa5__From(struct soap*, struct wsa5__EndpointReferenceType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsa5__From(struct soap*, const char *, int, struct wsa5__EndpointReferenceType *const*, const char *);
+SOAP_FMAC3 struct wsa5__EndpointReferenceType ** SOAP_FMAC4 soap_in_PointerTo_wsa5__From(struct soap*, const char*, struct wsa5__EndpointReferenceType **, const char*);
+
+#ifndef soap_write_PointerTo_wsa5__From
+#define soap_write_PointerTo_wsa5__From(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTo_wsa5__From(soap, data), 0) || soap_put_PointerTo_wsa5__From(soap, data, "wsa5:From", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsa5__From(struct soap*, struct wsa5__EndpointReferenceType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTo_wsa5__From
+#define soap_read_PointerTo_wsa5__From(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTo_wsa5__From(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct wsa5__EndpointReferenceType ** SOAP_FMAC4 soap_get_PointerTo_wsa5__From(struct soap*, struct wsa5__EndpointReferenceType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_wsa5__RelatesTo
+#define SOAP_TYPE_PointerTo_wsa5__RelatesTo (124)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsa5__RelatesTo(struct soap*, struct wsa5__RelatesToType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsa5__RelatesTo(struct soap*, const char *, int, struct wsa5__RelatesToType *const*, const char *);
+SOAP_FMAC3 struct wsa5__RelatesToType ** SOAP_FMAC4 soap_in_PointerTo_wsa5__RelatesTo(struct soap*, const char*, struct wsa5__RelatesToType **, const char*);
+
+#ifndef soap_write_PointerTo_wsa5__RelatesTo
+#define soap_write_PointerTo_wsa5__RelatesTo(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTo_wsa5__RelatesTo(soap, data), 0) || soap_put_PointerTo_wsa5__RelatesTo(soap, data, "wsa5:RelatesTo", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsa5__RelatesTo(struct soap*, struct wsa5__RelatesToType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTo_wsa5__RelatesTo
+#define soap_read_PointerTo_wsa5__RelatesTo(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTo_wsa5__RelatesTo(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct wsa5__RelatesToType ** SOAP_FMAC4 soap_get_PointerTo_wsa5__RelatesTo(struct soap*, struct wsa5__RelatesToType **, const char*, const char*);
+
+/* _wsa5__ProblemIRI is a typedef element/attribute synonym for string */
+
+#ifndef SOAP_TYPE__wsa5__ProblemIRI
+#define SOAP_TYPE__wsa5__ProblemIRI (121)
+#endif
+
+#define soap_default__wsa5__ProblemIRI(soap, a) soap_default_string(soap, a)
+
+
+#define soap_serialize__wsa5__ProblemIRI(soap, a) soap_serialize_string(soap, a)
+
+
+#define soap_out__wsa5__ProblemIRI soap_out_string
+
+
+#define soap_in__wsa5__ProblemIRI soap_in_string
+
+
+#ifndef soap_write__wsa5__ProblemIRI
+#define soap_write__wsa5__ProblemIRI(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsa5__ProblemIRI(soap, data), 0) || soap_put__wsa5__ProblemIRI(soap, data, "byte", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__wsa5__ProblemIRI soap_put_string
+
+
+#ifndef soap_read__wsa5__ProblemIRI
+#define soap_read__wsa5__ProblemIRI(soap, data) ( soap_begin_recv(soap) || !soap_get__wsa5__ProblemIRI(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__wsa5__ProblemIRI soap_get_string
+
+
+#ifndef SOAP_TYPE__wsa5__ProblemHeaderQName
+#define SOAP_TYPE__wsa5__ProblemHeaderQName (120)
+#endif
+
+#define soap_default__wsa5__ProblemHeaderQName(soap, a) soap_default_string(soap, a)
+
+
+#define soap_serialize__wsa5__ProblemHeaderQName(soap, a) soap_serialize_string(soap, a)
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsa5__ProblemHeaderQName(struct soap*, const char*, int, char*const*, const char*);
+SOAP_FMAC3 char * * SOAP_FMAC4 soap_in__wsa5__ProblemHeaderQName(struct soap*, const char*, char **, const char*);
+
+#ifndef soap_write__wsa5__ProblemHeaderQName
+#define soap_write__wsa5__ProblemHeaderQName(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsa5__ProblemHeaderQName(soap, data), 0) || soap_put__wsa5__ProblemHeaderQName(soap, data, "byte", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__wsa5__ProblemHeaderQName(struct soap*, char *const*, const char*, const char*);
+
+#ifndef soap_read__wsa5__ProblemHeaderQName
+#define soap_read__wsa5__ProblemHeaderQName(soap, data) ( soap_begin_recv(soap) || !soap_get__wsa5__ProblemHeaderQName(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 char ** SOAP_FMAC4 soap_get__wsa5__ProblemHeaderQName(struct soap*, char **, const char*, const char*);
+
+/* _wsa5__Action is a typedef element/attribute synonym for string */
+
+#ifndef SOAP_TYPE__wsa5__Action
+#define SOAP_TYPE__wsa5__Action (117)
+#endif
+
+#define soap_default__wsa5__Action(soap, a) soap_default_string(soap, a)
+
+
+#define soap_serialize__wsa5__Action(soap, a) soap_serialize_string(soap, a)
+
+
+#define soap_out__wsa5__Action soap_out_string
+
+
+#define soap_in__wsa5__Action soap_in_string
+
+
+#ifndef soap_write__wsa5__Action
+#define soap_write__wsa5__Action(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsa5__Action(soap, data), 0) || soap_put__wsa5__Action(soap, data, "byte", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__wsa5__Action soap_put_string
+
+
+#ifndef soap_read__wsa5__Action
+#define soap_read__wsa5__Action(soap, data) ( soap_begin_recv(soap) || !soap_get__wsa5__Action(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__wsa5__Action soap_get_string
+
+
+/* _wsa5__To is a typedef element/attribute synonym for string */
+
+#ifndef SOAP_TYPE__wsa5__To
+#define SOAP_TYPE__wsa5__To (116)
+#endif
+
+#define soap_default__wsa5__To(soap, a) soap_default_string(soap, a)
+
+
+#define soap_serialize__wsa5__To(soap, a) soap_serialize_string(soap, a)
+
+
+#define soap_out__wsa5__To soap_out_string
+
+
+#define soap_in__wsa5__To soap_in_string
+
+
+#ifndef soap_write__wsa5__To
+#define soap_write__wsa5__To(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsa5__To(soap, data), 0) || soap_put__wsa5__To(soap, data, "byte", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__wsa5__To soap_put_string
+
+
+#ifndef soap_read__wsa5__To
+#define soap_read__wsa5__To(soap, data) ( soap_begin_recv(soap) || !soap_get__wsa5__To(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__wsa5__To soap_get_string
+
+
+/* _wsa5__MessageID is a typedef element/attribute synonym for string */
+
+#ifndef SOAP_TYPE__wsa5__MessageID
+#define SOAP_TYPE__wsa5__MessageID (111)
+#endif
+
+#define soap_default__wsa5__MessageID(soap, a) soap_default_string(soap, a)
+
+
+#define soap_serialize__wsa5__MessageID(soap, a) soap_serialize_string(soap, a)
+
+
+#define soap_out__wsa5__MessageID soap_out_string
+
+
+#define soap_in__wsa5__MessageID soap_in_string
+
+
+#ifndef soap_write__wsa5__MessageID
+#define soap_write__wsa5__MessageID(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsa5__MessageID(soap, data), 0) || soap_put__wsa5__MessageID(soap, data, "byte", NULL) || soap_end_send(soap) )
+#endif
+
+
+#define soap_put__wsa5__MessageID soap_put_string
+
+
+#ifndef soap_read__wsa5__MessageID
+#define soap_read__wsa5__MessageID(soap, data) ( soap_begin_recv(soap) || !soap_get__wsa5__MessageID(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+
+#define soap_get__wsa5__MessageID soap_get_string
+
+
+#ifndef SOAP_TYPE_PointerTowsa5__MetadataType
+#define SOAP_TYPE_PointerTowsa5__MetadataType (106)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTowsa5__MetadataType(struct soap*, struct wsa5__MetadataType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTowsa5__MetadataType(struct soap*, const char *, int, struct wsa5__MetadataType *const*, const char *);
+SOAP_FMAC3 struct wsa5__MetadataType ** SOAP_FMAC4 soap_in_PointerTowsa5__MetadataType(struct soap*, const char*, struct wsa5__MetadataType **, const char*);
+
+#ifndef soap_write_PointerTowsa5__MetadataType
+#define soap_write_PointerTowsa5__MetadataType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTowsa5__MetadataType(soap, data), 0) || soap_put_PointerTowsa5__MetadataType(soap, data, "wsa5:MetadataType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTowsa5__MetadataType(struct soap*, struct wsa5__MetadataType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTowsa5__MetadataType
+#define soap_read_PointerTowsa5__MetadataType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTowsa5__MetadataType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct wsa5__MetadataType ** SOAP_FMAC4 soap_get_PointerTowsa5__MetadataType(struct soap*, struct wsa5__MetadataType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTowsa5__ReferenceParametersType
+#define SOAP_TYPE_PointerTowsa5__ReferenceParametersType (105)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTowsa5__ReferenceParametersType(struct soap*, struct wsa5__ReferenceParametersType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTowsa5__ReferenceParametersType(struct soap*, const char *, int, struct wsa5__ReferenceParametersType *const*, const char *);
+SOAP_FMAC3 struct wsa5__ReferenceParametersType ** SOAP_FMAC4 soap_in_PointerTowsa5__ReferenceParametersType(struct soap*, const char*, struct wsa5__ReferenceParametersType **, const char*);
+
+#ifndef soap_write_PointerTowsa5__ReferenceParametersType
+#define soap_write_PointerTowsa5__ReferenceParametersType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTowsa5__ReferenceParametersType(soap, data), 0) || soap_put_PointerTowsa5__ReferenceParametersType(soap, data, "wsa5:ReferenceParametersType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTowsa5__ReferenceParametersType(struct soap*, struct wsa5__ReferenceParametersType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTowsa5__ReferenceParametersType
+#define soap_read_PointerTowsa5__ReferenceParametersType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTowsa5__ReferenceParametersType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct wsa5__ReferenceParametersType ** SOAP_FMAC4 soap_get_PointerTowsa5__ReferenceParametersType(struct soap*, struct wsa5__ReferenceParametersType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_wsa5__FaultCodesOpenEnumType
+#define SOAP_TYPE_wsa5__FaultCodesOpenEnumType (102)
+#endif
+
+#define soap_default_wsa5__FaultCodesOpenEnumType(soap, a) soap_default_string(soap, a)
+
+
+#define soap_serialize_wsa5__FaultCodesOpenEnumType(soap, a) soap_serialize_string(soap, a)
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__FaultCodesOpenEnumType(struct soap*, const char*, int, char*const*, const char*);
+SOAP_FMAC3 char * * SOAP_FMAC4 soap_in_wsa5__FaultCodesOpenEnumType(struct soap*, const char*, char **, const char*);
+
+#ifndef soap_write_wsa5__FaultCodesOpenEnumType
+#define soap_write_wsa5__FaultCodesOpenEnumType(soap, data) ( soap_begin_send(soap) || (soap_serialize_wsa5__FaultCodesOpenEnumType(soap, data), 0) || soap_put_wsa5__FaultCodesOpenEnumType(soap, data, "byte", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsa5__FaultCodesOpenEnumType(struct soap*, char *const*, const char*, const char*);
+
+#ifndef soap_read_wsa5__FaultCodesOpenEnumType
+#define soap_read_wsa5__FaultCodesOpenEnumType(soap, data) ( soap_begin_recv(soap) || !soap_get_wsa5__FaultCodesOpenEnumType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 char ** SOAP_FMAC4 soap_get_wsa5__FaultCodesOpenEnumType(struct soap*, char **, const char*, const char*);
+
+#ifndef SOAP_TYPE_wsa5__RelationshipTypeOpenEnum
+#define SOAP_TYPE_wsa5__RelationshipTypeOpenEnum (101)
+#endif
+
+#define soap_default_wsa5__RelationshipTypeOpenEnum(soap, a) soap_default_string(soap, a)
+
+
+#define soap_serialize_wsa5__RelationshipTypeOpenEnum(soap, a) soap_serialize_string(soap, a)
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__RelationshipTypeOpenEnum(struct soap*, const char*, int, char*const*, const char*);
+SOAP_FMAC3 char * * SOAP_FMAC4 soap_in_wsa5__RelationshipTypeOpenEnum(struct soap*, const char*, char **, const char*);
+
+#ifndef soap_write_wsa5__RelationshipTypeOpenEnum
+#define soap_write_wsa5__RelationshipTypeOpenEnum(soap, data) ( soap_begin_send(soap) || (soap_serialize_wsa5__RelationshipTypeOpenEnum(soap, data), 0) || soap_put_wsa5__RelationshipTypeOpenEnum(soap, data, "byte", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_wsa5__RelationshipTypeOpenEnum(struct soap*, char *const*, const char*, const char*);
+
+#ifndef soap_read_wsa5__RelationshipTypeOpenEnum
+#define soap_read_wsa5__RelationshipTypeOpenEnum(soap, data) ( soap_begin_recv(soap) || !soap_get_wsa5__RelationshipTypeOpenEnum(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 char ** SOAP_FMAC4 soap_get_wsa5__RelationshipTypeOpenEnum(struct soap*, char **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_wsse__Security
+#define SOAP_TYPE_PointerTo_wsse__Security (95)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsse__Security(struct soap*, struct _wsse__Security *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsse__Security(struct soap*, const char *, int, struct _wsse__Security *const*, const char *);
+SOAP_FMAC3 struct _wsse__Security ** SOAP_FMAC4 soap_in_PointerTo_wsse__Security(struct soap*, const char*, struct _wsse__Security **, const char*);
+
+#ifndef soap_write_PointerTo_wsse__Security
+#define soap_write_PointerTo_wsse__Security(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTo_wsse__Security(soap, data), 0) || soap_put_PointerTo_wsse__Security(soap, data, "wsse:Security", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsse__Security(struct soap*, struct _wsse__Security *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTo_wsse__Security
+#define soap_read_PointerTo_wsse__Security(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTo_wsse__Security(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _wsse__Security ** SOAP_FMAC4 soap_get_PointerTo_wsse__Security(struct soap*, struct _wsse__Security **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTods__SignatureType
+#define SOAP_TYPE_PointerTods__SignatureType (93)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__SignatureType(struct soap*, struct ds__SignatureType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__SignatureType(struct soap*, const char *, int, struct ds__SignatureType *const*, const char *);
+SOAP_FMAC3 struct ds__SignatureType ** SOAP_FMAC4 soap_in_PointerTods__SignatureType(struct soap*, const char*, struct ds__SignatureType **, const char*);
+
+#ifndef soap_write_PointerTods__SignatureType
+#define soap_write_PointerTods__SignatureType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTods__SignatureType(soap, data), 0) || soap_put_PointerTods__SignatureType(soap, data, "ds:SignatureType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__SignatureType(struct soap*, struct ds__SignatureType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTods__SignatureType
+#define soap_read_PointerTods__SignatureType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTods__SignatureType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__SignatureType ** SOAP_FMAC4 soap_get_PointerTods__SignatureType(struct soap*, struct ds__SignatureType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerToxenc__EncryptedKeyType
+#define SOAP_TYPE_PointerToxenc__EncryptedKeyType (92)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxenc__EncryptedKeyType(struct soap*, struct xenc__EncryptedKeyType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToxenc__EncryptedKeyType(struct soap*, const char *, int, struct xenc__EncryptedKeyType *const*, const char *);
+SOAP_FMAC3 struct xenc__EncryptedKeyType ** SOAP_FMAC4 soap_in_PointerToxenc__EncryptedKeyType(struct soap*, const char*, struct xenc__EncryptedKeyType **, const char*);
+
+#ifndef soap_write_PointerToxenc__EncryptedKeyType
+#define soap_write_PointerToxenc__EncryptedKeyType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerToxenc__EncryptedKeyType(soap, data), 0) || soap_put_PointerToxenc__EncryptedKeyType(soap, data, "xenc:EncryptedKeyType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxenc__EncryptedKeyType(struct soap*, struct xenc__EncryptedKeyType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerToxenc__EncryptedKeyType
+#define soap_read_PointerToxenc__EncryptedKeyType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerToxenc__EncryptedKeyType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct xenc__EncryptedKeyType ** SOAP_FMAC4 soap_get_PointerToxenc__EncryptedKeyType(struct soap*, struct xenc__EncryptedKeyType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_wsse__BinarySecurityToken
+#define SOAP_TYPE_PointerTo_wsse__BinarySecurityToken (91)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsse__BinarySecurityToken(struct soap*, struct _wsse__BinarySecurityToken *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsse__BinarySecurityToken(struct soap*, const char *, int, struct _wsse__BinarySecurityToken *const*, const char *);
+SOAP_FMAC3 struct _wsse__BinarySecurityToken ** SOAP_FMAC4 soap_in_PointerTo_wsse__BinarySecurityToken(struct soap*, const char*, struct _wsse__BinarySecurityToken **, const char*);
+
+#ifndef soap_write_PointerTo_wsse__BinarySecurityToken
+#define soap_write_PointerTo_wsse__BinarySecurityToken(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTo_wsse__BinarySecurityToken(soap, data), 0) || soap_put_PointerTo_wsse__BinarySecurityToken(soap, data, "wsse:BinarySecurityToken", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsse__BinarySecurityToken(struct soap*, struct _wsse__BinarySecurityToken *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTo_wsse__BinarySecurityToken
+#define soap_read_PointerTo_wsse__BinarySecurityToken(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTo_wsse__BinarySecurityToken(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _wsse__BinarySecurityToken ** SOAP_FMAC4 soap_get_PointerTo_wsse__BinarySecurityToken(struct soap*, struct _wsse__BinarySecurityToken **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_wsse__UsernameToken
+#define SOAP_TYPE_PointerTo_wsse__UsernameToken (90)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsse__UsernameToken(struct soap*, struct _wsse__UsernameToken *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsse__UsernameToken(struct soap*, const char *, int, struct _wsse__UsernameToken *const*, const char *);
+SOAP_FMAC3 struct _wsse__UsernameToken ** SOAP_FMAC4 soap_in_PointerTo_wsse__UsernameToken(struct soap*, const char*, struct _wsse__UsernameToken **, const char*);
+
+#ifndef soap_write_PointerTo_wsse__UsernameToken
+#define soap_write_PointerTo_wsse__UsernameToken(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTo_wsse__UsernameToken(soap, data), 0) || soap_put_PointerTo_wsse__UsernameToken(soap, data, "wsse:UsernameToken", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsse__UsernameToken(struct soap*, struct _wsse__UsernameToken *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTo_wsse__UsernameToken
+#define soap_read_PointerTo_wsse__UsernameToken(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTo_wsse__UsernameToken(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _wsse__UsernameToken ** SOAP_FMAC4 soap_get_PointerTo_wsse__UsernameToken(struct soap*, struct _wsse__UsernameToken **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_wsu__Timestamp
+#define SOAP_TYPE_PointerTo_wsu__Timestamp (89)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsu__Timestamp(struct soap*, struct _wsu__Timestamp *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsu__Timestamp(struct soap*, const char *, int, struct _wsu__Timestamp *const*, const char *);
+SOAP_FMAC3 struct _wsu__Timestamp ** SOAP_FMAC4 soap_in_PointerTo_wsu__Timestamp(struct soap*, const char*, struct _wsu__Timestamp **, const char*);
+
+#ifndef soap_write_PointerTo_wsu__Timestamp
+#define soap_write_PointerTo_wsu__Timestamp(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTo_wsu__Timestamp(soap, data), 0) || soap_put_PointerTo_wsu__Timestamp(soap, data, "wsu:Timestamp", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsu__Timestamp(struct soap*, struct _wsu__Timestamp *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTo_wsu__Timestamp
+#define soap_read_PointerTo_wsu__Timestamp(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTo_wsu__Timestamp(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _wsu__Timestamp ** SOAP_FMAC4 soap_get_PointerTo_wsu__Timestamp(struct soap*, struct _wsu__Timestamp **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_xenc__ReferenceList
+#define SOAP_TYPE_PointerTo_xenc__ReferenceList (80)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_xenc__ReferenceList(struct soap*, struct _xenc__ReferenceList *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_xenc__ReferenceList(struct soap*, const char *, int, struct _xenc__ReferenceList *const*, const char *);
+SOAP_FMAC3 struct _xenc__ReferenceList ** SOAP_FMAC4 soap_in_PointerTo_xenc__ReferenceList(struct soap*, const char*, struct _xenc__ReferenceList **, const char*);
+
+#ifndef soap_write_PointerTo_xenc__ReferenceList
+#define soap_write_PointerTo_xenc__ReferenceList(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTo_xenc__ReferenceList(soap, data), 0) || soap_put_PointerTo_xenc__ReferenceList(soap, data, "xenc:ReferenceList", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_xenc__ReferenceList(struct soap*, struct _xenc__ReferenceList *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTo_xenc__ReferenceList
+#define soap_read_PointerTo_xenc__ReferenceList(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTo_xenc__ReferenceList(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _xenc__ReferenceList ** SOAP_FMAC4 soap_get_PointerTo_xenc__ReferenceList(struct soap*, struct _xenc__ReferenceList **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTo__xenc__union_ReferenceList
+#define SOAP_TYPE_PointerTo__xenc__union_ReferenceList (79)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo__xenc__union_ReferenceList(struct soap*, struct __xenc__union_ReferenceList *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo__xenc__union_ReferenceList(struct soap*, const char *, int, struct __xenc__union_ReferenceList *const*, const char *);
+SOAP_FMAC3 struct __xenc__union_ReferenceList ** SOAP_FMAC4 soap_in_PointerTo__xenc__union_ReferenceList(struct soap*, const char*, struct __xenc__union_ReferenceList **, const char*);
+
+#ifndef soap_write_PointerTo__xenc__union_ReferenceList
+#define soap_write_PointerTo__xenc__union_ReferenceList(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTo__xenc__union_ReferenceList(soap, data), 0) || soap_put_PointerTo__xenc__union_ReferenceList(soap, data, "-xenc:union-ReferenceList", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo__xenc__union_ReferenceList(struct soap*, struct __xenc__union_ReferenceList *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTo__xenc__union_ReferenceList
+#define soap_read_PointerTo__xenc__union_ReferenceList(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTo__xenc__union_ReferenceList(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct __xenc__union_ReferenceList ** SOAP_FMAC4 soap_get_PointerTo__xenc__union_ReferenceList(struct soap*, struct __xenc__union_ReferenceList **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerToxenc__ReferenceType
+#define SOAP_TYPE_PointerToxenc__ReferenceType (78)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxenc__ReferenceType(struct soap*, struct xenc__ReferenceType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToxenc__ReferenceType(struct soap*, const char *, int, struct xenc__ReferenceType *const*, const char *);
+SOAP_FMAC3 struct xenc__ReferenceType ** SOAP_FMAC4 soap_in_PointerToxenc__ReferenceType(struct soap*, const char*, struct xenc__ReferenceType **, const char*);
+
+#ifndef soap_write_PointerToxenc__ReferenceType
+#define soap_write_PointerToxenc__ReferenceType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerToxenc__ReferenceType(soap, data), 0) || soap_put_PointerToxenc__ReferenceType(soap, data, "xenc:ReferenceType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxenc__ReferenceType(struct soap*, struct xenc__ReferenceType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerToxenc__ReferenceType
+#define soap_read_PointerToxenc__ReferenceType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerToxenc__ReferenceType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct xenc__ReferenceType ** SOAP_FMAC4 soap_get_PointerToxenc__ReferenceType(struct soap*, struct xenc__ReferenceType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerToxenc__EncryptionPropertyType
+#define SOAP_TYPE_PointerToxenc__EncryptionPropertyType (76)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxenc__EncryptionPropertyType(struct soap*, struct xenc__EncryptionPropertyType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToxenc__EncryptionPropertyType(struct soap*, const char *, int, struct xenc__EncryptionPropertyType *const*, const char *);
+SOAP_FMAC3 struct xenc__EncryptionPropertyType ** SOAP_FMAC4 soap_in_PointerToxenc__EncryptionPropertyType(struct soap*, const char*, struct xenc__EncryptionPropertyType **, const char*);
+
+#ifndef soap_write_PointerToxenc__EncryptionPropertyType
+#define soap_write_PointerToxenc__EncryptionPropertyType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerToxenc__EncryptionPropertyType(soap, data), 0) || soap_put_PointerToxenc__EncryptionPropertyType(soap, data, "xenc:EncryptionPropertyType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxenc__EncryptionPropertyType(struct soap*, struct xenc__EncryptionPropertyType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerToxenc__EncryptionPropertyType
+#define soap_read_PointerToxenc__EncryptionPropertyType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerToxenc__EncryptionPropertyType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct xenc__EncryptionPropertyType ** SOAP_FMAC4 soap_get_PointerToxenc__EncryptionPropertyType(struct soap*, struct xenc__EncryptionPropertyType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerToxenc__TransformsType
+#define SOAP_TYPE_PointerToxenc__TransformsType (75)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxenc__TransformsType(struct soap*, struct xenc__TransformsType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToxenc__TransformsType(struct soap*, const char *, int, struct xenc__TransformsType *const*, const char *);
+SOAP_FMAC3 struct xenc__TransformsType ** SOAP_FMAC4 soap_in_PointerToxenc__TransformsType(struct soap*, const char*, struct xenc__TransformsType **, const char*);
+
+#ifndef soap_write_PointerToxenc__TransformsType
+#define soap_write_PointerToxenc__TransformsType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerToxenc__TransformsType(soap, data), 0) || soap_put_PointerToxenc__TransformsType(soap, data, "xenc:TransformsType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxenc__TransformsType(struct soap*, struct xenc__TransformsType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerToxenc__TransformsType
+#define soap_read_PointerToxenc__TransformsType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerToxenc__TransformsType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct xenc__TransformsType ** SOAP_FMAC4 soap_get_PointerToxenc__TransformsType(struct soap*, struct xenc__TransformsType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerToxenc__CipherReferenceType
+#define SOAP_TYPE_PointerToxenc__CipherReferenceType (74)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxenc__CipherReferenceType(struct soap*, struct xenc__CipherReferenceType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToxenc__CipherReferenceType(struct soap*, const char *, int, struct xenc__CipherReferenceType *const*, const char *);
+SOAP_FMAC3 struct xenc__CipherReferenceType ** SOAP_FMAC4 soap_in_PointerToxenc__CipherReferenceType(struct soap*, const char*, struct xenc__CipherReferenceType **, const char*);
+
+#ifndef soap_write_PointerToxenc__CipherReferenceType
+#define soap_write_PointerToxenc__CipherReferenceType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerToxenc__CipherReferenceType(soap, data), 0) || soap_put_PointerToxenc__CipherReferenceType(soap, data, "xenc:CipherReferenceType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxenc__CipherReferenceType(struct soap*, struct xenc__CipherReferenceType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerToxenc__CipherReferenceType
+#define soap_read_PointerToxenc__CipherReferenceType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerToxenc__CipherReferenceType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct xenc__CipherReferenceType ** SOAP_FMAC4 soap_get_PointerToxenc__CipherReferenceType(struct soap*, struct xenc__CipherReferenceType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerToxenc__EncryptionPropertiesType
+#define SOAP_TYPE_PointerToxenc__EncryptionPropertiesType (73)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxenc__EncryptionPropertiesType(struct soap*, struct xenc__EncryptionPropertiesType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToxenc__EncryptionPropertiesType(struct soap*, const char *, int, struct xenc__EncryptionPropertiesType *const*, const char *);
+SOAP_FMAC3 struct xenc__EncryptionPropertiesType ** SOAP_FMAC4 soap_in_PointerToxenc__EncryptionPropertiesType(struct soap*, const char*, struct xenc__EncryptionPropertiesType **, const char*);
+
+#ifndef soap_write_PointerToxenc__EncryptionPropertiesType
+#define soap_write_PointerToxenc__EncryptionPropertiesType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerToxenc__EncryptionPropertiesType(soap, data), 0) || soap_put_PointerToxenc__EncryptionPropertiesType(soap, data, "xenc:EncryptionPropertiesType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxenc__EncryptionPropertiesType(struct soap*, struct xenc__EncryptionPropertiesType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerToxenc__EncryptionPropertiesType
+#define soap_read_PointerToxenc__EncryptionPropertiesType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerToxenc__EncryptionPropertiesType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct xenc__EncryptionPropertiesType ** SOAP_FMAC4 soap_get_PointerToxenc__EncryptionPropertiesType(struct soap*, struct xenc__EncryptionPropertiesType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerToxenc__CipherDataType
+#define SOAP_TYPE_PointerToxenc__CipherDataType (72)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxenc__CipherDataType(struct soap*, struct xenc__CipherDataType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToxenc__CipherDataType(struct soap*, const char *, int, struct xenc__CipherDataType *const*, const char *);
+SOAP_FMAC3 struct xenc__CipherDataType ** SOAP_FMAC4 soap_in_PointerToxenc__CipherDataType(struct soap*, const char*, struct xenc__CipherDataType **, const char*);
+
+#ifndef soap_write_PointerToxenc__CipherDataType
+#define soap_write_PointerToxenc__CipherDataType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerToxenc__CipherDataType(soap, data), 0) || soap_put_PointerToxenc__CipherDataType(soap, data, "xenc:CipherDataType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxenc__CipherDataType(struct soap*, struct xenc__CipherDataType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerToxenc__CipherDataType
+#define soap_read_PointerToxenc__CipherDataType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerToxenc__CipherDataType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct xenc__CipherDataType ** SOAP_FMAC4 soap_get_PointerToxenc__CipherDataType(struct soap*, struct xenc__CipherDataType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_ds__KeyInfo
+#define SOAP_TYPE_PointerTo_ds__KeyInfo (71)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ds__KeyInfo(struct soap*, struct ds__KeyInfoType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ds__KeyInfo(struct soap*, const char *, int, struct ds__KeyInfoType *const*, const char *);
+SOAP_FMAC3 struct ds__KeyInfoType ** SOAP_FMAC4 soap_in_PointerTo_ds__KeyInfo(struct soap*, const char*, struct ds__KeyInfoType **, const char*);
+
+#ifndef soap_write_PointerTo_ds__KeyInfo
+#define soap_write_PointerTo_ds__KeyInfo(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTo_ds__KeyInfo(soap, data), 0) || soap_put_PointerTo_ds__KeyInfo(soap, data, "ds:KeyInfo", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ds__KeyInfo(struct soap*, struct ds__KeyInfoType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTo_ds__KeyInfo
+#define soap_read_PointerTo_ds__KeyInfo(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTo_ds__KeyInfo(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__KeyInfoType ** SOAP_FMAC4 soap_get_PointerTo_ds__KeyInfo(struct soap*, struct ds__KeyInfoType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerToxenc__EncryptionMethodType
+#define SOAP_TYPE_PointerToxenc__EncryptionMethodType (70)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxenc__EncryptionMethodType(struct soap*, struct xenc__EncryptionMethodType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToxenc__EncryptionMethodType(struct soap*, const char *, int, struct xenc__EncryptionMethodType *const*, const char *);
+SOAP_FMAC3 struct xenc__EncryptionMethodType ** SOAP_FMAC4 soap_in_PointerToxenc__EncryptionMethodType(struct soap*, const char*, struct xenc__EncryptionMethodType **, const char*);
+
+#ifndef soap_write_PointerToxenc__EncryptionMethodType
+#define soap_write_PointerToxenc__EncryptionMethodType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerToxenc__EncryptionMethodType(soap, data), 0) || soap_put_PointerToxenc__EncryptionMethodType(soap, data, "xenc:EncryptionMethodType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxenc__EncryptionMethodType(struct soap*, struct xenc__EncryptionMethodType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerToxenc__EncryptionMethodType
+#define soap_read_PointerToxenc__EncryptionMethodType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerToxenc__EncryptionMethodType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct xenc__EncryptionMethodType ** SOAP_FMAC4 soap_get_PointerToxenc__EncryptionMethodType(struct soap*, struct xenc__EncryptionMethodType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTods__X509IssuerSerialType
+#define SOAP_TYPE_PointerTods__X509IssuerSerialType (57)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__X509IssuerSerialType(struct soap*, struct ds__X509IssuerSerialType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__X509IssuerSerialType(struct soap*, const char *, int, struct ds__X509IssuerSerialType *const*, const char *);
+SOAP_FMAC3 struct ds__X509IssuerSerialType ** SOAP_FMAC4 soap_in_PointerTods__X509IssuerSerialType(struct soap*, const char*, struct ds__X509IssuerSerialType **, const char*);
+
+#ifndef soap_write_PointerTods__X509IssuerSerialType
+#define soap_write_PointerTods__X509IssuerSerialType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTods__X509IssuerSerialType(soap, data), 0) || soap_put_PointerTods__X509IssuerSerialType(soap, data, "ds:X509IssuerSerialType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__X509IssuerSerialType(struct soap*, struct ds__X509IssuerSerialType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTods__X509IssuerSerialType
+#define soap_read_PointerTods__X509IssuerSerialType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTods__X509IssuerSerialType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__X509IssuerSerialType ** SOAP_FMAC4 soap_get_PointerTods__X509IssuerSerialType(struct soap*, struct ds__X509IssuerSerialType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTods__RSAKeyValueType
+#define SOAP_TYPE_PointerTods__RSAKeyValueType (56)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__RSAKeyValueType(struct soap*, struct ds__RSAKeyValueType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__RSAKeyValueType(struct soap*, const char *, int, struct ds__RSAKeyValueType *const*, const char *);
+SOAP_FMAC3 struct ds__RSAKeyValueType ** SOAP_FMAC4 soap_in_PointerTods__RSAKeyValueType(struct soap*, const char*, struct ds__RSAKeyValueType **, const char*);
+
+#ifndef soap_write_PointerTods__RSAKeyValueType
+#define soap_write_PointerTods__RSAKeyValueType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTods__RSAKeyValueType(soap, data), 0) || soap_put_PointerTods__RSAKeyValueType(soap, data, "ds:RSAKeyValueType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__RSAKeyValueType(struct soap*, struct ds__RSAKeyValueType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTods__RSAKeyValueType
+#define soap_read_PointerTods__RSAKeyValueType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTods__RSAKeyValueType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__RSAKeyValueType ** SOAP_FMAC4 soap_get_PointerTods__RSAKeyValueType(struct soap*, struct ds__RSAKeyValueType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTods__DSAKeyValueType
+#define SOAP_TYPE_PointerTods__DSAKeyValueType (55)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__DSAKeyValueType(struct soap*, struct ds__DSAKeyValueType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__DSAKeyValueType(struct soap*, const char *, int, struct ds__DSAKeyValueType *const*, const char *);
+SOAP_FMAC3 struct ds__DSAKeyValueType ** SOAP_FMAC4 soap_in_PointerTods__DSAKeyValueType(struct soap*, const char*, struct ds__DSAKeyValueType **, const char*);
+
+#ifndef soap_write_PointerTods__DSAKeyValueType
+#define soap_write_PointerTods__DSAKeyValueType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTods__DSAKeyValueType(soap, data), 0) || soap_put_PointerTods__DSAKeyValueType(soap, data, "ds:DSAKeyValueType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__DSAKeyValueType(struct soap*, struct ds__DSAKeyValueType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTods__DSAKeyValueType
+#define soap_read_PointerTods__DSAKeyValueType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTods__DSAKeyValueType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__DSAKeyValueType ** SOAP_FMAC4 soap_get_PointerTods__DSAKeyValueType(struct soap*, struct ds__DSAKeyValueType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTods__TransformType
+#define SOAP_TYPE_PointerTods__TransformType (54)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__TransformType(struct soap*, struct ds__TransformType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__TransformType(struct soap*, const char *, int, struct ds__TransformType *const*, const char *);
+SOAP_FMAC3 struct ds__TransformType ** SOAP_FMAC4 soap_in_PointerTods__TransformType(struct soap*, const char*, struct ds__TransformType **, const char*);
+
+#ifndef soap_write_PointerTods__TransformType
+#define soap_write_PointerTods__TransformType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTods__TransformType(soap, data), 0) || soap_put_PointerTods__TransformType(soap, data, "ds:TransformType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__TransformType(struct soap*, struct ds__TransformType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTods__TransformType
+#define soap_read_PointerTods__TransformType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTods__TransformType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__TransformType ** SOAP_FMAC4 soap_get_PointerTods__TransformType(struct soap*, struct ds__TransformType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTods__DigestMethodType
+#define SOAP_TYPE_PointerTods__DigestMethodType (53)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__DigestMethodType(struct soap*, struct ds__DigestMethodType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__DigestMethodType(struct soap*, const char *, int, struct ds__DigestMethodType *const*, const char *);
+SOAP_FMAC3 struct ds__DigestMethodType ** SOAP_FMAC4 soap_in_PointerTods__DigestMethodType(struct soap*, const char*, struct ds__DigestMethodType **, const char*);
+
+#ifndef soap_write_PointerTods__DigestMethodType
+#define soap_write_PointerTods__DigestMethodType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTods__DigestMethodType(soap, data), 0) || soap_put_PointerTods__DigestMethodType(soap, data, "ds:DigestMethodType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__DigestMethodType(struct soap*, struct ds__DigestMethodType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTods__DigestMethodType
+#define soap_read_PointerTods__DigestMethodType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTods__DigestMethodType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__DigestMethodType ** SOAP_FMAC4 soap_get_PointerTods__DigestMethodType(struct soap*, struct ds__DigestMethodType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTods__TransformsType
+#define SOAP_TYPE_PointerTods__TransformsType (52)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__TransformsType(struct soap*, struct ds__TransformsType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__TransformsType(struct soap*, const char *, int, struct ds__TransformsType *const*, const char *);
+SOAP_FMAC3 struct ds__TransformsType ** SOAP_FMAC4 soap_in_PointerTods__TransformsType(struct soap*, const char*, struct ds__TransformsType **, const char*);
+
+#ifndef soap_write_PointerTods__TransformsType
+#define soap_write_PointerTods__TransformsType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTods__TransformsType(soap, data), 0) || soap_put_PointerTods__TransformsType(soap, data, "ds:TransformsType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__TransformsType(struct soap*, struct ds__TransformsType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTods__TransformsType
+#define soap_read_PointerTods__TransformsType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTods__TransformsType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__TransformsType ** SOAP_FMAC4 soap_get_PointerTods__TransformsType(struct soap*, struct ds__TransformsType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerToint
+#define SOAP_TYPE_PointerToint (51)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToint(struct soap*, int *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToint(struct soap*, const char *, int, int *const*, const char *);
+SOAP_FMAC3 int ** SOAP_FMAC4 soap_in_PointerToint(struct soap*, const char*, int **, const char*);
+
+#ifndef soap_write_PointerToint
+#define soap_write_PointerToint(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerToint(soap, data), 0) || soap_put_PointerToint(soap, data, "int", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToint(struct soap*, int *const*, const char*, const char*);
+
+#ifndef soap_read_PointerToint
+#define soap_read_PointerToint(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerToint(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 int ** SOAP_FMAC4 soap_get_PointerToint(struct soap*, int **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerToPointerTods__ReferenceType
+#define SOAP_TYPE_PointerToPointerTods__ReferenceType (50)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTods__ReferenceType(struct soap*, struct ds__ReferenceType **const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTods__ReferenceType(struct soap*, const char *, int, struct ds__ReferenceType **const*, const char *);
+SOAP_FMAC3 struct ds__ReferenceType *** SOAP_FMAC4 soap_in_PointerToPointerTods__ReferenceType(struct soap*, const char*, struct ds__ReferenceType ***, const char*);
+
+#ifndef soap_write_PointerToPointerTods__ReferenceType
+#define soap_write_PointerToPointerTods__ReferenceType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerToPointerTods__ReferenceType(soap, data), 0) || soap_put_PointerToPointerTods__ReferenceType(soap, data, "ds:ReferenceType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTods__ReferenceType(struct soap*, struct ds__ReferenceType **const*, const char*, const char*);
+
+#ifndef soap_read_PointerToPointerTods__ReferenceType
+#define soap_read_PointerToPointerTods__ReferenceType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerToPointerTods__ReferenceType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__ReferenceType *** SOAP_FMAC4 soap_get_PointerToPointerTods__ReferenceType(struct soap*, struct ds__ReferenceType ***, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTods__ReferenceType
+#define SOAP_TYPE_PointerTods__ReferenceType (49)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__ReferenceType(struct soap*, struct ds__ReferenceType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__ReferenceType(struct soap*, const char *, int, struct ds__ReferenceType *const*, const char *);
+SOAP_FMAC3 struct ds__ReferenceType ** SOAP_FMAC4 soap_in_PointerTods__ReferenceType(struct soap*, const char*, struct ds__ReferenceType **, const char*);
+
+#ifndef soap_write_PointerTods__ReferenceType
+#define soap_write_PointerTods__ReferenceType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTods__ReferenceType(soap, data), 0) || soap_put_PointerTods__ReferenceType(soap, data, "ds:ReferenceType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__ReferenceType(struct soap*, struct ds__ReferenceType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTods__ReferenceType
+#define soap_read_PointerTods__ReferenceType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTods__ReferenceType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__ReferenceType ** SOAP_FMAC4 soap_get_PointerTods__ReferenceType(struct soap*, struct ds__ReferenceType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTods__SignatureMethodType
+#define SOAP_TYPE_PointerTods__SignatureMethodType (48)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__SignatureMethodType(struct soap*, struct ds__SignatureMethodType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__SignatureMethodType(struct soap*, const char *, int, struct ds__SignatureMethodType *const*, const char *);
+SOAP_FMAC3 struct ds__SignatureMethodType ** SOAP_FMAC4 soap_in_PointerTods__SignatureMethodType(struct soap*, const char*, struct ds__SignatureMethodType **, const char*);
+
+#ifndef soap_write_PointerTods__SignatureMethodType
+#define soap_write_PointerTods__SignatureMethodType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTods__SignatureMethodType(soap, data), 0) || soap_put_PointerTods__SignatureMethodType(soap, data, "ds:SignatureMethodType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__SignatureMethodType(struct soap*, struct ds__SignatureMethodType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTods__SignatureMethodType
+#define soap_read_PointerTods__SignatureMethodType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTods__SignatureMethodType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__SignatureMethodType ** SOAP_FMAC4 soap_get_PointerTods__SignatureMethodType(struct soap*, struct ds__SignatureMethodType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTods__CanonicalizationMethodType
+#define SOAP_TYPE_PointerTods__CanonicalizationMethodType (47)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__CanonicalizationMethodType(struct soap*, struct ds__CanonicalizationMethodType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__CanonicalizationMethodType(struct soap*, const char *, int, struct ds__CanonicalizationMethodType *const*, const char *);
+SOAP_FMAC3 struct ds__CanonicalizationMethodType ** SOAP_FMAC4 soap_in_PointerTods__CanonicalizationMethodType(struct soap*, const char*, struct ds__CanonicalizationMethodType **, const char*);
+
+#ifndef soap_write_PointerTods__CanonicalizationMethodType
+#define soap_write_PointerTods__CanonicalizationMethodType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTods__CanonicalizationMethodType(soap, data), 0) || soap_put_PointerTods__CanonicalizationMethodType(soap, data, "ds:CanonicalizationMethodType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__CanonicalizationMethodType(struct soap*, struct ds__CanonicalizationMethodType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTods__CanonicalizationMethodType
+#define soap_read_PointerTods__CanonicalizationMethodType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTods__CanonicalizationMethodType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__CanonicalizationMethodType ** SOAP_FMAC4 soap_get_PointerTods__CanonicalizationMethodType(struct soap*, struct ds__CanonicalizationMethodType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_wsse__SecurityTokenReference
+#define SOAP_TYPE_PointerTo_wsse__SecurityTokenReference (42)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsse__SecurityTokenReference(struct soap*, struct _wsse__SecurityTokenReference *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsse__SecurityTokenReference(struct soap*, const char *, int, struct _wsse__SecurityTokenReference *const*, const char *);
+SOAP_FMAC3 struct _wsse__SecurityTokenReference ** SOAP_FMAC4 soap_in_PointerTo_wsse__SecurityTokenReference(struct soap*, const char*, struct _wsse__SecurityTokenReference **, const char*);
+
+#ifndef soap_write_PointerTo_wsse__SecurityTokenReference
+#define soap_write_PointerTo_wsse__SecurityTokenReference(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTo_wsse__SecurityTokenReference(soap, data), 0) || soap_put_PointerTo_wsse__SecurityTokenReference(soap, data, "wsse:SecurityTokenReference", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsse__SecurityTokenReference(struct soap*, struct _wsse__SecurityTokenReference *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTo_wsse__SecurityTokenReference
+#define soap_read_PointerTo_wsse__SecurityTokenReference(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTo_wsse__SecurityTokenReference(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _wsse__SecurityTokenReference ** SOAP_FMAC4 soap_get_PointerTo_wsse__SecurityTokenReference(struct soap*, struct _wsse__SecurityTokenReference **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTods__X509DataType
+#define SOAP_TYPE_PointerTods__X509DataType (41)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__X509DataType(struct soap*, struct ds__X509DataType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__X509DataType(struct soap*, const char *, int, struct ds__X509DataType *const*, const char *);
+SOAP_FMAC3 struct ds__X509DataType ** SOAP_FMAC4 soap_in_PointerTods__X509DataType(struct soap*, const char*, struct ds__X509DataType **, const char*);
+
+#ifndef soap_write_PointerTods__X509DataType
+#define soap_write_PointerTods__X509DataType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTods__X509DataType(soap, data), 0) || soap_put_PointerTods__X509DataType(soap, data, "ds:X509DataType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__X509DataType(struct soap*, struct ds__X509DataType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTods__X509DataType
+#define soap_read_PointerTods__X509DataType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTods__X509DataType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__X509DataType ** SOAP_FMAC4 soap_get_PointerTods__X509DataType(struct soap*, struct ds__X509DataType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTods__RetrievalMethodType
+#define SOAP_TYPE_PointerTods__RetrievalMethodType (39)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__RetrievalMethodType(struct soap*, struct ds__RetrievalMethodType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__RetrievalMethodType(struct soap*, const char *, int, struct ds__RetrievalMethodType *const*, const char *);
+SOAP_FMAC3 struct ds__RetrievalMethodType ** SOAP_FMAC4 soap_in_PointerTods__RetrievalMethodType(struct soap*, const char*, struct ds__RetrievalMethodType **, const char*);
+
+#ifndef soap_write_PointerTods__RetrievalMethodType
+#define soap_write_PointerTods__RetrievalMethodType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTods__RetrievalMethodType(soap, data), 0) || soap_put_PointerTods__RetrievalMethodType(soap, data, "ds:RetrievalMethodType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__RetrievalMethodType(struct soap*, struct ds__RetrievalMethodType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTods__RetrievalMethodType
+#define soap_read_PointerTods__RetrievalMethodType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTods__RetrievalMethodType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__RetrievalMethodType ** SOAP_FMAC4 soap_get_PointerTods__RetrievalMethodType(struct soap*, struct ds__RetrievalMethodType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTods__KeyValueType
+#define SOAP_TYPE_PointerTods__KeyValueType (37)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__KeyValueType(struct soap*, struct ds__KeyValueType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__KeyValueType(struct soap*, const char *, int, struct ds__KeyValueType *const*, const char *);
+SOAP_FMAC3 struct ds__KeyValueType ** SOAP_FMAC4 soap_in_PointerTods__KeyValueType(struct soap*, const char*, struct ds__KeyValueType **, const char*);
+
+#ifndef soap_write_PointerTods__KeyValueType
+#define soap_write_PointerTods__KeyValueType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTods__KeyValueType(soap, data), 0) || soap_put_PointerTods__KeyValueType(soap, data, "ds:KeyValueType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__KeyValueType(struct soap*, struct ds__KeyValueType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTods__KeyValueType
+#define soap_read_PointerTods__KeyValueType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTods__KeyValueType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__KeyValueType ** SOAP_FMAC4 soap_get_PointerTods__KeyValueType(struct soap*, struct ds__KeyValueType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_c14n__InclusiveNamespaces
+#define SOAP_TYPE_PointerTo_c14n__InclusiveNamespaces (33)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_c14n__InclusiveNamespaces(struct soap*, struct _c14n__InclusiveNamespaces *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_c14n__InclusiveNamespaces(struct soap*, const char *, int, struct _c14n__InclusiveNamespaces *const*, const char *);
+SOAP_FMAC3 struct _c14n__InclusiveNamespaces ** SOAP_FMAC4 soap_in_PointerTo_c14n__InclusiveNamespaces(struct soap*, const char*, struct _c14n__InclusiveNamespaces **, const char*);
+
+#ifndef soap_write_PointerTo_c14n__InclusiveNamespaces
+#define soap_write_PointerTo_c14n__InclusiveNamespaces(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTo_c14n__InclusiveNamespaces(soap, data), 0) || soap_put_PointerTo_c14n__InclusiveNamespaces(soap, data, "c14n:InclusiveNamespaces", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_c14n__InclusiveNamespaces(struct soap*, struct _c14n__InclusiveNamespaces *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTo_c14n__InclusiveNamespaces
+#define soap_read_PointerTo_c14n__InclusiveNamespaces(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTo_c14n__InclusiveNamespaces(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _c14n__InclusiveNamespaces ** SOAP_FMAC4 soap_get_PointerTo_c14n__InclusiveNamespaces(struct soap*, struct _c14n__InclusiveNamespaces **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTods__KeyInfoType
+#define SOAP_TYPE_PointerTods__KeyInfoType (25)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__KeyInfoType(struct soap*, struct ds__KeyInfoType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__KeyInfoType(struct soap*, const char *, int, struct ds__KeyInfoType *const*, const char *);
+SOAP_FMAC3 struct ds__KeyInfoType ** SOAP_FMAC4 soap_in_PointerTods__KeyInfoType(struct soap*, const char*, struct ds__KeyInfoType **, const char*);
+
+#ifndef soap_write_PointerTods__KeyInfoType
+#define soap_write_PointerTods__KeyInfoType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTods__KeyInfoType(soap, data), 0) || soap_put_PointerTods__KeyInfoType(soap, data, "ds:KeyInfoType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__KeyInfoType(struct soap*, struct ds__KeyInfoType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTods__KeyInfoType
+#define soap_read_PointerTods__KeyInfoType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTods__KeyInfoType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__KeyInfoType ** SOAP_FMAC4 soap_get_PointerTods__KeyInfoType(struct soap*, struct ds__KeyInfoType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTods__SignedInfoType
+#define SOAP_TYPE_PointerTods__SignedInfoType (23)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTods__SignedInfoType(struct soap*, struct ds__SignedInfoType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTods__SignedInfoType(struct soap*, const char *, int, struct ds__SignedInfoType *const*, const char *);
+SOAP_FMAC3 struct ds__SignedInfoType ** SOAP_FMAC4 soap_in_PointerTods__SignedInfoType(struct soap*, const char*, struct ds__SignedInfoType **, const char*);
+
+#ifndef soap_write_PointerTods__SignedInfoType
+#define soap_write_PointerTods__SignedInfoType(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTods__SignedInfoType(soap, data), 0) || soap_put_PointerTods__SignedInfoType(soap, data, "ds:SignedInfoType", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTods__SignedInfoType(struct soap*, struct ds__SignedInfoType *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTods__SignedInfoType
+#define soap_read_PointerTods__SignedInfoType(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTods__SignedInfoType(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct ds__SignedInfoType ** SOAP_FMAC4 soap_get_PointerTods__SignedInfoType(struct soap*, struct ds__SignedInfoType **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_wsse__Embedded
+#define SOAP_TYPE_PointerTo_wsse__Embedded (20)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsse__Embedded(struct soap*, struct _wsse__Embedded *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsse__Embedded(struct soap*, const char *, int, struct _wsse__Embedded *const*, const char *);
+SOAP_FMAC3 struct _wsse__Embedded ** SOAP_FMAC4 soap_in_PointerTo_wsse__Embedded(struct soap*, const char*, struct _wsse__Embedded **, const char*);
+
+#ifndef soap_write_PointerTo_wsse__Embedded
+#define soap_write_PointerTo_wsse__Embedded(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTo_wsse__Embedded(soap, data), 0) || soap_put_PointerTo_wsse__Embedded(soap, data, "wsse:Embedded", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsse__Embedded(struct soap*, struct _wsse__Embedded *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTo_wsse__Embedded
+#define soap_read_PointerTo_wsse__Embedded(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTo_wsse__Embedded(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _wsse__Embedded ** SOAP_FMAC4 soap_get_PointerTo_wsse__Embedded(struct soap*, struct _wsse__Embedded **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_wsse__KeyIdentifier
+#define SOAP_TYPE_PointerTo_wsse__KeyIdentifier (19)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsse__KeyIdentifier(struct soap*, struct _wsse__KeyIdentifier *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsse__KeyIdentifier(struct soap*, const char *, int, struct _wsse__KeyIdentifier *const*, const char *);
+SOAP_FMAC3 struct _wsse__KeyIdentifier ** SOAP_FMAC4 soap_in_PointerTo_wsse__KeyIdentifier(struct soap*, const char*, struct _wsse__KeyIdentifier **, const char*);
+
+#ifndef soap_write_PointerTo_wsse__KeyIdentifier
+#define soap_write_PointerTo_wsse__KeyIdentifier(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTo_wsse__KeyIdentifier(soap, data), 0) || soap_put_PointerTo_wsse__KeyIdentifier(soap, data, "wsse:KeyIdentifier", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsse__KeyIdentifier(struct soap*, struct _wsse__KeyIdentifier *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTo_wsse__KeyIdentifier
+#define soap_read_PointerTo_wsse__KeyIdentifier(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTo_wsse__KeyIdentifier(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _wsse__KeyIdentifier ** SOAP_FMAC4 soap_get_PointerTo_wsse__KeyIdentifier(struct soap*, struct _wsse__KeyIdentifier **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_wsse__Reference
+#define SOAP_TYPE_PointerTo_wsse__Reference (18)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsse__Reference(struct soap*, struct _wsse__Reference *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsse__Reference(struct soap*, const char *, int, struct _wsse__Reference *const*, const char *);
+SOAP_FMAC3 struct _wsse__Reference ** SOAP_FMAC4 soap_in_PointerTo_wsse__Reference(struct soap*, const char*, struct _wsse__Reference **, const char*);
+
+#ifndef soap_write_PointerTo_wsse__Reference
+#define soap_write_PointerTo_wsse__Reference(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTo_wsse__Reference(soap, data), 0) || soap_put_PointerTo_wsse__Reference(soap, data, "wsse:Reference", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsse__Reference(struct soap*, struct _wsse__Reference *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTo_wsse__Reference
+#define soap_read_PointerTo_wsse__Reference(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTo_wsse__Reference(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _wsse__Reference ** SOAP_FMAC4 soap_get_PointerTo_wsse__Reference(struct soap*, struct _wsse__Reference **, const char*, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_wsse__Password
+#define SOAP_TYPE_PointerTo_wsse__Password (12)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_wsse__Password(struct soap*, struct _wsse__Password *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_wsse__Password(struct soap*, const char *, int, struct _wsse__Password *const*, const char *);
+SOAP_FMAC3 struct _wsse__Password ** SOAP_FMAC4 soap_in_PointerTo_wsse__Password(struct soap*, const char*, struct _wsse__Password **, const char*);
+
+#ifndef soap_write_PointerTo_wsse__Password
+#define soap_write_PointerTo_wsse__Password(soap, data) ( soap_begin_send(soap) || (soap_serialize_PointerTo_wsse__Password(soap, data), 0) || soap_put_PointerTo_wsse__Password(soap, data, "wsse:Password", NULL) || soap_end_send(soap) )
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_wsse__Password(struct soap*, struct _wsse__Password *const*, const char*, const char*);
+
+#ifndef soap_read_PointerTo_wsse__Password
+#define soap_read_PointerTo_wsse__Password(soap, data) ( soap_begin_recv(soap) || !soap_get_PointerTo_wsse__Password(soap, data, NULL, NULL) || soap_end_recv(soap) )
+#endif
+
+SOAP_FMAC3 struct _wsse__Password ** SOAP_FMAC4 soap_get_PointerTo_wsse__Password(struct soap*, struct _wsse__Password **, const char*, const char*);
 
 #ifndef SOAP_TYPE__QName
 #define SOAP_TYPE__QName (5)
