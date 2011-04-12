@@ -18,7 +18,7 @@ OSCARS_listRequest list_request = {
 	NULL,                              // list of statuses
 	0,                                 // num times
 	NULL,                              // list of start/end times
-	"ion.internet2.edu-228",           // description
+	NULL,                              // description
 	0,                                 // num linkIDs
 	NULL,                              // list of linkIDs
 	0,                                 // num vlan tags
@@ -43,7 +43,7 @@ OSCARS_pathInfo path_info = {
 	NULL
 };
 
-OSCARS_createRequest create_request = {
+OSCARS_resRequest create_request = {
 	NULL,
 	1401772039,
 	1401782039,
@@ -52,7 +52,7 @@ OSCARS_createRequest create_request = {
 	&path_info
 };
 
-OSCARS_createRequest modify_request = {
+OSCARS_resRequest modify_request = {
 	"ion.internet2.edu-228",
 	1371772039,
 	1371792039,
@@ -61,16 +61,22 @@ OSCARS_createRequest modify_request = {
 	&path_info
 };
 
+void usage(char *exec) {
+	printf("usage: %s [create | modify | list | query | cancel | topo ] URL\n", exec);
+}
+
 int main(int argc, char* argv[])
 {
 	int i, j;	
 	void *response;
-	void *request;
 	xspdSoapContext oscars_soap;
 
-	//oscars_soap.soap_endpoint = "http://192.168.1.103:8080/axis2/services/OSCARS";
-	oscars_soap.soap_endpoint = "http://localhost:9001/OSCARS";
-	//oscars_soap.soap_endpoint = "https://idcdev0.internet2.edu:8443/axis2/services/OSCARS";
+	if (argc < 2) {
+		usage(argv[0]);
+		exit(1);
+	}
+
+	oscars_soap.soap_endpoint = strdup(argv[2]);
 	oscars_soap.soap_action = NULL;
 	
 	// setup soap context
@@ -84,66 +90,58 @@ int main(int argc, char* argv[])
 
 	xspd_start_soap_ssl(&oscars_soap, SOAP_SSL_NO_AUTHENTICATION);
 
-	/*
-	printf("\nTesting oscars_getNetworkTopology\n\n");
-	request = (void*) "all";
-        if (oscars_getNetworkTopology(&oscars_soap, request, &response) == 0) {
-                oscars_pretty_print(GET_TOPO, response);
+	if (!strcmp(argv[1], "topo")) {
+		printf("\nTesting oscars_getNetworkTopology\n\n");
+		if (oscars_getNetworkTopology(&oscars_soap, "all", &response) == 0) {
+			oscars_pretty_print(GET_TOPO, response);
+		}
+		else
+			printf("error in oscars_getNetworkTopology\n");
+	}
+	else if (!strcmp(argv[1], "create")) {
+		printf("\nTesting oscars_createReservation\n\n");
+		if (oscars_createReservation(&oscars_soap, &create_request, &response) == 0) {
+			oscars_pretty_print(CREATE_RES, response);
+		}
+		else
+			printf("error in oscars_createReservation\n");
+		
+	}
+	else if (!strcmp(argv[1], "list")) {
+		printf("\nTesting oscars_listReservations\n\n");
+		if (oscars_listReservations(&oscars_soap, &list_request, &response) == 0) {
+			oscars_pretty_print(LIST_RES, response);
+		}
+		else
+			printf("error in oscars_listReservations\n");
+		
+	}
+	else if (!strcmp(argv[1], "modify")) {
+		printf("\nTesting oscars_modifyReservation\n\n");
+		if (oscars_modifyReservation(&oscars_soap, &modify_request, &response) == 0) {
+			oscars_pretty_print(MODIFY_RES, response);
+		}
+		else
+			printf("error in oscars_modifyReservation\n");
+	}
+	else if (!strcmp(argv[1], "query")) {
+		printf("\nTesting oscars_queryReservation\n\n");
+		if (oscars_queryReservation(&oscars_soap, "ion.internet2.edu-228", &response) == 0) {
+			oscars_pretty_print(QUERY_RES, response);
+		}
+		else
+			printf("error in oscars_queryReservation\n");
+	}
+	else if (!strcmp(argv[1], "cancel")) {
+		printf("\nTesting oscars_cancelReservation\n\n");
+		if (oscars_cancelReservation(&oscars_soap, "ion.internet2.edu-228", &response) == 0) {
+			oscars_pretty_print(CANCEL_RES, response);
+		}
+		else
+			printf("error in oscars_cancelReservation\n");
 	}
 	else
-		printf("error in oscars_getNetworkTopology\n");
-	
-	sleep(1);
-
-	printf("\nTesting oscars_createReservation\n\n");
-	request = (void*) &create_request;
-	if (oscars_createReservation(&oscars_soap, request, &response) == 0) {
-		oscars_pretty_print(CREATE_RES, response);
-        }
-        else
-                printf("error in oscars_createReservation\n");
-	
-	sleep(1);
-	*/
-
-	printf("\nTesting oscars_listReservations\n\n");
-	request = (void*) &list_request;
-	if (oscars_listReservations(&oscars_soap, request, &response) == 0) {
-		oscars_pretty_print(LIST_RES, response);
-        }
-	else
-		printf("error in oscars_listReservations\n");
-	
-	sleep(1);
-	
-	printf("\nTesting oscars_modifyReservation\n\n");
-	request = (void*) &modify_request;
-        if (oscars_modifyReservation(&oscars_soap, request, &response) == 0) {
-                oscars_pretty_print(MODIFY_RES, response);
-        }
-        else
-                printf("error in oscars_modifyReservation\n");
-
-        sleep(1);
-
-	printf("\nTesting oscars_queryReservation\n\n");
-        if (oscars_queryReservation(&oscars_soap, "ion.internet2.edu-228", &response) == 0) {
-                oscars_pretty_print(QUERY_RES, response);
-        }
-        else
-                printf("error in oscars_queryReservation\n");
-
-        sleep(1);
-
-	printf("\nTesting oscars_cancelReservation\n\n");
-	if (oscars_cancelReservation(&oscars_soap, "ion.internet2.edu-228", &response) == 0) {
-		oscars_pretty_print(CANCEL_RES, response);
-        }
-        else
-                printf("error in oscars_cancelReservation\n");
-
-
-	printf("done\n");
+		usage(argv[1]);
 	
 	xspd_stop_soap_ssl(&oscars_soap);
 

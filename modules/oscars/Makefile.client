@@ -4,7 +4,7 @@ LIBS= -lssl -lcrypto -lgsoap
 LDFLAGS= -L../../libgsoap
 CFLAGS= -DWITH_NONAMESPACES -DWITH_OPENSSL -DWITH_DOM
 
-ALL= oscars_client
+ALL= oscars_client oscars6_client
 COMMON_SRC = dom.c smdevp.c mecevp.c
 VER_SRC = wsaapi.c wsseapi.c oscars_client.c
 SRC5 = oscars.c oscarsClient.c oscarsC.c
