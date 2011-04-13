@@ -342,7 +342,7 @@ if test "$enable_openssl" != "no" ; then
 	AH_TEMPLATE(HAVE_OPENSSL, Whether or not OpenSSL is installed on the system)
 	AC_CHECK_LIB(ssl, main, [
 		AC_CHECK_HEADERS(openssl/ssl.h, [
-			SSL_LIBS="-lssl"
+			SSL_LIBS="-lssl -lcrypto"
 			AC_SUBST(SSL_LIBS)
 			have_openssl=yes
 		])
