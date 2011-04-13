@@ -168,7 +168,8 @@ int oscars_getNetworkTopology(xspdSoapContext *osc, const char *request, void **
 	
 	struct ns1__getTopologyContent nt_req;
 	struct ns1__getTopologyResponseContent nt_res;
-
+	
+	bzero(&nt_req, sizeof(struct ns1__getTopologyContent));
 	bzero(&nt_res, sizeof(struct ns1__getTopologyResponseContent));
 	
 	if (_oscars_wsse_sign(osc) != 0) {
@@ -402,6 +403,8 @@ int oscars_cancelReservation(xspdSoapContext *osc, const char *request, void **r
 	
 	struct ns1__globalReservationId cancel_req;
 	char *cancel_res;
+
+	bzero(&cancel_req, sizeof(struct ns1__globalReservationId));
 
 	if (_oscars_wsse_sign(osc) != 0) {
 		return -1;

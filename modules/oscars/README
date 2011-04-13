@@ -1,0 +1,48 @@
+== OSCARS gsoap library and test clients ==
+
+
+==INSTALL==
+
+#> ./autogen.sh
+#> ./configure
+#> make && make install
+
+
+example usage:
+
+#> oscars_client <cmd> https://localhost:8443/axis2/services/OSCARS
+#> oscars6_client <cmd> http://localhost:9001/OSCARS
+
+Where <cmd> is one of list, create, modify, cancel, query, or topo
+
+
+==DETAILS==
+
+oscars_client.c: 
+
+    Skeleton client code that can use both oscars5 and oscars6
+    backends. The requests are hardcoded but it will accept the WS-API
+    call to test and an IDC URL on the command line.  A valid user
+    certificate and key file must be specified when setting up the
+    soap context in order to sign the SOAP-XML requests.  This
+    certificate must be issued by a CA trusted by the running OSCARS
+    instance and the subject and issuer DNs must be assigned to a
+    valid user within OSCARS.
+
+oscars.c: 
+
+    Implements the list, modify, create, cancel, getNetTopo, and query
+    OSCARS (v5) API calls.  This is a wrapper around the gsoap
+    generated stub code.
+
+oscars6.c:
+
+    Implements the list, modify, create, cancel, getNetTopo, and query
+    OSCARS (v6) API calls.  This is a wrapper around the gsoap
+    generated stub code.  Some slight but ciritical differences
+    between the versions.
+
+oscarsStub.h and oscars6Sub.h:
+    
+    The gsoap generated stub headers.  Could be used directly by a
+    client instead of the above library wrappers.

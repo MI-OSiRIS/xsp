@@ -171,6 +171,7 @@ int oscars_getNetworkTopology(xspdSoapContext *osc, const char *request, void **
 	struct ns1__getTopologyContent nt_req;
 	struct ns1__getTopologyResponseContent nt_res;
 
+	bzero(&nt_req, sizeof(struct ns1__getTopologyContent));
 	bzero(&nt_res, sizeof(struct ns1__getTopologyResponseContent));
 	
 	if (_oscars_wsse_sign(osc) != 0) {
@@ -300,6 +301,7 @@ int oscars_createReservation(xspdSoapContext *osc, const OSCARS_resRequest *requ
         struct ns1__createReply *create_res = calloc(1, sizeof(struct ns1__createReply*));
 
         bzero(&create_req, sizeof(struct ns1__resCreateContent));
+	bzero(&user_content, sizeof(struct ns1__userRequestConstraintType));
 
         OSCARS_resRequest *cr = (OSCARS_resRequest *)request;
 
@@ -340,6 +342,7 @@ int oscars_modifyReservation(xspdSoapContext *osc, const OSCARS_resRequest *requ
         struct ns1__modifyResReply *modify_res = calloc(1, sizeof(struct ns1__modifyResReply*));
 
         bzero(&modify_req, sizeof(struct ns1__modifyResContent));
+	bzero(&user_content, sizeof(struct ns1__userRequestConstraintType));
 
         OSCARS_resRequest *cr = (OSCARS_resRequest *)request;
 
@@ -378,6 +381,8 @@ int oscars_queryReservation(xspdSoapContext *osc, const char *request, void **re
 
 	struct ns1__queryResContent query_req;
 	struct ns1__queryResReply query_res;
+
+	bzero(&query_req, sizeof(struct ns1__queryResContent));
 		
         if (_oscars_wsse_sign(osc) != 0) {
                 return -1;
@@ -408,6 +413,8 @@ int oscars_cancelReservation(xspdSoapContext *osc, const char *request, void **r
 	
 	struct ns1__cancelResContent cancel_req;
 	struct ns1__cancelResReply cancel_res;
+
+	bzero(&cancel_req, sizeof(struct ns1__cancelResContent));
 
 	if (_oscars_wsse_sign(osc) != 0) {
 		return -1;
