@@ -347,7 +347,9 @@ static int __xspd_oscars_shared_new_channel(xspdPath *path, uint32_t size, xspdC
 	if (pi->status == OSCARS_DOWN) {
 		time_t stime, etime;
 		uint32_t new_bandwidth = size;
-		
+		OSCARS_resRequest create_req;
+		void *response;
+
 		pi->status = OSCARS_STARTING;		
 		
 		time(&stime);	
@@ -355,16 +357,27 @@ static int __xspd_oscars_shared_new_channel(xspdPath *path, uint32_t size, xspdC
 		etime = stime + pi->duration;
 		
 		xspd_info(0, "%s: the OSCARS path is down, allocating a new one", path->description);
-		
-		if (oscars_reserve_path(pi->java_binary, pi->axis_path, pi->url, pi->client_dir, pi->src, pi->src_tagged, pi->dst, pi->dst_tagged, stime, etime, size, pi->vlan_id, "XSPD Test Path", &reservation_id, &error_msg) != 0){
+
+		/*
+		if (oscars_reserve_path(pi->java_binary, pi->axis_path, pi->url, pi->client_dir,
+					pi->src, pi->src_tagged, pi->dst, pi->dst_tagged,
+		                        stime, etime, size, pi->vlan_id, "XSPD Test Path",
+					&reservation_id, &error_msg) != 0) {
+		*/
+
+		if (oscars_createReservation(&(pi->osc), &create_req, &response) != 0) {
 			pthread_cond_signal(&(pi->setup_cond));
 			pi->status = OSCARS_DOWN;	
-			xspd_event("oscars.circuit.reserve.failure", path, "SRC_ID=\"%s\" DST_ID=\"%s\" IDC=\"%s\" VLAN=%d SIZE=%lu ERROR_MSG=\"%s\"", pi->src, pi->dst, pi->url, pi->vlan_id, size, error_msg);
+			xspd_event("oscars.circuit.reserve.failure", path,
+				   "SRC_ID=\"%s\" DST_ID=\"%s\" IDC=\"%s\" VLAN=%d SIZE=%lu ERROR_MSG=\"%s\"",
+				   pi->src, pi->dst, pi->url, pi->vlan_id, size, error_msg);
 			xspd_err(0, "%s: couldn't reserve OSCARS path: %s", path->description, error_msg);
 			*ret_error_msg = error_msg;
 			goto error_exit_channel;
 		}
 		
+		reservation_id = ((struct ns1__createReply*)response)->globalReservationId;
+
 		xspd_info(10, "Sleeping for %d seconds", pi->sleep_time);
 		sleep(pi->sleep_time);
 		
