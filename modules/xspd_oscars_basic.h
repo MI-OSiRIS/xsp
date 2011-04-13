@@ -11,6 +11,8 @@
 #define PATH_PRIVATE	0x01
 
 typedef struct xspd_oscars_path_t {
+	xspdSoapContext osc;
+
 	int status;
 
 	char *url;
