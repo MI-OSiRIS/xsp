@@ -5,7 +5,7 @@
 
 xspdChannel *xspd_alloc_channel() {
 	xspdChannel *channel;
-
+	
 	channel = malloc(sizeof(xspdChannel));
 	if (!channel)
 		goto error_exit;
@@ -14,7 +14,7 @@ xspdChannel *xspd_alloc_channel() {
 
 	return channel;
 
-error_exit:
+ error_exit:
 	return NULL;
 }
 

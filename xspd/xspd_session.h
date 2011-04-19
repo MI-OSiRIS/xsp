@@ -67,8 +67,8 @@ void xspd_session_put_ref(xspdSess *sess);
 int xspd_num_sessions();
 void xspd_session_finalize(xspdSess *sess);
 
-int xspd_session_setup_path(xspdSess *sess, const void *msg, char **error_msgs);
-int xspd_session_data_open(xspdSess *sess, const void *msg, char **error_msgs);
+int xspd_session_setup_path(xspdSess *sess, const void *msg, char ***error_msgs);
+int xspd_session_data_open(xspdSess *sess, const void *msg, char ***error_msgs);
 
 #include "xspd_listener.h"
 

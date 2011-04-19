@@ -428,7 +428,7 @@ error_exit_settings:
 	return -1;
 }
 
-int xspd_session_setup_path(xspdSess *sess, const void *msg, char **error_msgs) {
+int xspd_session_setup_path(xspdSess *sess, const void *msg, char ***error_msgs) {
 	char *error_msg;
 	uint32_t bandwidth;
 	xspdPath *path;
@@ -470,11 +470,11 @@ int xspd_session_setup_path(xspdSess *sess, const void *msg, char **error_msgs) 
 	return 0;
 
  error_exit:
-	*error_msgs = error_msg;
+	*error_msgs[0] = error_msg;
 	return -1;
 }
 
-int xspd_session_data_open(xspdSess *sess, const void *msg, char **error_msgs) {
+int xspd_session_data_open(xspdSess *sess, const void *msg, char ***error_msgs) {
         //char *error_msg;
         //xspdSettings *settings = NULL;
         xspdConn *parent_conn;
@@ -492,7 +492,7 @@ int xspd_session_data_open(xspdSess *sess, const void *msg, char **error_msgs) {
 
 // handle any generic APP_DATA option blocks
 // registered option ranges are included in include/option_types.h for now
-int xspd_session_app_data(xspdSess *sess, const void *msg, char **error_msgs) {
+int xspd_session_app_data(xspdSess *sess, const void *msg, char ***error_msgs) {
 	char *error_msg = NULL;
         xspdConn *parent_conn;
 	xspdModule *module;
@@ -546,6 +546,6 @@ int xspd_session_app_data(xspdSess *sess, const void *msg, char **error_msgs) {
 	return 0;
 	
  error_exit:
-	*error_msgs = error_msg;
+	*error_msgs[0] = error_msg;
 	return -1;
 }

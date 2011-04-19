@@ -7,6 +7,8 @@
 #include "threads.h"
 #include "wsseapi.h"
 
+enum boolean_ { false = 0, true = 1 };
+
 enum response_type {
         CREATE_RES = 0,
         CANCEL_RES,
@@ -27,7 +29,7 @@ typedef struct OSCARS_time_t {
 
 typedef struct OSCARS_vlanTag_t {
 	char *id;
-	int tagged;
+	enum boolean_ *tagged;
 } OSCARS_vlanTag;
 
 typedef struct OSCARS_L2Info_t {

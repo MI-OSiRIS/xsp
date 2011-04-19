@@ -53,7 +53,7 @@ modules_LTLIBRARIES += oscars.la
 oscars_la_SOURCES = xspd_oscars_basic.c xspd_oscars_basic.h
 oscars_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
 oscars_la_LIBADD = oscars/liboscars.a $(top_builddir)/libgsoap/libgsoap.a
-oscars_la_CFLAGS = $(AM_CFLAGS) -DOSCARS5
+oscars_la_CFLAGS = $(AM_CFLAGS) -DOSCARS5 -DWITH_NONAMESPACES -DWITH_DOM
 INCLUDES += -I$(srcdir)/oscars -I$(top_srcdir)/libgsoap
 endif
 
