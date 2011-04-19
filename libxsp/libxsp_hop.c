@@ -11,7 +11,7 @@ xspHop *xsp_alloc_hop() {
 	if (!new_hop)
 		goto error_exit;
 
-	bzero(new_hop, sizeof(*new_hop));
+	bzero(new_hop, sizeof(xspHop));
 
 	return new_hop;
 

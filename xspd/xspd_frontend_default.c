@@ -77,18 +77,17 @@ void *xspd_default_handle_conn(void *arg) {
 	xspMsg *msg;
 	xspdSess *sess;
 	xspAuthType *auth_type;
- 	char **error_msgs;
 	int authenticated;
         int have_session;
 	int sess_close;
-
+	char **error_msgs;
 	char *gw_name;
 
 	authenticated = FALSE;
 	have_session = FALSE;
 	sess_close = FALSE;
 
-	xspd_info(0,"xspd_default_handle_conn \n");
+	xspd_info(0,"xspd_default_handle_conn");
 	do {
 		msg = xspd_conn_get_msg(new_conn, 0);
 		if (!msg) {
@@ -159,17 +158,13 @@ void *xspd_default_handle_conn(void *arg) {
 
 	} while (!authenticated || !have_session);
 
-	xspd_session_get_id(sess);
-
 	xspd_info(0, "new session: %s", xspd_session_get_id(sess));
 
-	free(msg->msg_body);
-	free(msg);
-
+	//free(msg->msg_body);
+	//free(msg);
+	
 	LIST_INSERT_HEAD(&sess->parent_conns, new_conn, sess_entries);
 	
-	error_msgs = (char **) malloc(sess->child_count * sizeof(char*));
-
 	/*
 	sess->credentials = credentials;
 	xspd_session_set_user(sess, strdup(credentials->get_user(credentials)));
@@ -184,7 +179,9 @@ void *xspd_default_handle_conn(void *arg) {
 
 	// send an ACK back once session is opened
 	xspd_conn_send_msg(new_conn, XSP_MSG_SESS_ACK, NULL);
-	
+
+	error_msgs = (char**)malloc(sess->child_count * sizeof(char*));
+
 	// now start another protocol loop
 	do {
 		msg = xspd_conn_get_msg(new_conn, 0);
@@ -204,7 +201,7 @@ void *xspd_default_handle_conn(void *arg) {
                         break;
 		case XSP_MSG_PATH_OPEN:
 			{
-				if (xspd_session_setup_path(sess, msg->msg_body, error_msgs) < 0)
+				if (xspd_session_setup_path(sess, msg->msg_body, &error_msgs) < 0)
 					goto error_exit1;
 				xspd_conn_send_msg(new_conn, XSP_MSG_SESS_ACK, NULL);
 				xsp_free_msg(msg);
@@ -219,7 +216,7 @@ void *xspd_default_handle_conn(void *arg) {
 			break;
 		case XSP_MSG_DATA_OPEN:
 			{
-				if (xspd_session_data_open(sess, msg->msg_body, error_msgs) < 0)
+				if (xspd_session_data_open(sess, msg->msg_body, &error_msgs) < 0)
 					goto error_exit1;
 				//xspd_conn_send_msg(new_conn, XSP_MSG_SESS_ACK, NULL);
 				xsp_free_msg(msg);
@@ -227,7 +224,7 @@ void *xspd_default_handle_conn(void *arg) {
 			break;
 		case XSP_MSG_APP_DATA:
 			{
-				if (xspd_session_app_data(sess, msg->msg_body, error_msgs) < 0)
+				if (xspd_session_app_data(sess, msg->msg_body, &error_msgs) < 0)
 					goto error_exit1;
 				xsp_free_msg(msg);
 			}
@@ -254,8 +251,8 @@ void *xspd_default_handle_conn(void *arg) {
 
 error_exit1:
 	{
- 		char nack_msg[1024];
- 		int i;
+		int i;
+		char nack_msg[1024];
  
  		nack_msg[0] = '\0';
  		if (!error_msgs) {
@@ -271,15 +268,13 @@ error_exit1:
  				}
  			}
  		}
- 
- 		xspd_info(0, "Sending NACK");
- 
+		
+ 		xspd_info(5, "Sending NACK: %s", nack_msg);
  		xspd_conn_send_msg(new_conn, XSP_MSG_SESS_NACK, nack_msg);
  	}
-
 	xspd_end_session(sess); // the new connection will get nuked(ugh this is ugly).
 	return NULL;
-
+	
 error_exit:
 	xspd_conn_shutdown(new_conn, (XSPD_SEND_SIDE | XSPD_RECV_SIDE));
 	xspd_conn_free(new_conn);

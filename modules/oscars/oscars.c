@@ -266,7 +266,7 @@ int oscars_listReservations(xspdSoapContext *osc, const OSCARS_listRequest *requ
                                 list_req.vlanTag[i]->__item =
                                         lr->vlan_tags[i]->id;
 				list_req.vlanTag[i]->tagged = 
-					(enum xsd__boolean_*)&(lr->vlan_tags[i]->tagged);
+					(enum xsd__boolean_*)(lr->vlan_tags[i]->tagged);
                         }
                         else
                                 return -1;

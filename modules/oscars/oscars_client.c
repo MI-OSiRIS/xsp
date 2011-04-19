@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
 	void *response;
 	xspdSoapContext oscars_soap;
 
-	if (argc < 2) {
+	if (argc < 3) {
 		usage(argv[0]);
 		exit(1);
 	}
@@ -126,7 +126,7 @@ int main(int argc, char* argv[])
 	}
 	else if (!strcmp(argv[1], "query")) {
 		printf("\nTesting oscars_queryReservation\n\n");
-		if (oscars_queryReservation(&oscars_soap, "ion.internet2.edu-228", &response) == 0) {
+		if (oscars_queryReservation(&oscars_soap, argv[3], &response) == 0) {
 			oscars_pretty_print(QUERY_RES, response);
 		}
 		else
@@ -134,7 +134,7 @@ int main(int argc, char* argv[])
 	}
 	else if (!strcmp(argv[1], "cancel")) {
 		printf("\nTesting oscars_cancelReservation\n\n");
-		if (oscars_cancelReservation(&oscars_soap, "ion.internet2.edu-228", &response) == 0) {
+		if (oscars_cancelReservation(&oscars_soap, argv[3], &response) == 0) {
 			oscars_pretty_print(CANCEL_RES, response);
 		}
 		else

@@ -15,23 +15,17 @@ typedef struct xspd_oscars_path_t {
 
 	int status;
 
-	char *url;
-
 	char *src;
 	int src_tagged;
 
 	char *dst;
 	int dst_tagged;
 
-	char *java_binary;
-	char *axis_path;
-	char *client_dir;
-
 	char *reservation_id;
 
 	int duration;
 
-	int vlan_id;
+	char *vlan_id;
 
 	int clock_offset;
 
@@ -46,6 +40,8 @@ typedef struct xspd_oscars_path_t {
 	time_t shutdown_time;
 
 	int type;
+	
+	int bw;
 
 	pthread_cond_t setup_cond;
 } xspdOSCARSPath;
