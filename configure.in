@@ -1,4 +1,4 @@
-AC_INIT(xspd/xspd.c)
+AC_INIT(src/xspd/xspd.c)
 
 AM_INIT_AUTOMAKE(xsp,0.1)
 
@@ -381,4 +381,17 @@ AC_SUBST(NL_LIBS)
 
 AC_CONFIG_SUBDIRS(libconfig)
 
-AC_OUTPUT(Makefile libradix/Makefile libbson/Makefile libxsp/Makefile libgsoap/Makefile xspd/Makefile modules/Makefile modules/terapaths/Makefile modules/oscars/Makefile libxsp_client/Makefile modules/monitoring/Makefile test/Makefile)
+AC_OUTPUT(
+	Makefile
+	libradix/Makefile
+	libbson/Makefile
+	libgsoap/Makefile
+	src/libxsp/Makefile
+	src/xspd/Makefile
+	src/modules/Makefile
+	src/modules/terapaths/Makefile
+	src/modules/oscars/Makefile
+	src/modules/monitoring/Makefile
+	src/libxsp-client/Makefile
+	test/Makefile
+	)
