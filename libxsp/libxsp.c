@@ -258,7 +258,7 @@ long gen_rand_seed() {
 		;
 	}
 
-	fscanf(fstr, "%l", &seed);
+	fscanf(fstr, "%ld", &seed);
 
 	// XXX: gross hack, but can't figure out why OSX hangs on this close
 #ifndef __APPLE__

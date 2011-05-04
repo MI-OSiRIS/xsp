@@ -64,10 +64,8 @@ int libxsp_proto_binary_v1_init() {
 }
 
 static int xsp_write_hdr(void *arg, char *buf) {
-        xspMsg *msg = (xspMsg*)arg;
-        xspMsgHdr *hdr;
 
-	printf("in v1 write hdr\n");
+	d_printf("in v1 write hdr\n");
 
         return sizeof(xspMsgHdr);
 }
@@ -677,10 +675,8 @@ static int xsp_writeout_slab_info(void *arg, char *buf, int remainder) {
 }
 
 static int xsp_writeout_slab_record(xspSlabRec *rec, char *buf, int remainder) {
-        int i;
         int orig_remainder;
         xspSlabRec_HDR *out;
-        int rec_size;
 
         if (remainder < sizeof(xspSlabRec_HDR)) {
                 return -1;

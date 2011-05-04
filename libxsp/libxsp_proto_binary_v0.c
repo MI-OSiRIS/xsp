@@ -67,8 +67,6 @@ static int xsp_write_hdr(void *arg, char *buf) {
         xspMsg *msg = (xspMsg*)arg;
 	xspMsgHdr *hdr;
 
-	printf("in write hdr\n");
-
         hdr = (xspMsgHdr *) buf;
 
 	d_printf("xsp_write_hdr: type: %d\n", msg->type);
@@ -692,10 +690,8 @@ static int xsp_writeout_slab_info(void *arg, char *buf, int remainder) {
 }
 
 static int xsp_writeout_slab_record(xspSlabRec *rec, char *buf, int remainder) {
-        int i;
         int orig_remainder;
         xspSlabRec_HDR *out;
-        int rec_size;
 
         if (remainder < sizeof(xspSlabRec_HDR)) {
                 return -1;
