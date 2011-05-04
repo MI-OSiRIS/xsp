@@ -14,6 +14,7 @@ typedef struct libxsp_sess_info_t {
 	char sess_id[XSP_SESSIONID_LEN * 2 + 1];
 
 	char src_id[XSP_HOPID_LEN + 1];
+	char dst_id[XSP_HOPID_LEN + 1];
 
 	uint32_t sess_flags;
 

@@ -231,6 +231,7 @@ int xspd_conn_default_send_msg(xspdConn *conn, uint8_t type, void *msg_body) {
        int msg_buf_len;
        int msg_len;
        int retval;
+       xspMsg msg;
 
        msg_buf = (char *) malloc(sizeof(char) * XSP_MAX_LENGTH);
        if (!msg_buf)
@@ -238,11 +239,16 @@ int xspd_conn_default_send_msg(xspdConn *conn, uint8_t type, void *msg_body) {
 
        msg_buf_len = XSP_MAX_LENGTH;
 
-       if (conn->session) {
-               msg_len = xsp_writeout_msg(msg_buf, msg_buf_len, 0, type, conn->session->id, msg_body);
-       } else {
-               msg_len = xsp_writeout_msg(msg_buf, msg_buf_len, 0, type, NULL, msg_body);
-       }
+       msg.version = XSP_v0;
+       msg.type = type;
+       msg.msg_body = msg_body;
+
+       if (conn->session)
+	       memcpy(msg.sess_id, xspd_session_get_id(conn->session), 2*XSP_SESSIONID_LEN+1);
+       else
+	       bzero(msg.sess_id, XSP_SESSIONID_LEN*2);
+       
+       msg_len = xsp_writeout_msg(msg_buf, msg_buf_len, XSP_v0, type, (void*)&msg, msg_body);
        if (msg_len < 0)
                goto error_exit2;
 

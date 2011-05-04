@@ -3,65 +3,76 @@
 #include <string.h>
 #include <strings.h>
 
-#include "libxsp_proto_binary.h"
+#include "libxsp_proto_binary_v1.h"
 
 #include "compat.h"
 
-#define LIBXSP_PROTO_BINARY_ID		0
+#define LIBXSP_PROTO_BINARY_ID		XSP_v1
 
 #define LIBXSP_PROTO_BINARY_MAX 	XSP_MSG_SLAB_INFO
 
-xspProtoHandler bin_handler;
+static xspProtoHandler bin_handler_v1;
 
-int libxsp_proto_binary_init() {
-	bin_handler.parse = (int (**)(const char*, int, void**)) malloc(sizeof(void *) * (LIBXSP_PROTO_BINARY_MAX + 1));
-	if (!bin_handler.parse)
+int libxsp_proto_binary_v1_init() {
+	bin_handler_v1.write_hdr = xsp_write_hdr;
+
+	bin_handler_v1.parse = (int (**)(const char*, int, void**)) malloc(sizeof(void *) * (LIBXSP_PROTO_BINARY_MAX + 1));
+	if (!bin_handler_v1.parse)
 		return -1;
 
-	bin_handler.writeout = (int (**)(void*, char*, int)) malloc(sizeof(void *) * (LIBXSP_PROTO_BINARY_MAX + 1));
-	if (!bin_handler.writeout)
+	bin_handler_v1.writeout = (int (**)(void*, char*, int)) malloc(sizeof(void *) * (LIBXSP_PROTO_BINARY_MAX + 1));
+	if (!bin_handler_v1.writeout)
 		return -1;
 
-	bin_handler.parse[XSP_MSG_INVALID] = NULL;
-	bin_handler.parse[XSP_MSG_SESS_OPEN] = xsp_parse_sess_open_msg;
-	bin_handler.parse[XSP_MSG_SESS_ACK] = NULL;
-	bin_handler.parse[XSP_MSG_SESS_CLOSE] = NULL;
-	bin_handler.parse[XSP_MSG_AUTH_TYPE] = xsp_parse_auth_type_msg;
-	bin_handler.parse[XSP_MSG_AUTH_TOKEN] = xsp_parse_auth_token_msg;
-	bin_handler.parse[XSP_MSG_BLOCK_HEADER] = xsp_parse_block_header_msg;
-	bin_handler.parse[XSP_MSG_SESS_NACK] = xsp_parse_nack_msg;
-	bin_handler.parse[XSP_MSG_PING] = NULL;
-	bin_handler.parse[XSP_MSG_PONG] = NULL;
-	bin_handler.parse[XSP_MSG_DATA_OPEN] = xsp_parse_data_open_msg;
-	bin_handler.parse[XSP_MSG_DATA_CLOSE] = NULL;
-	bin_handler.parse[XSP_MSG_PATH_OPEN] = xsp_parse_block_header_msg;
-	bin_handler.parse[XSP_MSG_PATH_CLOSE] = NULL;
-	bin_handler.parse[XSP_MSG_APP_DATA] = xsp_parse_block_header_msg;
-	bin_handler.parse[XSP_MSG_SLAB_INFO] = xsp_parse_slab_info;
+	bin_handler_v1.parse[XSP_MSG_INVALID] = NULL;
+	bin_handler_v1.parse[XSP_MSG_SESS_OPEN] = xsp_parse_sess_open_msg;
+	bin_handler_v1.parse[XSP_MSG_SESS_ACK] = NULL;
+	bin_handler_v1.parse[XSP_MSG_SESS_CLOSE] = NULL;
+	bin_handler_v1.parse[XSP_MSG_AUTH_TYPE] = xsp_parse_auth_type_msg;
+	bin_handler_v1.parse[XSP_MSG_AUTH_TOKEN] = xsp_parse_auth_token_msg;
+	bin_handler_v1.parse[XSP_MSG_BLOCK_HEADER] = xsp_parse_block_header_msg;
+	bin_handler_v1.parse[XSP_MSG_SESS_NACK] = xsp_parse_nack_msg;
+	bin_handler_v1.parse[XSP_MSG_PING] = NULL;
+	bin_handler_v1.parse[XSP_MSG_PONG] = NULL;
+	bin_handler_v1.parse[XSP_MSG_DATA_OPEN] = xsp_parse_data_open_msg;
+	bin_handler_v1.parse[XSP_MSG_DATA_CLOSE] = NULL;
+	bin_handler_v1.parse[XSP_MSG_PATH_OPEN] = xsp_parse_block_header_msg;
+	bin_handler_v1.parse[XSP_MSG_PATH_CLOSE] = NULL;
+	bin_handler_v1.parse[XSP_MSG_APP_DATA] = xsp_parse_block_header_msg;
+	bin_handler_v1.parse[XSP_MSG_SLAB_INFO] = xsp_parse_slab_info;
 
-	bin_handler.writeout[XSP_MSG_INVALID] = NULL;
-	bin_handler.writeout[XSP_MSG_SESS_OPEN] = xsp_writeout_sess_open_msg;
-	bin_handler.writeout[XSP_MSG_SESS_ACK] = NULL;
-	bin_handler.writeout[XSP_MSG_SESS_CLOSE] = NULL;
-	bin_handler.writeout[XSP_MSG_AUTH_TYPE] = xsp_writeout_auth_type_msg;
-	bin_handler.writeout[XSP_MSG_AUTH_TOKEN] = xsp_writeout_auth_token_msg;
-	bin_handler.writeout[XSP_MSG_BLOCK_HEADER] = xsp_writeout_block_header_msg;
-	bin_handler.writeout[XSP_MSG_SESS_NACK] = xsp_writeout_nack_msg;
-	bin_handler.writeout[XSP_MSG_PING] = NULL;
-	bin_handler.writeout[XSP_MSG_PONG] = NULL;
-	bin_handler.writeout[XSP_MSG_DATA_OPEN] = xsp_writeout_data_open_msg;
-	bin_handler.writeout[XSP_MSG_DATA_CLOSE] = NULL;
-	bin_handler.writeout[XSP_MSG_PATH_OPEN] = xsp_writeout_block_header_msg;
-	bin_handler.writeout[XSP_MSG_PATH_CLOSE] = NULL;
-	bin_handler.writeout[XSP_MSG_APP_DATA] = xsp_writeout_block_header_msg;
-	bin_handler.writeout[XSP_MSG_SLAB_INFO] = xsp_writeout_slab_info;
+	bin_handler_v1.writeout[XSP_MSG_INVALID] = NULL;
+	bin_handler_v1.writeout[XSP_MSG_SESS_OPEN] = xsp_writeout_sess_open_msg;
+	bin_handler_v1.writeout[XSP_MSG_SESS_ACK] = NULL;
+	bin_handler_v1.writeout[XSP_MSG_SESS_CLOSE] = NULL;
+	bin_handler_v1.writeout[XSP_MSG_AUTH_TYPE] = xsp_writeout_auth_type_msg;
+	bin_handler_v1.writeout[XSP_MSG_AUTH_TOKEN] = xsp_writeout_auth_token_msg;
+	bin_handler_v1.writeout[XSP_MSG_BLOCK_HEADER] = xsp_writeout_block_header_msg;
+	bin_handler_v1.writeout[XSP_MSG_SESS_NACK] = xsp_writeout_nack_msg;
+	bin_handler_v1.writeout[XSP_MSG_PING] = NULL;
+	bin_handler_v1.writeout[XSP_MSG_PONG] = NULL;
+	bin_handler_v1.writeout[XSP_MSG_DATA_OPEN] = xsp_writeout_data_open_msg;
+	bin_handler_v1.writeout[XSP_MSG_DATA_CLOSE] = NULL;
+	bin_handler_v1.writeout[XSP_MSG_PATH_OPEN] = xsp_writeout_block_header_msg;
+	bin_handler_v1.writeout[XSP_MSG_PATH_CLOSE] = NULL;
+	bin_handler_v1.writeout[XSP_MSG_APP_DATA] = xsp_writeout_block_header_msg;
+	bin_handler_v1.writeout[XSP_MSG_SLAB_INFO] = xsp_writeout_slab_info;
 
-	bin_handler.max_msg_type = LIBXSP_PROTO_BINARY_MAX;
+	bin_handler_v1.max_msg_type = LIBXSP_PROTO_BINARY_MAX;
 
-	return xsp_add_proto_handler(LIBXSP_PROTO_BINARY_ID, &bin_handler);
+	return xsp_add_proto_handler(LIBXSP_PROTO_BINARY_ID, &bin_handler_v1);
 }
 
-int xsp_parse_sess_open_msg(const char *buf, int length, void **msg_body) {
+static int xsp_write_hdr(void *arg, char *buf) {
+        xspMsg *msg = (xspMsg*)arg;
+        xspMsgHdr *hdr;
+
+	printf("in v1 write hdr\n");
+
+        return sizeof(xspMsgHdr);
+}
+
+static int xsp_parse_sess_open_msg(const char *buf, int length, void **msg_body) {
 	xspSess *ret_sess = NULL;
 	xspSess_HDR *hdr;
 	int remainder;
@@ -122,7 +133,7 @@ parse_error:
 	return -1;
 }
 
-xspHop *xsp_parsehop(xspSess *sess, const char *buf, int remainder, int *size) {
+static xspHop *xsp_parsehop(xspSess *sess, const char *buf, int remainder, int *size) {
 	xspHop *new_hop = NULL;
 	xspHop_HDR *hdr = NULL;
 	int orig_remainder = 0;
@@ -200,7 +211,7 @@ parse_error:
 	return NULL;
 }
 
-int xsp_parse_auth_token_msg(const char *buf, int remainder, void **msg_body) {
+static int xsp_parse_auth_token_msg(const char *buf, int remainder, void **msg_body) {
 	xspAuthToken_HDR *hdr;
 	xspAuthToken *new_token;
 
@@ -240,7 +251,7 @@ int xsp_parse_auth_token_msg(const char *buf, int remainder, void **msg_body) {
 	return 0;
 }
 
-int xsp_parse_nack_msg(const char *buf, int remainder, void **msg_body) {
+static int xsp_parse_nack_msg(const char *buf, int remainder, void **msg_body) {
 	xspSessNack_HDR *hdr;
 	uint16_t len;
 	char *error_msg;
@@ -276,7 +287,7 @@ int xsp_parse_nack_msg(const char *buf, int remainder, void **msg_body) {
 	return 0;
 }
 
-int xsp_parse_block_header_msg(const char *buf, int remainder, void **msg_body) {
+static int xsp_parse_block_header_msg(const char *buf, int remainder, void **msg_body) {
 	xspBlockHeader_HDR *hdr;
 	xspBlockHeader *new_header;
 
@@ -316,7 +327,7 @@ int xsp_parse_block_header_msg(const char *buf, int remainder, void **msg_body) 
 	return 0;
 }
 
-int xsp_parse_auth_type_msg(const char *buf, int remainder, void **msg_body) {
+static int xsp_parse_auth_type_msg(const char *buf, int remainder, void **msg_body) {
 	xspAuthType_HDR *hdr;
 	xspAuthType *new_auth_type;
 
@@ -340,7 +351,7 @@ int xsp_parse_auth_type_msg(const char *buf, int remainder, void **msg_body) {
 	return 0;
 }
 
-int xsp_parse_data_open_msg(const char *buf, int remainder, void **msg_body) {
+static int xsp_parse_data_open_msg(const char *buf, int remainder, void **msg_body) {
 	xspDataOpen_HDR *hdr;
 	xspDataOpenHeader *new;
 
@@ -362,7 +373,7 @@ int xsp_parse_data_open_msg(const char *buf, int remainder, void **msg_body) {
 
 
 
-int xsp_writeout_sess_open_msg(void *arg, char *buf, int remainder) {
+static int xsp_writeout_sess_open_msg(void *arg, char *buf, int remainder) {
 	int orig_remainder;
 	xspHop *hop = (xspHop *) arg;
 	xspSess_HDR *sess_hdr;
@@ -401,7 +412,7 @@ write_error:
 	return -1;
 }
 
-int xsp_writeouthop(xspHop *hop, char *buf, int remainder) {
+static int xsp_writeouthop(xspHop *hop, char *buf, int remainder) {
 	int i;
 	int orig_remainder;
 	xspHop_HDR *hdr;
@@ -445,7 +456,7 @@ write_error:
 	return -1;
 }
 
-int xsp_writeout_auth_token_msg(void *arg, char *buf, int remainder) {
+static int xsp_writeout_auth_token_msg(void *arg, char *buf, int remainder) {
 	xspAuthToken *xsp_token = arg;
 	xspAuthToken_HDR *hdr;
 
@@ -469,7 +480,7 @@ int xsp_writeout_auth_token_msg(void *arg, char *buf, int remainder) {
 	return sizeof(xspAuthToken_HDR) + xsp_token->token_length;
 }
 
-int xsp_writeout_auth_type_msg(void *arg, char *buf, int remainder) {
+static int xsp_writeout_auth_type_msg(void *arg, char *buf, int remainder) {
 	xspAuthType *auth_type = arg;
 	xspAuthType_HDR *hdr;
 
@@ -486,7 +497,7 @@ int xsp_writeout_auth_type_msg(void *arg, char *buf, int remainder) {
 	return sizeof(xspAuthType_HDR);
 }
 
-int xsp_writeout_block_header_msg(void *arg, char *buf, int remainder) {
+static int xsp_writeout_block_header_msg(void *arg, char *buf, int remainder) {
 	xspBlockHeader *block = arg;
 	xspBlockHeader_HDR *hdr;
 
@@ -512,7 +523,7 @@ int xsp_writeout_block_header_msg(void *arg, char *buf, int remainder) {
 	return sizeof(xspBlockHeader_HDR) + block->length;
 }
 
-int xsp_writeout_nack_msg(void *arg, char *buf, int remainder) {
+static int xsp_writeout_nack_msg(void *arg, char *buf, int remainder) {
 	const char *error_msg = arg;
 	xspSessNack_HDR *hdr;
 
@@ -537,7 +548,7 @@ int xsp_writeout_nack_msg(void *arg, char *buf, int remainder) {
 	return sizeof(xspSessNack_HDR) + strlen(error_msg);
 }
 
-int xsp_writeout_data_open_msg(void *arg, char *buf, int remainder) {
+static int xsp_writeout_data_open_msg(void *arg, char *buf, int remainder) {
 	xspDataOpenHeader *dopen = arg;
 	xspDataOpen_HDR *hdr;
 
@@ -558,7 +569,7 @@ int xsp_writeout_data_open_msg(void *arg, char *buf, int remainder) {
 
 // some slabs additions
 
-int xsp_parse_slab_info(const char *buf, int remainder, void **msg_body) {
+static int xsp_parse_slab_info(const char *buf, int remainder, void **msg_body) {
         xspSlabInfo *new_info;
         xspSlabInfo_HDR *in;
         int i;
@@ -603,7 +614,7 @@ int xsp_parse_slab_info(const char *buf, int remainder, void **msg_body) {
         return 0;
 }
 
-xspSlabRec *xsp_parse_slab_record(const char *buf, int remainder, int *size) {
+static xspSlabRec *xsp_parse_slab_record(const char *buf, int remainder, int *size) {
         xspSlabRec *new_rec;
         xspSlabRec_HDR *in;
         int orig_remainder;
@@ -631,7 +642,7 @@ xspSlabRec *xsp_parse_slab_record(const char *buf, int remainder, int *size) {
         return new_rec;
 }
 
-int xsp_writeout_slab_info(void *arg, char *buf, int remainder) {
+static int xsp_writeout_slab_info(void *arg, char *buf, int remainder) {
         int orig_remainder;
         xspSlabInfo *info = (xspSlabInfo*) arg;
         xspSlabInfo_HDR *out;
@@ -665,7 +676,7 @@ int xsp_writeout_slab_info(void *arg, char *buf, int remainder) {
         return orig_remainder - remainder;
 }
 
-int xsp_writeout_slab_record(xspSlabRec *rec, char *buf, int remainder) {
+static int xsp_writeout_slab_record(xspSlabRec *rec, char *buf, int remainder) {
         int i;
         int orig_remainder;
         xspSlabRec_HDR *out;
