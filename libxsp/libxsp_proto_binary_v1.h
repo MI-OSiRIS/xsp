@@ -14,7 +14,7 @@ static xspHop *xsp_parsehop(xspSess *sess, const char *buf, int remainder, int *
 static int xsp_parse_auth_token_msg(const char *buf, int remainder, void **msg_body);
 static int xsp_parse_auth_type_msg(const char *buf, int remainder, void **msg_body);
 static int xsp_parse_block_header_msg(const char *buf, int remainder, void **msg_body);
-static xsp_parse_nack_msg(const char *buf, int remainder, void **msg_body);
+static int xsp_parse_nack_msg(const char *buf, int remainder, void **msg_body);
 static int xsp_parse_data_open_msg(const char *buf, int remainder, void **msg_body);
 static int xsp_parse_slab_info(const char *buf, int remainder, void **msg_body);
 static xspSlabRec *xsp_parse_slab_record(const char *buf, int remainder, int *size);

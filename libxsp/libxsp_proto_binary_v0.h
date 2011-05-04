@@ -21,9 +21,9 @@ static xspSlabRec *xsp_parse_slab_record(const char *buf, int remainder, int *si
 
 static int xsp_writeout_sess_open_msg(void *hop, char *buf, int remainder);
 static int xsp_writeouthop(xspHop *hop, char *buf, int remainder);
-static xsp_writeout_auth_token_msg(void *arg, char *buf, int remainder);
+static int xsp_writeout_auth_token_msg(void *arg, char *buf, int remainder);
 static int xsp_writeout_auth_type_msg(void *arg, char *buf, int remainder);
-static xsp_writeout_block_header_msg(void *arg, char *buf, int remainder);
+static int xsp_writeout_block_header_msg(void *arg, char *buf, int remainder);
 static int xsp_writeout_nack_msg(void *arg, char *buf, int remainder);
 static int xsp_writeout_data_open_msg(void *arg, char *buf, int remainder);
 static int xsp_writeout_slab_info(void *arg, char *buf, int remainder);

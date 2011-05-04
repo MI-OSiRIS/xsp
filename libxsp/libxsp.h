@@ -1,13 +1,10 @@
-/*
- * $Id: libxsp.h,v 1.3.2.5.2.3 2005/04/08 00:24:36 aaron Exp $
- */
-
 #ifndef __LIBXSP_H
 #define __LIBXSP_H
 
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <time.h>
 
 #ifdef DEBUG
 #define d_printf(fmt, args...) fprintf(stderr, "XSP:"fmt, ##args)
