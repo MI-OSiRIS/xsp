@@ -468,7 +468,8 @@ int connect(int sockfd, const struct sockaddr *serv_addr, SOCKLEN_T addrlen) {
 	xsp_sess_appendchild(sess, dest, 0);
 
 	if ((retval = xsp_connect(sess)) != 0) {
-		fprintf(stderr, "XSP: connect(): failed to complete session with %s\n", path[0]);
+		fprintf(stderr, "XSP: connect(): failed to complete session with %s\n",
+			xsp_hop_getid(sess->child[0]));
 		return retval;
 	}
 
