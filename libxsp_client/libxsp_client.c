@@ -1123,6 +1123,7 @@ int xsp_put_msg(libxspSess *sess, uint8_t version, uint8_t type, char *sess_id, 
 	int amt_sent;
 	int sent;
 	int msg_len;
+	xspMsg msg;
 
 	msg_buf = (char *) malloc(sizeof(char) * 65536);
 	if (!msg_buf)
@@ -1130,7 +1131,12 @@ int xsp_put_msg(libxspSess *sess, uint8_t version, uint8_t type, char *sess_id, 
 
 	msg_buf_len = 65536;
 
-	msg_len = xsp_writeout_msg(msg_buf, msg_buf_len, version, type, sess_id, msg_body);
+	msg.version = version;
+	msg.type = type;
+	msg.msg_body = msg_body;
+	memcpy(msg.sess_id, sess_id, 2*XSP_SESSIONID_LEN+1);
+
+	msg_len = xsp_writeout_msg(msg_buf, msg_buf_len, version, type, (void*)&msg, msg_body);
 
 	if (msg_len < 0)
 		goto write_error;

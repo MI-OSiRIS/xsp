@@ -158,6 +158,7 @@ int xsp_make_connection(char *hop_id) {
 	return s;
 }
 
+/* XXX: could sepecify which versions we want to allow */
 int xsp_init() {
 	return xsp_proto_init();
 }

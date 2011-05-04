@@ -12,55 +12,88 @@
 #include "libxsp_hop.h"
 
 int xsp_writeout_msgbody(char *buf, int length, uint8_t version, uint8_t type, void *msg_body);
-int libxsp_proto_binary_init();
+int libxsp_proto_binary_v0_init();
+int libxsp_proto_binary_v1_init();
 
 xspProtoHandler *proto_list[256];
 
 int xsp_add_proto_handler(uint8_t version, xspProtoHandler *handler) {
+	d_printf("adding protocol handler [%d]\n", version);
 	proto_list[version] = handler;
 
 	return 0;
 }
 
 int xsp_proto_init() {
-	return libxsp_proto_binary_init();
-}
-
-int xsp_writeout_msg(char *buf, int length, uint8_t version, uint8_t type, char *sess_id, void *msg_body) {
-	xspMsgHdr *hdr;
-	char *msg_buf;
-	int body_length;
-	int remainder;
-
-	if (length < sizeof(xspMsgHdr))
-		goto write_error;
-
-	hdr = (xspMsgHdr *) buf;
-	msg_buf = buf;
-
-	hdr->type = type;
-	hdr->version = version;
-
-	if (sess_id != NULL) {
-		hex2bin(sess_id, hdr->sess_id, XSP_SESSIONID_LEN * 2);
-	} else {
-		bzero(hdr->sess_id, XSP_SESSIONID_LEN);
+	int ret;
+	
+	ret = libxsp_proto_binary_v0_init();
+	if (ret < 0) {
+		d_printf("could not start XSP v0 handler\n");
+		goto error_exit;
 	}
 
-	msg_buf += sizeof(xspMsgHdr);
-	remainder = length - sizeof(xspMsgHdr);
+	ret = libxsp_proto_binary_v1_init();
+	if (ret < 0) {
+		d_printf("could not start XSP v1 handler\n");
+		goto error_exit;
+	}
+	
+	return 0;
 
-	// fill in the message body
+ error_exit:
+	return -1;
+}
+
+int xsp_writeout_msg(char *buf, int length, int version, int type, void *msg, void *msg_body) {
+	char *msg_buf;
+	int body_length;
+	int hdr_length;
+	int remainder;
+
+	if (!msg || length < sizeof(xspMsgHdr))
+		goto write_error;
+
+	if (proto_list[version] == NULL) {
+		d_printf("unknown version: %d %d\n", version, type);
+		goto write_error;
+	}
+	
+	if (proto_list[version]->write_hdr == NULL) {
+		d_printf("write_hdr not defined: %d %d\n", version, type);
+		goto write_error;
+	}
+
+	msg_buf = buf;
+
+	d_printf("about to write v%d hdr\n", version);
+
+	hdr_length = proto_list[version]->write_hdr(msg, msg_buf);
+	
+	if (hdr_length <= 0) {
+		d_printf("error writing header: %d %d\n", version, type);
+		goto write_error;
+	}
+	
+	msg_buf += hdr_length;
+	remainder = length - hdr_length;
+
+	/* fill in the message body */
 	body_length = xsp_writeout_msgbody(msg_buf, remainder, version, type, msg_body);
 	if (body_length < 0)
 		goto write_error;
 
-	hdr->length = htons(body_length);
+	/* XXX: v0 requires the body length in the header */
+	if (version == XSP_v0) {
+		xspMsgHdr *hdr = (xspMsgHdr*)buf;
+		hdr->length = htons(body_length);
+		d_printf("v0 hdr length: %d\n", ntohs(hdr->length));
+	}
 
-	d_printf("body_length: %d %d\n", body_length, ntohs(hdr->length));
-	d_printf("header_length: %d\n", sizeof(xspMsgHdr));
+	d_printf("body_length: %d\n", body_length);
+	d_printf("header_length: %d\n", hdr_length);
 
-	return (sizeof(xspMsgHdr) + body_length);
+	return hdr_length + body_length;
 
 write_error:
 	return -1;
