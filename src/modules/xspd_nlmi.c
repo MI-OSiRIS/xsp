@@ -10,15 +10,15 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
-#include "xspd_protocols.h"
-#include "xspd_logger.h"
-#include "xspd_config.h"
-#include "xspd_tpool.h"
-#include "xspd_modules.h"
-#include "xspd_settings.h"
-#include "xspd_listener.h"
-#include "xspd_session.h"
-#include "xspd_conn.h"
+#include "xsp_protocols.h"
+#include "xsp_logger.h"
+#include "xsp_config.h"
+#include "xsp_tpool.h"
+#include "xsp_modules.h"
+#include "xsp_settings.h"
+#include "xsp_listener.h"
+#include "xsp_session.h"
+#include "xsp_conn.h"
 
 #include "option_types.h"
 #include "compat.h"
@@ -26,16 +26,16 @@
 #include "bson.h"
 
 int xspd_nlmi_init();
-int xspd_nlmi_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBlockHeader **ret_block);
+int xspd_nlmi_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockHeader **ret_block);
 
-static xspdModule xspd_nlmi_module = {
+static xspModule xspd_nlmi_module = {
 	.desc = "NLMI Module",
 	.dependencies = "",
 	.init = xspd_nlmi_init,
 	.opt_handler = xspd_nlmi_opt_handler
 };
 
-xspdModule *module_info() {
+xspModule *module_info() {
 	return &xspd_nlmi_module;
 }
 
@@ -49,9 +49,9 @@ int xspd_nlmi_init() {
 	return -1;
 }
 
-int xspd_nlmi_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBlockHeader **ret_block) {
+int xspd_nlmi_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockHeader **ret_block) {
 
-	xspd_info(0, "handling nlmi message of type: %d", block->type);
+	xsp_info(0, "handling nlmi message of type: %d", block->type);
 	// block->blob has the data of length block->length
 
 	switch(block->type) {
