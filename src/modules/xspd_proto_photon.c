@@ -10,16 +10,16 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
-#include "xspd_protocols.h"
-#include "xspd_logger.h"
-#include "xspd_config.h"
-#include "xspd_tpool.h"
-#include "xspd_modules.h"
-#include "xspd_main_settings.h"
-#include "xspd_settings.h"
-#include "xspd_listener.h"
-#include "xspd_session.h"
-#include "xspd_conn.h"
+#include "xsp_protocols.h"
+#include "xsp_logger.h"
+#include "xsp_config.h"
+#include "xsp_tpool.h"
+#include "xsp_modules.h"
+#include "xsp_main_settings.h"
+#include "xsp_settings.h"
+#include "xsp_listener.h"
+#include "xsp_session.h"
+#include "xsp_conn.h"
 
 #include "photon_xsp.h"
 
@@ -57,44 +57,44 @@ int dapl_xsp_post_os_get(xspSess *sess, char *ptr, uint32_t size, int tag, uint3
 
 
 int xspd_proto_photon_init();
-int xspd_proto_photon_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBlockHeader **ret_block);
+int xspd_proto_photon_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockHeader **ret_block);
 
 static PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg);
-static xspdConn *xspd_proto_photon_connect(const char *hop_id, xspdSettings *settings);
-static xspdListener *xspd_proto_photon_setup_listener(const char *listener_id, xspdSettings *settings, int one_shot, listener_cb callback, void *arg);
+static xspConn *xspd_proto_photon_connect(const char *hop_id, xspSettings *settings);
+static xspListener *xspd_proto_photon_setup_listener(const char *listener_id, xspSettings *settings, int one_shot, listener_cb callback, void *arg);
 
 pthread_mutex_t ci_lock;
 pthread_mutex_t rfi_lock;
 
 // maybe we eventually want this to be a generic protocal handler
-static xspdProtocolHandler xspd_photon_handler = {
+static xspProtocolHandler xspd_photon_handler = {
 	.connect = xspd_proto_photon_connect,
 	.setup_listener = xspd_proto_photon_setup_listener,
 	.name = "photon"
 };
 
-static xspdModule xspd_photon_module = {
+static xspModule xspd_photon_module = {
 	.desc = "Photon Forwarder Module",
 	.dependencies = "",
 	.init = xspd_proto_photon_init,
 	.opt_handler = xspd_proto_photon_opt_handler
 };
 
-xspdModule *module_info() {
+xspModule *module_info() {
 	return &xspd_photon_module;
 }
 
 int xspd_proto_photon_init() {
 	int maxclients;
-	xspdSettings *settings;
+	xspSettings *settings;
 	
-	if (xspd_main_settings_get_section("photon", &settings) != 0 ||
-	        xspd_settings_get_int(settings, "maxclients", &maxclients) != 0) {
-	    maxclients = 46; /* default */
+	if (xsp_main_settings_get_section("photon", &settings) != 0 ||
+	    xsp_settings_get_int(settings, "maxclients", &maxclients) != 0) {
+		maxclients = 46; /* default */
 	}
 
 	if (photon_xsp_init_server(maxclients) != 0) {
-		xspd_err(0, "could not init photon backend");
+		xsp_err(0, "could not init photon backend");
 		goto error_exit;
 	}
 
@@ -107,15 +107,15 @@ int xspd_proto_photon_init() {
 	return -1;
 }
 
-int xspd_proto_photon_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBlockHeader **ret_block) {
+int xsp_proto_photon_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockHeader **ret_block) {
 
-	xspd_info(0, "handling photon message of type: %d", block->type);
+	xsp_info(0, "handling photon message of type: %d", block->type);
 
 	switch(block->type) {
 
 	case PHOTON_CI:
 		{
-			xspdConn *parent_conn;
+			xspConn *parent_conn;
 			PhotonConnectInfo *ci;
 			PhotonConnectInfo *ret_ci = malloc(sizeof(PhotonConnectInfo));
 			
@@ -128,12 +128,12 @@ int xspd_proto_photon_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBloc
 				// does not currently check for duplicate registrations
 				// duplicate messages, etc.
 				if (dapl_xsp_register_session((xspSess*)sess) != 0) {
-					xspd_err(0, "could not register session with libphoton");
+					xsp_err(0, "could not register session with libphoton");
 					goto error_exit;
 				}
 				
 				if (dapl_xsp_set_ci((xspSess*)sess, ci, &ret_ci) != 0) {
-					xspd_err(0, "could not set photon connect info");
+					xsp_err(0, "could not set photon connect info");
 					goto error_exit;
 				}
 				
@@ -145,11 +145,11 @@ int xspd_proto_photon_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBloc
 				(*ret_block)->sport = 0;
 				
 				// so ugly to do this here
-				xspd_conn_send_msg(parent_conn, XSP_MSG_APP_DATA, *ret_block);
+				xsp_conn_send_msg(parent_conn, XSP_MSG_APP_DATA, *ret_block);
 				
 				// but it's better to wait for the dapl connection right away
 				if (dapl_xsp_wait_connect((xspSess*)sess) != 0) {
-					xspd_err(0, "could not complete dapl connections");
+					xsp_err(0, "could not complete dapl connections");
 					goto error_exit;
 				}
 			}
@@ -169,7 +169,7 @@ int xspd_proto_photon_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBloc
 			pthread_mutex_lock(&rfi_lock);
 			{
 				if (dapl_xsp_set_ri((xspSess*)sess, ri, &ret_ri) != 0) {
-					xspd_err(0, "could not set photon snd/rcv ledgers");
+					xsp_err(0, "could not set photon snd/rcv ledgers");
 					goto error_exit;
 				}
 			}
@@ -192,7 +192,7 @@ int xspd_proto_photon_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBloc
 			pthread_mutex_lock(&rfi_lock);
 			{
 				if (dapl_xsp_set_fi((xspSess*)sess, fi, &ret_fi) != 0) {
-					xspd_err(0, "could not set photon FIN ledger");
+					xsp_err(0, "could not set photon FIN ledger");
 					goto error_exit;
 				}
 			}
@@ -213,7 +213,7 @@ int xspd_proto_photon_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBloc
 		    
 		    /* XXX: AFAIK the I/O info is session specific, so no need for locks */
 		    if (dapl_xsp_set_io((xspSess*)sess, io) != 0) {
-			    xspd_err(0, "could not set photon I/O info");
+			    xsp_err(0, "could not set photon I/O info");
 			    goto error_exit;
 		    }
 		    
@@ -226,7 +226,7 @@ int xspd_proto_photon_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBloc
 		     *   until the I/O finishes.
 		     */
 		    if (dapl_xsp_do_io((xspSess*)sess) != 0) {
-			    xspd_err(0, "I/O processing failed");
+			    xsp_err(0, "I/O processing failed");
 			    goto error_exit;
 		    }
 		    
@@ -245,13 +245,13 @@ int xspd_proto_photon_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBloc
 	return -1;
 }
 
-static xspdConn *xspd_proto_photon_connect(const char *hostname, xspdSettings *settings) {
+static xspConn *xspd_proto_photon_connect(const char *hostname, xspSettings *settings) {
 	// we're not connecting with photon from here, yet
 
 	return NULL;
 }
 
-static xspdListener *xspd_proto_photon_setup_listener(const char *listener_id, xspdSettings *settings, int one_shot, listener_cb callback, void *arg) {
+static xspListener *xspd_proto_photon_setup_listener(const char *listener_id, xspSettings *settings, int one_shot, listener_cb callback, void *arg) {
 	
 	return NULL;
 }
@@ -265,7 +265,7 @@ PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg) {
     fileURI_size = *((int *)msg);
     io->fileURI = strdup((char*)(msg+sizeof(int)));
     if (fileURI_size != strlen(io->fileURI) + 1) {
-        xspd_err(0, "xspd_proto_photon_parse_io_msg: fileURI size mismatch");
+        xsp_err(0, "xspd_proto_photon_parse_io_msg: fileURI size mismatch");
         return NULL;
     }
     msg_ptr = msg + sizeof(int) + fileURI_size;
@@ -278,7 +278,7 @@ PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg) {
     io->view.nints = *((int *)msg_ptr);
     io->view.integers = malloc(io->view.nints*sizeof(int));
     if(io->view.integers == NULL) {
-        xspd_err(0, "xspd_proto_photon_parse_io_msg: out of memory");
+        xsp_err(0, "xspd_proto_photon_parse_io_msg: out of memory");
         return NULL;
     }
     memcpy(io->view.integers, msg_ptr+sizeof(int), io->view.nints*sizeof(int));
@@ -287,7 +287,7 @@ PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg) {
     io->view.naddrs = *((int *)msg_ptr);
     io->view.addresses = malloc(io->view.naddrs*sizeof(MPI_Aint));
     if(io->view.addresses == NULL) {
-        xspd_err(0, "xspd_proto_photon_parse_io_msg: out of memory");
+        xsp_err(0, "xspd_proto_photon_parse_io_msg: out of memory");
         return NULL;
     }
     memcpy(io->view.addresses, msg_ptr+sizeof(int), io->view.naddrs*sizeof(MPI_Aint));
@@ -296,7 +296,7 @@ PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg) {
     io->view.ndatatypes = *((int *)msg_ptr);
     io->view.datatypes = malloc(io->view.ndatatypes*sizeof(int));
     if(io->view.datatypes == NULL) {
-        xspd_err(0, "xspd_proto_photon_parse_io_msg: out of memory");
+        xsp_err(0, "xspd_proto_photon_parse_io_msg: out of memory");
         return NULL;
     }
     memcpy(io->view.datatypes, msg_ptr+sizeof(int), io->view.ndatatypes*sizeof(int));

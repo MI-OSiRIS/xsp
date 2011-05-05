@@ -389,9 +389,11 @@ AC_OUTPUT(
 	src/libxsp/Makefile
 	src/xspd/Makefile
 	src/modules/Makefile
-	src/modules/terapaths/Makefile
-	src/modules/oscars/Makefile
-	src/modules/monitoring/Makefile
-	src/libxsp-client/Makefile
+	src/libxsp_common/Makefile
+	src/libxsp_modules/Makefile
+	src/libxsp_modules/terapaths/Makefile
+	src/libxsp_modules/oscars/Makefile
+	src/libxsp_modules/monitoring/Makefile
+	src/libxsp_client/Makefile
 	test/Makefile
 	)

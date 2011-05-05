@@ -1,22 +1,22 @@
 AUTOMAKE_OPTIONS = foreign
 
-libdirs = src/libxsp libconfig libbson
+libdirs = libconfig libbson src/libxsp src/libxsp_common
 bindirs = src/xspd
 
 if ENABLE_TERAPATHS
 libdirs += libgsoap
-bindirs += src/modules/terapaths src/modules/monitoring
+bindirs += src/libxsp_modules/terapaths src/libxsp_modules/monitoring
 endif
 
 if ENABLE_OSCARS
 libdirs += libgsoap
-bindirs += src/modules/oscars
+bindirs += src/libxsp_modules/oscars
 endif
 
 if ENABLE_CLIENT
-libdirs += libradix src/libxsp-client
+libdirs += libradix src/libxsp_client
 endif
 
-bindirs += src/modules
+bindirs += src/libxsp_modules src/modules
 
 SUBDIRS = $(libdirs) $(bindirs)

@@ -10,29 +10,29 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
-#include "xspd_logger.h"
-#include "xspd_config.h"
-#include "xspd_tpool.h"
-#include "xspd_modules.h"
-#include "xspd_settings.h"
-#include "xspd_session.h"
-#include "xspd_conn.h"
+#include "xsp_logger.h"
+#include "xsp_config.h"
+#include "xsp_tpool.h"
+#include "xsp_modules.h"
+#include "xsp_settings.h"
+#include "xsp_session.h"
+#include "xsp_conn.h"
 
 #include "bson.h"
 #include "option_types.h"
 #include "compat.h"
 
 int xspd_globus_xio_init();
-int xspd_globus_xio_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBlockHeader **ret_block);
+int xspd_globus_xio_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockHeader **ret_block);
 
-static xspdModule xspd_globus_xio_module = {
+static xspModule xspd_globus_xio_module = {
 	.desc = "Globus XIO Module",
 	.dependencies = "",
 	.init = xspd_globus_xio_init,
 	.opt_handler = xspd_globus_xio_opt_handler
 };
 
-xspdModule *module_info() {
+xspModule *module_info() {
 	return &xspd_globus_xio_module;
 }
 
@@ -46,9 +46,9 @@ int xspd_globus_xio_init() {
 	return -1;
 }
 
-int xspd_globus_xio_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBlockHeader **ret_block) {
+int xspd_globus_xio_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockHeader **ret_block) {
 
-	xspd_info(8, "handling globus_xio message of type: %d", block->type);
+	xsp_info(8, "handling globus_xio message of type: %d", block->type);
 	// block->blob has the data of length block->length
 
 	switch(block->type) {
@@ -59,7 +59,7 @@ int xspd_globus_xio_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBlockH
 		    char *tmp = malloc(block->length*sizeof(char)+1);
 		    memcpy(tmp, block->blob, block->length);
 		    tmp[block->length] = '\0';
-		    xspd_info(10, "NEW XFER: %s\n", tmp);
+		    xsp_info(10, "NEW XFER: %s\n", tmp);
 		    free(tmp);
 		    
 		    *ret_block = (xspBlockHeader*)malloc(sizeof(xspBlockHeader));
@@ -91,7 +91,7 @@ int xspd_globus_xio_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBlockH
 		    char *tmp = malloc(block->length*sizeof(char)+1);
 		    memcpy(tmp, block->blob, block->length);
 		    tmp[block->length] = '\0';
-		    xspd_info(10, "END XFER: %s\n", tmp);
+		    xsp_info(10, "END XFER: %s\n", tmp);
 		    free(tmp);
 		    */
 
@@ -117,7 +117,7 @@ int xspd_globus_xio_opt_handler(xspdSess *sess, xspBlockHeader *block, xspBlockH
 		    char *tmp = malloc(block->length*sizeof(char)+1);
 		    memcpy(tmp, block->blob, block->length);
 		    tmp[block->length] = '\0';
-		    xspd_info(10, "NL UPDATE: %s\n", tmp);
+		    xsp_info(10, "NL UPDATE: %s\n", tmp);
 		    free(tmp);
 		    */
 

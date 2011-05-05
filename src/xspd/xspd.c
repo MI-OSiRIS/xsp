@@ -1,10 +1,8 @@
 #include "config.h"
 #include "compat.h"
 
-#ifdef JUNOS
 #include <stdio.h>
-#endif
-
+#include <stdlib.h>
 #include <signal.h>
 #include <string.h>
 #include <strings.h>
@@ -17,16 +15,17 @@
 #include <sys/prctl.h>
 #endif
 
-#include "xspd_conn.h"
-#include "xspd_logger.h"
-#include "xspd_config.h"
-#include "xspd_tpool.h"
-#include "xspd_session.h"
+#include "xsp_conn.h"
+#include "xsp_logger.h"
+#include "xsp_config.h"
+#include "xsp_tpool.h"
+#include "xsp_session.h"
 
-#include "xspd_protocols.h"
-#include "xspd_default_settings.h"
-#include "xspd_frontend_default.h"
-#include "xspd_modules.h"
+#include "xsp_protocols.h"
+#include "xsp_default_settings.h"
+#include "xsp_modules.h"
+
+#include "xspd_frontend.h"
 
 
 void sig_exit(int signal) {
@@ -36,7 +35,7 @@ void sig_exit(int signal) {
 int main(int argc, char *argv[]) {
 	int c;
 	extern char *optarg;
-	static char usage[] = "usage: xspd [-V] [-B] [-c config_file] [-d debug_level]\n";
+	static char usage[] = "usage: xsp [-V] [-B] [-c config_file] [-d debug_level]\n";
 	int do_background = 0;
 	int debug_level = -1;
 	int log_syslog = 0;
@@ -133,7 +132,7 @@ int main(int argc, char *argv[]) {
 		fprintf(stderr, "couldn't initialize xsp protocol handler\n");
 		goto error_exit;
 	}
-	if (xspd_config_read(conf_file)) {
+	if (xsp_config_read(conf_file)) {
 		fprintf(stderr, "reading configuration file failed\n");
 		goto error_exit;
 	}
@@ -147,33 +146,33 @@ int main(int argc, char *argv[]) {
 	prctl(PR_SET_DUMPABLE, 1);
 #endif
 
-	if (xspd_tpool_init()) {
-		xspd_err(0, "couldn't initialize thread pooling system");
+	if (xsp_tpool_init()) {
+		xsp_err(0, "couldn't initialize thread pooling system");
 		goto error_exit;
 	}
 	
-	if (xspd_modules_init() != 0) {
-		xspd_err(0, "couldn't initialize moduler loader");
+	if (xsp_modules_init() != 0) {
+		xsp_err(0, "couldn't initialize moduler loader");
 		goto error_exit;
 	}
-	if (xspd_logger_init(debug_level)) {
-		xspd_err(0, "couldn't initialize the event log");
+	if (xsp_logger_init(debug_level)) {
+		xsp_err(0, "couldn't initialize the event log");
 		goto error_exit;
 	}
-	if (xspd_sessions_init()) {
-		xspd_err(0, "couldn't initialize session system");
+	if (xsp_sessions_init()) {
+		xsp_err(0, "couldn't initialize session system");
 		goto error_exit;
 	}
-	if (xspd_path_handler_init()) {
-		xspd_err(0, "couldn't initialize path handler system");
+	if (xsp_path_handler_init()) {
+		xsp_err(0, "couldn't initialize path handler system");
 		goto error_exit;
 	}
-	if (xspd_load_modules() != 0) {
-		xspd_err(0, "couldn't load modules");
+	if (xsp_load_modules() != 0) {
+		xsp_err(0, "couldn't load modules");
 		goto error_exit;
 	}
-	if (xspd_frontend_default_start() != 0) {
-		xspd_err(0, "couldn't start default frontend");
+	if (xsp_frontend_start() != 0) {
+		xsp_err(0, "couldn't start default frontend");
 		goto error_exit;
 	}
 	pthread_exit(0);
