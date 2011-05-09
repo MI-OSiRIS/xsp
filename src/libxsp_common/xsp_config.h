@@ -3,6 +3,6 @@
 
 #include "xsp_settings.h"
 
-int xsp_config_read(const char *filename);
+int xsp_config_read(const char *filename, const char *cgroup);
 
 #endif

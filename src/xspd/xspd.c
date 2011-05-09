@@ -132,7 +132,7 @@ int main(int argc, char *argv[]) {
 		fprintf(stderr, "couldn't initialize xsp protocol handler\n");
 		goto error_exit;
 	}
-	if (xsp_config_read(conf_file)) {
+	if (xsp_config_read(conf_file, "xspd")) {
 		fprintf(stderr, "reading configuration file failed\n");
 		goto error_exit;
 	}
