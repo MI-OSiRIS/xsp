@@ -8,7 +8,7 @@
 #include "xsp_config.h"
 #include "xsp_common.h"
 
-int xsp_config_read(const char *filename) {
+int xsp_config_read(const char *filename, const char *cgroup) {
 	config_t root;
 	const config_setting_t *group, *def, *connections;
 	int i, n, j;
@@ -21,7 +21,7 @@ int xsp_config_read(const char *filename) {
 		goto error_exit;
 	}
 
-	group = config_setting_remove_child(config_root_setting(&root), "xspd");
+	group = config_setting_remove_child(config_root_setting(&root), cgroup);
 	if (group && config_setting_type(group) == CONFIG_TYPE_GROUP) {
 		settings = xsp_settings_alloc();
 		if (settings) {
