@@ -14,6 +14,7 @@
 #include "libxsp.h"
 #include "xsp-proto.h"
 #include "xsp_settings.h"
+#include "xsp_conn.h"
 
 typedef struct common_session_t {
 	char id[2*XSP_SESSIONID_LEN + 1];
@@ -24,9 +25,9 @@ typedef struct common_session_t {
 
 	xspHop **child;
 	int child_count;
-
+	
 	char *user;
-
+	
 	xspSettings *requested_settings;
 
 	xspHop *next_hop_info;
@@ -38,16 +39,22 @@ typedef struct common_session_t {
         LIST_HEAD(sess_cdc_listhead, xsp_connection_t) child_data_conns;
 
 	struct xsp_credentials_t *credentials;
-
+	
 	struct timeval start_time, end_time;
-
+	
 	int references;
 	pthread_mutex_t references_lock;
+	
+	int (*proto_cb) (int type, void *body);
 
 	LIST_ENTRY(common_session_t) sess_list;
 } comSess;
 
 int xsp_sessions_init();
+
+comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess);
+void xsp_set_proto_cb(comSess *sess, void (*fn) (int, void *));
+int xsp_proto_loop(comSess *sess);
 
 int xsp_setup_session(comSess *sess, char ***error_msgs);
 void xsp_end_session(comSess *sess);
@@ -60,6 +67,7 @@ inline char *xsp_session_get_id(comSess *sess);
 inline char *xsp_session_get_user(comSess *sess);
 inline void xsp_session_set_user(comSess *sess, char *user);
 inline void xsp_session_close_connections(comSess *sess);
+
 void xsp_free_session(comSess *sess);
 comSess *xsp_session_get_ref(comSess *sess);
 comSess *__xsp_session_get_ref(comSess *sess);

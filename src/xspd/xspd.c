@@ -171,7 +171,7 @@ int main(int argc, char *argv[]) {
 		xsp_err(0, "couldn't load modules");
 		goto error_exit;
 	}
-	if (xsp_frontend_start() != 0) {
+	if (xspd_frontend_start() != 0) {
 		xsp_err(0, "couldn't start default frontend");
 		goto error_exit;
 	}
