@@ -22,8 +22,6 @@
 #include "xsp_path_handler.h"
 #include "xsp_config.h"
 
-#define XSP_BUF_SIZE			1048576
-
 int xsp_connect_control_channel(comSess *sess, xspHop *curr_child, xspSettings *settings, xspConn **ret_conn, char **ret_error_msg);
 int xsp_connect_main(comSess *sess, xspHop *curr_child, xspConn **ret_conn, xspConn **ret_data_conn, char **ret_error_msg);
 int xsp_connect_main_protocol(comSess *sess, xspHop *curr_child, xspSettings *policy, const char *protocol, xspConn **ret_conn, char **ret_error_msg);
@@ -547,5 +545,243 @@ int xsp_session_app_data(comSess *sess, const void *msg, char ***error_msgs) {
 	
  error_exit:
 	*error_msgs[0] = error_msg;
+	return -1;
+}
+
+void xsp_set_proto_cb(comSess *sess, void (*fn) (int, void*)) {
+	sess->proto_cb = fn;
+}
+
+comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess) {
+	xspMsg *msg;
+	comSess *sess;
+	xspAuthType *auth_type;
+	int authenticated;
+        int have_session;
+	int sess_close;
+	
+	authenticated = FALSE;
+	have_session = FALSE;
+	sess_close = FALSE;
+	
+	xsp_info(0,"xsp_default_handle_conn");
+	do {
+		msg = xsp_conn_get_msg(conn, 0);
+		if (!msg) {
+			xsp_err(5, "Did not receive properly formed message.");
+			goto error_exit;
+		}
+		
+		switch(msg->type) {
+		
+		case XSP_MSG_SESS_CLOSE:
+			{
+				// so we can close the connection after ping/pong
+				xsp_info(10, "Close session message received.");
+				xsp_free_msg(msg);
+				goto error_exit;
+			}
+			break;
+			
+		case XSP_MSG_PING:
+			{
+				xsp_info(10, "PING/PONG");
+				xsp_free_msg(msg);
+				xsp_conn_send_msg(conn, XSP_MSG_PONG, NULL);
+			}
+			break;
+
+		case XSP_MSG_AUTH_TYPE:
+			{
+				auth_type = msg->msg_body;
+				/*
+				if (xsp_authenticate_connection(conn, auth_type->name, &credentials) != 0) {
+					xsp_err(0, "Authentication failed.");
+					goto error_exit;
+				}
+				*/
+				xsp_free_msg(msg);
+				authenticated = TRUE;
+			}
+			break;
+			
+		case XSP_MSG_SESS_OPEN:
+			{
+				if (!authenticated) {
+					xsp_err(0, "Session open before authentication.");
+					xsp_free_msg(msg);
+					goto error_exit;
+				}
+				
+				sess = xsp_convert_xspSess((xspSess *) msg->msg_body);
+				if (!sess) {
+					free(msg->msg_body);
+					free(msg);
+					xsp_err(0, "xspSess conversion failed");
+					xsp_free_msg(msg);
+					goto error_exit;
+				}
+				have_session = TRUE;
+			}
+			break;
+		       
+		default:
+			{
+				xsp_err(0, "Invalid message received");
+				free(msg);
+				goto error_exit;
+			}
+		}
+
+	} while (!authenticated || !have_session);
+
+	xsp_info(0, "new session: %s", xsp_session_get_id(sess));
+
+	//free(msg->msg_body);
+	//free(msg);
+	
+	LIST_INSERT_HEAD(&sess->parent_conns, conn, sess_entries);
+	
+	/*
+	sess->credentials = credentials;
+	xsp_session_set_user(sess, strdup(credentials->get_user(credentials)));
+       
+	xsp_info(0, "new user: \"%s\"(%s) from \"%s\"",
+		 xsp_session_get_user(sess),
+		 credentials->get_email(credentials),
+		 credentials->get_institution(credentials));
+	*/
+
+	gettimeofday(&sess->start_time, NULL);
+	
+	// send an ACK back once session is opened
+	xsp_conn_send_msg(conn, XSP_MSG_SESS_ACK, NULL);
+
+	*ret_sess = sess;
+	return sess;
+	
+ error_exit:
+        xsp_conn_shutdown(conn, (XSP_SEND_SIDE | XSP_RECV_SIDE));
+	xsp_conn_free(conn);
+	*ret_sess = NULL;
+	return NULL;
+}
+
+int xsp_proto_loop(comSess *sess) {
+	xspMsg *msg;
+	xspConn *conn;
+	char **error_msgs;
+	int sess_close;
+
+	conn = LIST_FIRST(&sess->parent_conns);
+	if (!conn) {
+		xsp_err(0, "no active session conn, aborting");
+		goto error_exit;
+	}
+			 
+	error_msgs = (char**)malloc(sess->child_count * sizeof(char*));
+
+	// now start another protocol loop
+	do {
+		msg = xsp_conn_get_msg(conn, 0);
+                if (!msg) {
+                        xsp_err(5, "Did not receive properly formed message.");
+                        goto error_exit;
+                }
+
+                switch(msg->type) {
+			
+                case XSP_MSG_SESS_CLOSE:
+                        {
+                                xsp_info(10, "Close session message received.");
+				if (sess->proto_cb)
+					sess->proto_cb(msg->type, msg->msg_body);
+                                xsp_free_msg(msg);
+                                sess_close = 1;
+                        }
+                        break;
+		case XSP_MSG_PATH_OPEN:
+			{
+				if (xsp_session_setup_path(sess, msg->msg_body, &error_msgs) < 0)
+					goto error_exit1;
+				if (sess->proto_cb)
+					sess->proto_cb(msg->type, msg->msg_body);
+				xsp_conn_send_msg(conn, XSP_MSG_SESS_ACK, NULL);
+				xsp_free_msg(msg);
+			}
+			break;
+                case XSP_MSG_PING:
+		        {
+			        xsp_info(10, "PING/PONG");
+				if (sess->proto_cb)
+					sess->proto_cb(msg->type, msg->msg_body);
+				xsp_free_msg(msg);
+				xsp_conn_send_msg(conn, XSP_MSG_PONG, NULL);
+			}
+			break;
+		case XSP_MSG_DATA_OPEN:
+			{
+				if (xsp_session_data_open(sess, msg->msg_body, &error_msgs) < 0)
+					goto error_exit1;
+				if (sess->proto_cb)
+					sess->proto_cb(msg->type, msg->msg_body);
+				//xsp_conn_send_msg(conn, XSP_MSG_SESS_ACK, NULL);
+				xsp_free_msg(msg);
+			}
+			break;
+		case XSP_MSG_APP_DATA:
+			{
+				if (xsp_session_app_data(sess, msg->msg_body, &error_msgs) < 0)
+					goto error_exit1;
+				if (sess->proto_cb)
+					sess->proto_cb(msg->type, msg->msg_body);
+				xsp_free_msg(msg);
+			}
+			break;
+		default:
+                        {
+                                xsp_err(0, "Invalid message received");
+                                free(msg);
+                                goto error_exit;
+                        }
+                }
+	} while (!sess_close);
+
+	gettimeofday(&sess->end_time, NULL);
+
+	xsp_info(5, "session finished: %s", xsp_session_get_id(sess));
+
+	xsp_session_finalize(sess);
+
+	xsp_session_put_ref(sess);
+
+	return 0;
+
+error_exit1:
+	{
+		int i;
+		char nack_msg[1024];
+ 
+ 		nack_msg[0] = '\0';
+ 		if (!error_msgs) {
+ 			strlcat(nack_msg, "An internal error occurred", sizeof(nack_msg));
+ 		} else {
+ 			for(i = 0; i < sess->child_count; i++) {
+ 				if (error_msgs[i]) {
+ 					strlcat(nack_msg, "Connect to ", sizeof(nack_msg));
+ 					strlcat(nack_msg, xsp_hop_getid(sess->child[i]), sizeof(nack_msg));
+ 					strlcat(nack_msg, " failed: ", sizeof(nack_msg));
+ 					strlcat(nack_msg, error_msgs[i], sizeof(nack_msg));
+ 					strlcat(nack_msg, "\n", sizeof(nack_msg));
+ 				}
+ 			}
+ 		}
+		
+ 		xsp_info(5, "Sending NACK: %s", nack_msg);
+ 		xsp_conn_send_msg(conn, XSP_MSG_SESS_NACK, nack_msg);
+ 	}
+
+ error_exit:
+	xsp_end_session(sess);
 	return -1;
 }

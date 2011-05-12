@@ -1,5 +1,5 @@
 #ifndef XSP_FRONTEND_H
 
-int xsp_frontend_start();
+int xspd_frontend_start();
 
 #endif
