@@ -19,9 +19,11 @@
 #include "xsp_logger.h"
 #include "xsp_settings.h"
 #include "xsp_default_settings.h"
+#include "xsp_user_settings.h"
 #include "xsp_path.h"
 #include "xsp_path_handler.h"
 #include "xsp_config.h"
+#include "xsp_measurement.h"
 
 int xsp_connect_control_channel(comSess *sess, xspHop *curr_child, xspSettings *settings, xspConn **ret_conn, char **ret_error_msg);
 int xsp_connect_main(comSess *sess, xspHop *curr_child, xspConn **ret_conn, xspConn **ret_data_conn, char **ret_error_msg);
@@ -209,7 +211,7 @@ comSess *xsp_convert_xspSess(xspSess *old_sess) {
 	new_sess->references = 1;
 
 	for(i = 0; i < new_sess->child_count; i++) {
-		new_sess->child[i]->session = (comSess *) new_sess;
+		new_sess->child[i]->session = (xspSess *) new_sess;
 	}
 
 	LIST_INIT(&new_sess->parent_conns);
@@ -364,6 +366,76 @@ int xsp_num_sessions() {
 	return count;
 }
 
+int xsp_session_get_stat(comSess *sess, uint16_t type, void *optval, size_t *optlen) {
+        int retval = -1;
+
+        switch(type) {
+	case XSP_STATS_BYTES_READ:
+		if (*optlen >= sizeof(uint64_t)) {
+			xspConn *conn;
+			uint64_t total_bytes;
+
+			total_bytes = 0;
+
+			LIST_FOREACH(conn, &(sess->parent_conns), sess_entries) {
+				uint64_t bytes_read = 0;
+				size_t bytes_read_size = sizeof(bytes_read);
+
+				if (xsp_conn_get_stat(conn, XSP_STATS_BYTES_READ, &bytes_read, &bytes_read_size) == 0) {
+					total_bytes += bytes_read;
+				}
+			}
+
+			LIST_FOREACH(conn, &(sess->child_conns), sess_entries) {
+				uint64_t bytes_read = 0;
+				size_t bytes_read_size = sizeof(bytes_read);
+
+				if (xsp_conn_get_stat(conn, XSP_STATS_BYTES_READ, &bytes_read, &bytes_read_size) == 0) {
+					total_bytes += bytes_read;
+				}
+			}
+
+			*((uint64_t *)optval) = total_bytes;
+			*optlen = sizeof(total_bytes);
+			retval = 0;
+		}
+		break;
+		
+	case XSP_STATS_BYTES_WRITTEN:
+		if (*optlen >= sizeof(uint64_t)) {
+			xspConn *conn;
+			uint64_t total_bytes;
+
+			total_bytes = 0;
+
+			LIST_FOREACH(conn, &(sess->parent_conns), sess_entries) {
+				uint64_t bytes_written = 0;
+				size_t bytes_written_size = sizeof(bytes_written);
+
+				if (xsp_conn_get_stat(conn, XSP_STATS_BYTES_WRITTEN, &bytes_written, &bytes_written_size) == 0) {
+					total_bytes += bytes_written;
+				}
+			}
+
+			LIST_FOREACH(conn, &(sess->child_conns), sess_entries) {
+				uint64_t bytes_written = 0;
+				size_t bytes_written_size = sizeof(bytes_written);
+				
+				if (xsp_conn_get_stat(conn, XSP_STATS_BYTES_WRITTEN, &bytes_written, &bytes_written_size) == 0) {
+					total_bytes += bytes_written;
+				}
+			}
+
+
+			*((uint64_t *)optval) = total_bytes;
+			*optlen = sizeof(total_bytes);
+			retval = 0;
+		}
+		break;
+        }
+
+        return retval;
+}
 
 void xsp_session_finalize(comSess *sess) {
 	uint64_t bytes_written;
@@ -372,11 +444,51 @@ void xsp_session_finalize(comSess *sess) {
 	bytes_written_size = sizeof(bytes_written);
 }
 
+xspConn *xsp_connect_hop_control(const char *hop_id) {
+        char *hostname, *port_str;
+        int port;
+        xspConn *conn;
+        xspSettings *tcp_settings;
 
+        if (xsp_parse_hopid(hop_id, &hostname, &port_str) != 0) {
+                xsp_err(0, "invalid hop id: %s", hop_id);
+                goto error_exit;
+        }
+
+        tcp_settings = xsp_settings_alloc();
+        if (!tcp_settings) {
+                xsp_err(0, "couldn't allocate tcp protocol settings");
+                goto error_exit_parsed;
+        }
+
+        sscanf(port_str, "%d", &port);
+
+        if (xsp_settings_set_int_2(tcp_settings, "tcp", "port", port) != 0) {
+                xsp_err(0, "couldn't set TCP port");
+                goto error_exit_settings;
+        }
+
+        conn = xsp_protocol_connect_host(hostname, "tcp", tcp_settings);
+        if (!conn) {
+                xsp_err(0, "couldn't connect to %s on port %d with tcp", hostname, port);
+                goto error_exit_settings;
+        }
+
+        return conn;
+
+ error_exit_settings:
+        xsp_settings_free(tcp_settings);
+ error_exit_parsed:
+        free(hostname);
+        free(port_str);
+ error_exit:
+        return NULL;
+}
 
 int xsp_get_settings(comSess *sess, xspHop *curr_child, xspSettings **ret_settings) {
 	xspSettings *default_settings = NULL;
 	xspSettings *route_settings = NULL;
+	xspSettings *user_settings = NULL;
 	xspSettings *new_settings = NULL;
 	xspSettings *settings = NULL;
 
@@ -407,6 +519,32 @@ int xsp_get_settings(comSess *sess, xspHop *curr_child, xspSettings **ret_settin
 
 		settings = new_settings;
 	}
+
+	user_settings = xsp_user_settings(sess->credentials->get_user(sess->credentials), XSP_BOTH);
+        if (user_settings) {
+                new_settings = xsp_settings_merge(settings, user_settings);
+                if (!new_settings) {
+                        xsp_err(5, "couldn't merge default settings with user settings");
+                        goto error_exit_settings;
+                }
+
+		xsp_settings_free(settings);
+
+                settings = new_settings;
+        }
+
+        user_settings = xsp_user_settings(sess->credentials->get_user(sess->credentials), XSP_OUTGOING);
+        if (user_settings) {
+                new_settings = xsp_settings_merge(settings, user_settings);
+                if (!new_settings) {
+                        xsp_err(5, "couldn't merge default settings with user settings");
+                        goto error_exit_settings;
+                }
+
+                xsp_settings_free(settings);
+
+                settings = new_settings;
+        }
 
 	if (sess->requested_settings) {
 		new_settings = xsp_settings_merge(settings, route_settings);
@@ -550,11 +688,43 @@ int xsp_session_app_data(comSess *sess, const void *msg, char ***error_msgs) {
 	return -1;
 }
 
-void xsp_set_proto_cb(comSess *sess, void (*fn) (int, void*)) {
-	sess->proto_cb = fn;
+int xsp_session_send_nack(comSess *sess, char **error_msgs) {
+	int i;
+	char nack_msg[1024];
+	xspConn *conn = NULL;
+
+	conn = LIST_FIRST(&sess->parent_conns);
+        if (!conn) {
+                xsp_err(0, "no active session conn, aborting");
+		return -1;
+        }
+	
+	nack_msg[0] = '\0';
+	if (!error_msgs) {
+		strlcat(nack_msg, "An internal error occurred", sizeof(nack_msg));
+	} else {
+		for(i = 0; i < sess->child_count; i++) {
+			if (error_msgs[i]) {
+				strlcat(nack_msg, "Connect to ", sizeof(nack_msg));
+				strlcat(nack_msg, xsp_hop_getid(sess->child[i]), sizeof(nack_msg));
+				strlcat(nack_msg, " failed: ", sizeof(nack_msg));
+				strlcat(nack_msg, error_msgs[i], sizeof(nack_msg));
+				strlcat(nack_msg, "\n", sizeof(nack_msg));
+			}
+		}
+	}
+	
+	xsp_info(5, "Sending NACK: %s", nack_msg);
+	xsp_conn_send_msg(conn, XSP_MSG_SESS_NACK, nack_msg);
+	return 0;
 }
 
-comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, void (*cb) (comSess *)) {
+int xsp_set_proto_cb(comSess *sess, void *(*fn) (int, void*)) {
+	sess->proto_cb = fn;
+	return 0;
+}
+
+comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, void *(*cb) (comSess *)) {
 	xspMsg *msg;
 	comSess *sess;
 	xspCreds *credentials;
@@ -641,7 +811,7 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, void (*cb) (com
 	
 	sess->credentials = credentials;
 	xsp_session_set_user(sess, strdup(credentials->get_user(credentials)));
-       
+	
 	xsp_info(0, "new user: \"%s\"(%s) from \"%s\"",
 		 xsp_session_get_user(sess),
 		 credentials->get_email(credentials),
@@ -653,6 +823,8 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, void (*cb) (com
 	// but we leave that task for the callback for now
 	if (cb) cb(sess);
 	
+	xsp_conn_set_session_status(conn, STATUS_CONNECTED);
+
 	// send an ACK back once session is opened
 	xsp_conn_send_msg(conn, XSP_MSG_SESS_ACK, NULL);
 
@@ -746,30 +918,9 @@ int xsp_proto_loop(comSess *sess) {
 
 	return 0;
 
-error_exit1:
-	{
-		int i;
-		char nack_msg[1024];
- 
- 		nack_msg[0] = '\0';
- 		if (!error_msgs) {
- 			strlcat(nack_msg, "An internal error occurred", sizeof(nack_msg));
- 		} else {
- 			for(i = 0; i < sess->child_count; i++) {
- 				if (error_msgs[i]) {
- 					strlcat(nack_msg, "Connect to ", sizeof(nack_msg));
- 					strlcat(nack_msg, xsp_hop_getid(sess->child[i]), sizeof(nack_msg));
- 					strlcat(nack_msg, " failed: ", sizeof(nack_msg));
- 					strlcat(nack_msg, error_msgs[i], sizeof(nack_msg));
- 					strlcat(nack_msg, "\n", sizeof(nack_msg));
- 				}
- 			}
- 		}
-		
- 		xsp_info(5, "Sending NACK: %s", nack_msg);
- 		xsp_conn_send_msg(conn, XSP_MSG_SESS_NACK, nack_msg);
- 	}
-
+ error_exit1:
+	xsp_session_send_nack(sess, error_msgs);
+	
  error_exit:
 	xsp_end_session(sess);
 	return -1;

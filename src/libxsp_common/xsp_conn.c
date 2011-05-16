@@ -127,6 +127,10 @@ int xsp_conn_write(xspConn *conn, const void *buf, size_t len, int flags) {
 	return conn->write2(conn, buf, len, flags);
 }
 
+int xsp_conn_set_session_status(xspConn *conn, int status) {
+        return conn->set_session_status2(conn, status);
+}
+
 int xsp_conn_setbufsize(xspConn *conn, uint8_t direction, int size) {
 	return conn->setbufsize2(conn, direction, size);
 }
@@ -159,6 +163,10 @@ xspMsg *xsp_conn_get_msg(xspConn *conn, unsigned int flags) {
 
 int xsp_conn_send_msg(xspConn *conn, uint8_t type, void *msg_body) {
 	return conn->send_msg2(conn, type, msg_body);
+}
+
+int xsp_conn_default_set_session_status(xspConn *conn, int status) {
+	conn->status = status;
 }
 
 xspMsg *xsp_conn_default_get_msg(xspConn *conn, unsigned int flags) {
