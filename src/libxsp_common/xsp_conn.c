@@ -7,11 +7,12 @@
 #include "xsp_conn.h"
 #include "xsp_logger.h"
 #include "xsp_settings.h"
+#include "xsp_measurement.h"
 #include "xsp_session.h"
 
 #include "libxsp.h"
 #include "libxsp_proto.h"
-/*
+
 xspConn_defStats *xsp_conn_stats_alloc_def() {
 	xspConn_defStats *retval;
 
@@ -29,7 +30,7 @@ void xsp_conn_free_stats_def(xspConn *conn) {
 
 	free(stats);
 }
-/*
+
 int xsp_conn_default_get_stat(xspConn *conn, uint16_t type, void *optval, size_t *optlen) {
 	int retval = -1;
 
@@ -56,7 +57,7 @@ int xsp_conn_default_get_stat(xspConn *conn, uint16_t type, void *optval, size_t
 
 	return retval;
 }
-*/
+
 xspConn *xsp_conn_alloc() {
 	xspConn *new_conn;
 
@@ -85,10 +86,10 @@ error_exit:
 void xsp_conn_free(xspConn *conn) {
 	if (conn->conn_private != NULL)
 		conn->free_conn_private2(conn);
-	/*
+	
 	if (conn->stats_private != NULL)
 		conn->free_stats2(conn);
-	*/
+
 	if (conn->settings)
 		xsp_settings_free(conn->settings);
 
@@ -133,11 +134,11 @@ int xsp_conn_setbufsize(xspConn *conn, uint8_t direction, int size) {
 int xsp_conn_settimeout(xspConn *conn, uint8_t direction, int seconds) {
 	return conn->settimeout2(conn, direction, seconds);
 }
-/*
+
 int xsp_conn_get_stat (xspConn *conn, uint16_t type, void *optval, size_t *optlen) {
 	return conn->get_stat2(conn, type, optval, optlen);
 }
-*/
+
 int xsp_conn_shutdown(xspConn *conn, int side) {
 	int n, was_connected;
 
