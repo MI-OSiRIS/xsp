@@ -1,3 +1,4 @@
+#include <limits.h>
 #include <netinet/in.h>
 #include <pthread.h>
 #include <sys/socket.h>
@@ -9,8 +10,8 @@
 
 #include "config.h"
 
+#include "xsp_auth.h"
 #include "xsp_conn.h"
-#include "xsp_session.h"
 #include "xsp_config.h"
 #include "xsp_logger.h"
 #include "xsp_tpool.h"
@@ -18,13 +19,13 @@
 #include "xsp_protocols.h"
 #include "xsp_modules.h"
 
-#ifdef HAVE_NETFILTER
+//#ifdef HAVE_NETFILTER
 #include <linux/netfilter_ipv4.h>
-#else
-#ifdef HAVE_PF
+//#else
+//#ifdef HAVE_PF
 // put the relevant info here...
-#endif
-#endif
+//#endif
+//#endif
 
 #include "compat.h"
 
@@ -48,6 +49,26 @@ xspModule *module_info() {
 	return &xsp_transparent_module;
 }
 
+int xsp_sess_add_hop(xspSess *sess, xspHop *hop) {
+	xspHop **new_list;
+        int new_count;
+
+        new_count = sess->child_count + 1;
+
+        new_list = (xspHop **) realloc(sess->child, sizeof(xspHop *) * new_count);
+        if (!new_list)
+                return -1;
+
+        sess->child = new_list;
+
+        sess->child[sess->child_count] = hop;
+	sess->child_count++;
+
+	hop->session = sess;
+
+        return 0;
+}
+
 int xsp_frontend_transparent_init() {
 	xspSettings *settings;
 	xspListener *listener;
@@ -59,30 +80,30 @@ int xsp_frontend_transparent_init() {
 		goto error_exit;
 	}
 
-	if (xsp_main_settings_get_bool("transparent", "disabled", &val) == 0) {
+	if (xsp_depot_settings_get_bool("transparent", "disabled", &val) == 0) {
 		if (val) {
-			xsp_info(0, "Transparent module disbaled");
+			xsp_info(0, "Transparent module disabled");
 			return 0;
 		}
 	}
 
-	if (xsp_main_settings_get_int("transparent", "port", &val) == 0) {
+	if (xsp_depot_settings_get_int("transparent", "port", &val) == 0) {
 		xsp_settings_set_int_2(settings, "tcp", "port", val);
 	}
-
-	if (xsp_main_settings_get_int("transparent", "send_bufsize", &val) == 0) {
+	
+	if (xsp_depot_settings_get_int("transparent", "send_bufsize", &val) == 0) {
 		xsp_settings_set_int_2(settings, "tcp", "send_bufsize", val);
 	}
 
-	if (xsp_main_settings_get_int("transparent", "recv_bufsize", &val) == 0) {
+	if (xsp_depot_settings_get_int("transparent", "recv_bufsize", &val) == 0) {
 		xsp_settings_set_int_2(settings, "tcp", "recv_bufsize", val);
 	}
 
-	if (xsp_main_settings_get_int("transparent", "send_timeout", &val) == 0) {
+	if (xsp_depot_settings_get_int("transparent", "send_timeout", &val) == 0) {
 		xsp_settings_set_int_2(settings, "tcp", "send_timeout", val);
 	}
 
-	if (xsp_main_settings_get_int("transparent", "recv_timeout", &val) == 0) {
+	if (xsp_depot_settings_get_int("transparent", "recv_timeout", &val) == 0) {
 		xsp_settings_set_int_2(settings, "tcp", "recv_timeout", val);
 	}
 
@@ -118,11 +139,12 @@ static int xsp_frontend_connection_handler(xspListener *listener, xspConn *conn,
 
 void *xsp_handle_transparent_conn(void *arg) {
 	xspConn *new_conn = (xspConn *) arg;
-	comSess *sess;
+	xspSess *sess;
 	xspHop *hop;
 	struct sockaddr_storage sa;
 	SOCKLEN_T sa_size = sizeof(struct sockaddr_storage);
 	xspConn_tcpData *tcp_data;
+	xspCreds *credentials;
 	int child_fd;
 	char **error_msgs = NULL;
 
@@ -135,42 +157,51 @@ void *xsp_handle_transparent_conn(void *arg) {
 	xsp_session_get_ref(sess);
 
 	// generate a random session id
-	gen_rand_hex(sess->id, sizeof(sess->id));
+	gen_rand_hex(sess->id, 2*XSP_SESSIONID_LEN+1);
 
 	hop = xsp_alloc_hop();
 	if (!hop) {
 		xsp_err(5, "xsp_alloc_hop() failed: %s", strerror(errno));
+		free(sess);
 		goto error_exit2;
 	}
-
-	hop->session = (comSess *) sess;
+	
+	hop->session = (xspSess *) sess;
 
 	tcp_data = new_conn->conn_private;
 	child_fd = tcp_data->sd;
 
-#ifdef HAVE_NETFILTER
+	if (xsp_authenticate_connection(new_conn, "ANON", &credentials) != 0) {
+		xsp_err(0, "Authentication failed.");
+		goto error_exit;
+	}
+	
 	// copy the original address in here:
-	if (getsockopt(child_fd, SOL_IP, SO_ORIGINAL_DST, &sa, &sa_size) != 0) {
+	if (getsockopt(child_fd, IPPROTO_IP, SO_ORIGINAL_DST, &sa, &sa_size) != 0) {
 		xsp_err(5, "Couldn't get the original destination"); 
+		perror("getsockopt");
 		goto error_exit3;
 	}
-#else
-	xsp_err(5, "No Netfilter support");
-	goto error_exit3;
-#endif
 
 	if (xsp_sa2hopid_r((struct sockaddr *) &sa, sizeof(sa), hop->hop_id, sizeof(hop->hop_id), 0) == NULL) {
 		xsp_err(5, "Couldn't convert destination to hop id");
 		goto error_exit3;
 	}
-
-	if (xsp_sess_addhop((comSess *) sess, hop) != 0) {
+	
+	if (xsp_sess_add_hop(sess, hop) != 0) {
 		xsp_err(5, "Error adding \"%s\" to session", hop->hop_id);
 		goto error_exit3;
 	}
 
 	LIST_INSERT_HEAD(&sess->parent_conns, new_conn, sess_entries);
-	xsp_session_set_user(sess, NULL);
+
+	sess->credentials = credentials;
+	xsp_session_set_user(sess, strdup(credentials->get_user(credentials)));
+
+        xsp_info(0, "new user: \"%s\"(%s) from \"%s\"",
+		 xsp_session_get_user(sess),
+		 credentials->get_email(credentials),
+		 credentials->get_institution(credentials));
 
 	gettimeofday(&sess->start_time, NULL);
 
@@ -203,10 +234,9 @@ void *xsp_handle_transparent_conn(void *arg) {
 
 error_exit4:
 	// XXX: need to close ALL the sessions
+	xsp_end_session(sess);
 error_exit3:
-	free(hop);
 error_exit2:
-	free(sess);
 error_exit:
 	xsp_conn_shutdown(new_conn, (XSP_SEND_SIDE | XSP_RECV_SIDE));
 	return NULL;

@@ -1,9 +1,9 @@
 lib_LIBRARIES = libxsp_common.a
 lib_LTLIBRARIES = libxsp_common.la
 
-libxsp_common_a_SOURCES = xsp_modules.c xsp_session.c xsp_settings.c xsp_settings.h xsp_default_settings.c xsp_default_settings.h xsp_tpool.c xsp_logger.c xsp_logger.h  xsp_protocols.c xsp_conn.c  hashtable.c hashtable.h  xsp_conn.h  xsp_modules.h xsp_protocols.h xsp_session.h xsp_tpool.h $(top_srcdir)/compat/queue.h $(top_srcdir)/compat/compat.c $(top_srcdir)/compat/compat.h xsp_listener.c xsp_listener.h xsp_listener_handler.c xsp_listener_handler.h xsp_common.c xsp_common.h xsp_main_settings.c xsp_main_settings.h xsp_config.c xsp_config.h xsp_path.c xsp_path.h xsp_path_handler.c xsp_path_handler.h xsp_channel.c xsp_channel.h
+libxsp_common_a_SOURCES = xsp_modules.c xsp_session.c xsp_settings.c xsp_settings.h xsp_default_settings.c xsp_default_settings.h xsp_tpool.c xsp_logger.c xsp_logger.h  xsp_protocols.c xsp_conn.c  hashtable.c hashtable.h  xsp_conn.h  xsp_modules.h xsp_protocols.h xsp_session.h xsp_tpool.h $(top_srcdir)/compat/queue.h $(top_srcdir)/compat/compat.c $(top_srcdir)/compat/compat.h xsp_listener.c xsp_listener.h xsp_listener_handler.c xsp_listener_handler.h xsp_common.c xsp_common.h xsp_main_settings.c xsp_main_settings.h xsp_config.c xsp_config.h xsp_path.c xsp_path.h xsp_path_handler.c xsp_path_handler.h xsp_channel.c xsp_channel.h xsp_measurement.c xsp_measurement.h xsp_user_settings.c xsp_user_settings.h
 
-libxsp_common_la_SOURCES = xsp_modules.c xsp_session.c xsp_settings.c xsp_settings.h xsp_default_settings.c xsp_default_settings.h xsp_tpool.c xsp_logger.c xsp_logger.h  xsp_protocols.c xsp_conn.c  hashtable.c hashtable.h  xsp_conn.h  xsp_modules.h xsp_protocols.h xsp_session.h xsp_tpool.h $(top_srcdir)/compat/queue.h $(top_srcdir)/compat/compat.c $(top_srcdir)/compat/compat.h xsp_listener.c xsp_listener.h xsp_listener_handler.c xsp_listener_handler.h xsp_common.c xsp_common.h xsp_main_settings.c xsp_main_settings.h xsp_config.c xsp_config.h xsp_path.c xsp_path.h xsp_path_handler.c xsp_path_handler.h xsp_channel.c xsp_channel.h
+libxsp_common_la_SOURCES = xsp_modules.c xsp_session.c xsp_settings.c xsp_settings.h xsp_default_settings.c xsp_default_settings.h xsp_tpool.c xsp_logger.c xsp_logger.h  xsp_protocols.c xsp_conn.c  hashtable.c hashtable.h  xsp_conn.h  xsp_modules.h xsp_protocols.h xsp_session.h xsp_tpool.h $(top_srcdir)/compat/queue.h $(top_srcdir)/compat/compat.c $(top_srcdir)/compat/compat.h xsp_listener.c xsp_listener.h xsp_listener_handler.c xsp_listener_handler.h xsp_common.c xsp_common.h xsp_main_settings.c xsp_main_settings.h xsp_config.c xsp_config.h xsp_path.c xsp_path.h xsp_path_handler.c xsp_path_handler.h xsp_channel.c xsp_channel.h xsp_measurement.c xsp_measurement.h xsp_user_settings.c xsp_user_settings.h
 
 libxsp_common_a_LIBADD =
 libxsp_common_la_LIBADD =
@@ -12,7 +12,7 @@ libxsp_common_la_LDFLAGS = -lm @THREAD_LIBS@ @DL_LIBS@ -export-dynamic @SSL_LIBS
 libxsp_common_a_CFLAGS = @CFLAGS@ -DMODULE_DIR=\"$(moduledir)\" -fPIC
 libxsp_common_la_CFLAGS = @CFLAGS@ -DMODULE_DIR=\"$(moduledir)\" -fPIC
 
-INCLUDES = -I@top_srcdir@/include -I@top_srcdir@/src/libxsp -I@top_srcdir@/libradix -I@top_srcdir@/compat -I@top_srcdir@/libconfig 
+INCLUDES = -I@top_srcdir@/include -I@top_srcdir@/src/libxsp -I@top_srcdir@/compat -I@top_srcdir@/libconfig 
 
 if HAVE_LIBXML
 libxsp_common_a_CFLAGS += @LIBXML_CFLAGS@

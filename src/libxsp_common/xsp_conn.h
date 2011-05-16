@@ -40,12 +40,12 @@ typedef struct xsp_connection_t {
 	int (*setbufsize2) (struct xsp_connection_t *conn, uint8_t direction, int size);
 	int (*settimeout2) (struct xsp_connection_t *conn, uint8_t direction, int seconds);
 	void (*free_conn_private2) (struct xsp_connection_t *conn);
-	//void (*free_stats2) (void *arg);
+	void (*free_stats2) (void *arg);
 
 	xspMsg *(*get_msg2) (struct xsp_connection_t *conn, unsigned int flags);
 	int (*send_msg2) (struct xsp_connection_t *conn, uint8_t type, void *msg_body);
 
-	//int (*get_stat2) (struct xsp_connection_t *conn, uint16_t type, void *optval, size_t *optlen);
+	int (*get_stat2) (struct xsp_connection_t *conn, uint16_t type, void *optval, size_t *optlen);
 
 	void *auth_info;
 
@@ -65,12 +65,12 @@ typedef struct xsp_conn_stats_default_t {
 #define XSP_SEND_SIDE	0x01
 #define XSP_RECV_SIDE	0x02
 
-//xspConn_defStats *xsp_conn_stats_alloc_def();
+xspConn_defStats *xsp_conn_stats_alloc_def();
 xspConn *xsp_conn_alloc();
 void xsp_conn_free(xspConn *conn);
 void __xsp_conn_free(xspConn *conn);
-//void xsp_conn_free_stats_def(xspConn *conn);
-//int xsp_conn_default_get_stat(xspConn *conn, uint16_t type, void *optval, size_t *optlen);
+void xsp_conn_free_stats_def(xspConn *conn);
+int xsp_conn_default_get_stat(xspConn *conn, uint16_t type, void *optval, size_t *optlen);
 xspMsg *xsp_conn_default_get_msg(xspConn *conn, unsigned int flags);
 int xsp_conn_default_send_msg(xspConn *conn, uint8_t type, void *msg_body);
 
@@ -83,7 +83,6 @@ int xsp_conn_settimeout(xspConn *conn, uint8_t direction, int seconds);
 int xsp_conn_shutdown(xspConn *conn, int side);
 xspMsg *xsp_conn_get_msg(xspConn *conn, unsigned int flags);
 int xsp_conn_send_msg(xspConn *conn, uint8_t type, void *msg_body);
-//int xsp_conn_get_stat (xspConn *conn, uint16_t type, void *optval, size_t *optlen);
-
+int xsp_conn_get_stat (xspConn *conn, uint16_t type, void *optval, size_t *optlen);
 
 #endif
