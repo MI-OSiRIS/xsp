@@ -78,13 +78,13 @@ void *xspd_default_handle_conn(void *arg) {
 	xspConn *conn = (xspConn *) arg;
 	comSess *sess;
 
-	xsp_wait_for_session(conn, &sess);
+	xsp_wait_for_session(conn, &sess, NULL);
 	
 	if (!sess) {
 		xsp_info(0, "could not get session");
 		goto error_exit;
 	}
-	
+
 	xsp_set_proto_cb(sess, xspd_handle_proto_cb);
 	
 	xsp_proto_loop(sess);
