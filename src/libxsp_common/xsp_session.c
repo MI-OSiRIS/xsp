@@ -13,6 +13,7 @@
 
 #include "xsp_modules.h"
 #include "xsp_session.h"
+#include "xsp_auth.h"
 #include "xsp_conn.h"
 #include "xsp_protocols.h"
 #include "xsp_logger.h"
@@ -25,6 +26,7 @@
 int xsp_connect_control_channel(comSess *sess, xspHop *curr_child, xspSettings *settings, xspConn **ret_conn, char **ret_error_msg);
 int xsp_connect_main(comSess *sess, xspHop *curr_child, xspConn **ret_conn, xspConn **ret_data_conn, char **ret_error_msg);
 int xsp_connect_main_protocol(comSess *sess, xspHop *curr_child, xspSettings *policy, const char *protocol, xspConn **ret_conn, char **ret_error_msg);
+void __xsp_cb_and_free(comSess *sess, xspMsg *msg);
 
 static LIST_HEAD(listhead, common_session_t) sessions_list;
 static pthread_mutex_t sessions_list_lock;
@@ -552,9 +554,10 @@ void xsp_set_proto_cb(comSess *sess, void (*fn) (int, void*)) {
 	sess->proto_cb = fn;
 }
 
-comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess) {
+comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, void (*cb) (comSess *)) {
 	xspMsg *msg;
 	comSess *sess;
+	xspCreds *credentials;
 	xspAuthType *auth_type;
 	int authenticated;
         int have_session;
@@ -593,13 +596,11 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess) {
 
 		case XSP_MSG_AUTH_TYPE:
 			{
-				auth_type = msg->msg_body;
-				/*
+				auth_type = msg->msg_body;				
 				if (xsp_authenticate_connection(conn, auth_type->name, &credentials) != 0) {
 					xsp_err(0, "Authentication failed.");
 					goto error_exit;
 				}
-				*/
 				xsp_free_msg(msg);
 				authenticated = TRUE;
 			}
@@ -615,12 +616,11 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess) {
 				
 				sess = xsp_convert_xspSess((xspSess *) msg->msg_body);
 				if (!sess) {
-					free(msg->msg_body);
-					free(msg);
 					xsp_err(0, "xspSess conversion failed");
 					xsp_free_msg(msg);
 					goto error_exit;
 				}
+				xsp_free_msg(msg);
 				have_session = TRUE;
 			}
 			break;
@@ -637,12 +637,8 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess) {
 
 	xsp_info(0, "new session: %s", xsp_session_get_id(sess));
 
-	//free(msg->msg_body);
-	//free(msg);
-	
 	LIST_INSERT_HEAD(&sess->parent_conns, conn, sess_entries);
 	
-	/*
 	sess->credentials = credentials;
 	xsp_session_set_user(sess, strdup(credentials->get_user(credentials)));
        
@@ -650,9 +646,12 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess) {
 		 xsp_session_get_user(sess),
 		 credentials->get_email(credentials),
 		 credentials->get_institution(credentials));
-	*/
-
+		
 	gettimeofday(&sess->start_time, NULL);
+	
+	// XXX: should probably setup child hops here before we ACK
+	// but we leave that task for the callback for now
+	if (cb) cb(sess);
 	
 	// send an ACK back once session is opened
 	xsp_conn_send_msg(conn, XSP_MSG_SESS_ACK, NULL);
@@ -694,9 +693,7 @@ int xsp_proto_loop(comSess *sess) {
                 case XSP_MSG_SESS_CLOSE:
                         {
                                 xsp_info(10, "Close session message received.");
-				if (sess->proto_cb)
-					sess->proto_cb(msg->type, msg->msg_body);
-                                xsp_free_msg(msg);
+				__xsp_cb_and_free(sess, msg);
                                 sess_close = 1;
                         }
                         break;
@@ -704,18 +701,14 @@ int xsp_proto_loop(comSess *sess) {
 			{
 				if (xsp_session_setup_path(sess, msg->msg_body, &error_msgs) < 0)
 					goto error_exit1;
-				if (sess->proto_cb)
-					sess->proto_cb(msg->type, msg->msg_body);
+				__xsp_cb_and_free(sess, msg);
 				xsp_conn_send_msg(conn, XSP_MSG_SESS_ACK, NULL);
-				xsp_free_msg(msg);
 			}
 			break;
                 case XSP_MSG_PING:
 		        {
 			        xsp_info(10, "PING/PONG");
-				if (sess->proto_cb)
-					sess->proto_cb(msg->type, msg->msg_body);
-				xsp_free_msg(msg);
+				__xsp_cb_and_free(sess, msg);
 				xsp_conn_send_msg(conn, XSP_MSG_PONG, NULL);
 			}
 			break;
@@ -723,19 +716,15 @@ int xsp_proto_loop(comSess *sess) {
 			{
 				if (xsp_session_data_open(sess, msg->msg_body, &error_msgs) < 0)
 					goto error_exit1;
-				if (sess->proto_cb)
-					sess->proto_cb(msg->type, msg->msg_body);
+				__xsp_cb_and_free(sess, msg);
 				//xsp_conn_send_msg(conn, XSP_MSG_SESS_ACK, NULL);
-				xsp_free_msg(msg);
 			}
 			break;
 		case XSP_MSG_APP_DATA:
 			{
 				if (xsp_session_app_data(sess, msg->msg_body, &error_msgs) < 0)
 					goto error_exit1;
-				if (sess->proto_cb)
-					sess->proto_cb(msg->type, msg->msg_body);
-				xsp_free_msg(msg);
+				__xsp_cb_and_free(sess, msg);
 			}
 			break;
 		default:
@@ -784,4 +773,10 @@ error_exit1:
  error_exit:
 	xsp_end_session(sess);
 	return -1;
+}
+
+void __xsp_cb_and_free(comSess *sess, xspMsg *msg) {
+	if (sess->proto_cb)
+		sess->proto_cb(msg->type, msg->msg_body);
+	xsp_free_msg(msg);
 }
