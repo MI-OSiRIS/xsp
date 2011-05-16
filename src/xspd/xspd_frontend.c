@@ -17,7 +17,7 @@
 
 static int xspd_frontend_connection_handler(xspListener *listener, xspConn *conn, void *arg);
 void *xspd_default_handle_conn(void *arg);
-void xspd_handle_proto_cb(int type, void *body);
+void *xspd_handle_proto_cb(int type, void *body);
 
 int xspd_frontend_start() {
 	char **protocols;
@@ -95,7 +95,8 @@ void *xspd_default_handle_conn(void *arg) {
 	
 }
 
-void xspd_handle_proto_cb(int type, void *body) {
+void *xspd_handle_proto_cb(int type, void *body) {
 
 	xsp_info(0, "in proto cb");
+	return NULL;
 }

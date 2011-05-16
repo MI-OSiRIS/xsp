@@ -36,6 +36,7 @@ typedef struct xsp_connection_t {
 	int (*sink_splice2) (struct xsp_connection_t *conn, int fd, size_t len, int flags);
 	int (*read2) (struct xsp_connection_t *src, void *buf, size_t len, int flags);
 	int (*write2) (struct xsp_connection_t *sink, const void *buf, size_t len, int flags);
+	int (*set_session_status2) (struct xsp_connection_t *sink, int status);
 	int (*shutdown2) (struct xsp_connection_t *conn, uint8_t direction);
 	int (*setbufsize2) (struct xsp_connection_t *conn, uint8_t direction, int size);
 	int (*settimeout2) (struct xsp_connection_t *conn, uint8_t direction, int seconds);
@@ -73,6 +74,7 @@ void xsp_conn_free_stats_def(xspConn *conn);
 int xsp_conn_default_get_stat(xspConn *conn, uint16_t type, void *optval, size_t *optlen);
 xspMsg *xsp_conn_default_get_msg(xspConn *conn, unsigned int flags);
 int xsp_conn_default_send_msg(xspConn *conn, uint8_t type, void *msg_body);
+int xsp_conn_default_set_session_status(xspConn *conn, int status);
 
 int xsp_conn_src_splice(xspConn *conn, int fd, size_t len, int flags);
 int xsp_conn_sink_splice(xspConn *conn, int fd, size_t len, int flags);

@@ -59,21 +59,21 @@ xspConn *xsp_conn_tcp_alloc(int sd, int use_web100) {
 #ifdef HAVE_WEB100
 	if (use_web100) {
 		xsp_info(0, "using web100 statistics gathering");
-		//new_conn->stats_private = xsp_alloc_web100_stats(sd);
+		new_conn->stats_private = xsp_alloc_web100_stats(sd);
 	} else {
 		xsp_info(0, "using default statistics gathering");
-		//new_conn->stats_private = xsp_conn_stats_alloc_def();
+		new_conn->stats_private = xsp_conn_stats_alloc_def();
 	}
 #else
 	xsp_info(0, "using default statistics gathering");
-	//new_conn->stats_private = xsp_conn_stats_alloc_def();
+	new_conn->stats_private = xsp_conn_stats_alloc_def();
 #endif
-	/*
+
 	if (!new_conn->stats_private) {
 		xsp_err(0, "couldn't allocate tcp stats structure");
 		goto error_exit3;
 	}
-	*/
+
 	new_conn->protocol = "TCP";
 	new_conn->status = STATUS_CONNECTED;
 
@@ -95,16 +95,17 @@ xspConn *xsp_conn_tcp_alloc(int sd, int use_web100) {
 	new_conn->setbufsize2 = xsp_conn_tcp_setbufsize;
 	new_conn->settimeout2 = xsp_conn_tcp_settimeout;
 	new_conn->free_conn_private2 = xsp_conn_tcp_free_tcp_data;
-	//new_conn->get_stat2 = xsp_conn_default_get_stat;
-	//new_conn->free_stats2 = xsp_conn_free_stats_def;
+	new_conn->get_stat2 = xsp_conn_default_get_stat;
+	new_conn->free_stats2 = xsp_conn_free_stats_def;
 	new_conn->send_msg2 = xsp_conn_default_send_msg;
 	new_conn->get_msg2 = xsp_conn_default_get_msg;
+	new_conn->set_session_status2=xsp_conn_default_set_session_status;
 
 #ifdef HAVE_WEB100
 	if (use_web100) {
 		new_conn->read2 = xsp_conn_tcp_web100_read;
 		new_conn->write2 = xsp_conn_tcp_web100_write;
-		//new_conn->free_stats2 = xsp_web100_free_stats;
+		new_conn->free_stats2 = xsp_web100_free_stats;
 	}
 #endif
 	return new_conn;
@@ -145,11 +146,12 @@ static xsp_conn_tcp_splice(xspConn *src, xspConn *sink, size_t len, int flags) {
 	xspConn_tcpData *tcp_sink = (xspConn_tcpData *) sink->conn_private;
 
 	printf("calling splice: %d, %d, %d", tcp_src->sd, tcp_sink->sd, len);
-	n = ssplice(tcp_src->sd, NULL, tcp_sink->sd, NULL, len, flags);/*
+	n = ssplice(tcp_src->sd, NULL, tcp_sink->sd, NULL, len, flags);
+
 	if (n > 0) {
 		((xspConn_defStats *)src->stats_private)->bytes_read += n;
 		((xspConn_defStats *)sink->stats_private)->bytes_written += n;
-		}*/
+	}
 	return n;
 }
 
@@ -159,10 +161,10 @@ static int xsp_conn_tcp_src_splice(xspConn *src, int fd, size_t len, int flags) 
 	xspConn_tcpData *tcp_src = (xspConn_tcpData *) src->conn_private;
 
 	n = ssplice(tcp_src->sd, NULL, fd, NULL, len, flags);
-	/*
+
 	if (n > 0)
 		((xspConn_defStats *)src->stats_private)->bytes_read += n;
-	*/
+
 	return n;
 }
 
@@ -171,10 +173,10 @@ static int xsp_conn_tcp_sink_splice(xspConn *sink, int fd, size_t len, int flags
 	xspConn_tcpData *tcp_sink = (xspConn_tcpData *) sink->conn_private;
 
 	n = ssplice(fd, NULL, tcp_sink->sd, NULL, len, flags);
-	/*
+
 	if (n > 0)
                 ((xspConn_defStats *)sink->stats_private)->bytes_written += n;
-	*/
+
         return n;
 }
 
@@ -183,10 +185,10 @@ static int xsp_conn_tcp_write(xspConn *sink, const void *buf, size_t len, int fl
 	xspConn_tcpData *tcp_data = (xspConn_tcpData *) sink->conn_private;
 
         n = send(tcp_data->sd, buf, len, flags);
-	/*
+
 	if (n > 0)
 		((xspConn_defStats *)sink->stats_private)->bytes_written += n;
-	*/
+
 	return n;
 }
 
@@ -195,10 +197,10 @@ static int xsp_conn_tcp_read(xspConn *src, void *buf, size_t len, int flags) {
 	xspConn_tcpData *tcp_data = (xspConn_tcpData *) src->conn_private;
 
 	n = recv(tcp_data->sd, buf, len, flags);
-	/*
+
 	if (n > 0)
 		((xspConn_defStats *) src->stats_private)->bytes_read += n;
-	*/
+
 	return n;
 }
 
