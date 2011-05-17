@@ -18,14 +18,15 @@
 #include "xsp_conn_tcp.h"
 #include "xsp_protocols.h"
 #include "xsp_modules.h"
+#include "xsp_main_settings.h"
 
-//#ifdef HAVE_NETFILTER
+#ifdef HAVE_NETFILTER
 #include <linux/netfilter_ipv4.h>
-//#else
-//#ifdef HAVE_PF
-// put the relevant info here...
-//#endif
-//#endif
+#else
+#ifdef HAVE_PF
+// put the relevant info here
+#endif
+#endif
 
 #include "compat.h"
 
@@ -49,7 +50,7 @@ xspModule *module_info() {
 	return &xsp_transparent_module;
 }
 
-int xsp_sess_add_hop(xspSess *sess, xspHop *hop) {
+int xsp_sess_add_hop(comSess *sess, xspHop *hop) {
 	xspHop **new_list;
         int new_count;
 
@@ -64,7 +65,7 @@ int xsp_sess_add_hop(xspSess *sess, xspHop *hop) {
         sess->child[sess->child_count] = hop;
 	sess->child_count++;
 
-	hop->session = sess;
+	hop->session = (xspSess*)sess;
 
         return 0;
 }
@@ -80,30 +81,30 @@ int xsp_frontend_transparent_init() {
 		goto error_exit;
 	}
 
-	if (xsp_depot_settings_get_bool("transparent", "disabled", &val) == 0) {
+	if (xsp_main_settings_get_bool("transparent", "disabled", &val) == 0) {
 		if (val) {
 			xsp_info(0, "Transparent module disabled");
 			return 0;
 		}
 	}
 
-	if (xsp_depot_settings_get_int("transparent", "port", &val) == 0) {
+	if (xsp_main_settings_get_int("transparent", "port", &val) == 0) {
 		xsp_settings_set_int_2(settings, "tcp", "port", val);
 	}
 	
-	if (xsp_depot_settings_get_int("transparent", "send_bufsize", &val) == 0) {
+	if (xsp_main_settings_get_int("transparent", "send_bufsize", &val) == 0) {
 		xsp_settings_set_int_2(settings, "tcp", "send_bufsize", val);
 	}
 
-	if (xsp_depot_settings_get_int("transparent", "recv_bufsize", &val) == 0) {
+	if (xsp_main_settings_get_int("transparent", "recv_bufsize", &val) == 0) {
 		xsp_settings_set_int_2(settings, "tcp", "recv_bufsize", val);
 	}
 
-	if (xsp_depot_settings_get_int("transparent", "send_timeout", &val) == 0) {
+	if (xsp_main_settings_get_int("transparent", "send_timeout", &val) == 0) {
 		xsp_settings_set_int_2(settings, "tcp", "send_timeout", val);
 	}
 
-	if (xsp_depot_settings_get_int("transparent", "recv_timeout", &val) == 0) {
+	if (xsp_main_settings_get_int("transparent", "recv_timeout", &val) == 0) {
 		xsp_settings_set_int_2(settings, "tcp", "recv_timeout", val);
 	}
 
@@ -139,7 +140,7 @@ static int xsp_frontend_connection_handler(xspListener *listener, xspConn *conn,
 
 void *xsp_handle_transparent_conn(void *arg) {
 	xspConn *new_conn = (xspConn *) arg;
-	xspSess *sess;
+	comSess *sess;
 	xspHop *hop;
 	struct sockaddr_storage sa;
 	SOCKLEN_T sa_size = sizeof(struct sockaddr_storage);
@@ -148,7 +149,7 @@ void *xsp_handle_transparent_conn(void *arg) {
 	int child_fd;
 	char **error_msgs = NULL;
 
-	sess = xsp_alloc_sess();
+	sess = xsp_alloc_com_sess();
 	if (!sess) {
 		xsp_err(5, "xsp_alloc_sess() failed: %s", strerror(errno));
 		goto error_exit;

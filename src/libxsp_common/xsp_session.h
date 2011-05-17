@@ -52,7 +52,7 @@ typedef struct common_session_t {
 
 int xsp_sessions_init();
 
-comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, void *(*fn) (comSess *));
+comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, int (*fn) (comSess *));
 int xsp_set_proto_cb(comSess *sess, void *(*fn) (int, void *));
 int xsp_proto_loop(comSess *sess);
 

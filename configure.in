@@ -178,7 +178,7 @@ AH_TEMPLATE(HAVE_SYS_PRCTL_H, Whether or not prctl is available)
 AC_ARG_ENABLE(netfilter, [  --enable-netfilter      use netfilter for transparency [default=yes]], enable_netfilter=$enableval, enable_netfilter=try)
 
 if test "$enable_netfilter" = "yes" -o "$enable_netfilter" = "try"; then
-	AC_CHECK_HEADER(linux/netfilter.h, netfilter_header=yes)
+	AC_CHECK_HEADER(linux/netfilter.h, netfilter_header=yes, [], [ #include <netinet/in.h> ])
 	if test "$netfilter_header" == "yes"; then
 		AC_DEFINE(HAVE_NETFILTER)
 	elif test "$enable_netfilter" = "yes"; then
@@ -372,7 +372,7 @@ dnl End check for Globus
 CONFIG_FILE=$sysconfdir/xspd.conf
 AC_SUBST(CONFIG_FILE)
 
-moduledir=$libdir/xspd
+moduledir=$libdir/modules
 AC_SUBST(moduledir)
 
 AC_SUBST(THREAD_LIBS)

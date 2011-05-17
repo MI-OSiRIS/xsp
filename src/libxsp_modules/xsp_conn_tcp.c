@@ -18,6 +18,7 @@
 #include "xsp_tpool.h"
 #include "xsp_modules.h"
 
+#include "splice.h"
 #include "compat.h"
 
 xspConn *xsp_conn_tcp_alloc(int sd, int use_web100);

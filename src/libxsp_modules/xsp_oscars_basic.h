@@ -3,6 +3,8 @@
 
 #include <pthread.h>
 
+#include "xsp_soap_context.h"
+
 #define OSCARS_DOWN		    0x00
 #define OSCARS_UP		    0x01
 #define OSCARS_STARTING		0x02
