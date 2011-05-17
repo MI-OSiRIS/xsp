@@ -1,6 +1,6 @@
-# this needs to be set as $(libdir)/xspd instead of $(moduledir) so that the RPM
+# this needs to be set as $(libdir)/xsp instead of $(moduledir) so that the RPM
 # will install to the correct location.
-modulesdir = $(libdir)/xspd
+modulesdir = $(libdir)/modules
 modules_LTLIBRARIES =
 
 INCLUDES = -I@top_srcdir@/include -I@top_srcdir@/src/libxsp -I@top_srcdir@/libradix -I@top_srcdir@/compat -I@top_srcdir@/libconfig -I@top_srcdir@/src/libxsp_common
@@ -8,7 +8,7 @@ AM_CFLAGS = @CFLAGS@ -DWITH_OPENSSL -DMODULE_DIR=\"$(moduledir)\" -DCONFIG_FILE=
 
 if HAVE_NETFILTER
 modules_LTLIBRARIES += transparent.la
-transparent_la_SOURCES = xspd_frontend_transparent.c
+transparent_la_SOURCES = xsp_frontend_transparent.c
 transparent_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
 endif
 

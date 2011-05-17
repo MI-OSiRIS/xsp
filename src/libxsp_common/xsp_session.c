@@ -724,7 +724,7 @@ int xsp_set_proto_cb(comSess *sess, void *(*fn) (int, void*)) {
 	return 0;
 }
 
-comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, void *(*cb) (comSess *)) {
+comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, int (*cb) (comSess *)) {
 	xspMsg *msg;
 	comSess *sess;
 	xspCreds *credentials;
@@ -790,7 +790,6 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, void *(*cb) (co
 					xsp_free_msg(msg);
 					goto error_exit;
 				}
-				xsp_free_msg(msg);
 				have_session = TRUE;
 			}
 			break;
@@ -807,6 +806,9 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, void *(*cb) (co
 
 	xsp_info(0, "new session: %s", xsp_session_get_id(sess));
 
+	free(msg->msg_body);
+	free(msg);
+
 	LIST_INSERT_HEAD(&sess->parent_conns, conn, sess_entries);
 	
 	sess->credentials = credentials;
@@ -821,11 +823,15 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, void *(*cb) (co
 	
 	// XXX: should probably setup child hops here before we ACK
 	// but we leave that task for the callback for now
-	if (cb) cb(sess);
-	
+	if (cb) {
+		if (cb(sess) != 0) {
+			goto error_exit;
+		}
+	}
+
 	xsp_conn_set_session_status(conn, STATUS_CONNECTED);
 
-	// send an ACK back once session is opened
+	// send an ACK back once session is ready
 	xsp_conn_send_msg(conn, XSP_MSG_SESS_ACK, NULL);
 
 	*ret_sess = sess;
@@ -913,7 +919,6 @@ int xsp_proto_loop(comSess *sess) {
 	xsp_info(5, "session finished: %s", xsp_session_get_id(sess));
 
 	xsp_session_finalize(sess);
-
 	xsp_session_put_ref(sess);
 
 	return 0;

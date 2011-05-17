@@ -74,7 +74,7 @@ error_exit:
 	return -1;
 }
 
-int xsp_request_authentication(xspSess *sess, xspConn *new_conn, const char *auth_name) {
+int xsp_request_authentication(comSess *sess, xspConn *new_conn, const char *auth_name) {
 	int num;
 	xspAuthType auth_type;
 

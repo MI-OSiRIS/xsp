@@ -97,6 +97,7 @@ error_exit:
 static xspConn *xsp_proto_tcp_connect(const char *hostname, xspSettings *settings) {
 	struct addrinfo hints;
 	struct addrinfo *hop_addrs, *nexthop;
+	char *addr;
 	char port_str[10];
 	int port;
 	int retval;
@@ -226,7 +227,7 @@ static xspConn *xsp_proto_tcp_connect(const char *hostname, xspSettings *setting
 			close(new_sd);
 			continue;
 		}
-
+		addr = strdup(inet_ntoa(((struct sockaddr_in*)nexthop->ai_addr)->sin_addr));
 		connected = 1;
 	}
 
@@ -245,6 +246,7 @@ static xspConn *xsp_proto_tcp_connect(const char *hostname, xspSettings *setting
 
 	xsp_info(1, "connected to %s", hostname);
 
+	ret_conn->addr = addr;
 	return ret_conn;
 
 error_exit_sd:

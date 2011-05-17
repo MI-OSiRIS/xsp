@@ -21,15 +21,16 @@ typedef struct xsp_connection_t {
 	struct common_session_t *session;
 	char *id;
 	char *hostname;
+	char *addr;
 	char *description;
 	char *protocol;
+	int gw_peer;
 	
 	struct xsp_path_t *path;
 	struct xsp_channel_t *channel;
 	
 	xspSettings *settings;
 	struct timeval start_time, end_time;
-
 	
 	int (*splice2) (struct xsp_connection_t *src, struct xsp_connection_t *sink, size_t len, int flags);
 	int (*src_splice2) (struct xsp_connection_t *conn, int fd, size_t len, int flags);
@@ -41,7 +42,7 @@ typedef struct xsp_connection_t {
 	int (*setbufsize2) (struct xsp_connection_t *conn, uint8_t direction, int size);
 	int (*settimeout2) (struct xsp_connection_t *conn, uint8_t direction, int seconds);
 	void (*free_conn_private2) (struct xsp_connection_t *conn);
-	void (*free_stats2) (void *arg);
+	void (*free_stats2) (struct xsp_connection_t *conn);
 
 	xspMsg *(*get_msg2) (struct xsp_connection_t *conn, unsigned int flags);
 	int (*send_msg2) (struct xsp_connection_t *conn, uint8_t type, void *msg_body);
