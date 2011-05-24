@@ -76,7 +76,7 @@ typedef struct xsp_v1_option_hdr_t {
 
 	uint16_t          type;
 	uint16_t          sport;
-} xspv1OptHdr;
+} xspv1BlockHdr;
 	
 	
 /* the XSP socket layer */

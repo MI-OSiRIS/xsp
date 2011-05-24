@@ -574,9 +574,9 @@ int xsp_session_setup_path(comSess *sess, const void *msg, char ***error_msgs) {
 	xspSettings *settings = NULL;
 	xspConn *parent_conn;
 	
-	xspBlockHeader *block = (xspBlockHeader *)msg;
+	xspBlock *block = (xspBlock *)msg;
 	char *path_type = malloc(block->length*sizeof(char));
-	strncpy(path_type, block->blob, block->length);
+	strncpy(path_type, block->data, block->length);
 
 	parent_conn = LIST_FIRST(&sess->parent_conns);
 
@@ -635,14 +635,14 @@ int xsp_session_app_data(comSess *sess, const void *msg, char ***error_msgs) {
         xspConn *parent_conn;
 	xspModule *module;
 
-        xspBlockHeader *block;
-	xspBlockHeader *ret_block;
+        xspBlock *block;
+	xspBlock *ret_block;
 
 	char *mstring = NULL;
 
 	parent_conn = LIST_FIRST(&sess->parent_conns);
 
-	block = (xspBlockHeader *)msg;
+	block = (xspBlock *)msg;
 	
 	// each module should register some range of option blocks
 	// then the module option handler (callback) should get invoked based on the type

@@ -57,7 +57,7 @@ int dapl_xsp_post_os_get(xspSess *sess, char *ptr, uint32_t size, int tag, uint3
 
 
 int xspd_proto_photon_init();
-int xspd_proto_photon_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockHeader **ret_block);
+int xspd_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block);
 
 static PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg);
 static xspConn *xspd_proto_photon_connect(const char *hop_id, xspSettings *settings);
@@ -107,7 +107,7 @@ int xspd_proto_photon_init() {
 	return -1;
 }
 
-int xsp_proto_photon_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockHeader **ret_block) {
+int xsp_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block) {
 
 	xsp_info(0, "handling photon message of type: %d", block->type);
 
@@ -121,7 +121,7 @@ int xsp_proto_photon_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockH
 			
 			parent_conn = LIST_FIRST(&sess->parent_conns);
 
-			ci = (PhotonConnectInfo*) block->blob;
+			ci = (PhotonConnectInfo*) block->data;
 			
 			pthread_mutex_lock(&ci_lock);
 			{
@@ -138,8 +138,8 @@ int xsp_proto_photon_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockH
 				}
 				
 				
-				*ret_block = (xspBlockHeader*)malloc(sizeof(xspBlockHeader));
-				(*ret_block)->blob = ret_ci;
+				*ret_block = xsp_alloc_block();
+				(*ret_block)->data = ret_ci;
 				(*ret_block)->length = sizeof(PhotonConnectInfo);
 				(*ret_block)->type = block->type;
 				(*ret_block)->sport = 0;
@@ -164,7 +164,7 @@ int xsp_proto_photon_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockH
 			PhotonRIInfo *ri;
                         PhotonRIInfo *ret_ri = malloc(sizeof(PhotonRIInfo));
 			
-			ri = (PhotonRIInfo*) block->blob;
+			ri = (PhotonRIInfo*) block->data;
 			
 			pthread_mutex_lock(&rfi_lock);
 			{
@@ -175,8 +175,8 @@ int xsp_proto_photon_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockH
 			}
 			pthread_mutex_unlock(&rfi_lock);
 			
-			*ret_block = (xspBlockHeader*)malloc(sizeof(xspBlockHeader));
-                        (*ret_block)->blob = ret_ri;
+			*ret_block = xsp_alloc_block();
+                        (*ret_block)->data = ret_ri;
                         (*ret_block)->length = sizeof(PhotonRIInfo);
                         (*ret_block)->type = block->type;
                         (*ret_block)->sport = 0;
@@ -187,7 +187,7 @@ int xsp_proto_photon_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockH
 			PhotonFINInfo *fi;
                         PhotonFINInfo *ret_fi = malloc(sizeof(PhotonFINInfo));
 			
-                        fi = (PhotonFINInfo*) block->blob;
+                        fi = (PhotonFINInfo*) block->data;
 
 			pthread_mutex_lock(&rfi_lock);
 			{
@@ -198,8 +198,8 @@ int xsp_proto_photon_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockH
 			}
 			pthread_mutex_unlock(&rfi_lock);
 
-                        *ret_block = (xspBlockHeader*)malloc(sizeof(xspBlockHeader));
-                        (*ret_block)->blob = ret_fi;
+                        *ret_block = xsp_alloc_block();
+                        (*ret_block)->data = ret_fi;
                         (*ret_block)->length = sizeof(PhotonFINInfo);
                         (*ret_block)->type = block->type;
                         (*ret_block)->sport = 0;
@@ -207,7 +207,7 @@ int xsp_proto_photon_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockH
 		break;
 	case PHOTON_IO:
 		{
-		    PhotonIOInfo *io = xspd_proto_photon_parse_io_msg(block->blob);
+		    PhotonIOInfo *io = xspd_proto_photon_parse_io_msg(block->data);
 		    if(io == NULL)
 		        goto error_exit;
 		    
@@ -261,7 +261,7 @@ PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg) {
     PhotonIOInfo *io = malloc(sizeof(PhotonIOInfo));
     void *msg_ptr = msg;
 
-    /* TODO: Assumes block->blob will be freed by xspd. True? */
+    /* TODO: Assumes block->data will be freed by xspd. True? */
     fileURI_size = *((int *)msg);
     io->fileURI = strdup((char*)(msg+sizeof(int)));
     if (fileURI_size != strlen(io->fileURI) + 1) {

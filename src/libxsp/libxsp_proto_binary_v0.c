@@ -105,10 +105,10 @@ static int xsp_parse_sess_open_msg(const char *buf, int length, void **msg_body)
 		goto parse_error;
 
 	bin2hex(hdr->sess_id, ret_sess->sess_id, XSP_SESSIONID_LEN);
-	bcopy(hdr->src_id, ret_sess->src_id, XSP_HOPID_LEN);
-	ret_sess->src_id[XSP_HOPID_LEN] = '\0';
+	bcopy(hdr->src_id, ret_sess->src_eid.x_addrc, XSP_HOPID_LEN);
+	ret_sess->src_eid.x_addrc[XSP_HOPID_LEN] = '\0';
 
-	d_printf("src: %s\n", ret_sess->src_id);
+	d_printf("src: %s\n", ret_sess->src_eid.x_addrc);
 
 	ret_sess->sess_flags = ntohl(hdr->sess_flags);
 
@@ -301,39 +301,39 @@ static int xsp_parse_nack_msg(const char *buf, int remainder, void **msg_body) {
 }
 
 static int xsp_parse_block_header_msg(const char *buf, int remainder, void **msg_body) {
-	xspBlockHeader_HDR *hdr;
-	xspBlockHeader *new_header;
+	xspBlock_HDR *hdr;
+	xspBlock *new_header;
 
-	if (remainder < sizeof(xspBlockHeader_HDR))
+	if (remainder < sizeof(xspBlock_HDR))
 		return -1;
 
 	// allocate a new block structure
-	new_header = malloc(sizeof(xspBlockHeader));
+	new_header = malloc(sizeof(xspBlock));
 	if (!new_header)
 		return -1;
 
-	hdr = (xspBlockHeader_HDR *) buf;
+	hdr = (xspBlock_HDR *) buf;
 
 	new_header->type = ntohs(hdr->type);
 	new_header->sport = ntohs(hdr->sport);
 	new_header->length = ntohl(hdr->length);
 
-	remainder -= sizeof(xspBlockHeader_HDR);
+	remainder -= sizeof(xspBlock_HDR);
 
-        // validate the blob size
+        // validate the data size
         if (new_header->length > 1<<24 || new_header->length > remainder) {
                 free(new_header);
                 return -1;
         }
-        // allocate space for the blob
-        new_header->blob = malloc(sizeof(char) * new_header->length);
-        if (!new_header->blob) {
+        // allocate space for the data
+        new_header->data = malloc(sizeof(char) * new_header->length);
+        if (!new_header->data) {
                 free(new_header);
                 return -1;
         }
 
-        // copy the blob from the message
-        bcopy(buf + sizeof(xspBlockHeader_HDR), new_header->blob, new_header->length);
+        // copy the data from the message
+        bcopy(buf + sizeof(xspBlock_HDR), new_header->data, new_header->length);
 
 	*msg_body = new_header;
 
@@ -401,7 +401,7 @@ static int xsp_writeout_sess_open_msg(void *arg, char *buf, int remainder) {
 	sess_hdr = (xspSess_HDR *) buf;
 
 	hex2bin(hop->session->sess_id, sess_hdr->sess_id, 2*XSP_SESSIONID_LEN);
-	bcopy(hop->session->src_id, sess_hdr->src_id, XSP_HOPID_LEN);
+	bcopy(hop->session->src_eid.x_addrc, sess_hdr->src_id, XSP_HOPID_LEN);
 
 	sess_hdr->sess_flags = htonl(hop->session->sess_flags);
 	sess_hdr->hop_flags = htonl(hop->flags);
@@ -511,29 +511,29 @@ static int xsp_writeout_auth_type_msg(void *arg, char *buf, int remainder) {
 }
 
 static int xsp_writeout_block_header_msg(void *arg, char *buf, int remainder) {
-	xspBlockHeader *block = arg;
-	xspBlockHeader_HDR *hdr;
+	xspBlock *block = arg;
+	xspBlock_HDR *hdr;
 
 	// if there isn't enough room to write the structure, don't do it
-	if (remainder < sizeof(xspBlockHeader_HDR)) {
+	if (remainder < sizeof(xspBlock_HDR)) {
 		return -1;
 	}
 
-	hdr = (xspBlockHeader_HDR *) buf;
+	hdr = (xspBlock_HDR *) buf;
 
 	// writeout the block header structure in network byte order
 	hdr->type = htons(block->type);
 	hdr->sport = htons(block->sport);
 	hdr->length = htonl(block->length);
 
-	remainder -= sizeof(xspBlockHeader_HDR);
+	remainder -= sizeof(xspBlock_HDR);
 
 	if (remainder < block->length)
 		return -1;
 
-	bcopy(block->blob, buf + sizeof(xspBlockHeader_HDR), block->length);
+	bcopy(block->data, buf + sizeof(xspBlock_HDR), block->length);
 
-	return sizeof(xspBlockHeader_HDR) + block->length;
+	return sizeof(xspBlock_HDR) + block->length;
 }
 
 static int xsp_writeout_nack_msg(void *arg, char *buf, int remainder) {

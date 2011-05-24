@@ -15,6 +15,7 @@
 #include "xsp-proto.h"
 #include "libxsp_session.h"
 #include "libxsp_hop.h"
+#include "libxsp_block.h"
 #include "libxsp_path.h"
 
 /* XSP Defines */
@@ -48,9 +49,14 @@
 /* XSP Objects */
 
 typedef struct xsp_message_t {
-	uint8_t type;
-	uint8_t version;
-	char sess_id[XSP_SESSIONID_LEN * 2 + 1];
+        uint8_t version;
+        uint8_t flags;
+        uint16_t type;
+
+        struct xsp_addr src_eid;
+        struct xsp_addr dst_eid;
+
+	char sess_id[2*XSP_SESSIONID_LEN + 1];
 	void *msg_body;
 } xspMsg;
 
@@ -63,13 +69,6 @@ typedef struct xsp_auth_token_t {
 	void *token;
 } xspAuthToken;
 
-typedef struct xsp_block_header_t {
-	uint16_t type;
-	uint16_t sport;
-	uint32_t length;
-	void *blob;
-} xspBlockHeader;
-
 typedef struct xsp_data_open_header_t {
 	uint16_t flags;
 	char hop_id[XSP_HOPID_LEN];
@@ -77,7 +76,7 @@ typedef struct xsp_data_open_header_t {
 } xspDataOpenHeader;
 
 typedef struct slab_record_t {
-        char sess_id[XSP_SESSIONID_LEN * 2 + 1];
+        char sess_id[2*XSP_SESSIONID_LEN + 1];
         uint32_t offset;
         uint32_t length;
         uint32_t crc;
