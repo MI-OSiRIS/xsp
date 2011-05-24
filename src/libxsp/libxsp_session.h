@@ -5,13 +5,12 @@
 #include "xsp-proto.h"
 
 typedef struct xsp_sess_info_t {
-	char sess_id[XSP_SESSIONID_LEN * 2 + 1];
+	struct xsp_addr src_eid;
+	struct xsp_addr dst_eid;
 
-	char src_id[XSP_HOPID_LEN + 1];
-	char dst_id[XSP_HOPID_LEN + 1];
+	char sess_id[2*XSP_SESSIONID_LEN + 1];
 
 	uint32_t sess_flags;
-
 	uint32_t hop_flags;
 
 	xspHop **child;

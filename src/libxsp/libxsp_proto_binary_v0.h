@@ -57,11 +57,11 @@ typedef struct xsp_msg_auth_info_hdr_t {
 	char name[XSP_AUTH_NAME_LEN];
 } xspAuthType_HDR;
 
-typedef struct xsp_block_header_hdr_t {
+typedef struct xsp_block_hdr_t {
 	uint16_t type;
 	uint16_t sport;
 	uint32_t length;
-} xspBlockHeader_HDR;
+} xspBlock_HDR;
 
 typedef struct xsp_msg_sess_nack_hdr_t {
 	uint32_t length;

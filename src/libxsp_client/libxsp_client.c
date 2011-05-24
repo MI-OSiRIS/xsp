@@ -696,13 +696,13 @@ int xsp_data_connect(libxspSess *sess) {
 }
 
 int xsp_send_msg(libxspSess *sess, const void *buf, size_t len, int opt_type) {
-	xspBlockHeader block;
+	xspBlock block;
 	int ret;
 
-	block.type = (uint16_t)opt_type;
+	block.type = opt_type;
 	block.sport = 0;
 	block.length = len;
-	block.blob = buf;
+	block.data = buf;
 
 	if ((ret = xsp_put_msg(sess, 0, XSP_MSG_APP_DATA, sess->sess_id, &block)) < 0) {
 		d_printf("xsp_send_msg(): error: failed to send message\n");
@@ -717,7 +717,7 @@ int xsp_send_msg(libxspSess *sess, const void *buf, size_t len, int opt_type) {
 
 int xsp_recv_msg(libxspSess *sess, void **ret_buf, int *len, int *ret_type) {
 	xspMsg *msg;
-	xspBlockHeader *block;
+	xspBlock *block;
 
 	msg = xsp_get_msg(sess, 0);
 	
@@ -730,7 +730,7 @@ int xsp_recv_msg(libxspSess *sess, void **ret_buf, int *len, int *ret_type) {
 		goto error_exit;
 	}
 	
-	block = (xspBlockHeader *) msg->msg_body;
+	block = (xspBlock *) msg->msg_body;
 
 	if (block->length <=0 ) {
 	    d_printf("xsp_recv_msg(): error: no block data!\n");
@@ -743,7 +743,7 @@ int xsp_recv_msg(libxspSess *sess, void **ret_buf, int *len, int *ret_type) {
 	    goto error_exit;
 	}
 	    
-	memcpy(*ret_buf, block->blob, block->length);
+	memcpy(*ret_buf, block->data, block->length);
 	
 	*ret_type = block->type;
 	*len = block->length;
@@ -757,7 +757,7 @@ int xsp_recv_msg(libxspSess *sess, void **ret_buf, int *len, int *ret_type) {
 
 int xsp_signal_path(libxspSess *sess, char *path_type) {
 	xspMsg *msg;
-	xspBlockHeader block;
+	xspBlock block;
 	char *path;
 
 	if (!strcmp(path_type, "TERAPATHS") ||
@@ -767,7 +767,7 @@ int xsp_signal_path(libxspSess *sess, char *path_type) {
 		block.type = 0;
 		block.sport = 0;
 		block.length = strlen(path) + 1;
-		block.blob = path;
+		block.data = path;
 
 		if (xsp_put_msg(sess, 0, XSP_MSG_PATH_OPEN, sess->sess_id, &block) < 0) {
 			d_printf("xsp_signal_path(): error: failed to send session path message\n");

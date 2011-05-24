@@ -148,8 +148,8 @@ void xsp_free_msg(xspMsg *msg) {
 				break;
 
 		        case XSP_MSG_APP_DATA:
-				if (((xspBlockHeader *) msg->msg_body)->blob)
-					free(((xspBlockHeader *) msg->msg_body)->blob);
+				if (((xspBlock *) msg->msg_body)->data)
+					free(((xspBlock *) msg->msg_body)->data);
 				free(msg->msg_body);
 				break;
 

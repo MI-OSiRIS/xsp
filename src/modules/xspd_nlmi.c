@@ -26,7 +26,7 @@
 #include "bson.h"
 
 int xspd_nlmi_init();
-int xspd_nlmi_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockHeader **ret_block);
+int xspd_nlmi_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block);
 
 static xspModule xspd_nlmi_module = {
 	.desc = "NLMI Module",
@@ -49,7 +49,7 @@ int xspd_nlmi_init() {
 	return -1;
 }
 
-int xspd_nlmi_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockHeader **ret_block) {
+int xspd_nlmi_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block) {
 
 	xsp_info(0, "handling nlmi message of type: %d", block->type);
 	// block->blob has the data of length block->length
@@ -62,7 +62,7 @@ int xspd_nlmi_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockHeader *
 			char *data;
 			
 			data = (char *)malloc(block->length);
-			memcpy(data, block->blob, block->length);
+			memcpy(data, block->data, block->length);
 
 			bpp = (bson *)malloc(sizeof(bson));
 			bson_init(bpp, data, 1);

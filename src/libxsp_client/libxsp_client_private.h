@@ -11,17 +11,20 @@
 
 /* Objects */
 typedef struct libxsp_sess_info_t {
-	char sess_id[XSP_SESSIONID_LEN * 2 + 1];
+        uint8_t version;
+        uint8_t flags;
+        uint16_t type;
 
-	char src_id[XSP_HOPID_LEN + 1];
-	char dst_id[XSP_HOPID_LEN + 1];
+        struct xsp_addr src_eid;
+        struct xsp_addr dst_eid;
 
-	uint32_t sess_flags;
+        char sess_id[2*XSP_SESSIONID_LEN + 1];
 
-	uint32_t hop_flags;
+        uint32_t sess_flags;
+        uint32_t hop_flags;
 
-	xspHop **child;
-	int child_count;
+        xspHop **child;
+        int child_count;
 
 	// the above is "inherited" from xspSess
 
