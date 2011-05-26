@@ -69,13 +69,9 @@ typedef struct xsp_v1_message_hdr_t {
 } xspv1MsgHdr;
 
 typedef struct xsp_v1_option_hdr_t {
-	union {
-		uint16_t  s_length;
-		uint64_t  b_length;
-	} length_u;
-
 	uint16_t          type;
 	uint16_t          sport;
+	uint16_t          length;
 } xspv1BlockHdr;
 	
 	

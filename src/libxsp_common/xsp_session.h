@@ -58,7 +58,7 @@ int xsp_proto_loop(comSess *sess);
 
 int xsp_setup_session(comSess *sess, char ***error_msgs);
 void xsp_end_session(comSess *sess);
-comSess *xsp_convert_xspSess(xspSess *old_sess);
+comSess *xsp_convert_xspSess(xspMsg *msg);
 comSess *xsp_alloc_com_sess();
 
 comSess **xsp_get_sessions(int *count);

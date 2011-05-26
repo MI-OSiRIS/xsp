@@ -193,7 +193,7 @@ void xsp_end_session(comSess *sess) {
 	xsp_free_session(sess);
 }
 
-comSess *xsp_convert_xspSess(xspSess *old_sess) {
+comSess *xsp_convert_xspSess(xspMsg *msg) {
 	comSess *new_sess;
 	int i;
 
@@ -202,24 +202,39 @@ comSess *xsp_convert_xspSess(xspSess *old_sess) {
 		return NULL;
 	}
 
-	// copy all the old data over
-	bcopy(old_sess->sess_id, new_sess->id, 2*XSP_SESSIONID_LEN+1);
-	new_sess->child = old_sess->child;
-	new_sess->child_count = old_sess->child_count;
-
-	// initialize the new data
-	new_sess->references = 1;
-
-	for(i = 0; i < new_sess->child_count; i++) {
-		new_sess->child[i]->session = (xspSess *) new_sess;
+	switch (msg->version) {
+	case XSP_v0:
+		{
+			xspSess *old_sess = (xspSess*)msg->msg_body;
+			// copy all the old data over
+			memcpy(new_sess->id, old_sess->sess_id, 2*XSP_SESSIONID_LEN+1);
+			new_sess->child = old_sess->child;
+			new_sess->child_count = old_sess->child_count;
+			
+			// initialize the new data
+			new_sess->references = 1;
+			
+			for(i = 0; i < new_sess->child_count; i++) {
+				new_sess->child[i]->session = (xspSess *) new_sess;
+			}
+			
+			LIST_INIT(&new_sess->parent_conns);
+			LIST_INIT(&new_sess->child_conns);
+			
+			LIST_INIT(&new_sess->parent_data_conns);
+			LIST_INIT(&new_sess->child_data_conns);
+		}
+		break;
+	case XSP_v1:
+		{
+			
+		}
+		break;
+	default:
+		xsp_warn(0, "unknown session open msg version");
+		break;
 	}
-
-	LIST_INIT(&new_sess->parent_conns);
-	LIST_INIT(&new_sess->child_conns);
 	
-	LIST_INIT(&new_sess->parent_data_conns);
-	LIST_INIT(&new_sess->child_data_conns);
-
 	return new_sess;
 }
 
@@ -784,7 +799,7 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, int (*cb) (comS
 					goto error_exit;
 				}
 				
-				sess = xsp_convert_xspSess((xspSess *) msg->msg_body);
+				sess = xsp_convert_xspSess(msg);
 				if (!sess) {
 					xsp_err(0, "xspSess conversion failed");
 					xsp_free_msg(msg);

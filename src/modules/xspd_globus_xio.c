@@ -23,7 +23,7 @@
 #include "compat.h"
 
 int xspd_globus_xio_init();
-int xspd_globus_xio_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockHeader **ret_block);
+int xspd_globus_xio_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block);
 
 static xspModule xspd_globus_xio_module = {
 	.desc = "Globus XIO Module",
@@ -46,10 +46,10 @@ int xspd_globus_xio_init() {
 	return -1;
 }
 
-int xspd_globus_xio_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockHeader **ret_block) {
+int xspd_globus_xio_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block) {
 
 	xsp_info(8, "handling globus_xio message of type: %d", block->type);
-	// block->blob has the data of length block->length
+	// block->data has the data of length block->length
 
 	switch(block->type) {
 
@@ -57,14 +57,14 @@ int xspd_globus_xio_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockHe
 		{
 		    /*
 		    char *tmp = malloc(block->length*sizeof(char)+1);
-		    memcpy(tmp, block->blob, block->length);
+		    memcpy(tmp, block->data, block->length);
 		    tmp[block->length] = '\0';
 		    xsp_info(10, "NEW XFER: %s\n", tmp);
 		    free(tmp);
 		    
-		    *ret_block = (xspBlockHeader*)malloc(sizeof(xspBlockHeader));
-		    (*ret_block)->blob = "This is my response";
-		    (*ret_block)->length = strlen((*ret_block)->blob);
+		    *ret_block = xsp_alloc_block();
+		    (*ret_block)->data = "This is my response";
+		    (*ret_block)->length = strlen((*ret_block)->data);
 		    (*ret_block)->type = block->type;
 		    (*ret_block)->sport = 0;
 		    */
@@ -73,7 +73,7 @@ int xspd_globus_xio_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockHe
                     char *data;
 
                     data = (char *)malloc(block->length);
-                    memcpy(data, block->blob, block->length);
+                    memcpy(data, block->data, block->length);
 
                     bpp = (bson *)malloc(sizeof(bson));
                     bson_init(bpp, data, 1);
@@ -89,7 +89,7 @@ int xspd_globus_xio_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockHe
 	        {
 		    /*
 		    char *tmp = malloc(block->length*sizeof(char)+1);
-		    memcpy(tmp, block->blob, block->length);
+		    memcpy(tmp, block->data, block->length);
 		    tmp[block->length] = '\0';
 		    xsp_info(10, "END XFER: %s\n", tmp);
 		    free(tmp);
@@ -99,7 +99,7 @@ int xspd_globus_xio_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockHe
                     char *data;
 
                     data = (char *)malloc(block->length);
-                    memcpy(data, block->blob, block->length);
+                    memcpy(data, block->data, block->length);
 
                     bpp = (bson *)malloc(sizeof(bson));
                     bson_init(bpp, data, 1);
@@ -115,7 +115,7 @@ int xspd_globus_xio_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockHe
 	        {
 		    /*
 		    char *tmp = malloc(block->length*sizeof(char)+1);
-		    memcpy(tmp, block->blob, block->length);
+		    memcpy(tmp, block->data, block->length);
 		    tmp[block->length] = '\0';
 		    xsp_info(10, "NL UPDATE: %s\n", tmp);
 		    free(tmp);
@@ -125,7 +125,7 @@ int xspd_globus_xio_opt_handler(comSess *sess, xspBlockHeader *block, xspBlockHe
 		    char *data;
 
 		    data = (char *)malloc(block->length);
-		    memcpy(data, block->blob, block->length);
+		    memcpy(data, block->data, block->length);
 
 		    bpp = (bson *)malloc(sizeof(bson));
 		    bson_init(bpp, data, 1);

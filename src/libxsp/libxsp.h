@@ -52,6 +52,7 @@ typedef struct xsp_message_t {
         uint8_t version;
         uint8_t flags;
         uint16_t type;
+	uint16_t opt_cnt;
 
         struct xsp_addr src_eid;
         struct xsp_addr dst_eid;

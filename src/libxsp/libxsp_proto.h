@@ -4,7 +4,7 @@
 #include "libxsp.h"
 
 typedef struct xsp_proto_handler_t {
-	int (**parse) (const char *buf, int remainder, void **msg_body);
+	int (**parse) (const void *arg, int remainder, void **msg_body);
 	int (**writeout) (void *arg, char *buf, int remainder);
 	int (*write_hdr) (void *arg, char *buf);
 	uint8_t max_msg_type;
