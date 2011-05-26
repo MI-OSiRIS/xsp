@@ -9,23 +9,29 @@
 
 static int xsp_write_hdr(void *arg, char *buf);
 
-static int xsp_parse_sess_open_msg(const char *buf, int length, void **msg_body);
-static xspHop *xsp_parsehop(xspSess *sess, const char *buf, int remainder, int *size);
-static int xsp_parse_auth_token_msg(const char *buf, int remainder, void **msg_body);
-static int xsp_parse_auth_type_msg(const char *buf, int remainder, void **msg_body);
-static int xsp_parse_block_header_msg(const char *buf, int remainder, void **msg_body);
-static int xsp_parse_nack_msg(const char *buf, int remainder, void **msg_body);
-static int xsp_parse_data_open_msg(const char *buf, int remainder, void **msg_body);
-static int xsp_parse_slab_info(const char *buf, int remainder, void **msg_body);
-static xspSlabRec *xsp_parse_slab_record(const char *buf, int remainder, int *size);
+static int xsp_parse_default_block_list(const void *arg, int length, void **msg_body);
+static int xsp_writeout_default_block_list(void *arg, char *buf, int remainder);
 
-static int xsp_writeout_sess_open_msg(void *hop, char *buf, int remainder);
+
+static int xsp_parse_hops(const void *arg, int remainder, void **msg_body);
+static xspHop *xsp_parsehop(xspSess *sess, const void *arg, int remainder, int *size);
+static int xsp_parse_auth_token_msg(const void *arg, int remainder, void **msg_body);
+static int xsp_parse_auth_type_msg(const void *arg, int remainder, void **msg_body);
+static int xsp_parse_block_msg(const void *arg, int remainder, void **msg_body);
+static int xsp_parse_nack_msg(const void *arg, int remainder, void **msg_body);
+static int xsp_parse_data_open_msg(const void *arg, int remainder, void **msg_body);
+static int xsp_parse_path_open_msg(const void *arg, int remainder, void **msg_body);
+static int xsp_parse_slab_info(const void *arg, int remainder, void **msg_body);
+static xspSlabRec *xsp_parse_slab_record(const void *arg, int remainder, int *size);
+
+static int xsp_writeout_hops(void *arg, char *buf, int remainder);
 static int xsp_writeouthop(xspHop *hop, char *buf, int remainder);
 static int xsp_writeout_auth_token_msg(void *arg, char *buf, int remainder);
 static int xsp_writeout_auth_type_msg(void *arg, char *buf, int remainder);
-static int xsp_writeout_block_header_msg(void *arg, char *buf, int remainder);
+static int xsp_writeout_block_msg(void *arg, char *buf, int remainder);
 static int xsp_writeout_nack_msg(void *arg, char *buf, int remainder);
 static int xsp_writeout_data_open_msg(void *arg, char *buf, int remainder);
+static int xsp_writeout_path_open_msg(void *arg, char *buf, int remainder);
 static int xsp_writeout_slab_info(void *arg, char *buf, int remainder);
 static int xsp_writeout_slab_record(xspSlabRec *rec, char *buf, int remainder);
 
@@ -42,13 +48,6 @@ typedef struct xsp_hop_hdr_t {
 	uint16_t child_count;
 } xspHop_HDR;
 
-typedef struct xsp_sess_hdr_t {
-	char sess_id[XSP_SESSIONID_LEN];
-	char src_id[XSP_HOPID_LEN];
-	uint32_t sess_flags;
-	uint32_t hop_flags;
-} xspSess_HDR;
-
 typedef struct xsp_msg_auth_token_hdr_t {
 	uint32_t token_length;
 } xspAuthToken_HDR;
@@ -56,12 +55,6 @@ typedef struct xsp_msg_auth_token_hdr_t {
 typedef struct xsp_msg_auth_info_hdr_t {
 	char name[XSP_AUTH_NAME_LEN];
 } xspAuthType_HDR;
-
-typedef struct xsp_block_hdr_t {
-	uint16_t type;
-	uint16_t sport;
-	uint64_t length;
-} xspBlock_HDR;
 
 typedef struct xsp_msg_sess_nack_hdr_t {
 	uint32_t length;
