@@ -416,8 +416,8 @@ static int xsp_parse_nack_msg(const void *arg, int remainder, void **msg_body) {
 	}
 
 	// copy the token from the message
-	strlcpy(error_msg, buf, len);
-	
+	memcpy(error_msg, buf, len);
+
 	block->data = error_msg;
 	block->length = 0;
 
@@ -681,7 +681,7 @@ static int xsp_writeout_nack_msg(void *arg, char *buf, int remainder) {
 	if (remainder < strlen(error_msg))
 		return -1;
 
-	strlcpy(buf, error_msg, strlen(arg));
+	memcpy(buf, error_msg, strlen(error_msg));
 
 	return bhdr_size + block->length;
 

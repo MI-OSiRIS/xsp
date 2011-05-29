@@ -53,6 +53,8 @@ int xsp_sess_appendchild(libxspSess *sess, char *child, unsigned int flags);
 int xsp_data_connect(libxspSess *sess);
 static int xsp_hash_password(const unsigned char *pass, unsigned int pass_len, const unsigned char *nonce, unsigned char *ret_hash);
 
+char *__print_nack_msg(xspMsg *msg);
+
 #ifdef HAVE_GLOBUS
 int xsp_globus_get_token( void *arg, void ** token, size_t * token_length);
 int xsp_globus_send_token( void *arg, void * token, size_t token_length);
@@ -73,6 +75,31 @@ static int (*std_close)(int);
 static ssize_t (*std_send)(int, const void *, size_t, int);
 static ssize_t (*std_recv)(int, void *, size_t, int);
 static int (*std_shutdown)(int, int);
+
+char *__print_nack_msg(xspMsg *msg) {
+	switch (msg->version) {
+	case XSP_v0:
+		return (char*)msg->msg_body;
+		break;
+	case XSP_v1:
+		{
+			xspBlock **blocks;
+			int count;
+			xsp_block_list_find((xspBlockList*)msg->msg_body, XSP_OPT_NACK, &blocks, &count);
+			// XXX: taking only the first block found!
+			if (count)
+				return (char*)blocks[0]->data;
+			else
+				return NULL;
+		}
+		break;
+	default:
+		fprintf(stderr, "unsupported version");
+		break;
+	}
+	
+	return NULL;
+}
 
 uint64_t __xsp_send_one_block(libxspSess *sess, uint16_t type, uint16_t opt_type, uint64_t len, const void *msg_body) {
 	xspBlock *block;
@@ -543,7 +570,8 @@ int xsp_connect(libxspSess *sess) {
 		}
 
 		if (msg->type == XSP_MSG_SESS_NACK) {
-			fprintf(stderr, "xsp_connect(): could not connect to destination using XSP, error received: %s\n", (char *) msg->msg_body);
+			fprintf(stderr, "xsp_connect(): could not connect to destination using XSP, error received: %s\n",
+				__print_nack_msg(msg));
 			std_close(connfd);
 			errno = ECONNREFUSED;
 			return -1;
