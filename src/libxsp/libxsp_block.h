@@ -15,7 +15,10 @@
 
 #include "xsp-proto.h"
 
-#define XSP_OPT_INVALID     0
+#define XSP_BLOCK_KEEP_DATA 0
+#define XSP_BLOCK_FREE_DATA 1
+
+#define XSP_OPT_NULL        0
 #define XSP_OPT_HOP         1
 #define XSP_OPT_AUTH_TYP    2
 #define XSP_OPT_AUTH_TOK    3
@@ -42,12 +45,17 @@ typedef struct xsp_block_list_t {
 } xspBlockList;
 
 xspBlock *xsp_alloc_block();
-void xsp_free_block(xspBlock *block);
+void xsp_free_block(xspBlock *block, int free_data);
 
+xspBlockList *xsp_alloc_block_list();
 void xsp_block_list_push(xspBlockList *bl, xspBlock *new_block);
 xspBlock *xsp_block_list_pop(xspBlockList *bl);
+void xsp_free_block_list(xspBlockList *bl, int free_data);
+int xsp_block_list_find(xspBlockList *bl, int type, xspBlock ***ret_ary, int *count);
 
 inline int xsp_block_list_get_count(xspBlockList *bl);
+
+xspBlock *xsp_block_new(int opt_type, int sport, uint64_t len, const void *data);
 
 inline void xsp_block_set_data(xspBlock *block, void *data);
 inline void xsp_block_set_type(xspBlock *block, int type);

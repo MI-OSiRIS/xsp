@@ -98,7 +98,7 @@ def main():
     sess.connect('localhost', 5006)
     
     my_msg = "This is a test"
-    my_type = 0x30
+    my_type = 0x20
     print '\nSending message [%d,%d]: %s' % (my_type, len(my_msg), my_msg)
     sess.send_msg(my_msg, len(my_msg), my_type)
 

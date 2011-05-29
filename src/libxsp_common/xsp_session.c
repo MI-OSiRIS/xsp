@@ -208,32 +208,61 @@ comSess *xsp_convert_xspSess(xspMsg *msg) {
 			xspSess *old_sess = (xspSess*)msg->msg_body;
 			// copy all the old data over
 			memcpy(new_sess->id, old_sess->sess_id, 2*XSP_SESSIONID_LEN+1);
-			new_sess->child = old_sess->child;
+			new_sess->child = malloc(old_sess->child_count * sizeof(xspHop*));
 			new_sess->child_count = old_sess->child_count;
-			
-			// initialize the new data
-			new_sess->references = 1;
-			
-			for(i = 0; i < new_sess->child_count; i++) {
-				new_sess->child[i]->session = (xspSess *) new_sess;
-			}
-			
-			LIST_INIT(&new_sess->parent_conns);
-			LIST_INIT(&new_sess->child_conns);
-			
-			LIST_INIT(&new_sess->parent_data_conns);
-			LIST_INIT(&new_sess->child_data_conns);
+			for (i = 0; i < old_sess->child_count; i++)
+				xsp_hop_copy(&(new_sess->child[i]), old_sess->child[i]);
+
+			new_sess->version = XSP_v0;
 		}
 		break;
 	case XSP_v1:
 		{
+			xspBlock **blocks;
+			int count;
+			// XXX: not sure why the msg contained the xspSess before...
+			// the msg should have all the info
+			memcpy(new_sess->id, msg->sess_id, 2*XSP_SESSIONID_LEN+1);
+			xsp_session_get_blocks(msg, XSP_OPT_HOP, &blocks, &count);
+			// XXX: use the first found hop block for now
+			if (count > 0) {
+				xspHop *hop = (xspHop*)blocks[0]->data;
+				// XXX: the hop block can be empty...perhaps change this
+				if (hop) {
+					new_sess->child = malloc(sizeof(xspHop*));
+					new_sess->child_count = 1;
+					xsp_hop_copy(&(new_sess->child[0]), hop);
+				}
+				else {
+					new_sess->child = NULL;
+					new_sess->child_count = 0;
+				}
+			}
+			else {
+				xsp_err(0, "could not find XSP HOP option block");
+				return NULL;
+			}
 			
+			new_sess->version = XSP_v1;
 		}
 		break;
 	default:
 		xsp_warn(0, "unknown session open msg version");
 		break;
 	}
+	
+	// initialize the new data
+	new_sess->references = 1;
+	
+	for(i = 0; i < new_sess->child_count; i++) {
+		new_sess->child[i]->session = (xspSess *) new_sess;
+	}
+	
+	LIST_INIT(&new_sess->parent_conns);
+	LIST_INIT(&new_sess->child_conns);
+	
+	LIST_INIT(&new_sess->parent_data_conns);
+	LIST_INIT(&new_sess->child_data_conns);
 	
 	return new_sess;
 }
@@ -581,16 +610,24 @@ error_exit_settings:
 	return -1;
 }
 
-int xsp_session_setup_path(comSess *sess, const void *msg, char ***error_msgs) {
+int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
 	char *error_msg;
-	uint32_t bandwidth;
+	char *path_type;
+	uint32_t bandwidth = 0;
 	xspPath *path;
 	xspChannel *channel;
 	xspSettings *settings = NULL;
 	xspConn *parent_conn;
+
+	xspBlock *block;
+	xspBlock **blocks;
+	int block_count;
 	
-	xspBlock *block = (xspBlock *)msg;
-	char *path_type = malloc(block->length*sizeof(char));
+	xsp_session_get_blocks((xspMsg*)arg, XSP_OPT_PATH, &blocks, &block_count);
+	// XXX: taking only the first block!
+	block = blocks[0];
+
+	path_type = malloc(block->length*sizeof(char));
 	strncpy(path_type, block->data, block->length);
 
 	parent_conn = LIST_FIRST(&sess->parent_conns);
@@ -627,11 +664,18 @@ int xsp_session_setup_path(comSess *sess, const void *msg, char ***error_msgs) {
 	return -1;
 }
 
-int xsp_session_data_open(comSess *sess, const void *msg, char ***error_msgs) {
-        //char *error_msg;
-        //xspSettings *settings = NULL;
+int xsp_session_data_open(comSess *sess, const void *arg, char ***error_msgs) {
         xspConn *parent_conn;
-        xspDataOpenHeader *dopen = (xspDataOpenHeader *)msg;
+        xspDataOpenHeader *dopen;
+        xspBlock *block;
+        xspBlock **blocks;
+        int block_count;
+
+	xsp_session_get_blocks((xspMsg*)arg, XSP_OPT_DATA, &blocks, &block_count);
+	// XXX: taking only the first block!
+	block = blocks[0];
+
+	dopen = (xspDataOpenHeader *)block->data;
 	
         parent_conn = LIST_FIRST(&sess->parent_conns);
 
@@ -645,19 +689,22 @@ int xsp_session_data_open(comSess *sess, const void *msg, char ***error_msgs) {
 
 // handle any generic APP_DATA option blocks
 // registered option ranges are included in include/option_types.h for now
-int xsp_session_app_data(comSess *sess, const void *msg, char ***error_msgs) {
+int xsp_session_app_data(comSess *sess, const void *arg, char ***error_msgs) {
 	char *error_msg = NULL;
+	char *mstring = NULL;
         xspConn *parent_conn;
 	xspModule *module;
 
-        xspBlock *block;
 	xspBlock *ret_block;
-
-	char *mstring = NULL;
+	xspBlock *block;
+        xspBlock **blocks;
+	int block_count;
 
 	parent_conn = LIST_FIRST(&sess->parent_conns);
 
-	block = (xspBlock *)msg;
+	xsp_session_get_blocks((xspMsg*)arg, -1, &blocks, &block_count);
+	// XXX: taking only the first block!
+	block = blocks[0];
 	
 	// each module should register some range of option blocks
 	// then the module option handler (callback) should get invoked based on the type
@@ -692,8 +739,8 @@ int xsp_session_app_data(comSess *sess, const void *msg, char ***error_msgs) {
 	
 	// send back a response if necessary
 	if (ret_block) {
-		xsp_conn_send_msg(parent_conn, XSP_MSG_APP_DATA, ret_block);
-		free(ret_block);
+		xsp_conn_send_msg(parent_conn, sess->version, XSP_MSG_APP_DATA, XSP_OPT_NULL, ret_block);
+		xsp_free_block(ret_block, XSP_BLOCK_KEEP_DATA);
 	}
 
 	return 0;
@@ -730,7 +777,7 @@ int xsp_session_send_nack(comSess *sess, char **error_msgs) {
 	}
 	
 	xsp_info(5, "Sending NACK: %s", nack_msg);
-	xsp_conn_send_msg(conn, XSP_MSG_SESS_NACK, nack_msg);
+	xsp_conn_send_msg(conn, sess->version, XSP_MSG_SESS_NACK, XSP_OPT_NACK, nack_msg);
 	return 0;
 }
 
@@ -747,6 +794,7 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, int (*cb) (comS
 	int authenticated;
         int have_session;
 	int sess_close;
+	int version = XSP_v1;
 	
 	authenticated = FALSE;
 	have_session = FALSE;
@@ -760,6 +808,8 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, int (*cb) (comS
 			goto error_exit;
 		}
 		
+		version = msg->version;
+
 		switch(msg->type) {
 		
 		case XSP_MSG_SESS_CLOSE:
@@ -775,14 +825,13 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, int (*cb) (comS
 			{
 				xsp_info(10, "PING/PONG");
 				xsp_free_msg(msg);
-				xsp_conn_send_msg(conn, XSP_MSG_PONG, NULL);
+				xsp_conn_send_msg(conn, version, XSP_MSG_PONG, XSP_OPT_NULL, NULL);
 			}
 			break;
 
 		case XSP_MSG_AUTH_TYPE:
 			{
-				auth_type = msg->msg_body;				
-				if (xsp_authenticate_connection(conn, auth_type->name, &credentials) != 0) {
+				if (xsp_authenticate_connection(conn, msg, &credentials) != 0) {
 					xsp_err(0, "Authentication failed.");
 					goto error_exit;
 				}
@@ -806,6 +855,7 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, int (*cb) (comS
 					goto error_exit;
 				}
 				have_session = TRUE;
+				xsp_free_msg(msg);
 			}
 			break;
 		       
@@ -820,10 +870,7 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, int (*cb) (comS
 	} while (!authenticated || !have_session);
 
 	xsp_info(0, "new session: %s", xsp_session_get_id(sess));
-
-	free(msg->msg_body);
-	free(msg);
-
+	
 	LIST_INSERT_HEAD(&sess->parent_conns, conn, sess_entries);
 	
 	sess->credentials = credentials;
@@ -847,8 +894,8 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, int (*cb) (comS
 	xsp_conn_set_session_status(conn, STATUS_CONNECTED);
 
 	// send an ACK back once session is ready
-	xsp_conn_send_msg(conn, XSP_MSG_SESS_ACK, NULL);
-
+	xsp_conn_send_msg(conn, sess->version, XSP_MSG_SESS_ACK, XSP_OPT_NULL, NULL);
+	
 	*ret_sess = sess;
 	return sess;
 	
@@ -863,7 +910,8 @@ int xsp_proto_loop(comSess *sess) {
 	xspMsg *msg;
 	xspConn *conn;
 	char **error_msgs;
-	int sess_close;
+	int sess_close = 0;
+	int version = XSP_v1;
 
 	conn = LIST_FIRST(&sess->parent_conns);
 	if (!conn) {
@@ -881,6 +929,8 @@ int xsp_proto_loop(comSess *sess) {
                         goto error_exit;
                 }
 
+		version = msg->version;
+
                 switch(msg->type) {
 			
                 case XSP_MSG_SESS_CLOSE:
@@ -892,30 +942,30 @@ int xsp_proto_loop(comSess *sess) {
                         break;
 		case XSP_MSG_PATH_OPEN:
 			{
-				if (xsp_session_setup_path(sess, msg->msg_body, &error_msgs) < 0)
+				if (xsp_session_setup_path(sess, msg, &error_msgs) < 0)
 					goto error_exit1;
 				__xsp_cb_and_free(sess, msg);
-				xsp_conn_send_msg(conn, XSP_MSG_SESS_ACK, NULL);
+				xsp_conn_send_msg(conn, version, XSP_MSG_SESS_ACK, XSP_OPT_NULL, NULL);
 			}
 			break;
                 case XSP_MSG_PING:
 		        {
 			        xsp_info(10, "PING/PONG");
 				__xsp_cb_and_free(sess, msg);
-				xsp_conn_send_msg(conn, XSP_MSG_PONG, NULL);
+				xsp_conn_send_msg(conn, version, XSP_MSG_PONG, XSP_OPT_NULL, NULL);
 			}
 			break;
 		case XSP_MSG_DATA_OPEN:
 			{
-				if (xsp_session_data_open(sess, msg->msg_body, &error_msgs) < 0)
+				if (xsp_session_data_open(sess, msg, &error_msgs) < 0)
 					goto error_exit1;
 				__xsp_cb_and_free(sess, msg);
-				//xsp_conn_send_msg(conn, XSP_MSG_SESS_ACK, NULL);
+				//xsp_conn_send_msg(conn, version, XSP_MSG_SESS_ACK, XSP_OPT_NULL, NULL);
 			}
 			break;
 		case XSP_MSG_APP_DATA:
 			{
-				if (xsp_session_app_data(sess, msg->msg_body, &error_msgs) < 0)
+				if (xsp_session_app_data(sess, msg, &error_msgs) < 0)
 					goto error_exit1;
 				__xsp_cb_and_free(sess, msg);
 			}
@@ -951,3 +1001,27 @@ void __xsp_cb_and_free(comSess *sess, xspMsg *msg) {
 		sess->proto_cb(msg->type, msg->msg_body);
 	xsp_free_msg(msg);
 }
+
+int xsp_session_get_blocks(const xspMsg *msg, int opt_type, xspBlock ***ret_blocks, int *count) {
+	int num;
+
+	switch (msg->version) {
+	case XSP_v0:
+		{
+			*ret_blocks = malloc(sizeof(xspBlock*));
+			*ret_blocks[0] = (xspBlock *)msg->msg_body;
+			num = 1;
+		}
+		break;
+	case XSP_v1:
+		xsp_block_list_find((xspBlockList*)msg->msg_body, opt_type, ret_blocks, &num);
+		break;
+	default:
+		xsp_err(0, "unkown message version");
+		break;
+	}
+	
+	*count = num;
+	return num;
+}
+		

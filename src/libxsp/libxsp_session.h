@@ -5,10 +5,10 @@
 #include "xsp-proto.h"
 
 typedef struct xsp_sess_info_t {
+	char sess_id[2*XSP_SESSIONID_LEN + 1];
+
 	struct xsp_addr src_eid;
 	struct xsp_addr dst_eid;
-
-	char sess_id[2*XSP_SESSIONID_LEN + 1];
 
 	uint32_t sess_flags;
 	uint32_t hop_flags;

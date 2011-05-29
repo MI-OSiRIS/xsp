@@ -19,10 +19,10 @@ xspBlockList *xsp_alloc_block_list() {
 	return NULL;
 }
 
-void xsp_free_block_list(xspBlockList *bl) {
+void xsp_free_block_list(xspBlockList *bl, int free_data) {
 	xspBlock *block;
 	for (block = bl->first; block != NULL; block = block->next)
-		xsp_free_block(block);
+		xsp_free_block(block, free_data);
 
 	free(bl);
 }		
@@ -62,6 +62,34 @@ xspBlock *xsp_block_list_pop(xspBlockList *bl) {
 	return ret; 
 }
 
+// send back a pointer array of blocks instead of copying into a new list
+int xsp_block_list_find(xspBlockList *bl, int type, xspBlock ***ret_ary, int *count) {
+	xspBlock *block;
+	xspBlock **ba;
+	int num = 0;
+	
+	ba = (xspBlock **)malloc(bl->count * sizeof(xspBlock *));
+	
+	for (block = bl->first; block != NULL; block = block->next) {
+		if ((block->type == type) || (type < 0))
+			ba[num++] = block;
+	}
+	
+	if (num < 1) {
+		free (ba);
+		*ret_ary = NULL;
+		*count = 0;
+		return 0;
+	}
+	
+	realloc(ba, num * sizeof(xspBlock *));
+	*ret_ary = ba;
+	*count = num;
+	
+	return num;
+}
+	
+
 inline int xsp_block_list_get_count(xspBlockList *bl) {
 	return bl->count;
 }
@@ -81,8 +109,21 @@ error_exit:
 	return NULL;
 }
 
-void xsp_free_block(xspBlock *block) {
-	if (block->data)
+xspBlock *xsp_block_new(int opt_type, int sport, uint64_t len, const void *data) {
+	xspBlock *new_block = xsp_alloc_block();
+
+	if (new_block) {
+		new_block->type = opt_type;
+		new_block->sport = sport;
+		new_block->length = len;
+		new_block->data = data;
+	}
+
+	return new_block;
+}
+
+void xsp_free_block(xspBlock *block, int free_data) {
+	if (free_data && block->data)
 		free(block->data);
 
 	free(block);

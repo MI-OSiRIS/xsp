@@ -11,8 +11,8 @@ typedef struct xsp_proto_handler_t {
 } xspProtoHandler;
 
 int xsp_proto_init();
-int xsp_writeout_msg(char *buf, int length, int version, int type, void *msg, void *msg_body);
-int xsp_parse_msgbody(const xspMsg *hdr, const char *buf, int length, void **msg_body);
+uint64_t xsp_writeout_msg(char *buf, uint64_t length, int version, int type, void *msg, void *msg_body);
+int xsp_parse_msgbody(const xspMsg *hdr, const void *arg, uint64_t length, void **msg_body);
 int xsp_add_proto_handler(uint8_t version, xspProtoHandler *handler);
 
 #endif

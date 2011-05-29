@@ -63,7 +63,7 @@ int xspd_nlmi_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block) 
 			
 			data = (char *)malloc(block->length);
 			memcpy(data, block->data, block->length);
-
+			
 			bpp = (bson *)malloc(sizeof(bson));
 			bson_init(bpp, data, 1);
 			

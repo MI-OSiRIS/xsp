@@ -44,8 +44,11 @@ libxspSess *xsp_session();
 int xsp_add_sess(int s, libxspSess *sess);
 int xsp_del_sess(libxspSess *sess);
 int __xsp_addchild(xspHop *curr_node, char *parent, xspHop *new_child);
-int xsp_put_msg(libxspSess *sess, uint8_t version, uint8_t type, char *sess_id, void *msg_body);
+uint64_t xsp_put_msg(libxspSess *sess, uint8_t version, uint16_t type, void *msg_body);
+uint64_t __xsp_send_one_block(libxspSess *sess, uint16_t type, uint16_t opt_type, uint64_t len, const void *msg_body);
 xspMsg *xsp_get_msg(libxspSess *sess, unsigned int flags);
+xspMsg *__xsp_get_msg_v0(libxspSess *sess, unsigned int flags);
+xspMsg *__xsp_get_msg_v1(libxspSess *sess, unsigned int flags);
 int xsp_sess_appendchild(libxspSess *sess, char *child, unsigned int flags);
 int xsp_data_connect(libxspSess *sess);
 static int xsp_hash_password(const unsigned char *pass, unsigned int pass_len, const unsigned char *nonce, unsigned char *ret_hash);
@@ -70,6 +73,26 @@ static int (*std_close)(int);
 static ssize_t (*std_send)(int, const void *, size_t, int);
 static ssize_t (*std_recv)(int, void *, size_t, int);
 static int (*std_shutdown)(int, int);
+
+uint64_t __xsp_send_one_block(libxspSess *sess, uint16_t type, uint16_t opt_type, uint64_t len, const void *msg_body) {
+	xspBlock *block;
+	xspBlockList *bl;
+	uint64_t ret;
+
+	if (msg_body) {
+		block = xsp_block_new(opt_type, XSP_DEFAULT_SPORT, len, msg_body);
+		bl = xsp_alloc_block_list();
+		xsp_block_list_push(bl, block);
+	}
+	else
+		bl = NULL;
+
+	ret = xsp_put_msg(sess, XSP_v1, type, bl);
+
+	xsp_free_block_list(bl, XSP_BLOCK_KEEP_DATA);
+
+	return ret;
+}
 
 int libxsp_init() {
 	void *handle;
@@ -410,7 +433,8 @@ int xsp_connect(libxspSess *sess) {
 		if (getenv("XSP_USERNAME") && getenv("XSP_PASSWORD")) {
 			unsigned char hash[SHA_DIGEST_LENGTH];
 			strlcpy(auth_type.name, "PASS", XSP_AUTH_NAME_LEN);
-			if (xsp_put_msg(sess, 0, XSP_MSG_AUTH_TYPE, sess->sess_id, &auth_type) < 0) {
+			
+			if (__xsp_send_one_block(sess, XSP_MSG_AUTH_TYPE, XSP_OPT_AUTH_TYP, 0, &auth_type) < 0) {
 				d_printf("xsp_connect(): error: PASS authorization failed: couldn't send auth type\n");
 				errno = ECONNREFUSED;
 				std_close(connfd);
@@ -420,7 +444,7 @@ int xsp_connect(libxspSess *sess) {
 			token.token = getenv("XSP_USERNAME");
 			token.token_length = strlen(getenv("XSP_USERNAME"));
 
-			if (xsp_put_msg(sess, 0, XSP_MSG_AUTH_TOKEN, sess->sess_id, &token) < 0) {
+			if (__xsp_send_one_block(sess, XSP_MSG_AUTH_TOKEN, XSP_OPT_AUTH_TOK, 0, &token) < 0) {
 				d_printf("xsp_connect(): error: PASS authorization failed: couldn't send username\n");
 				errno = ECONNREFUSED;
 				std_close(connfd);
@@ -447,12 +471,12 @@ int xsp_connect(libxspSess *sess) {
 				return -1;
 			}
 
-			xsp_hash_password(getenv("XSP_PASSWORD"), strlen(getenv("XSP_PASSWORD")), ret_token->token, hash);
+			xsp_hash_password((const unsigned char*)getenv("XSP_PASSWORD"), strlen(getenv("XSP_PASSWORD")), ret_token->token, hash);
 
 			token.token = hash;
 			token.token_length = SHA_DIGEST_LENGTH;
-
-			if (xsp_put_msg(sess, 0, XSP_MSG_AUTH_TOKEN, sess->sess_id, &token) < 0) {
+			
+			if (__xsp_send_one_block(sess, XSP_MSG_AUTH_TOKEN, XSP_OPT_AUTH_TOK, 0, &token) < 0) {
 				d_printf("xsp_connect(): error: PASS authorization failed: couldn't send password hash\n");
 				errno = ECONNREFUSED;
 				std_close(connfd);
@@ -460,7 +484,7 @@ int xsp_connect(libxspSess *sess) {
 			}
 		} else {
 			strlcpy(auth_type.name, "ANON", XSP_AUTH_NAME_LEN);
-			if (xsp_put_msg(sess, 0, XSP_MSG_AUTH_TYPE, sess->sess_id, &auth_type) < 0) {
+			if (__xsp_send_one_block(sess, XSP_MSG_AUTH_TYPE, XSP_OPT_AUTH_TYP, 0, &auth_type) < 0) {
 				d_printf("xsp_connect(): error: authorization failed\n");
 				errno = ECONNREFUSED;
 				std_close(connfd);
@@ -468,7 +492,7 @@ int xsp_connect(libxspSess *sess) {
 		}
 #else
 		auth_info.type = 1;
-		if (xsp_put_msg(sess, 0, XSP_MSG_AUTHORIZATION_START, sess->sess_id, &auth_info) < 0) {
+		if (__xsp_send_one_block(sess, XSP_MSG_AUTHORIZATION_START, XSP_OPT_AUTH_INF, 0, &auth_info) < 0) {
 			d_printf("Error: authorization failed\n");
 			errno = ECONNREFUSED;
 			std_close(connfd);
@@ -496,7 +520,7 @@ int xsp_connect(libxspSess *sess) {
 		}
 #endif
 
-		if (xsp_put_msg(sess, 0, XSP_MSG_SESS_OPEN, sess->sess_id, next_hop) < 0) {
+		if (__xsp_send_one_block(sess, XSP_MSG_SESS_OPEN, XSP_OPT_HOP, 0, next_hop) < 0) {
 			d_printf("xsp_connect(): error: failed to send session open message\n");
 			std_close(connfd);
 			errno = ECONNREFUSED;
@@ -695,29 +719,24 @@ int xsp_data_connect(libxspSess *sess) {
         return 0;
 }
 
-int xsp_send_msg(libxspSess *sess, const void *buf, size_t len, int opt_type) {
-	xspBlock block;
+int xsp_send_msg(libxspSess *sess, const void *buf, uint64_t len, int opt_type) {
 	int ret;
-
-	block.type = opt_type;
-	block.sport = 0;
-	block.length = len;
-	block.data = buf;
-
-	if ((ret = xsp_put_msg(sess, 0, XSP_MSG_APP_DATA, sess->sess_id, &block)) < 0) {
+	
+	if ((ret = __xsp_send_one_block(sess, XSP_MSG_APP_DATA, (uint16_t)opt_type, len, (void*)buf)) < 0) {
 		d_printf("xsp_send_msg(): error: failed to send message\n");
 		goto error_exit;
 	}
-
+	
 	return ret;
-
+	
  error_exit:
 	return 0;
 }
 
-int xsp_recv_msg(libxspSess *sess, void **ret_buf, int *len, int *ret_type) {
+int xsp_recv_msg(libxspSess *sess, void **ret_buf, uint64_t *len, int *ret_type) {
 	xspMsg *msg;
 	xspBlock *block;
+	xspBlockList *bl;
 
 	msg = xsp_get_msg(sess, 0);
 	
@@ -730,12 +749,14 @@ int xsp_recv_msg(libxspSess *sess, void **ret_buf, int *len, int *ret_type) {
 		goto error_exit;
 	}
 	
-	block = (xspBlock *) msg->msg_body;
+	bl = (xspBlockList *) msg->msg_body;
 
-	if (block->length <=0 ) {
-	    d_printf("xsp_recv_msg(): error: no block data!\n");
+	if (bl->count != 1 ) {
+	    d_printf("xsp_recv_msg(): error: block count is not 1!\n");
 	    goto error_exit;
 	}
+
+	block = bl->first;
 
 	*ret_buf = (void*)malloc(sizeof(char) * block->length);
 	if (!ret_buf) {
@@ -757,19 +778,14 @@ int xsp_recv_msg(libxspSess *sess, void **ret_buf, int *len, int *ret_type) {
 
 int xsp_signal_path(libxspSess *sess, char *path_type) {
 	xspMsg *msg;
-	xspBlock block;
 	char *path;
 
 	if (!strcmp(path_type, "TERAPATHS") ||
 	    !strcmp(path_type, "OSCARS")) {
 		
 		path = strdup(path_type);
-		block.type = 0;
-		block.sport = 0;
-		block.length = strlen(path) + 1;
-		block.data = path;
-
-		if (xsp_put_msg(sess, 0, XSP_MSG_PATH_OPEN, sess->sess_id, &block) < 0) {
+		
+		if (__xsp_send_one_block(sess, XSP_MSG_PATH_OPEN, XSP_OPT_PATH, strlen(path)+1, path) < 0) {
 			d_printf("xsp_signal_path(): error: failed to send session path message\n");
 			goto error_exit;
 		}
@@ -1005,7 +1021,7 @@ int xsp_close(libxspSess *sess) {
 int xsp_close2(libxspSess *sess) {
 
 	if (sess->connected) {
-		if (xsp_put_msg(sess, 0, XSP_MSG_SESS_CLOSE, sess->sess_id, NULL) < 0) {
+		if (xsp_put_msg(sess, XSP_v1, XSP_MSG_SESS_CLOSE, NULL) < 0) {
 			d_printf("xsp_close(): error: failed to send session close message\n");
 			return -1;
 		}
@@ -1020,7 +1036,7 @@ int xsp_close2(libxspSess *sess) {
 	return 0;
 }
 
-xspMsg *xsp_get_msg(libxspSess *sess, unsigned int flags) {
+xspMsg *__xsp_get_msg_v0(libxspSess *sess, unsigned int flags) {
 	char hdr_buf[32];
 	char *buf = NULL;
 	int amt_read, rd, remainder;
@@ -1117,24 +1133,180 @@ error_exit:
 	return NULL;
 }
 
-int xsp_put_msg(libxspSess *sess, uint8_t version, uint8_t type, char *sess_id, void *msg_body) {
+xspMsg *__xsp_get_msg_v1(libxspSess *sess, unsigned int flags) {
+	char *buf = NULL;
+        char hdr_buf[sizeof(xspv1MsgHdr)];
+        char bhdr_buf[sizeof(xspv1BlockHdr)];
+
+        int i;
+        int options;
+        uint64_t amt_read;
+        uint64_t data_size = 0;
+
+        xspMsg *msg;
+        xspv1MsgHdr *hdr;
+        xspv1BlockHdr *bhdr;
+        xspBlock *block;
+        xspBlockList *bl;
+
+        // read the header in
+        amt_read = recv(sess->sock, hdr_buf, sizeof(xspv1MsgHdr), MSG_WAITALL);
+
+        if (amt_read < sizeof(xspv1MsgHdr)) {
+                if (amt_read < 0) {
+                        perror("error:");
+                }
+                goto error_exit;
+        }
+
+        hdr = (xspv1MsgHdr *) hdr_buf;
+
+        options = ntohs(hdr->opt_cnt);
+
+        if (options > 0)
+                bl = xsp_alloc_block_list();
+        else
+                bl = NULL;
+
+        for (i = 0; i < options; i++) {
+                uint16_t bhdr_len;
+                uint16_t bhdr_type;
+                uint16_t bhdr_sport;
+                uint64_t block_len;
+
+                // get block header
+                amt_read = recv(sess->sock, bhdr_buf, sizeof(xspv1BlockHdr), MSG_WAITALL);
+                if (amt_read < sizeof(xspv1BlockHdr)) {
+                        if (amt_read < 0) {
+                                perror("error:");
+                        }
+                        goto error_exit;
+                }
+
+                bhdr = (xspv1BlockHdr*) bhdr_buf;
+
+                bhdr_type = ntohs(bhdr->type);
+                bhdr_sport = ntohs(bhdr->sport);
+                bhdr_len = ntohs(bhdr->length);
+
+                d_printf("block hdr type: %d, len: %d\n", bhdr_type, bhdr_len);
+                // figure out the length of the block
+                if (bhdr_len == 0xFFFF) {
+                        amt_read = recv(sess->sock, &block_len, sizeof(uint64_t), MSG_WAITALL);
+                        if (amt_read < sizeof(uint64_t)) {
+                                if (amt_read < 0) {
+                                        perror("error:");
+                                }
+                                goto error_exit;
+                        }
+                }
+                else
+                        block_len = bhdr_len;
+
+                // we can have empty blocks
+                if (block_len > 0) {
+
+                        // now allocate space and read the block data
+                        buf = (char*)malloc(sizeof(char) * block_len);
+                        if (!buf)
+                                goto error_exit;
+
+                        amt_read = recv(sess->sock, buf, block_len, MSG_WAITALL);
+                        if (amt_read < block_len) {
+                                if (amt_read < 0) {
+                                        perror("error:");
+                                }
+                                goto error_exit;
+                        }
+
+                        data_size += amt_read;
+                }
+                // make a new xspBlock and add it the block list
+                block = xsp_block_new(bhdr_type, bhdr_sport, block_len, buf);
+                xsp_block_list_push(bl, block);
+        }
+        // allocate a message to return
+        msg = (xspMsg *) malloc(sizeof(xspMsg));
+        if (!msg) {
+                goto error_exit2;
+        }
+
+        // fill in the message
+        msg->version = hdr->version;
+        msg->flags = hdr->flags;
+        msg->type = ntohs(hdr->type);
+        msg->opt_cnt = ntohs(hdr->opt_cnt);
+        memcpy(&(msg->src_eid), &(hdr->src_eid), sizeof(struct xsp_addr));
+        memcpy(&(msg->dst_eid), &(hdr->dst_eid), sizeof(struct xsp_addr));
+        bin2hex(hdr->sess_id, msg->sess_id, XSP_SESSIONID_LEN);
+
+        if (xsp_parse_msgbody(msg, bl, data_size, &(msg->msg_body)) != 0)
+                goto error_exit3;
+
+        d_printf("returning an xspMsg of type: %d\n", msg->type);
+        return msg;
+ error_exit3:
+        free(msg);
+ error_exit2:
+        if (bl)
+                xsp_free_block_list(bl, XSP_BLOCK_FREE_DATA);
+ error_exit:
+        return NULL;
+}
+
+xspMsg *xsp_get_msg(libxspSess *sess, unsigned int flags) {
+        uint8_t version;
+        int amt_read;
+
+        amt_read = recv(sess->sock, &version, sizeof(uint8_t), MSG_WAITALL | MSG_PEEK);
+        if (amt_read < sizeof(uint8_t)) {
+                goto error_exit;
+        }
+	
+	switch (version) {
+        case XSP_v0:
+                return __xsp_get_msg_v0(sess, flags);
+                break;
+        case XSP_v1:
+                return __xsp_get_msg_v1(sess, flags);
+                break;
+        default:
+                fprintf(stderr, "unsupported version\n");
+                goto error_exit;
+        }
+
+ error_exit:
+        return NULL;
+}
+
+uint64_t xsp_put_msg(libxspSess *sess, uint8_t version, uint16_t type, void *msg_body) {
 	char *msg_buf;
-	int msg_buf_len;
-	int amt_sent;
-	int sent;
-	int msg_len;
+	uint64_t msg_buf_len;
+	uint64_t amt_sent;
+	uint64_t sent;
+	uint64_t msg_len;
 	xspMsg msg;
 
-	msg_buf = (char *) malloc(sizeof(char) * 65536);
+	msg_buf = (char *) malloc(sizeof(char) * XSP_MAX_LENGTH);
 	if (!msg_buf)
 		return -1;
 
-	msg_buf_len = 65536;
+	msg_buf_len = XSP_MAX_LENGTH;
 
 	msg.version = version;
 	msg.type = type;
+	msg.flags = 0;
 	msg.msg_body = msg_body;
-	memcpy(msg.sess_id, sess_id, 2*XSP_SESSIONID_LEN+1);
+
+	// XXX: need to figure out best use of EIDs
+	msg.src_eid.x_addrc[0] = '\0';
+	msg.dst_eid.x_addrc[0] = '\0';
+	memcpy(msg.sess_id, sess->sess_id, 2*XSP_SESSIONID_LEN+1);
+
+	if ((version == XSP_v1) && msg_body)
+		msg.opt_cnt = ((xspBlockList*)msg_body)->count;
+	else
+		msg.opt_cnt = 0;
 
 	msg_len = xsp_writeout_msg(msg_buf, msg_buf_len, version, type, (void*)&msg, msg_body);
 
@@ -1214,7 +1386,7 @@ int xsp_set_session_connected(libxspSess *sess) {
 }
 
 int xsp_send_ping(libxspSess *sess) {
-	if (xsp_put_msg(sess, 0, XSP_MSG_PING, sess->sess_id, NULL) < 0) {
+	if (xsp_put_msg(sess, 0, XSP_MSG_PING, NULL) < 0) {
 		d_printf("xsp_ping(): error: failed to send ping message\n");
 		return -1;
 	}

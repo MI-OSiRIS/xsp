@@ -7,20 +7,20 @@
 
 #include "compat.h"
 
-#define LIBXSP_PROTO_BINARY_ID		XSP_v0
+#define LIBXSP_PROTO_BINARY_V0_ID	XSP_v0
 
-#define LIBXSP_PROTO_BINARY_MAX 	XSP_MSG_SLAB_INFO
+#define LIBXSP_PROTO_BINARY_V0_MAX 	XSP_MSG_SLAB_INFO
 
 static xspProtoHandler bin_handler_v0;
 
 int libxsp_proto_binary_v0_init() {
-	bin_handler_v0.write_hdr = xsp_write_hdr;
+	bin_handler_v0.write_hdr = xsp_writeout_hdr;
 	
-	bin_handler_v0.parse = (int (**)(const void*, int, void**)) malloc(sizeof(void *) * (LIBXSP_PROTO_BINARY_MAX + 1));
+	bin_handler_v0.parse = (int (**)(const void*, int, void**)) malloc(sizeof(void *) * (LIBXSP_PROTO_BINARY_V0_MAX + 1));
 	if (!bin_handler_v0.parse)
 		return -1;
 
-	bin_handler_v0.writeout = (int (**)(void*, char*, int)) malloc(sizeof(void *) * (LIBXSP_PROTO_BINARY_MAX + 1));
+	bin_handler_v0.writeout = (int (**)(void*, char*, int)) malloc(sizeof(void *) * (LIBXSP_PROTO_BINARY_V0_MAX + 1));
 	if (!bin_handler_v0.writeout)
 		return -1;
 
@@ -34,7 +34,7 @@ int libxsp_proto_binary_v0_init() {
 	bin_handler_v0.parse[XSP_MSG_SESS_NACK] = xsp_parse_nack_msg;
 	bin_handler_v0.parse[XSP_MSG_PING] = NULL;
 	bin_handler_v0.parse[XSP_MSG_PONG] = NULL;
-	bin_handler_v0.parse[XSP_MSG_DATA_OPEN] = xsp_parse_data_open_msg;
+	bin_handler_v0.parse[XSP_MSG_DATA_OPEN] = NULL;
 	bin_handler_v0.parse[XSP_MSG_DATA_CLOSE] = NULL;
 	bin_handler_v0.parse[XSP_MSG_PATH_OPEN] = xsp_parse_block_header_msg;
 	bin_handler_v0.parse[XSP_MSG_PATH_CLOSE] = NULL;
@@ -51,19 +51,19 @@ int libxsp_proto_binary_v0_init() {
 	bin_handler_v0.writeout[XSP_MSG_SESS_NACK] = xsp_writeout_nack_msg;
 	bin_handler_v0.writeout[XSP_MSG_PING] = NULL;
 	bin_handler_v0.writeout[XSP_MSG_PONG] = NULL;
-	bin_handler_v0.writeout[XSP_MSG_DATA_OPEN] = xsp_writeout_data_open_msg;
+	bin_handler_v0.writeout[XSP_MSG_DATA_OPEN] = NULL;
 	bin_handler_v0.writeout[XSP_MSG_DATA_CLOSE] = NULL;
 	bin_handler_v0.writeout[XSP_MSG_PATH_OPEN] = xsp_writeout_block_header_msg;
 	bin_handler_v0.writeout[XSP_MSG_PATH_CLOSE] = NULL;
 	bin_handler_v0.writeout[XSP_MSG_APP_DATA] = xsp_writeout_block_header_msg;
 	bin_handler_v0.writeout[XSP_MSG_SLAB_INFO] = xsp_writeout_slab_info;
 
-	bin_handler_v0.max_msg_type = LIBXSP_PROTO_BINARY_MAX;
+	bin_handler_v0.max_msg_type = LIBXSP_PROTO_BINARY_V0_MAX;
 
-	return xsp_add_proto_handler(LIBXSP_PROTO_BINARY_ID, &bin_handler_v0);
+	return xsp_add_proto_handler(LIBXSP_PROTO_BINARY_V0_ID, &bin_handler_v0);
 }
 
-static int xsp_write_hdr(void *arg, char *buf) {
+static int xsp_writeout_hdr(void *arg, char *buf) {
         xspMsg *msg = (xspMsg*)arg;
 	xspMsgHdr *hdr;
 
@@ -370,29 +370,6 @@ int xsp_parse_auth_type_msg(const void *arg, int remainder, void **msg_body) {
 	return 0;
 }
 
-static int xsp_parse_data_open_msg(const void *arg, int remainder, void **msg_body) {
-	char *buf = (char*) arg;
-	xspDataOpen_HDR *hdr;
-	xspDataOpenHeader *new;
-
-	if (remainder < sizeof(xspDataOpen_HDR))
-		return -1;
-
-	new = malloc(sizeof(xspDataOpenHeader));
-	if (!new)
-		return -1;
-
-	hdr = (xspDataOpen_HDR *) buf;
-	bcopy(hdr->hop_id, new->hop_id, XSP_HOPID_LEN);
-	new->flags = ntohs(hdr->flags);
-
-	*msg_body = new;
-
-	return 0;
-}
-
-
-
 static int xsp_writeout_sess_open_msg(void *arg, char *buf, int remainder) {
 	int orig_remainder;
 	xspHop *hop = (xspHop *) arg;
@@ -566,25 +543,6 @@ static int xsp_writeout_nack_msg(void *arg, char *buf, int remainder) {
 	strlcpy(buf, error_msg, strlen(arg));
 
 	return sizeof(xspSessNack_HDR) + strlen(error_msg);
-}
-
-static int xsp_writeout_data_open_msg(void *arg, char *buf, int remainder) {
-	xspDataOpenHeader *dopen = arg;
-	xspDataOpen_HDR *hdr;
-
-	if (remainder < sizeof(xspDataOpen_HDR)) {
-		return -1;
-	}
-	       
-	hdr = (xspDataOpen_HDR *) buf;
-	
-	hdr->flags = htons(dopen->flags);
-	strlcpy(hdr->hop_id, dopen->hop_id, XSP_HOPID_LEN);
-	strlcpy(hdr->proto, dopen->proto, XSP_PROTO_NAME_LEN);
-	
-	remainder -= sizeof(xspDataOpen_HDR);
-	
-	return sizeof(xspDataOpen_HDR);
 }
 
 // some slabs additions
