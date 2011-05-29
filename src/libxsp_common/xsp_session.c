@@ -1025,3 +1025,27 @@ int xsp_session_get_blocks(const xspMsg *msg, int opt_type, xspBlock ***ret_bloc
 	return num;
 }
 		
+char *xsp_session_print_nack(const xspMsg *msg) {
+	switch (msg->version) {
+        case XSP_v0:
+                return (char*)msg->msg_body;
+                break;
+        case XSP_v1:
+                {
+                        xspBlock **blocks;
+                        int count;
+                        xsp_block_list_find((xspBlockList*)msg->msg_body, XSP_OPT_NACK, &blocks, &count);
+                        // XXX: taking only the first block found!
+                        if (count)
+                                return (char*)blocks[0]->data;
+                        else
+                                return NULL;
+                }
+                break;
+        default:
+                xsp_err(0, "unknown version");
+                break;
+        }
+
+        return NULL;
+}
