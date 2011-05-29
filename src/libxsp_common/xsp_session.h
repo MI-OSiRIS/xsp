@@ -19,12 +19,10 @@
 typedef struct common_session_t {
 	char id[2*XSP_SESSIONID_LEN + 1];
 
-#ifdef NETLOGGER
-        int nl_id;
-#endif
-
 	xspHop **child;
 	int child_count;
+	
+	uint8_t version;
 	
 	char *user;
 	
@@ -48,6 +46,10 @@ typedef struct common_session_t {
 	void *(*proto_cb) (int type, void *body);
 
 	LIST_ENTRY(common_session_t) sess_list;
+
+#ifdef NETLOGGER
+        int nl_id;
+#endif
 } comSess;
 
 int xsp_sessions_init();
@@ -62,6 +64,7 @@ comSess *xsp_convert_xspSess(xspMsg *msg);
 comSess *xsp_alloc_com_sess();
 
 comSess **xsp_get_sessions(int *count);
+int xsp_session_get_blocks(const xspMsg *msg, int opt_type, xspBlock ***ret_blocks, int *count);
 
 inline char *xsp_session_get_id(comSess *sess);
 inline char *xsp_session_get_user(comSess *sess);

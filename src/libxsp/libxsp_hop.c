@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include <strings.h>
 
 #include "compat.h"
@@ -83,6 +84,46 @@ int xsp_hop_add_child(xspHop *parent, xspHop *child) {
 
 error_exit:
 	return -1;
+}
+
+int xsp_hop_copy(xspHop **dest, xspHop *src) {
+	int i;
+	int ret;
+	
+	xspHop *hop;
+
+	hop = malloc(sizeof(xspHop));
+	if (!hop)
+		return -1;
+	
+	hop->opt_type = src->opt_type;
+	hop->flags = src->flags;
+	hop->child_count = src->child_count;
+	hop->session = src->session;
+
+	memcpy(hop->hop_id, src->hop_id, XSP_HOPID_LEN + 1);
+	memcpy(hop->protocol, src->protocol, XSP_PROTO_NAME_LEN + 1);
+
+	hop->child = malloc(src->child_count * sizeof(xspHop*));
+	
+	for (i = 0; i < src->child_count; i++) {
+		ret = xsp_hop_copy(&(hop->child[i]), src->child[i]);
+		if (ret != 0)
+			return -1;
+	}
+
+	*dest = hop;
+	return 0;
+}
+	
+int xsp_hop_total_child_count(xspHop *hop) {
+	int i;
+	int count = 0;
+	
+	for (i=0; i<hop->child_count; i++)
+		count += xsp_hop_total_child_count(hop->child[i]);
+	
+	return hop->child_count + count;
 }
 
 inline void xsp_hop_set_flag(xspHop *hop, uint16_t flag) {

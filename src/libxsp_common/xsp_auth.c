@@ -58,9 +58,34 @@ int xsp_get_authentication_handler(const char *name) {
 	return -1;
 }
 
-int xsp_authenticate_connection(xspConn *conn, const char *auth_type, xspCreds **ret_creds) {
+int xsp_authenticate_connection(xspConn *conn, xspMsg *msg, xspCreds **ret_creds) {
 	int num;
-	xspMsg *msg;
+	char *auth_type;
+
+	switch (msg->version) {
+        case XSP_v0:
+		auth_type = msg->msg_body;
+		break;
+	case XSP_v1:
+		{
+			xspBlock **blocks;
+			int count;
+			xsp_block_list_find((xspBlockList*)msg->msg_body, XSP_OPT_AUTH_TYP, &blocks, &count);
+			// XXX: we can have more than one auth type in the auth request
+			// just pick the first one for now
+			if (count > 0)
+				auth_type = blocks[0]->data;
+			else {
+				xsp_err(1, "no AUTH TYPE option block found");
+				goto error_exit;
+			}
+		}
+		break;
+	default:
+                xsp_warn(0, "unknown session open msg version");
+                break;
+        }
+
 
 	num = xsp_get_authentication_handler(auth_type);
 	if (num < 0) {
@@ -86,7 +111,7 @@ int xsp_request_authentication(comSess *sess, xspConn *new_conn, const char *aut
 
 	strlcpy(auth_type.name, auth_name, XSP_AUTH_NAME_LEN);
 
-	if (!xsp_conn_send_msg(new_conn, XSP_MSG_AUTH_TYPE, &auth_type)) {
+	if (!xsp_conn_send_msg(new_conn, sess->version, XSP_MSG_AUTH_TYPE, XSP_OPT_AUTH_TYP, &auth_type)) {
 		xsp_err(1, "send msg failed");
 		return -1;
 	}

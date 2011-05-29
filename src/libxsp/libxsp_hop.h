@@ -34,6 +34,8 @@ int xsp_hop_merge_children(xspHop *dst, xspHop *src);
 inline char *xsp_hop_getid(xspHop *hop);
 inline void xsp_hop_setid(xspHop *hop, const char *hop_id);
 int xsp_hop_add_child(xspHop *parent, xspHop *child);
+int xsp_hop_copy(xspHop **dest, xspHop *src);
+int xsp_hop_total_child_count(xspHop *hop);
 inline void xsp_hop_set_flag(xspHop *hop, uint16_t flag);
 inline int xsp_hop_check_flag(xspHop *hop, uint16_t flag);
 

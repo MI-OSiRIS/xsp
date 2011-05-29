@@ -7,14 +7,16 @@
 #include "libxsp_hop.h"
 #include "libxsp_session.h"
 
-static int xsp_write_hdr(void *arg, char *buf);
+static int xsp_writeout_hdr(void *arg, char *buf);
+static int xsp_writeout_block_hdr(void *arg, char *buf, int remainder);
 
 static int xsp_parse_default_block_list(const void *arg, int length, void **msg_body);
 static int xsp_writeout_default_block_list(void *arg, char *buf, int remainder);
-
+static int xsp_parse_app_data_block_list(const void *arg, int length, void **msg_body);
+static int xsp_writeout_app_data_block_list(void *arg, char *bug, int remainder);
 
 static int xsp_parse_hops(const void *arg, int remainder, void **msg_body);
-static xspHop *xsp_parsehop(xspSess *sess, const void *arg, int remainder, int *size);
+static xspHop *xsp_parsehop(void *arg, int remainder, int *size);
 static int xsp_parse_auth_token_msg(const void *arg, int remainder, void **msg_body);
 static int xsp_parse_auth_type_msg(const void *arg, int remainder, void **msg_body);
 static int xsp_parse_block_msg(const void *arg, int remainder, void **msg_body);

@@ -47,7 +47,7 @@ typedef struct xsp_authentication_handler_t {
  */
 int xsp_add_authentication_handler(xspAuthenticationHandler *handler);
 
-int xsp_authenticate_connection(xspConn *conn, const char *auth_type, xspCreds **ret_creds);
+int xsp_authenticate_connection(xspConn *conn, xspMsg *msg, xspCreds **ret_creds);
 int xsp_request_authentication(comSess *sess, xspConn *new_conn, const char *auth_name);
 
 #endif

@@ -170,7 +170,7 @@ static int xsp_pass_auth_request_authentication(comSess *sess, xspConn *conn) {
 	token.token = ui->username;
 	token.token_length = strlen(ui->username);
 
-	if (xsp_conn_send_msg(conn, XSP_MSG_AUTH_TOKEN, &token) < 0) {
+	if (xsp_conn_send_msg(conn, sess->version, XSP_MSG_AUTH_TOKEN, XSP_OPT_AUTH_TOK, &token) < 0) {
 		xsp_err(0, "couldn't send user name");
 		goto error_exit2;
 	}
@@ -193,7 +193,7 @@ static int xsp_pass_auth_request_authentication(comSess *sess, xspConn *conn) {
 	token.token = hash;
 	token.token_length = SHA_DIGEST_LENGTH;
 
-	if (xsp_conn_send_msg(conn, XSP_MSG_AUTH_TOKEN, &token) < 0) {
+	if (xsp_conn_send_msg(conn, sess->version, XSP_MSG_AUTH_TOKEN, XSP_OPT_AUTH_TOK, &token) < 0) {
 		xsp_err(0, "couldn't send password hash");
 		goto error_exit3;
 	}
@@ -246,8 +246,8 @@ int xsp_pass_auth_authenticate(xspConn *conn, xspCreds **ret_creds) {
 	bzero(&send_token, sizeof(xspAuthToken));
 	send_token.token = nonce;
 	send_token.token_length = SHA_DIGEST_LENGTH;
-
-	xsp_conn_send_msg(conn, XSP_MSG_AUTH_TOKEN, &send_token);
+	
+	xsp_conn_send_msg(conn, msg1->version, XSP_MSG_AUTH_TOKEN, XSP_OPT_AUTH_TOK, &send_token);
 
 	// get the password hash from the user
 	msg2 = xsp_conn_get_msg(conn, 0);

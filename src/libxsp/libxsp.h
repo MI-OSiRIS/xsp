@@ -20,13 +20,15 @@
 
 /* XSP Defines */
 
-#define XSP_MSG_NOWAIT 0x01
+#define XSP_MSG_NOWAIT                  0x01
 
-#define XSP_SESS_SAVE_STREAM	0x01
-#define XSP_SESS_LSRR		0x02
+#define XSP_SESS_SAVE_STREAM	        0x01
+#define XSP_SESS_LSRR		        0x02
 
-#define XSP_HOP_NATIVE 	0x01
-#define XSP_UNNECESSARY	0x02
+#define XSP_HOP_NATIVE 	                0x01
+#define XSP_UNNECESSARY	                0x02
+
+#define XSP_DEFAULT_SPORT               0
 
 #define XSP_MSG_INVALID			0
 #define XSP_MSG_SESS_OPEN		1

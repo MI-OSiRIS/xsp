@@ -7,7 +7,7 @@
 #include "libxsp_hop.h"
 #include "libxsp_session.h"
 
-static int xsp_write_hdr(void *arg, char *buf);
+static int xsp_writeout_hdr(void *arg, char *buf);
 
 static int xsp_parse_sess_open_msg(const void *arg, int length, void **msg_body);
 static xspHop *xsp_parsehop(xspSess *sess, const void *arg, int remainder, int *size);
@@ -15,7 +15,6 @@ static int xsp_parse_auth_token_msg(const void *arg, int remainder, void **msg_b
 static int xsp_parse_auth_type_msg(const void *arg, int remainder, void **msg_body);
 static int xsp_parse_block_header_msg(const void *arg, int remainder, void **msg_body);
 static int xsp_parse_nack_msg(const void *arg, int remainder, void **msg_body);
-static int xsp_parse_data_open_msg(const void *arg, int remainder, void **msg_body);
 static int xsp_parse_slab_info(const void *arg, int remainder, void **msg_body);
 static xspSlabRec *xsp_parse_slab_record(const void *arg, int remainder, int *size);
 
@@ -25,15 +24,8 @@ static int xsp_writeout_auth_token_msg(void *arg, char *buf, int remainder);
 static int xsp_writeout_auth_type_msg(void *arg, char *buf, int remainder);
 static int xsp_writeout_block_header_msg(void *arg, char *buf, int remainder);
 static int xsp_writeout_nack_msg(void *arg, char *buf, int remainder);
-static int xsp_writeout_data_open_msg(void *arg, char *buf, int remainder);
 static int xsp_writeout_slab_info(void *arg, char *buf, int remainder);
 static int xsp_writeout_slab_record(xspSlabRec *rec, char *buf, int remainder);
-
-typedef struct xsp_msg_data_open_hdr_t {
-	uint32_t flags;
-	char hop_id[XSP_HOPID_LEN];
-	char proto[XSP_PROTO_NAME_LEN];
-} xspDataOpen_HDR;
 
 typedef struct xsp_hop_hdr_t {
 	char id[XSP_HOPID_LEN];

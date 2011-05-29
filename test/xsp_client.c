@@ -18,7 +18,6 @@ struct sockaddr_in *nameport2sa(const char *name_port);
 
 int main(int argc, char *argv[])
 {
-	int i;
 	libxspSess *sess;
 
 	if (libxsp_init() < 0) {
@@ -42,11 +41,12 @@ int main(int argc, char *argv[])
 
 	char buf[20] = "This is a test";
 	char *ret_buf;
-	int ret_len;
+	uint64_t ret_len;
 	int ret_type;
 
-	xsp_send_msg(sess, buf, strlen(buf)+1, 0x30);
-	xsp_recv_msg(sess, &ret_buf, &ret_len, &ret_type);
+	xsp_send_msg(sess, buf, strlen(buf)+1, 0x20);
+	xsp_recv_msg(sess, (void**)&ret_buf, &ret_len, &ret_type);
+	ret_buf[ret_len] = '\0';
 
 	printf("got message[%d]: %s\n", ret_type, ret_buf);
 
