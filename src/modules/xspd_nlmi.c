@@ -70,7 +70,8 @@ int xspd_nlmi_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block) 
 			bson_print(bpp);
 
 			// fill in an option block to return
-			*ret_block = NULL;
+			char *ret_str = "holla";
+			*ret_block = xsp_block_new(block->type, 0, strlen(ret_str), ret_str);
 		}
 		break;
 	default:

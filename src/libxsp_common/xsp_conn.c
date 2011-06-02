@@ -211,7 +211,7 @@ xspMsg *__xsp_conn_get_msg_v0(xspConn *conn, unsigned int flags) {
 
 	// read the header in
 	amt_read = xsp_conn_read(conn, hdr_buf, sizeof(xspMsgHdr), MSG_WAITALL);
-	if (amt_read < sizeof(xspMsgHdr)) {
+	if (amt_read < (int)sizeof(xspMsgHdr)) {
 		goto error_exit;
 	}
 
@@ -283,7 +283,7 @@ xspMsg *__xsp_conn_get_msg_v1(xspConn *conn, unsigned int flags) {
 	// read the header in
 	amt_read = xsp_conn_read(conn, hdr_buf, sizeof(xspv1MsgHdr), MSG_WAITALL);
 
-	if (amt_read < sizeof(xspv1MsgHdr)) {
+	if (amt_read < (int)sizeof(xspv1MsgHdr)) {
 		if (amt_read < 0) {
 			perror("error:");
 		}
@@ -307,7 +307,7 @@ xspMsg *__xsp_conn_get_msg_v1(xspConn *conn, unsigned int flags) {
 		
 		// get block header
 		amt_read = xsp_conn_read(conn, bhdr_buf, sizeof(xspv1BlockHdr), MSG_WAITALL);
-		if (amt_read < sizeof(xspv1BlockHdr)) {
+		if (amt_read < (int)sizeof(xspv1BlockHdr)) {
 			if (amt_read < 0) {
 				perror("error:");
 			}
@@ -325,7 +325,7 @@ xspMsg *__xsp_conn_get_msg_v1(xspConn *conn, unsigned int flags) {
 		// figure out the length of the block
 		if (bhdr_len == 0xFFFF) {
 			amt_read = xsp_conn_read(conn, &block_len, sizeof(uint64_t), MSG_WAITALL);
-			if (amt_read < sizeof(uint64_t)) {
+			if (amt_read < (int)sizeof(uint64_t)) {
 				if (amt_read < 0) {
 					perror("error:");
 				}
@@ -392,7 +392,7 @@ xspMsg *xsp_conn_default_get_msg(xspConn *conn, unsigned int flags) {
 	int amt_read;
 
 	amt_read = xsp_conn_read(conn, &version, sizeof(uint8_t), MSG_WAITALL | MSG_PEEK);
-	if (amt_read < sizeof(uint8_t)) {
+	if (amt_read < (int)sizeof(uint8_t)) {
 		if (amt_read < 0) {
 			perror("error:");
 		}
