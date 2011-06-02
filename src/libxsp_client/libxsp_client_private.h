@@ -4,10 +4,16 @@
 #include <sys/queue.h>
 
 #include "libxsp.h"
+#include "libxsp_sec.h"
+
+#ifdef HAVE_SSH
+#include "libssh2.h"
+#endif
 
 #ifdef NETLOGGER
 #define MAX_FD 256
 #endif
+
 
 /* Objects */
 typedef struct libxsp_sess_info_t {
@@ -37,8 +43,19 @@ typedef struct libxsp_sess_info_t {
 	char data_hop[XSP_HOPID_LEN];
 
 	LIST_ENTRY(libxsp_sess_info_t) sessions;
+	
+	ssize_t (*sendfn) (struct libxsp_sess_info_t *sess, const void *buf, size_t len, int flags);
+	ssize_t (*recvfn) (struct libxsp_sess_info_t *sess, void *buf, size_t len, int flags);
+			
+	enum xsp_sec security;
+	struct libxsp_sec_info_t *sec_info;
+	
+#ifdef HAVE_SSH
+	LIBSSH2_SESSION *ssh_sess;
+	LIBSSH2_CHANNEL *ssh_chan;
+#endif
 
-#ifdef USE_GLOBUS
+#ifdef HAVE_GLOBUS
 	gss_ctx_id_t ctx_handle;
 #endif
 
@@ -66,7 +83,9 @@ int libxsp_init(void);
 libxspSess *xsp_session();
 int xsp_sess_appendchild(libxspSess *sess, char *child, unsigned int flags);
 int xsp_sess_addchild(libxspSess *sess, char *parent, char *child, uint16_t flags);
+int xsp_sess_set_security(libxspSess *sess, libxspSecInfo *sec, int type);
 int xsp_connect(libxspSess *sess);
+int xsp_data_connect(libxspSess *sess);
 int xsp_signal_path(libxspSess *sess, char *path_type);
 int xsp_setsockopt(libxspSess *sess, int level, int optname, const void *optval, socklen_t optlen);
 int xsp_getsockopt(libxspSess *sess, int level, int optname, void *optval, socklen_t *optlen);

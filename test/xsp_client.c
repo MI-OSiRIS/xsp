@@ -16,6 +16,16 @@
 
 struct sockaddr_in *nameport2sa(const char *name_port);
 
+
+libxspSecInfo sec_info = {
+	.username = "ezra",
+	.password = NULL,
+	.key1 = "/home/ezra/.ssh/id_rsa_pl.pub",
+	.key2 = "/home/ezra/.ssh/id_rsa_pl",
+	.keypass = NULL
+};
+	
+
 int main(int argc, char *argv[])
 {
 	libxspSess *sess;
@@ -32,6 +42,11 @@ int main(int argc, char *argv[])
 	}
 
 	xsp_sess_appendchild(sess, argv[argc - 1], XSP_HOP_NATIVE);
+
+	if (xsp_sess_set_security(sess, &sec_info, XSP_SEC_SSH)) {
+		fprintf(stderr, "could not set requested xsp security method\n");
+		exit(-1);
+	}
 
 	/* argc - 1 is the ultimate dest */
 	if (xsp_connect(sess)) {
