@@ -218,7 +218,7 @@ ssize_t __ssh2_chan_read(libxspSess *sess, void *buf, size_t len, int flags) {
 		if (ret < 0) {
 			if (ret == LIBSSH2_ERROR_EAGAIN) {
 				retries--;
-				d_printf("ssh2_chan_read(): EAGAIN\n");
+				//d_printf("ssh2_chan_read(): EAGAIN\n");
 				usleep(5000);
 			} else {
 				d_printf("ssh2_chan_read(): read error\n");

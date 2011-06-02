@@ -61,6 +61,7 @@ int main(int argc, char *argv[])
 
 	xsp_send_msg(sess, buf, strlen(buf)+1, 0x20);
 	xsp_recv_msg(sess, (void**)&ret_buf, &ret_len, &ret_type);
+
 	ret_buf[ret_len] = '\0';
 
 	printf("got message[%d]: %s\n", ret_type, ret_buf);
