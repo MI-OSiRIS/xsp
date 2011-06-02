@@ -335,6 +335,26 @@ AC_SUBST(SQLITE_LIBS)
 #AM_CONDITIONAL(HAVE_UDT, test "${UDT_INCLUDES}" != "")
 #dnl End check for Libudt
 
+dnl Check for libssh2
+AC_ARG_ENABLE(ssh, AC_HELP_STRING([--disable-ssh], [disable SSH2 connection support (default is autodetect)]),[enable_ssh=$enableval],[enable_ssh=try])
+
+if test "$enable_ssh" != "no" ; then
+        AH_TEMPLATE(HAVE_SSH, Whether or not libssh2 is installed on the system)
+        AC_CHECK_LIB(ssh2, main, [
+                AC_CHECK_HEADERS(libssh/ssh2.h, [
+                        SSH_LIBS="-lssh2"
+                        AC_SUBST(SSH_LIBS)
+                        have_ssh=yes
+                ])
+        ])
+
+        if test "$have_ssh" == "yes"; then
+                AC_DEFINE(HAVE_SSH,, Build with SSH2 support)
+        fi
+fi
+
+AM_CONDITIONAL(HAVE_SSH, test x$have_ssh = xyes)
+
 dnl Check for OpenSSL
 AC_ARG_ENABLE(openssl, AC_HELP_STRING([--disable-openssl], [disable OpenSSL support (default is autodetect)]),[enable_openssl=$enableval],[enable_openssl=try])
 
@@ -395,5 +415,6 @@ AC_OUTPUT(
 	src/libxsp_modules/oscars/Makefile
 	src/libxsp_modules/monitoring/Makefile
 	src/libxsp_client/Makefile
+	misc/subsys/Makefile
 	test/Makefile
 	)

@@ -31,6 +31,8 @@
 #include "libxsp_proto.h"
 #include "libxsp_client_private.h"
 
+#include "libxsp_ssh.h"
+
 #ifdef HAVE_GLOBUS
 #include "globus_gss_assist.h"
 #endif
@@ -45,15 +47,18 @@ int xsp_add_sess(int s, libxspSess *sess);
 int xsp_del_sess(libxspSess *sess);
 int __xsp_addchild(xspHop *curr_node, char *parent, xspHop *new_child);
 uint64_t xsp_put_msg(libxspSess *sess, uint8_t version, uint16_t type, void *msg_body);
-uint64_t __xsp_send_one_block(libxspSess *sess, uint16_t type, uint16_t opt_type, uint64_t len, const void *msg_body);
 xspMsg *xsp_get_msg(libxspSess *sess, unsigned int flags);
+uint64_t __xsp_send_one_block(libxspSess *sess, uint16_t type, uint16_t opt_type, uint64_t len, const void *msg_body);
 xspMsg *__xsp_get_msg_v0(libxspSess *sess, unsigned int flags);
 xspMsg *__xsp_get_msg_v1(libxspSess *sess, unsigned int flags);
-int xsp_sess_appendchild(libxspSess *sess, char *child, unsigned int flags);
-int xsp_data_connect(libxspSess *sess);
+char *__print_nack_msg(xspMsg *msg);
 static int xsp_hash_password(const unsigned char *pass, unsigned int pass_len, const unsigned char *nonce, unsigned char *ret_hash);
 
-char *__print_nack_msg(xspMsg *msg);
+ssize_t __xsp_send_default(libxspSess *sess, const void *buf, size_t len, int flags);
+ssize_t __xsp_recv_default(libxspSess *sess, void *buf, size_t len, int flags);
+
+int __setup_ssh(libxspSess *sess);
+int __setup_ssl(libxspSess *sess);
 
 #ifdef HAVE_GLOBUS
 int xsp_globus_get_token( void *arg, void ** token, size_t * token_length);
@@ -94,7 +99,7 @@ char *__print_nack_msg(xspMsg *msg) {
 		}
 		break;
 	default:
-		fprintf(stderr, "unsupported version");
+		fprintf(stderr, "NACK: unsupported version");
 		break;
 	}
 	
@@ -119,6 +124,39 @@ uint64_t __xsp_send_one_block(libxspSess *sess, uint16_t type, uint16_t opt_type
 	xsp_free_block_list(bl, XSP_BLOCK_KEEP_DATA);
 
 	return ret;
+}
+
+int __setup_ssh(libxspSess *sess) {
+	char *user;
+	char *pass;
+	char *pubkey;
+	char *privkey;
+	char *keypass;
+	
+	if (!(user = getenv("XSP_SSH_USER")))
+		user = getenv("USER");
+	
+	if (!(pass = getenv("XSP_SSH_PASS")))
+		pass = NULL;
+
+	if (!(pubkey = getenv("XSP_SSH_PUBKEY"))) {
+		pubkey = malloc((strlen(user) + 60) * sizeof(char)); 
+		sprintf(pubkey, "%s%s%s%s%s", "/home/", user, "/.ssh/", user, ".pub");
+	}
+	
+	if (!(privkey = getenv("XSP_SSH_PRIVKEY"))) {
+                privkey = malloc((strlen(user) + 60) * sizeof(char));
+		sprintf(privkey, "%s%s%s", "/home/", user, "/.ssh/identity");
+	}
+	
+	if (!(keypass = getenv("XSP_SSH_KEYPASS")))
+		keypass = NULL;
+	
+	return xsp_ssh2_setup(sess, user, pass, privkey, pubkey, keypass);
+}
+
+int __setup_ssl(libxspSess *sess) {
+	return -1;
 }
 
 int libxsp_init() {
@@ -249,6 +287,9 @@ libxspSess *xsp_session() {
 #ifdef NETLOGGER
 	new_sess->block_id = 0;
 #endif
+
+	new_sess->sendfn = __xsp_send_default;
+	new_sess->recvfn = __xsp_recv_default;
 
 	return new_sess;
 }
@@ -386,6 +427,50 @@ int __xsp_addchild(xspHop *curr_node, char *parent, xspHop *new_child) {
 	return retval;
 }
 
+int xsp_sess_set_security(libxspSess *sess, libxspSecInfo *sec, int type) {
+	switch (type) {
+	case XSP_SEC_NONE:
+		{
+			d_printf("setting session security to XSP_SEC_NONE\n");
+			sess->security = XSP_SEC_NONE;
+			sess->sec_info = NULL;
+			
+		}
+		break;
+	case XSP_SEC_SSH:
+		{
+#ifdef HAVE_SSH
+			d_printf("setting session security to XSP_SEC_SSH\n");
+			sess->security = XSP_SEC_SSH;
+			sess->sec_info = sec;
+			sess->sendfn = xsp_ssh2_send;
+			sess->recvfn = xsp_ssh2_recv;
+#else
+			d_printf("SSH support was not found\n");
+#endif
+		}
+		break;
+	case XSP_SEC_SSL:
+		{
+#ifdef HAVE_SSL
+			d_printf("setting session security to XSP_SEC_SSL\n");
+                        sess->security = XSP_SEC_SSL;
+			sess->sec_info = sec;
+			sess->sendfn = __xsp_send_default;
+			sess->recvfn = __xsp_recv_default;
+#else
+			d_printf("SSL support was not found\n");
+#endif	       
+                }
+                break;
+	default:
+		d_printf("xsp_sess_set_security() error: unknown security type\n");
+		return -1;
+	}
+	return 0;
+}
+		
+
 int xsp_connect(libxspSess *sess) {
 	int r = -1;
 	struct addrinfo *nexthop_addrs = NULL;
@@ -439,7 +524,7 @@ int xsp_connect(libxspSess *sess) {
 
 		connected = 1;
 	}
-
+	
 	freeaddrinfo(nexthop_addrs);
 
 	if (connected == 0) {
@@ -451,10 +536,33 @@ int xsp_connect(libxspSess *sess) {
 	sess->sock = connfd;
 
 	if (next_hop->flags & XSP_HOP_NATIVE) {
+		int ret;
 		xspMsg *msg;
 		xspAuthType auth_type;
 		xspAuthToken token, *ret_token;
 
+		switch (sess->security) {
+		case XSP_SEC_NONE:
+			break;
+		case XSP_SEC_SSH:
+			{
+				ret = __setup_ssh(sess);
+				if (ret < 0)
+					return -1;
+			}
+			break;
+		case XSP_SEC_SSL:
+			{
+				ret = __setup_ssl(sess);
+				if (ret < 0)
+					return -1;
+			}
+			break;
+		default:
+			d_printf("xsp_connect() error: unknown security\n");
+			break;
+		}
+		
 
 #ifndef HAVE_GLOBUS
 		if (getenv("XSP_USERNAME") && getenv("XSP_PASSWORD")) {
@@ -1071,13 +1179,17 @@ xspMsg *__xsp_get_msg_v0(libxspSess *sess, unsigned int flags) {
 	xspMsg *msg;
 	xspMsgHdr *hdr;
 
+	hdr_buf[0] = XSP_v0;
+
 	// if they don't want to wait, check to see if everything can be read in without waiting
 	// if not, return an error stating as such
 	if (flags & XSP_MSG_NOWAIT) {
 
 		// read in the buffer using MSG_PEEK so as to not actually remove the data from the stream
-		rd = recv(sess->sock, hdr_buf, sizeof(xspMsgHdr), MSG_PEEK | MSG_WAITALL | MSG_DONTWAIT);
-		if (rd < sizeof(xspMsgHdr)) {
+		rd = sess->recvfn(sess, hdr_buf+sizeof(uint8_t), 
+				  sizeof(xspMsgHdr)-sizeof(uint8_t),
+				  MSG_PEEK | MSG_WAITALL | MSG_DONTWAIT);
+		if (rd < (int)(sizeof(xspMsgHdr)-sizeof(uint8_t))) {
 			errno = EAGAIN;
 			return NULL;
 		}
@@ -1097,8 +1209,9 @@ xspMsg *__xsp_get_msg_v0(libxspSess *sess, unsigned int flags) {
 				return NULL;
 			}
 
-			rd = recv(sess->sock, buf, sizeof(xspMsgHdr) + remainder, MSG_PEEK | MSG_WAITALL | MSG_DONTWAIT);
-			if (rd < (sizeof(xspMsgHdr) + remainder)) {
+			rd = sess->recvfn(sess, buf, sizeof(xspMsgHdr) + remainder,
+					  MSG_PEEK | MSG_WAITALL | MSG_DONTWAIT);
+			if (rd < (int)(sizeof(xspMsgHdr) + remainder)) {
 				free(buf);
 				errno = EAGAIN;
 				return NULL;
@@ -1108,9 +1221,9 @@ xspMsg *__xsp_get_msg_v0(libxspSess *sess, unsigned int flags) {
 		}
 	}
 
-	// read the header in
-	amt_read = recv(sess->sock, hdr_buf, sizeof(xspMsgHdr), MSG_WAITALL);
-	if (amt_read < sizeof(xspMsgHdr)) {
+	// read the read of the header
+	amt_read = sess->recvfn(sess, hdr_buf+sizeof(uint8_t), sizeof(xspMsgHdr)-sizeof(uint8_t), MSG_WAITALL);
+	if (amt_read < (int)(sizeof(xspMsgHdr)-sizeof(uint8_t))) {
 		goto error_exit;
 	}
 
@@ -1128,7 +1241,7 @@ xspMsg *__xsp_get_msg_v0(libxspSess *sess, unsigned int flags) {
 			goto error_exit;
 
 		// grab the remainder
-		amt_read = recv(sess->sock, buf, remainder, MSG_WAITALL);
+		amt_read = sess->recvfn(sess, buf, remainder, MSG_WAITALL);
 		if (amt_read < remainder)
 			goto error_exit2;
 	}
@@ -1177,10 +1290,12 @@ xspMsg *__xsp_get_msg_v1(libxspSess *sess, unsigned int flags) {
         xspBlock *block;
         xspBlockList *bl;
 
-        // read the header in
-        amt_read = recv(sess->sock, hdr_buf, sizeof(xspv1MsgHdr), MSG_WAITALL);
+	hdr_buf[0] = XSP_v1;
+	
+        // read the rest of the header
+        amt_read = sess->recvfn(sess, hdr_buf+sizeof(uint8_t), sizeof(xspv1MsgHdr)-sizeof(uint8_t), MSG_WAITALL);
 
-        if (amt_read < sizeof(xspv1MsgHdr)) {
+        if (amt_read < (int)(sizeof(xspv1MsgHdr)-sizeof(uint8_t))) {
                 if (amt_read < 0) {
                         perror("error:");
                 }
@@ -1203,8 +1318,8 @@ xspMsg *__xsp_get_msg_v1(libxspSess *sess, unsigned int flags) {
                 uint64_t block_len;
 
                 // get block header
-                amt_read = recv(sess->sock, bhdr_buf, sizeof(xspv1BlockHdr), MSG_WAITALL);
-                if (amt_read < sizeof(xspv1BlockHdr)) {
+                amt_read = sess->recvfn(sess, bhdr_buf, sizeof(xspv1BlockHdr), MSG_WAITALL);
+                if (amt_read < (int)sizeof(xspv1BlockHdr)) {
                         if (amt_read < 0) {
                                 perror("error:");
                         }
@@ -1220,8 +1335,8 @@ xspMsg *__xsp_get_msg_v1(libxspSess *sess, unsigned int flags) {
                 d_printf("block hdr type: %d, len: %d\n", bhdr_type, bhdr_len);
                 // figure out the length of the block
                 if (bhdr_len == 0xFFFF) {
-                        amt_read = recv(sess->sock, &block_len, sizeof(uint64_t), MSG_WAITALL);
-                        if (amt_read < sizeof(uint64_t)) {
+                        amt_read = sess->recvfn(sess, &block_len, sizeof(uint64_t), MSG_WAITALL);
+                        if (amt_read < (int)sizeof(uint64_t)) {
                                 if (amt_read < 0) {
                                         perror("error:");
                                 }
@@ -1239,7 +1354,7 @@ xspMsg *__xsp_get_msg_v1(libxspSess *sess, unsigned int flags) {
                         if (!buf)
                                 goto error_exit;
 
-                        amt_read = recv(sess->sock, buf, block_len, MSG_WAITALL);
+                        amt_read = sess->recvfn(sess, buf, block_len, MSG_WAITALL);
                         if (amt_read < block_len) {
                                 if (amt_read < 0) {
                                         perror("error:");
@@ -1286,8 +1401,10 @@ xspMsg *xsp_get_msg(libxspSess *sess, unsigned int flags) {
         uint8_t version;
         int amt_read;
 
-        amt_read = recv(sess->sock, &version, sizeof(uint8_t), MSG_WAITALL | MSG_PEEK);
-        if (amt_read < sizeof(uint8_t)) {
+
+	// XXX: should probably find a more efficient way to read in xsp headers
+        amt_read = sess->recvfn(sess, &version, sizeof(uint8_t), MSG_WAITALL);
+        if (amt_read < (int)sizeof(uint8_t)) {
                 goto error_exit;
         }
 	
@@ -1343,7 +1460,7 @@ uint64_t xsp_put_msg(libxspSess *sess, uint8_t version, uint16_t type, void *msg
 
 	amt_sent = 0;
 	do {
-		sent = send(sess->sock, msg_buf + amt_sent, msg_len - amt_sent, 0);
+		sent = sess->sendfn(sess, msg_buf + amt_sent, msg_len - amt_sent, 0);
 		if (sent <= 0)
 			goto write_error;
 
@@ -1453,4 +1570,12 @@ static int xsp_hash_password(const unsigned char *pass, unsigned int pass_len, c
 	SHA1(buf, SHA_DIGEST_LENGTH, ret_hash);
 
 	return 0;
+}
+
+ssize_t __xsp_send_default(libxspSess *sess, const void *buf, size_t len, int flags) {
+	return send(sess->sock, buf, len, flags);
+}
+
+ssize_t __xsp_recv_default(libxspSess *sess, void *buf, size_t len, int flags) {
+	return recv(sess->sock, buf, len, flags);
 }

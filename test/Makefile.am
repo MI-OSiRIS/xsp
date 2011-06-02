@@ -15,3 +15,8 @@ nlmi_test_CFLAGS = -DMONGO_HAVE_STDINT
 LDADD += $(top_builddir)/libbson/libbson.a
 INCLUDES += -I$(top_srcdir)/libbson
 endif
+
+
+if HAVE_SSH
+LDADD += @SSH_LIBS@
+endif

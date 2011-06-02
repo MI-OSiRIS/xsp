@@ -12,6 +12,8 @@
 
 #include <unistd.h>
 
+#include "libxsp_sec.h"
+
 #define XSP_HOP_NATIVE 0x01
 
 typedef void libxspSess;
@@ -20,6 +22,7 @@ int libxsp_init(void);
 libxspSess *xsp_session();
 int xsp_sess_appendchild(libxspSess *sess, char *child, unsigned int flags);
 int xsp_sess_addchild(libxspSess *sess, char *parent, char *child, uint16_t flags);
+int xsp_sess_set_security(libxspSess *sess, libxspSecInfo *sec, int type);
 int xsp_connect(libxspSess *sess);
 int xsp_signal_path(libxspSess *sess, char *path_type);
 int xsp_setsockopt(libxspSess *sess, int level, int optname, const void *optval, socklen_t optlen);

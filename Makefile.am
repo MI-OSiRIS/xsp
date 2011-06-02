@@ -17,6 +17,10 @@ if ENABLE_CLIENT
 libdirs += libradix src/libxsp_client
 endif
 
+if HAVE_SSH
+bindirs += misc/subsys
+endif
+
 bindirs += src/libxsp_modules src/modules
 
 SUBDIRS = $(libdirs) $(bindirs)
