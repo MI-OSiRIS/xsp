@@ -1,3 +1,24 @@
+/* 
+ * Author: Ezra Kissel <kissel@cis.udel.edu>
+ * Based on netconf-subsystem.c from www.netconfcentral.org
+ * 02-jun-11
+ */
+
+/*  
+ * FILE: xsp-subsystem.c
+ */
+
+/*
+ * Copyright (c) 2009, Andy Bierman
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 #include <sys/types.h>
 #include <sys/param.h>
 #include <sys/stat.h>
@@ -18,7 +39,7 @@
 
 #include "libxsp_client.h"
 
-#define SUBSYS_TRACE 1
+//#define SUBSYS_TRACE 1
 
 #define XSP_INSTANCE_ADDR "127.0.0.1"
 #define XSP_INSTANCE_PORT 5006
@@ -32,6 +53,14 @@ enum {
 	FALSE = 0,
 	TRUE
 };
+
+enum {
+	XSP_NO_ERR = 0,
+	XSP_ERR_EOF,
+	XSP_ERR_READ,
+	XSP_ERR_SKIPPED
+};
+	
 
 struct sockaddr_in saddr;
 int xspsock;
@@ -47,6 +76,54 @@ static int   errok;
 #endif
 
 static char msgbuff[XSP_MAX_LENGTH];
+
+static ssize_t do_read (int readfd,
+			char *readbuff,
+			size_t readcnt,
+			int *retres)
+{
+	int   readdone;
+	ssize_t   retcnt;
+
+	readdone = FALSE;
+	retcnt = 0;
+	*retres = XSP_NO_ERR;
+
+	while (!readdone && *retres == 0) {
+		retcnt = read(readfd, readbuff, readcnt);
+		if (retcnt < 0) {
+			if (errno != EAGAIN) {
+#ifdef SUBSYS_TRACE
+				if (errfile) {
+					fprintf(errfile,
+						"\nread failed on FD %d (%d)",
+						readfd,
+						(int)retcnt);
+					errdirty = 1;
+				}
+#endif
+				*retres = XSP_ERR_READ;
+				continue;
+			}
+		} else if (retcnt == 0) {
+#ifdef SUBSYS_TRACE
+			if (errfile) {
+				fprintf(errfile, "\nclosed connection");
+				errdirty = 1;
+			}
+#endif
+			*retres = XSP_ERR_EOF;
+			readdone = TRUE;
+			continue;
+		} else {
+			/* retcnt is the number of bytes read */
+			readdone = TRUE;
+		}
+	}  /*end readdone loop */
+
+	return retcnt;
+
+}  /* do_read */
 
 int send_buff (int fd, const char *buffer, size_t cnt) {
 	size_t sent, left;
@@ -81,7 +158,7 @@ int send_buff (int fd, const char *buffer, size_t cnt) {
 		}
 	}
 
-	return 0;
+	return XSP_NO_ERR;
 
 } /* send_buff */
 
@@ -102,8 +179,8 @@ static int init_subsys (void) {
 	
 	/* open the logfiles that should be active */
 	
-	infile = fopen("/tmp/subsys-in.log", "w"); 
-	outfile = fopen("/tmp/subsys-out.log", "w");
+	//infile = fopen("/tmp/subsys-in.log", "w"); 
+	//outfile = fopen("/tmp/subsys-out.log", "w");
 	errfile = fopen("/tmp/subsys-err.log", "w");
 #endif
 		
@@ -159,17 +236,16 @@ static void cleanup_subsys (void) {
 
 
 static int io_loop (void) {
-	int  res;
-	int  done;
+	int       done;
 	fd_set    fds;
 	int       ret;
+	int       res;
 	ssize_t   retcnt;
-	int cnt;
+	int       cnt;
 
 	res = 0;
 	done = FALSE;
 	while (!done) {
-
 		FD_ZERO(&fds);
 		
 		FD_SET(STDIN_FILENO, &fds);
@@ -217,47 +293,37 @@ static int io_loop (void) {
 		
 		/* check any input from client */
 		if (FD_ISSET(STDIN_FILENO, &fds)) {
-			retcnt = read(STDIN_FILENO, msgbuff, (size_t)XSP_MAX_LENGTH);
-			if (retcnt < 0) {
-#ifdef SUBSYS_TRACE
-				if (errfile) {
-					fprintf(errfile, "\nxsp client read failed (%d)",
-						retcnt);
-					errdirty = 1;
-				}
-#endif
-				res = -1;
+			retcnt = do_read(STDIN_FILENO,
+					 msgbuff,
+					 (size_t)XSP_MAX_LENGTH,
+					 &res);
+
+			if (res == XSP_ERR_EOF) {
+				res = XSP_NO_ERR;
 				done = TRUE;
 				continue;
-			} else if (retcnt == 0) {
+			} else if (res == XSP_ERR_SKIPPED) {
+				res = XSP_NO_ERR;
+			} else if (res == XSP_NO_ERR && retcnt > 0) {
 #ifdef SUBSYS_TRACE
-				if (errfile) {
-					//fprintf(errfile, "\nxsp client closed connection");
+				if (errfile && errok) {
+					/* not an error */
+					fprintf(errfile,
+						"\nSTDIN read (%d)",
+						(int)retcnt);
 					errdirty = 1;
 				}
-#endif
-				res = 0;
-				errok = 0;
-				//done = TRUE;
-				//continue;
-				usleep(100000);
-			}
-			
-#ifdef SUBSYS_TRACE
-			if (errfile && errok) {
-				/* not an error */
-				fprintf(errfile, "\nxsp read client (%d)", retcnt);
-				errdirty = 1;
-			}
-			if (infile) {
-				for (cnt = 0; cnt<retcnt; cnt++) {
-					fprintf(infile, "%c", msgbuff[cnt]);
+				/*
+				if (infile) {
+					int cnt;
+					for (cnt = 0; cnt<retcnt; cnt++) {
+						fprintf(infile, "%c", msgbuff[cnt]);
+					}
+					indirty = 1;
 				}
-				indirty = 1;
-			}
-#else
-			usleep(USLEEP_CNT);
+				*/
 #endif
+			}
 			
 			if (retcnt > 0) {
 				/* send this buffer to the xsp instance */
@@ -280,68 +346,67 @@ static int io_loop (void) {
 					fprintf(errfile, "\nsend xsp server (%d)", retcnt);
 					errdirty = 1;
 				}
-#else 
-				usleep(USLEEP_CNT);
 #endif
 			}
 		}
 		
-		/* check any input from the xspserver */
+		/* check any input from the xsp server */
 		if (FD_ISSET(xspsock, &fds)) {
-			retcnt = recv(xspsock, msgbuff, (size_t)XSP_MAX_LENGTH, 0);
-			if (retcnt < 0) {
-#ifdef SUBSYS_TRACE
-				if (errfile) {
-					fprintf(errfile, "\nxsp recv failed (%d)",
-						retcnt);
-					errdirty = 1;
-				}
-#endif
-				res = -1;
+			res = XSP_NO_ERR;
+			retcnt = do_read(xspsock,
+					 msgbuff,
+					 (size_t)XSP_MAX_LENGTH,
+					 &res);
+			
+			if (res == XSP_ERR_EOF) {
+				res = XSP_NO_ERR;
 				done = TRUE;
 				continue;
-			} else if (retcnt == 0) {
+			} else if (res == XSP_ERR_SKIPPED) {
+				res = XSP_NO_ERR;
+			} else if (res == XSP_NO_ERR && retcnt > 0) {
 #ifdef SUBSYS_TRACE
-				if (errfile) {
-					fprintf(errfile, "\nxsp recv len 0");
+				if (errfile && errok) {
+					/* not an error */
+					fprintf(errfile,
+						"\nxsp server read  (%d)",
+						(int)retcnt);
 					errdirty = 1;
 				}
+				/*
+				if (outfile) {
+					int cnt;
+					for (cnt = 0; cnt<retcnt; cnt++) {
+						fprintf(outfile, "%c", msgbuff[cnt]);
+					}
+					outdirty = 1;
+				}
+				*/
 #endif
 				
-				res = 0;
-				done = TRUE;
-				continue;
-			}
-			
+				/* send this buffer to STDOUT */
+				res = send_buff(STDOUT_FILENO, msgbuff, (size_t)retcnt);
+				if (res != XSP_NO_ERR) {
 #ifdef SUBSYS_TRACE
-			if (errfile && errok) {
-				/* not an error */
-				fprintf(errfile, "\nxsp read (%d)", retcnt);
-				errdirty = 1;
-			}
+					if (errfile) {
+						fprintf(errfile, "\nxsp send buff to client failed");
+						errdirty = 1;
+					}
 #endif
-			/* send this buffer to STDOUT */
-			res = send_buff(STDOUT_FILENO, msgbuff, (size_t)retcnt);
-			if (res != 0) {
+					done = TRUE;
+					continue;
+				}
 #ifdef SUBSYS_TRACE
-				if (errfile) {
-					fprintf(errfile, "\nxsp send buff to client failed");
+				if (errfile && errok) {
+					/* not an error */
+					fprintf(errfile, "\nxsp write client (%d)", retcnt);
 					errdirty = 1;
 				}
 #endif
-				done = TRUE;
-				continue;
 			}
-#ifdef SUBSYS_TRACE
-			if (errfile && errok) {
-				/* not an error */
-				fprintf(errfile, "\nxsp write client (%d)", retcnt);
-				errdirty = 1;
-			}
-#endif
 		}
 	}
-	
+
 	return res;
 	
 } /* io_loop */
@@ -363,7 +428,7 @@ int main (void) {
 	const char *msg;
 	
 	res = init_subsys();
-	if (res != 0) {
+	if (res != XSP_NO_ERR) {
 		msg = "init failed";
 	}
 	
@@ -374,7 +439,7 @@ int main (void) {
 		}
 	}
 	
-	if (res != 0) {
+	if (res != XSP_NO_ERR) {
 #ifdef SUBSYS_TRACE
 		if (errfile) {
 			fprintf(errfile, 
@@ -385,7 +450,7 @@ int main (void) {
 	
 	cleanup_subsys();
 	
-	if (res != 0) {
+	if (res != XSP_NO_ERR) {
 		return 1;
 	} else {
 		return 0;
