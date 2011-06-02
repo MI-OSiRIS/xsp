@@ -53,6 +53,7 @@ typedef struct libxsp_sess_info_t {
 #ifdef HAVE_SSH
 	LIBSSH2_SESSION *ssh_sess;
 	LIBSSH2_CHANNEL *ssh_chan;
+	LIBSSH2_AGENT *agent;
 #endif
 
 #ifdef HAVE_GLOBUS
