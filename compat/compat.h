@@ -3,9 +3,14 @@
 
 #include "config.h"
 
+#include <stdint.h>
+#include <byteswap.h>
+#include <arpa/inet.h>
 #include <netdb.h>
 #include <sys/types.h>
 #include <sys/time.h>
+#include <sys/param.h>
+#include <endian.h>
 
 #define TRUE 1
 #define FALSE 0
@@ -24,6 +29,24 @@ size_t	strlcpy (char *dst, const char *src, size_t siz);
 
 #ifndef HAVE_STRLCAT
 size_t	strlcat (char *dst, const char *src, size_t siz);
+#endif
+
+#ifndef ntohll
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+static inline uint64_t ntohll(uint64_t x)
+{
+	return bswap_64(x);
+}
+#elif __BYTE_ORDER == __BIG_ENDIAN
+static inline uint64_t ntohll(uint64_t x)
+{
+	return x;
+}
+#endif
+#endif
+
+#ifndef htonll
+#define htonll ntohll
 #endif
 
 char *bin2hex(const char *src, char *dst, int size);

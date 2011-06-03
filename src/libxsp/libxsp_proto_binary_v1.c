@@ -34,10 +34,8 @@ int libxsp_proto_binary_v1_init() {
 	bin_handler_v1.parse[XSP_MSG_SESS_NACK] = xsp_parse_default_block_list;
 	bin_handler_v1.parse[XSP_MSG_PING] = NULL;
 	bin_handler_v1.parse[XSP_MSG_PONG] = NULL;
-	bin_handler_v1.parse[XSP_MSG_DATA_OPEN] = xsp_parse_default_block_list;
-	bin_handler_v1.parse[XSP_MSG_DATA_CLOSE] = NULL;
-	bin_handler_v1.parse[XSP_MSG_PATH_OPEN] = xsp_parse_default_block_list;
-	bin_handler_v1.parse[XSP_MSG_PATH_CLOSE] = NULL;
+	bin_handler_v1.parse[XSP_MSG_DATA_CHAN] = xsp_parse_default_block_list;
+	bin_handler_v1.parse[XSP_MSG_NET_PATH] = xsp_parse_default_block_list;
 	bin_handler_v1.parse[XSP_MSG_APP_DATA] = xsp_parse_app_data_block_list;
 	bin_handler_v1.parse[XSP_MSG_SLAB_INFO] = xsp_parse_default_block_list;
 
@@ -51,10 +49,8 @@ int libxsp_proto_binary_v1_init() {
 	bin_handler_v1.writeout[XSP_MSG_SESS_NACK] = xsp_writeout_default_block_list;
 	bin_handler_v1.writeout[XSP_MSG_PING] = NULL;
 	bin_handler_v1.writeout[XSP_MSG_PONG] = NULL;
-	bin_handler_v1.writeout[XSP_MSG_DATA_OPEN] = xsp_writeout_default_block_list;
-	bin_handler_v1.writeout[XSP_MSG_DATA_CLOSE] = NULL;
-	bin_handler_v1.writeout[XSP_MSG_PATH_OPEN] = xsp_writeout_default_block_list;
-	bin_handler_v1.writeout[XSP_MSG_PATH_CLOSE] = NULL;
+	bin_handler_v1.writeout[XSP_MSG_DATA_CHAN] = xsp_writeout_default_block_list;
+	bin_handler_v1.writeout[XSP_MSG_NET_PATH] = xsp_writeout_default_block_list;
 	bin_handler_v1.writeout[XSP_MSG_APP_DATA] = xsp_writeout_app_data_block_list;
 	bin_handler_v1.writeout[XSP_MSG_SLAB_INFO] = xsp_writeout_default_block_list;
 
@@ -112,7 +108,8 @@ static int xsp_writeout_block_hdr(void *arg, char *buf, int remainder) {
 
         if (block->length >= XSP_MAX_LENGTH) {
                 uint64_t *len = (uint64_t*)(buf+3*sizeof(uint16_t));
-                memcpy(len, &(block->length), sizeof(uint64_t));
+		uint64_t nbo = htonll(block->length);
+                memcpy(len, &nbo, sizeof(uint64_t));
                 hdr->length = htons(0xFFFF);
                 len_offset = sizeof(uint64_t);
         }
@@ -145,10 +142,10 @@ static int xsp_parse_default_block_list(const void *arg, int length, void **msg_
                         n = xsp_parse_nack_msg(block, block->length, (void**)&ret_block);
                         break;
                 case XSP_OPT_DATA:
-                        n = xsp_parse_data_open_msg(block, block->length, (void**)&ret_block);
+                        n = xsp_parse_data_chan_msg(block, block->length, (void**)&ret_block);
                         break;
                 case XSP_OPT_PATH:
-                        n = xsp_parse_block_msg(block, block->length, (void**)&ret_block);
+                        n = xsp_parse_net_path_msg(block, block->length, (void**)&ret_block);
                         break;
                 case XSP_OPT_SLAB:
                         n = xsp_parse_slab_info(block, block->length, (void**)&ret_block);
@@ -207,10 +204,10 @@ static int xsp_writeout_default_block_list(void *arg, char *buf, int remainder) 
 			n = xsp_writeout_nack_msg(block, buf, remainder);
 			break;
 		case XSP_OPT_DATA:
-			n = xsp_writeout_data_open_msg(block, buf, remainder);
+			n = xsp_writeout_data_chan_msg(block, buf, remainder);
 			break;
 		case XSP_OPT_PATH:
-			n = xsp_writeout_block_msg(block, buf, remainder);
+			n = xsp_writeout_net_path_msg(block, buf, remainder);
 			break;
 		case XSP_OPT_SLAB:
 			n = xsp_writeout_slab_info(block, buf, remainder);
@@ -463,14 +460,14 @@ static int xsp_parse_auth_type_msg(const void *arg, int remainder, void **msg_bo
 	return 0;
 }
 
-static int xsp_parse_data_open_msg(const void *arg, int remainder, void **msg_body) {
+static int xsp_parse_data_chan_msg(const void *arg, int remainder, void **msg_body) {
 	xspBlock *block = (xspBlock*) arg;
 	xspDataOpen_HDR *hdr = (xspDataOpen_HDR*) block->data;
-	xspDataOpenHeader *new;
+	xspDataOpen *new;
 
 	*msg_body = NULL;
 
-	new = malloc(sizeof(xspDataOpenHeader));
+	new = malloc(sizeof(xspDataOpen));
 	if (!new)
 		return -1;
 	
@@ -487,7 +484,61 @@ static int xsp_parse_data_open_msg(const void *arg, int remainder, void **msg_bo
 	return 0;
 }
 
-static int xsp_parse_path_open_msg(const void *arg, int remainder, void **msg_body) {
+static int xsp_parse_net_path_msg(const void *arg, int remainder, void **msg_body) {
+	xspBlock *block = (xspBlock*) arg;
+	char *buf = (char*) block->data;
+	xspNetPath_HDR *hdr;
+	xspNetPath *new;
+	int i;
+
+	*msg_body = NULL;
+
+	new = xsp_alloc_net_path();
+	if (!new)
+		return -1;
+	
+	hdr = (xspNetPath_HDR *) buf;
+
+	memcpy(new->type, hdr->type, XSP_NET_PATH_LEN);
+	new->type[XSP_NET_PATH_LEN] = '\0';
+        new->action = ntohs(hdr->action);
+        new->rule_count = ntohs(hdr->rule_count);
+	
+	new->rules = (xspNetPathRule **)malloc(new->rule_count * sizeof(xspNetPathRule*));
+	if (!new->rules)
+		return -1;
+
+	buf += sizeof(xspNetPath_HDR);
+
+        for (i = 0; i < new->rule_count; i++) {
+		xspNetPathRule *rule;
+                xspNetPathRule_HDR *rhdr;
+
+		rhdr = (xspNetPathRule_HDR *) buf;
+
+                rule = new->rules[i];
+
+                memcpy(&(rule->src_eid), &(rhdr->src_eid), sizeof(struct xsp_addr));
+                memcpy(&(rule->src_mask), &(rhdr->src_mask), sizeof(struct xsp_addr));
+                memcpy(&(rule->dst_eid), &(rhdr->dst_eid), sizeof(struct xsp_addr));
+                memcpy(&(rule->dst_mask), &(rhdr->dst_mask), sizeof(struct xsp_addr));
+
+                rule->src_port_min = ntohs(rhdr->src_port_min);
+                rule->src_port_max = ntohs(rhdr->src_port_max);
+                rule->dst_port_min = ntohs(rhdr->dst_port_min);
+                rule->dst_port_max = ntohs(rhdr->dst_port_max);
+
+                rule->direction = ntohs(rhdr->direction);
+                rule->bandwidth = ntohll(rhdr->bandwidth);
+                rule->status = ntohs(rhdr->status);
+
+                buf += sizeof(xspNetPathRule_HDR);
+        }
+
+	block->data = new;
+	block->length = 0;
+
+	*msg_body = block;
 	
 	return 0;
 }
@@ -689,9 +740,9 @@ static int xsp_writeout_nack_msg(void *arg, char *buf, int remainder) {
 	return -1;
 }
 
-static int xsp_writeout_data_open_msg(void *arg, char *buf, int remainder) {
+static int xsp_writeout_data_chan_msg(void *arg, char *buf, int remainder) {
 	xspBlock *block = arg;
-	xspDataOpenHeader *dopen = block->data;
+	xspDataOpen *dopen = block->data;
 	xspDataOpen_HDR *hdr;
         int bhdr_size;
 
@@ -714,6 +765,63 @@ static int xsp_writeout_data_open_msg(void *arg, char *buf, int remainder) {
 	
 	return bhdr_size + block->length;
 
+ write_error:
+	return -1;
+}
+static int xsp_writeout_net_path_msg(void *arg, char *buf, int remainder) {
+	xspBlock *block = arg;
+	xspNetPath *net_path = block->data;
+	xspNetPath_HDR *hdr;
+	int bhdr_size;
+	int i;
+
+	block->length = net_path->rule_count * sizeof(xspNetPathRule_HDR) + sizeof(xspNetPath_HDR);
+	
+	bhdr_size = xsp_writeout_block_hdr(block, buf, remainder);
+        if (bhdr_size < 0)
+                goto write_error;
+
+        remainder -= bhdr_size;
+        if (remainder < sizeof(xspNetPath_HDR))
+                goto write_error;
+
+	buf += bhdr_size;
+	hdr = (xspNetPath_HDR *) buf;
+	
+	d_printf("net_path type: %s\n", net_path->type);
+
+	memcpy(hdr->type, net_path->type, XSP_NET_PATH_LEN);
+	hdr->action = htons(net_path->action);
+	hdr->rule_count = htons(net_path->rule_count);
+
+	buf += sizeof(xspNetPath_HDR);
+	
+	for (i = 0; i < net_path->rule_count; i++) {
+		xspNetPathRule *rule;
+		xspNetPathRule_HDR *rhdr;
+		
+		rule = net_path->rules[i];
+		rhdr = (xspNetPathRule_HDR *) buf;
+		
+		memcpy(&(rhdr->src_eid), &(rule->src_eid), sizeof(struct xsp_addr));
+		memcpy(&(rhdr->src_mask), &(rule->src_mask), sizeof(struct xsp_addr));
+		memcpy(&(rhdr->dst_eid), &(rule->dst_eid), sizeof(struct xsp_addr));
+		memcpy(&(rhdr->dst_mask), &(rule->dst_mask), sizeof(struct xsp_addr));
+
+		rhdr->src_port_min = htons(rule->src_port_min);
+		rhdr->src_port_max = htons(rule->src_port_max);
+		rhdr->dst_port_min = htons(rule->dst_port_min);
+		rhdr->dst_port_max = htons(rule->dst_port_max);
+		
+		rhdr->direction = htons(rule->direction);
+		rhdr->bandwidth = htonll(rule->bandwidth);
+		rhdr->status = htons(rule->status);
+		
+		buf += sizeof(xspNetPathRule_HDR);
+	}
+	
+	return bhdr_size + block->length;
+	
  write_error:
 	return -1;
 }

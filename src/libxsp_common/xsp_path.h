@@ -14,8 +14,8 @@ typedef struct xsp_path_t {
 	char *description;
 
 	LIST_HEAD(channellisthead, xsp_channel_t) channel_list;
-
-	int (*new_channel) (struct xsp_path_t *path, uint32_t size, xspChannel **channel, char **ret_error_msg);
+	
+	int (*new_channel) (struct xsp_path_t *path, xspNetPathRule *rule, xspChannel **channel, char **ret_error_msg);
 	int (*resize_channel) (struct xsp_path_t *path, xspChannel *channel, uint32_t new_size, char **ret_error_msg);
 	int (*close_channel) (struct xsp_path_t *path, xspChannel *channel);
 

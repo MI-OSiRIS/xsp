@@ -18,7 +18,12 @@
 #define XSP_v0                  0
 #define XSP_v1                  1
 
-/* XSP message types */
+/* EID types */
+enum xsp_eid_types_t {
+	XSP_EID_IPv4 = 0,
+	XSP_EID_IPv6,
+	XSP_EID_URN
+};
 
 /* result/status codes */
 #define XSP_STAT_OK		0x0000
@@ -31,10 +36,10 @@
 #define XSP_MAX_OPT_LENGTH      2**64
 
 #define XSP_HOPID_LEN		60
-#define XSP_EID_LEN             16
 #define XSP_SESSIONID_LEN	16
 #define XSP_PROTO_NAME_LEN      10
 #define XSP_AUTH_NAME_LEN       10
+#define XSP_NET_PATH_LEN        10
 
 typedef struct xsp_message_hdr_t {
 	uint16_t          length;
@@ -45,12 +50,15 @@ typedef struct xsp_message_hdr_t {
 
 /* based on ipv6 addrs */
 struct xsp_addr {
+	uint8_t                eid_type;
 	union {
-		uint8_t   xsp_addr8[16];
-		uint16_t  xsp_addr16[8];
-		uint32_t  xsp_addr32[4];
-		char      xsp_addrc[XSP_HOPID_LEN+1];
+		unsigned long  xsp_addrs;
+		uint8_t        xsp_addr8[16];
+		uint16_t       xsp_addr16[8];
+		uint32_t       xsp_addr32[4];
+		char           xsp_addrc[XSP_HOPID_LEN+1];
 	} xsp_u;
+#define x_addrs           xsp_u.xsp_addrs
 #define x_addr            xsp_u.xsp_addr8
 #define x_addr16          xsp_u.xsp_addr16
 #define x_addr32          xsp_u.xsp_addr32

@@ -427,7 +427,34 @@ int __xsp_addchild(xspHop *curr_node, char *parent, xspHop *new_child) {
 	return retval;
 }
 
-int xsp_sess_set_security(libxspSess *sess, libxspSecInfo *sec, int type) {
+xspNetPath *xsp_net_path(char *type, int action) {
+	xspNetPath *new = xsp_alloc_net_path();
+	
+	if (new) {
+		memcpy(new->type, type, XSP_NET_PATH_LEN);
+		new->action = action;
+		new->rule_count = 0;
+		new->rules = NULL;
+	}
+
+	return new;
+}
+
+xspSecInfo *xsp_security(char *username, char *password, char *key1, char *key2, char *keypass) {
+	xspSecInfo *new = malloc(sizeof(xspSecInfo));
+	
+	if (new) {
+		new->username = username;
+		new->password = password;
+		new->key1 = key1;
+		new->key2 = key2;
+		new->keypass = keypass;
+	}
+
+	return new;
+}
+
+int xsp_sess_set_security(libxspSess *sess, xspSecInfo *sec, int type) {
 	switch (type) {
 	case XSP_SEC_NONE:
 		{
@@ -469,7 +496,40 @@ int xsp_sess_set_security(libxspSess *sess, libxspSecInfo *sec, int type) {
 	}
 	return 0;
 }
-		
+
+int xsp_sess_signal_path(libxspSess *sess, xspNetPath *net_path) {
+	xspMsg *msg;
+	
+	if (!net_path)
+		goto error_exit;
+
+	if (__xsp_send_one_block(sess, XSP_MSG_NET_PATH, XSP_OPT_PATH, 0, net_path) < 0) {
+		d_printf("xsp_signal_path(): error: failed to send session path message\n");
+		goto error_exit;
+	}
+	
+	msg = xsp_get_msg(sess, 0);
+	if (!msg) {
+		d_printf("xsp_signal_path(): error: did not receive a valid response\n");
+		goto error_exit;
+	}
+	
+	if (msg->type == XSP_MSG_SESS_NACK) {
+		fprintf(stderr, "xsp_signal_path(): could not setup path, error received: %s\n", __print_nack_msg(msg));
+		goto error_exit;
+	} else if (msg->type != XSP_MSG_SESS_ACK) {
+		d_printf("xsp_signal_path(): error: did not receive a path sess ACK\n");
+		goto error_exit;
+	}
+	
+	if (msg)
+		xsp_free_msg(msg);
+	
+	return 0;
+
+ error_exit:
+	return -1;
+}				
 
 int xsp_connect(libxspSess *sess) {
 	int r = -1;
@@ -662,13 +722,6 @@ int xsp_connect(libxspSess *sess) {
 			return -1;
 		}
 
-		if (getenv("XSP_CIRCUIT") != NULL) {
-			d_printf("xsp_connect(): found XSP_CIRCUIT, using %s\n", getenv("XSP_CIRCUIT"));
-			if (xsp_signal_path(sess, getenv("XSP_CIRCUIT")) != 0) {
-				fprintf(stderr, "xsp_connect(): could not signal XSP_CIRCUIT\n");
-			}
-		}
-		
 		msg = xsp_get_msg(sess, 0);
 		if (!msg) {
 			d_printf("xsp_connect(): error: did not receive a valid response\n");
@@ -911,49 +964,6 @@ int xsp_recv_msg(libxspSess *sess, void **ret_buf, uint64_t *len, int *ret_type)
 	*ret_buf = NULL;
 	return 0;
 }
-
-int xsp_signal_path(libxspSess *sess, char *path_type) {
-	xspMsg *msg;
-	char *path;
-
-	if (!strcmp(path_type, "TERAPATHS") ||
-	    !strcmp(path_type, "OSCARS")) {
-		
-		path = strdup(path_type);
-		
-		if (__xsp_send_one_block(sess, XSP_MSG_PATH_OPEN, XSP_OPT_PATH, strlen(path)+1, path) < 0) {
-			d_printf("xsp_signal_path(): error: failed to send session path message\n");
-			goto error_exit;
-		}
-		
-		msg = xsp_get_msg(sess, 0);
-		if (!msg) {
-			d_printf("xsp_signal_path(): error: did not receive a valid response\n");
-			goto error_exit;
-		}
-		
-                if (msg->type == XSP_MSG_SESS_NACK) {
-                        fprintf(stderr, "xsp_signal_path(): could not setup path, error received: %s\n", (char *) msg->msg_body);
-			goto error_exit;
-                } else if (msg->type != XSP_MSG_SESS_ACK) {
-                        d_printf("xsp_signal_path(): error: did not receive a path sess ACK\n");
-			goto error_exit;
-                }
-
-		if (msg)
-			xsp_free_msg(msg);
-		free(path);
-	}
-	else {
-		fprintf(stderr, "xsp_signal_path(): error: XSP_CIRCUIT=%s is not a valid path type\n", path_type);
-		goto error_exit;
-	}
-
-	return 0;
-
- error_exit:
-	return -1;
-}		
 
 // FIXME: this won't work as we don't actually have a socket yet...
 int xsp_setsockopt(libxspSess *sess, int level, int optname, const void *optval, SOCKLEN_T optlen) {

@@ -71,11 +71,11 @@ int xsp_ssh2_setup(libxspSess *sess, char *user, char *pass, char *privkey, char
 	char       *userauthlist;
 	int authdone = FALSE;
 
-	libxspSecInfo *sec;
+	xspSecInfo *sec;
 	if (sess->sec_info)
 		sec = sess->sec_info;
 	else {
-		libxspSecInfo new_sec;
+		xspSecInfo new_sec;
 		new_sec.username = user;
 		new_sec.password = pass;
 		new_sec.key1 = pubkey;
@@ -256,7 +256,9 @@ ssize_t xsp_ssh2_recv(libxspSess *sess, void *buf, size_t len, int flags) {
 	d_printf("in recv for %d bytes\n", len);
 
 	ret = __ssh2_chan_read(sess, buf, len, flags);
-	if (ret < (int)len) {
+	if (ret == 0)
+		return 0;
+	else if (ret < (int)len) {
 		while (!done) {
 			FD_SET(sess->sock, &fds);
 			

@@ -40,7 +40,7 @@ typedef struct xsp_oscars_timeout_args {
 int xsp_oscars_shared_init();
 static int xsp_oscars_shared_allocate_path(const xspSettings *settings, xspPath **ret_path, char **ret_error_msg);
 static char *xsp_oscars_generate_path_id(const xspSettings *settings, char **ret_error_msg);
-static int xsp_oscars_shared_new_channel(xspPath *path, uint32_t size, xspChannel **channel, char **ret_error_msg);
+static int xsp_oscars_shared_new_channel(xspPath *path, xspNetPathRule *rule, xspChannel **channel, char **ret_error_msg);
 static int xsp_oscars_shared_close_channel(xspPath *path, xspChannel *channel);
 static int xsp_oscars_shared_resize_channel(xspPath *path, xspChannel *channel, uint32_t new_size, char **ret_error_msg);
 static void xsp_oscars_shared_free_path(xspPath *path);
@@ -293,13 +293,13 @@ static int xsp_oscars_shared_allocate_path(const xspSettings *settings, xspPath 
 	return -1;
 }
 
-static int xsp_oscars_shared_new_channel(xspPath *path, uint32_t size, xspChannel **channel, char **ret_error_msg) {
+static int xsp_oscars_shared_new_channel(xspPath *path, xspNetPathRule *rule, xspChannel **channel, char **ret_error_msg) {
 	int retval;
 	char *error_msg = NULL;
 
 	pthread_mutex_lock(&(path->lock));
 	{
-		retval = __xsp_oscars_shared_new_channel(path, size, channel, &error_msg);
+		retval = __xsp_oscars_shared_new_channel(path, rule->bandwidth, channel, &error_msg);
 	}
 	pthread_mutex_unlock(&(path->lock));
 
