@@ -324,13 +324,15 @@ xspMsg *__xsp_conn_get_msg_v1(xspConn *conn, unsigned int flags) {
 		
 		// figure out the length of the block
 		if (bhdr_len == 0xFFFF) {
-			amt_read = xsp_conn_read(conn, &block_len, sizeof(uint64_t), MSG_WAITALL);
+			uint64_t nbo;
+			amt_read = xsp_conn_read(conn, &nbo, sizeof(uint64_t), MSG_WAITALL);
 			if (amt_read < (int)sizeof(uint64_t)) {
 				if (amt_read < 0) {
 					perror("error:");
 				}
 				goto error_exit;
 			}
+			block_len = ntohll(nbo);
 		}
 		else
 			block_len = bhdr_len;
@@ -358,6 +360,7 @@ xspMsg *__xsp_conn_get_msg_v1(xspConn *conn, unsigned int flags) {
 		block = xsp_block_new(bhdr_type, bhdr_sport, block_len, buf);
 		xsp_block_list_push(bl, block);
 	}
+
 	// allocate a message to return
 	msg = (xspMsg *) malloc(sizeof(xspMsg));
 	if (!msg) {
@@ -377,7 +380,9 @@ xspMsg *__xsp_conn_get_msg_v1(xspConn *conn, unsigned int flags) {
 		goto error_exit3;
 
 	d_printf("returning an xspMsg of type: %d\n", msg->type);
+
 	return msg;
+
  error_exit3:
 	free(msg);
  error_exit2:

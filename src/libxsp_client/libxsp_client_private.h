@@ -4,7 +4,6 @@
 #include <sys/queue.h>
 
 #include "libxsp.h"
-#include "libxsp_sec.h"
 
 #ifdef HAVE_SSH
 #include "libssh2.h"
@@ -48,7 +47,7 @@ typedef struct libxsp_sess_info_t {
 	ssize_t (*recvfn) (struct libxsp_sess_info_t *sess, void *buf, size_t len, int flags);
 			
 	enum xsp_sec security;
-	struct libxsp_sec_info_t *sec_info;
+	xspSecInfo *sec_info;
 	
 #ifdef HAVE_SSH
 	LIBSSH2_SESSION *ssh_sess;
@@ -82,12 +81,14 @@ typedef struct libxsp_sess_info_t {
 
 int libxsp_init(void);
 libxspSess *xsp_session();
+xspSecInfo *xsp_security(char *username, char *password, char *privkey, char *pubkey, char *keypass);
+xspNetPath *xsp_net_path(char *type, int action);
 int xsp_sess_appendchild(libxspSess *sess, char *child, unsigned int flags);
 int xsp_sess_addchild(libxspSess *sess, char *parent, char *child, uint16_t flags);
-int xsp_sess_set_security(libxspSess *sess, libxspSecInfo *sec, int type);
+int xsp_sess_set_security(libxspSess *sess, xspSecInfo *sec, int type);
 int xsp_connect(libxspSess *sess);
 int xsp_data_connect(libxspSess *sess);
-int xsp_signal_path(libxspSess *sess, char *path_type);
+int xsp_signal_path(libxspSess *sess, xspNetPath *net_path);
 int xsp_setsockopt(libxspSess *sess, int level, int optname, const void *optval, socklen_t optlen);
 int xsp_getsockopt(libxspSess *sess, int level, int optname, void *optval, socklen_t *optlen);
 int xsp_close(libxspSess *sess);

@@ -372,6 +372,8 @@ int connect(int sockfd, const struct sockaddr *serv_addr, SOCKLEN_T addrlen) {
 	int i;
 	char *tmp_hop[1];
 	int free_path = 0;
+	char *xsp_sec;
+	char *xsp_net_path;
 
 	pthread_once(&init_once, libxsp_wrapper_init);
 
@@ -467,10 +469,28 @@ int connect(int sockfd, const struct sockaddr *serv_addr, SOCKLEN_T addrlen) {
 
 	xsp_sess_appendchild(sess, dest, 0);
 
+	xsp_sec = getenv("XSP_SEC");
+	if (xsp_sec) {
+	    if (!strcasecmp(xsp_sec, "ssh"))
+		xsp_sess_set_security(sess, NULL, XSP_SEC_SSH);
+	    else if (!strcasecmp(xsp_sec, "ssl"))
+		xsp_sess_set_security(sess, NULL, XSP_SEC_SSL);
+	    else
+		xsp_sess_set_security(sess, NULL, XSP_SEC_NONE);
+	}
+
 	if ((retval = xsp_connect(sess)) != 0) {
 		fprintf(stderr, "XSP: connect(): failed to complete session with %s\n",
 			xsp_hop_getid(sess->child[0]));
 		return retval;
+	}
+	
+	xsp_net_path = getenv("XSP_NET_PATH");
+	if (xsp_net_path) {
+	    d_printf("XSP: connect(): found XSP_NET_PATH, TYPE: %s, ACTION: CREATE\n", xsp_net_path);
+	    if (xsp_signal_path(sess, NULL) != 0) {
+		fprintf(stderr, "XSP: connect(): failed to complete network path setup\n");
+	    }
 	}
 
 #ifndef HAVE_PHOEBUS

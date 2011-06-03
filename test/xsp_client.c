@@ -16,19 +16,10 @@
 
 struct sockaddr_in *nameport2sa(const char *name_port);
 
-
-libxspSecInfo sec_info = {
-	.username = "ezra",
-	.password = NULL,
-	.key1 = "/home/ezra/.ssh/id_rsa_pl.pub",
-	.key2 = "/home/ezra/.ssh/id_rsa_pl",
-	.keypass = NULL
-};
-	
-
 int main(int argc, char *argv[])
 {
 	libxspSess *sess;
+	libxspSecInfo *sec;
 
 	if (libxsp_init() < 0) {
 		perror("libxsp_init(): failed");
@@ -42,8 +33,11 @@ int main(int argc, char *argv[])
 	}
 
 	xsp_sess_appendchild(sess, argv[argc - 1], XSP_HOP_NATIVE);
+	
+	sec = xsp_security("ezra", NULL, "/home/ezra/.ssh/id_rsa_pl.pub",
+			   "/home/ezra/.ssh/id_rsa_pl", NULL);
 
-	if (xsp_sess_set_security(sess, &sec_info, XSP_SEC_SSH)) {
+	if (xsp_sess_set_security(sess, sec, XSP_SEC_SSH)) {
 		fprintf(stderr, "could not set requested xsp security method\n");
 		exit(-1);
 	}
@@ -67,6 +61,11 @@ int main(int argc, char *argv[])
 	printf("got message[%d]: %s\n", ret_type, ret_buf);
 
 	free(ret_buf);
+
+	libxspNetPath *path;
+	path = xsp_net_path("OSCARS", XSP_NET_PATH_CREATE);
+	
+	xsp_sess_signal_path(sess, path);
 
 	xsp_close2(sess);
 

@@ -34,10 +34,8 @@ int libxsp_proto_binary_v0_init() {
 	bin_handler_v0.parse[XSP_MSG_SESS_NACK] = xsp_parse_nack_msg;
 	bin_handler_v0.parse[XSP_MSG_PING] = NULL;
 	bin_handler_v0.parse[XSP_MSG_PONG] = NULL;
-	bin_handler_v0.parse[XSP_MSG_DATA_OPEN] = NULL;
-	bin_handler_v0.parse[XSP_MSG_DATA_CLOSE] = NULL;
-	bin_handler_v0.parse[XSP_MSG_PATH_OPEN] = xsp_parse_block_header_msg;
-	bin_handler_v0.parse[XSP_MSG_PATH_CLOSE] = NULL;
+	bin_handler_v0.parse[XSP_MSG_DATA_CHAN] = NULL;
+	bin_handler_v0.parse[XSP_MSG_NET_PATH] = xsp_parse_block_header_msg;
 	bin_handler_v0.parse[XSP_MSG_APP_DATA] = xsp_parse_block_header_msg;
 	bin_handler_v0.parse[XSP_MSG_SLAB_INFO] = xsp_parse_slab_info;
 
@@ -51,10 +49,8 @@ int libxsp_proto_binary_v0_init() {
 	bin_handler_v0.writeout[XSP_MSG_SESS_NACK] = xsp_writeout_nack_msg;
 	bin_handler_v0.writeout[XSP_MSG_PING] = NULL;
 	bin_handler_v0.writeout[XSP_MSG_PONG] = NULL;
-	bin_handler_v0.writeout[XSP_MSG_DATA_OPEN] = NULL;
-	bin_handler_v0.writeout[XSP_MSG_DATA_CLOSE] = NULL;
-	bin_handler_v0.writeout[XSP_MSG_PATH_OPEN] = xsp_writeout_block_header_msg;
-	bin_handler_v0.writeout[XSP_MSG_PATH_CLOSE] = NULL;
+	bin_handler_v0.writeout[XSP_MSG_DATA_CHAN] = NULL;
+	bin_handler_v0.writeout[XSP_MSG_NET_PATH] = xsp_writeout_block_header_msg;
 	bin_handler_v0.writeout[XSP_MSG_APP_DATA] = xsp_writeout_block_header_msg;
 	bin_handler_v0.writeout[XSP_MSG_SLAB_INFO] = xsp_writeout_slab_info;
 

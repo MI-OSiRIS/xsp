@@ -13,7 +13,6 @@ typedef struct libxsp_sec_info_t {
         char *key1;
         char *key2;
         char *keypass;
-} libxspSecInfo;
-
+} xspSecInfo;
 
 #endif

@@ -14,9 +14,11 @@
 
 #include "xsp-proto.h"
 #include "libxsp_session.h"
+#include "libxsp_sec.h"
 #include "libxsp_hop.h"
 #include "libxsp_block.h"
 #include "libxsp_path.h"
+#include "libxsp_net_path.h"
 
 /* XSP Defines */
 
@@ -40,12 +42,10 @@
 #define XSP_MSG_SESS_NACK		10
 #define XSP_MSG_PING			11
 #define XSP_MSG_PONG			12
-#define XSP_MSG_DATA_OPEN               13
-#define XSP_MSG_DATA_CLOSE              14
-#define XSP_MSG_PATH_OPEN               15
-#define XSP_MSG_PATH_CLOSE              16
-#define XSP_MSG_APP_DATA                17
-#define XSP_MSG_SLAB_INFO               18
+#define XSP_MSG_DATA_CHAN               13
+#define XSP_MSG_NET_PATH                14
+#define XSP_MSG_APP_DATA                15
+#define XSP_MSG_SLAB_INFO               16
 
 
 /* XSP Objects */
@@ -76,7 +76,7 @@ typedef struct xsp_data_open_header_t {
 	uint16_t flags;
 	char hop_id[XSP_HOPID_LEN];
 	char proto[XSP_PROTO_NAME_LEN];
-} xspDataOpenHeader;
+} xspDataOpen;
 
 typedef struct slab_record_t {
         char sess_id[2*XSP_SESSIONID_LEN + 1];

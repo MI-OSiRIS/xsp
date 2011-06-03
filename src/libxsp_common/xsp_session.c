@@ -611,29 +611,26 @@ error_exit_settings:
 }
 
 int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
+	int i;
 	char *error_msg;
-	char *path_type;
-	uint32_t bandwidth = 0;
 	xspPath *path;
 	xspChannel *channel;
 	xspSettings *settings = NULL;
 	xspConn *parent_conn;
 
-	xspBlock *block;
 	xspBlock **blocks;
 	int block_count;
-	
+	xspNetPath *net_path;
+	xspNetPathRule *rule;
+
 	xsp_session_get_blocks((xspMsg*)arg, XSP_OPT_PATH, &blocks, &block_count);
 	// XXX: taking only the first block!
-	block = blocks[0];
-
-	path_type = malloc(block->length*sizeof(char));
-	strncpy(path_type, block->data, block->length);
-
+	net_path = blocks[0]->data;
+	
 	parent_conn = LIST_FIRST(&sess->parent_conns);
 
-	xsp_info(0, "Setting up path type %s for SRC=%s to DST=%s\n",
-		  path_type, parent_conn->description, xsp_hop_getid(sess->child[0]));
+	xsp_info(0, "Setting up path type %s for client=%s\n",
+		 net_path->type, parent_conn->description);
 
 	// just get main paths section from the config for now
 	// we can also make our own settings from the session values
@@ -642,21 +639,37 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
                 settings = xsp_settings_alloc();
         }
 
-	if (!strcmp(path_type, "TERAPATHS")) {
+	if (!strcasecmp(net_path->type, "TERAPATHS")) {
 		// set src and dst in the settings to start
 		xsp_settings_set_2(settings, "terapaths", "src", strtok(parent_conn->description, "/"));
 		xsp_settings_set_2(settings, "terapaths", "dst", strtok(xsp_hop_getid(sess->child[0]), "/"));
 	}
 
-	if (xsp_get_path(path_type, settings, &path, &error_msg) != 0) {
+	if (xsp_get_path(net_path->type, settings, &path, &error_msg) != 0) {
 		xsp_err(0, "couldn't get path information: %s", error_msg);
 		goto error_exit;
 	}
-	if (path->new_channel(path, bandwidth, &channel, &error_msg) != 0) {
-		xsp_err(0, "couldn't allocate a channel: %s", error_msg);
-		goto error_exit;
+
+	if (net_path->rule_count) {
+		// setup channels for each rule in the net path
+		for (i = 0; i < net_path->rule_count; i++) {
+			if (path->new_channel(path, net_path->rules[i], &channel, &error_msg) != 0) {
+				xsp_err(0, "couldn't allocate a channel: %s", error_msg);
+				goto error_exit;
+			}
+		}
 	}
-	
+	// setup a blank rule that uses local settings
+	else {
+		xspNetPathRule rule;
+		memset(&rule, 0, sizeof(xspNetPathRule));
+		
+		if (path->new_channel(path, net_path->rules[i], &channel, &error_msg) != 0) {
+			xsp_err(0, "couldn't allocate a channel: %s", error_msg);
+			goto error_exit;
+		}
+	}
+		
 	return 0;
 
  error_exit:
@@ -666,7 +679,7 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
 
 int xsp_session_data_open(comSess *sess, const void *arg, char ***error_msgs) {
         xspConn *parent_conn;
-        xspDataOpenHeader *dopen;
+        xspDataOpen *dopen;
         xspBlock *block;
         xspBlock **blocks;
         int block_count;
@@ -675,7 +688,7 @@ int xsp_session_data_open(comSess *sess, const void *arg, char ***error_msgs) {
 	// XXX: taking only the first block!
 	block = blocks[0];
 
-	dopen = (xspDataOpenHeader *)block->data;
+	dopen = (xspDataOpen *)block->data;
 	
         parent_conn = LIST_FIRST(&sess->parent_conns);
 
@@ -765,11 +778,11 @@ int xsp_session_send_nack(comSess *sess, char **error_msgs) {
 	if (!error_msgs) {
 		strlcat(nack_msg, "An internal error occurred", sizeof(nack_msg));
 	} else {
-		for(i = 0; i < sess->child_count; i++) {
+		for(i = 0; i < sess->child_count+1; i++) {
 			if (error_msgs[i]) {
-				strlcat(nack_msg, "Connect to ", sizeof(nack_msg));
-				strlcat(nack_msg, xsp_hop_getid(sess->child[i]), sizeof(nack_msg));
-				strlcat(nack_msg, " failed: ", sizeof(nack_msg));
+				//strlcat(nack_msg, "Connect to ", sizeof(nack_msg));
+				//strlcat(nack_msg, xsp_hop_getid(sess->child[i]), sizeof(nack_msg));
+				strlcat(nack_msg, "failure: ", sizeof(nack_msg));
 				strlcat(nack_msg, error_msgs[i], sizeof(nack_msg));
 				strlcat(nack_msg, "\n", sizeof(nack_msg));
 			}
@@ -919,7 +932,7 @@ int xsp_proto_loop(comSess *sess) {
 		goto error_exit;
 	}
 			 
-	error_msgs = (char**)malloc(sess->child_count * sizeof(char*));
+	error_msgs = (char**)malloc(sess->child_count+1 * sizeof(char*));
 
 	// now start another protocol loop
 	do {
@@ -940,7 +953,7 @@ int xsp_proto_loop(comSess *sess) {
                                 sess_close = 1;
                         }
                         break;
-		case XSP_MSG_PATH_OPEN:
+		case XSP_MSG_NET_PATH:
 			{
 				if (xsp_session_setup_path(sess, msg, &error_msgs) < 0)
 					goto error_exit1;
@@ -955,7 +968,7 @@ int xsp_proto_loop(comSess *sess) {
 				xsp_conn_send_msg(conn, version, XSP_MSG_PONG, XSP_OPT_NULL, NULL);
 			}
 			break;
-		case XSP_MSG_DATA_OPEN:
+		case XSP_MSG_DATA_CHAN:
 			{
 				if (xsp_session_data_open(sess, msg, &error_msgs) < 0)
 					goto error_exit1;

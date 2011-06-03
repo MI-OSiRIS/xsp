@@ -21,8 +21,8 @@ static int xsp_parse_auth_token_msg(const void *arg, int remainder, void **msg_b
 static int xsp_parse_auth_type_msg(const void *arg, int remainder, void **msg_body);
 static int xsp_parse_block_msg(const void *arg, int remainder, void **msg_body);
 static int xsp_parse_nack_msg(const void *arg, int remainder, void **msg_body);
-static int xsp_parse_data_open_msg(const void *arg, int remainder, void **msg_body);
-static int xsp_parse_path_open_msg(const void *arg, int remainder, void **msg_body);
+static int xsp_parse_data_chan_msg(const void *arg, int remainder, void **msg_body);
+static int xsp_parse_net_path_msg(const void *arg, int remainder, void **msg_body);
 static int xsp_parse_slab_info(const void *arg, int remainder, void **msg_body);
 static xspSlabRec *xsp_parse_slab_record(const void *arg, int remainder, int *size);
 
@@ -32,8 +32,8 @@ static int xsp_writeout_auth_token_msg(void *arg, char *buf, int remainder);
 static int xsp_writeout_auth_type_msg(void *arg, char *buf, int remainder);
 static int xsp_writeout_block_msg(void *arg, char *buf, int remainder);
 static int xsp_writeout_nack_msg(void *arg, char *buf, int remainder);
-static int xsp_writeout_data_open_msg(void *arg, char *buf, int remainder);
-static int xsp_writeout_path_open_msg(void *arg, char *buf, int remainder);
+static int xsp_writeout_data_chan_msg(void *arg, char *buf, int remainder);
+static int xsp_writeout_net_path_msg(void *arg, char *buf, int remainder);
 static int xsp_writeout_slab_info(void *arg, char *buf, int remainder);
 static int xsp_writeout_slab_record(xspSlabRec *rec, char *buf, int remainder);
 
@@ -61,6 +61,28 @@ typedef struct xsp_msg_auth_info_hdr_t {
 typedef struct xsp_msg_sess_nack_hdr_t {
 	uint32_t length;
 } xspSessNack_HDR;
+
+typedef struct xsp_sess_net_path_rule_hdr_t {
+        struct xsp_addr src_eid;
+        struct xsp_addr src_mask;
+        struct xsp_addr dst_eid;
+        struct xsp_addr dst_mask;
+
+        uint16_t src_port_min;
+        uint16_t src_port_max;
+        uint16_t dst_port_min;
+        uint16_t dst_port_max;
+
+        uint16_t direction;
+        uint64_t bandwidth;
+        uint16_t status;
+} xspNetPathRule_HDR;
+
+typedef struct xsp_sess_net_path_hdr_t {
+        char type[XSP_NET_PATH_LEN];
+        uint16_t action;
+        uint16_t rule_count;
+} xspNetPath_HDR;
 
 typedef struct slab_record_hdr_t {
         char sess_id[XSP_SESSIONID_LEN];

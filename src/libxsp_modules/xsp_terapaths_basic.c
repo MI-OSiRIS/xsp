@@ -42,7 +42,7 @@ int xsp_terapaths_update_path_status(xspTERAPATHSPath *pi, xspSoapContext *msc, 
 static int xsp_terapaths_allocate_path(const xspSettings *settings, xspPath **ret_path, char ** ret_error_msg);
 static char *xsp_terapaths_generate_path_id(const xspSettings *settings, char **ret_error_msg);
 
-static int xsp_terapaths_new_channel(xspPath *path, uint32_t size, xspChannel **channel, char **ret_error_msg);
+static int xsp_terapaths_new_channel(xspPath *path, xspNetPathRule *rule, xspChannel **channel, char **ret_error_msg);
 static int xsp_terapaths_close_channel(xspPath *path, xspChannel *channel);
 static int xsp_terapaths_resize_channel(xspPath *path, xspChannel *channel, uint32_t new_size, char **ret_error_msg);
 static void xsp_terapaths_free_path(xspPath *path);
@@ -264,12 +264,12 @@ static char *xsp_terapaths_generate_path_id(const xspSettings *settings, char **
 
 }
 
-static int xsp_terapaths_new_channel(xspPath *path, uint32_t size, xspChannel **channel, char **ret_error_msg) {
+static int xsp_terapaths_new_channel(xspPath *path, xspNetPathRule *rule, xspChannel **channel, char **ret_error_msg) {
 	int retval;
 
         pthread_mutex_lock(&(path->lock));
         {
-                retval = __xsp_terapaths_new_channel(path, size, channel, ret_error_msg);
+                retval = __xsp_terapaths_new_channel(path, rule->bandwidth, channel, ret_error_msg);
         }
         pthread_mutex_unlock(&(path->lock));
 

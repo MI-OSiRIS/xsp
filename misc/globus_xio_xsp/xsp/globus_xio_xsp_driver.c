@@ -66,6 +66,8 @@ static globus_xio_string_cntl_table_t  xsp_l_string_opts_table[] =
 {
     {"stack", GLOBUS_XIO_XSP_CNTL_SET_STACK, globus_xio_string_cntl_string},
     {"xsp_hop", GLOBUS_XIO_XSP_CNTL_SET_HOP, globus_xio_string_cntl_string},
+    {"xsp_sec", GLOBUS_XIO_XSP_CNTL_SET_SEC, globus_xio_string_cntl_string},
+    {"xsp_net_path", GLOBUS_XIO_XSP_CNTL_SET_PATH, globus_xio_string_cntl_string},
     {"user", GLOBUS_XIO_XSP_CNTL_SET_USER, globus_xio_string_cntl_string},
     {"task_id", GLOBUS_XIO_XSP_CNTL_SET_TASK, globus_xio_string_cntl_string},
     {"src", GLOBUS_XIO_XSP_CNTL_SET_SRC, globus_xio_string_cntl_string},
@@ -117,6 +119,8 @@ typedef struct xio_l_xsp_handle_s
 
     int                                 stack;
     char *                              xsp_hop;
+    char *                              xsp_sec;
+    char *                              xsp_net_path;
     char *                              user;
     char *                              task_id;
     char *                              src;
@@ -155,6 +159,8 @@ static xio_l_xsp_handle_t               globus_l_xio_xsp_handle_default =
     0,                                  /* filesize */
     GLOBUS_XIO_XSP_NETSTACK,            /* stack */
     GLOBUS_NULL,                        /* xsp_hop */
+    GLOBUS_NULL,                        /* xsp_sec */
+    GLOBUS_NULL,                        /* xsp_net_path */
     GLOBUS_NULL,                        /* user */
     GLOBUS_NULL,                        /* task_id */
     GLOBUS_NULL,                        /* src */
@@ -762,7 +768,7 @@ globus_l_xio_xsp_attr_copy(
     /* intiialize everything to 0 */
     globus_l_xio_xsp_attr_init((void **)&dst_attr);
 
-    if(src_attr->xsp_hop != NULL)
+    if (src_attr->xsp_hop != NULL)
     {
 	dst_attr->xsp_hop = strdup(src_attr->xsp_hop);
     }
@@ -775,6 +781,32 @@ globus_l_xio_xsp_attr_copy(
 	dst_attr->xsp_hop = NULL;
     }
 
+    if (src_attr->xsp_sec != NULL)
+    {
+	dst_attr->xsp_sec = strdup(src_attr->xsp_sec);
+    }
+    else if  (globus_l_xio_xsp_handle_default.xsp_sec)
+    {
+	dst_attr->xsp_sec = strdup(globus_l_xio_xsp_handle_default.xsp_sec);
+    }
+    else
+    {
+	dst_attr->xsp_sec = NULL;
+    }
+
+    if (src_attr->xsp_net_path != NULL)
+    {
+	dst_attr->xsp_net_path = strdup(src_attr->xsp_net_path);
+    }
+    else if (globus_l_xio_xsp_handle_default.xsp_net_path)
+    {
+	dst_attr->xsp_net_path = strdup(globus_l_xio_xsp_handle_default.xsp_net_path);
+    }
+    else
+    {
+	dst_attr->xsp_net_path = NULL;
+    }
+    
     if (src_attr->local_contact)
     {
 	globus_xio_contact_copy(dst_attr->local_contact, src_attr->local_contact);
@@ -874,6 +906,14 @@ globus_l_xio_xsp_cntl(
 	  str = va_arg(ap, char *);
 	  attr->xsp_hop = strdup(str);
 	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_SEC:
+	  str = va_arg(ap, char *);
+	  attr->xsp_sec = strdup(str);
+	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_PATH:
+	  str = va_arg(ap, char *);
+	  attr->xsp_net_path = strdup(str);
+	  break;
       case GLOBUS_XIO_XSP_CNTL_SET_USER:
 	  str = va_arg(ap, char *);
 	  attr->user = strdup(str);
@@ -891,23 +931,23 @@ globus_l_xio_xsp_cntl(
 	  attr->dst = strdup(str);
 	  break;
       case GLOBUS_XIO_XSP_CNTL_SET_SPORT:
-	  attr->sport = va_arg(ap, int);;
+	  attr->sport = va_arg(ap, int);
 	  break;
       case GLOBUS_XIO_XSP_CNTL_SET_DPORT:
-	  attr->dport = va_arg(ap, int);;
+	  attr->dport = va_arg(ap, int);
 	  break;
       case GLOBUS_XIO_XSP_CNTL_SET_RESOURCE:
 	  str = va_arg(ap, char *);
 	  attr->resource = strdup(str);
 	  break;
       case GLOBUS_XIO_XSP_CNTL_SET_SIZE:
-	  attr->size = va_arg(ap, int);;
+	  attr->size = va_arg(ap, int);
 	  break;
       case GLOBUS_XIO_XSP_CNTL_SET_MASK:
-	  attr->log_flag = va_arg(ap, int);;
+	  attr->log_flag = va_arg(ap, int);
 	  break;
       case GLOBUS_XIO_XSP_CNTL_SET_INTERVAL:
-	  attr->interval = va_arg(ap, int);;
+	  attr->interval = va_arg(ap, int);
 	  break;
     }
 	
@@ -993,6 +1033,14 @@ globus_l_xio_xsp_handle_destroy(
     if (handle->xsp_hop != NULL)
     {
 	globus_free(handle->xsp_hop);
+    }
+    if (handle->xsp_sec != NULL)
+    {
+	globus_free(handle->xsp_sec);
+    }
+    if (handle->xsp_net_path != NULL)
+    {
+	globus_free(handle->xsp_net_path);
     }
     if (handle->local_contact != NULL)
     {
@@ -1727,9 +1775,23 @@ globus_l_xio_xsp_activate(void)
     }
     else
     {
-	fprintf(stderr, "Warning: XSP_HOP not set in environment!\n");
+	fprintf(stderr, "XIO-XSP: XSP_HOP not set in environment.\n");
     }
 
+    if ((tmp = globus_module_getenv("XSP_SEC")))
+    {
+	globus_l_xio_xsp_handle_default.xsp_sec = tmp;
+    }
+    else
+    {
+	fprintf(stderr, "XIO-XSP: XSP_SEC not set in environment, using \"none\".\n");
+    }
+
+    if ((tmp = globus_module_getenv("XSP_NET_PATH")))
+    {
+	globus_l_xio_xsp_handle_default.xsp_net_path = tmp;
+    }
+    
     rc = libxsp_init();
     if (rc != 0) 
     {
