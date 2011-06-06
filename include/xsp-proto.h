@@ -52,16 +52,16 @@ typedef struct xsp_message_hdr_t {
 struct xsp_addr {
 	uint8_t                eid_type;
 	union {
-		unsigned long  xsp_addrs;
 		uint8_t        xsp_addr8[16];
 		uint16_t       xsp_addr16[8];
 		uint32_t       xsp_addr32[4];
+		uint32_t       xsp_addrs;
 		char           xsp_addrc[XSP_HOPID_LEN+1];
 	} xsp_u;
-#define x_addrs           xsp_u.xsp_addrs
 #define x_addr            xsp_u.xsp_addr8
 #define x_addr16          xsp_u.xsp_addr16
 #define x_addr32          xsp_u.xsp_addr32
+#define x_addrs           xsp_u.xsp_addrs
 #define x_addrc           xsp_u.xsp_addrc
 };
 
