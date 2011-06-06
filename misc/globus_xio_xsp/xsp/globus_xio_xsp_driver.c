@@ -85,8 +85,9 @@ typedef struct xio_l_xsp_xfer_s
 {
     char *                              id;
     char *                              hash_str;
-    int                                 xsp_connected; 
     libxspSess *                        sess;
+    int                                 xsp_connected; 
+    int                                 xsp_signal_path;
     int                                 streams;
 } xio_l_xsp_xfer_t;
 
@@ -146,6 +147,7 @@ static xio_l_xsp_xfer_t                 globus_l_xio_xsp_xfer_default =
     GLOBUS_NULL,                        /* hash_str */
     GLOBUS_NULL,                        /* sess */
     GLOBUS_FALSE,                       /* xsp_connected */
+    GLOBUS_FALSE,                       /* xsp_signal_path */
     0                                   /* streams */
 };
 
@@ -427,7 +429,7 @@ globus_l_xio_xsp_do_nl_summary(
 
     if (handle->xfer->xsp_connected == GLOBUS_FALSE)
     {
-        printf("NL_UPDATE: XSP not connected!\n");
+        fprintf(stderr, "NL_UPDATE: XSP not connected!\n");
 	result = -1;
 	goto error;
     }
@@ -636,12 +638,32 @@ globus_l_xio_xsp_connect_handle(
 	    goto error_sess;
 	}
 
+	if (handle->xsp_sec && !strcasecmp(handle->xsp_sec, "ssh")) {
+	    if (xsp_sess_set_security(handle->xfer->sess, NULL, XSP_SEC_SSH)) {
+                ret = -1;
+		goto error_sess;
+	    }
+	}
+
 	ret = xsp_connect(handle->xfer->sess);
 	if (ret != 0)
 	{
 	    goto error_sess;
 	}
 	
+	if (handle->xsp_net_path &&
+	    globus_l_xio_xsp_xfer_default.xsp_signal_path)
+	{
+	    libxspNetPath *path;
+	    path = xsp_net_path(handle->xsp_net_path, XSP_NET_PATH_CREATE);
+	    if (xsp_sess_signal_path(handle->xfer->sess, path) != 0)
+	    {
+		ret = -1;
+		goto error_sess;
+	    }
+	    free(path);
+	}
+
 	handle->xfer->xsp_connected = GLOBUS_TRUE;
     }
     else
@@ -1340,6 +1362,9 @@ globus_l_xio_xsp_open(
     char                                hstring[1024];
     int                                 hstrlen;
 
+    GlobusXIOName(globus_l_xio_xsp_open);
+    GlobusXIOXSPDebugEnter();
+
     /* first copy attr if we have it */
     if(driver_attr != NULL)
     {
@@ -1421,6 +1446,17 @@ globus_l_xio_xsp_open(
 	globus_l_xio_xsp_caliper_init((void**)&(handle->r_caliper), "nl.read.summary");
 	globus_l_xio_xsp_caliper_init((void**)&(handle->w_caliper), "nl.write.summary");
 	globus_l_xio_xsp_caliper_init((void**)&(handle->a_caliper), "nl.accept.summary");
+
+	/* if there's a path to setup, do it before the underlying connection start */
+	if (globus_l_xio_xsp_xfer_default.xsp_signal_path)
+	{
+	    res = globus_l_xio_xsp_connect_handle(handle);
+	    if (res != GLOBUS_TRUE)
+	    {
+		GlobusXIOErrorWrapFailed("Could not complete XSP PATH.", res);
+		return res;
+	    }
+	}
     }
     else
     {
@@ -1429,6 +1465,8 @@ globus_l_xio_xsp_open(
 
     res = globus_xio_driver_pass_open(
 	      op, contact_info, globus_l_xio_xsp_open_cb, handle);
+
+    GlobusXIOXSPDebugExit();
     return res;
 }
 
@@ -1792,6 +1830,11 @@ globus_l_xio_xsp_activate(void)
 	globus_l_xio_xsp_handle_default.xsp_net_path = tmp;
     }
     
+    if ((tmp = globus_module_getenv("XSP_SIGNAL_PATH")))
+    {
+	globus_l_xio_xsp_xfer_default.xsp_signal_path = GLOBUS_TRUE;
+    }
+
     rc = libxsp_init();
     if (rc != 0) 
     {
