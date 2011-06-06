@@ -7,8 +7,6 @@
 #include <string.h>
 #include <strings.h>
 #include <unistd.h>
-#include <grp.h>
-#include <pwd.h>
 #include <sys/types.h>
 
 #ifdef HAVE_SYS_PRCTL_H
@@ -31,7 +29,7 @@
 
 
 void sig_exit(int signal) {
-	exit(0);
+	exit(EXIT_SUCCESS);
 }
 
 int main(int argc, char *argv[]) {
@@ -45,10 +43,6 @@ int main(int argc, char *argv[]) {
 	char *pid_file = NULL;
 	char *user = NULL;
 	char *group = NULL;
-	uid_t uid;
-	gid_t gid;
-	struct group *gr;
-        struct passwd *pw;
 #ifdef CONFIG_FILE
 	char *conf_file = CONFIG_FILE;
 #else
@@ -144,72 +138,27 @@ int main(int argc, char *argv[]) {
 		goto error_exit;
 	}
 
-	if (do_background)
-	        daemonize();
-
-
-	chdir("/tmp");
-
-	if (!pid_file) {
-                if (xsp_main_settings_get_1("pid_file", &pid_file) != 0) {
-                        pid_file = NULL;
-                }
-        }
-
-        if (pid_file) {
-                FILE *pid_out = fopen(pid_file, "w+");
-                if (!pid_out) {
-                        printf("Couldn't open pid file: %s\n", pid_file);
-                        exit(-1);
-                }
-
-                fprintf(pid_out, "%d", getpid());
-                fclose(pid_out);
-        }
-
-	if (!user) {
-                if (xsp_main_settings_get_1("user", &user) != 0) {
-                        user = NULL;
-                }
-        }
-
-        if (!group) {
-                if (xsp_main_settings_get_1("group", &group) != 0) {
-                        group = NULL;
-                }
-        }
-
-        if (group) {
-                gr = getgrnam(group);
-                if (gr) {
-                        gid = gr->gr_gid;
-                }
-
-                if (!gid) {
-                        xsp_err(0, "Invalid group '%s'\n", group);
-                        exit(-1);
-                }
-
-                if (setgid(gid) < 0) {
-                        xsp_err(0, "Couldn't change process group to %s", group);
-                }
-        }
-
-        if (user) {
-                pw = getpwnam(user);
-                if (pw) {
-                        uid = pw->pw_uid;
-                }
-
-                if (!uid) {
-                        xsp_err(0, "Invalid user '%s'\n", user);
-                        exit(-1);
-                }
-
-                if (setuid(uid) < 0) {
-                        xsp_err(0, "Couldn't change process user to %s", user);
-                }
-        }
+	if (do_background) {
+		if (!pid_file) {
+			if (xsp_main_settings_get_1("pid_file", &pid_file) != 0) {
+				pid_file = NULL;
+			}
+		}
+		
+		if (!user) {
+			if (xsp_main_settings_get_1("user", &user) != 0) {
+				user = NULL;
+			}
+		}
+		
+		if (!group) {
+			if (xsp_main_settings_get_1("group", &group) != 0) {
+				group = NULL;
+			}
+		}
+		
+	        daemonize(pid_file, user, group);
+	}
 
 #if HAVE_SYS_PRCTL_H
 	// ensure that we can generate a core dump even if we changed uids
@@ -245,9 +194,10 @@ int main(int argc, char *argv[]) {
 		xsp_err(0, "couldn't start default frontend");
 		goto error_exit;
 	}
+
 	pthread_exit(0);
 
-error_exit:
+ error_exit:
 	sleep(1);
-	exit(-1);
+	exit(EXIT_FAILURE);
 }

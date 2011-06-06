@@ -53,8 +53,8 @@ int main(int argc, char *argv[])
 	uint64_t ret_len;
 	int ret_type;
 
-	//xsp_send_msg(sess, buf, strlen(buf)+1, 0x20);
-	//xsp_recv_msg(sess, (void**)&ret_buf, &ret_len, &ret_type);
+	xsp_send_msg(sess, buf, strlen(buf)+1, 0x20);
+	xsp_recv_msg(sess, (void**)&ret_buf, &ret_len, &ret_type);
 
 	if (ret_buf) {
 	  ret_buf[ret_len] = '\0';
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 	libxspNetPath *path;
 	path = xsp_net_path("OSCARS", XSP_NET_PATH_CREATE);
 	
-	//xsp_sess_signal_path(sess, path);
+	xsp_sess_signal_path(sess, path);
 
 	xsp_close2(sess);
 

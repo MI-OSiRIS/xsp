@@ -57,6 +57,8 @@
 #include <limits.h>
 #include <stdarg.h>
 #include <sys/stat.h>
+#include <grp.h>
+#include <pwd.h>
 
 
 #ifndef HAVE_STRTOUL
@@ -474,11 +476,16 @@ error_exit:
 	return NULL;
 }
 
-int daemonize() {
-	pid_t pid, sid;
+int daemonize(char *pid_file, char *user, char *group) {
+	uid_t uid;
+	gid_t gid;
+	struct group *gr;
+        struct passwd *pw;
+
+	pid_t pid, sid, parent;
 
 	/* already a daemon */
-	if ( getppid() == 1 ) return 0;
+	if (getppid() == 1) return 0;
 
 	/* Fork off the parent process */
 	pid = fork();
@@ -491,6 +498,7 @@ int daemonize() {
 	}
 
 	/* At this point we are executing as the child process */
+	parent = getppid();
 
 	/* Change the file mode mask */
 	umask(0);
@@ -500,13 +508,66 @@ int daemonize() {
 	if (sid < 0) {
 		exit(EXIT_FAILURE);
 	}
+	
+	/* Cancel certain signals */
+	signal(SIGCHLD,SIG_DFL); /* A child process dies */
+	signal(SIGTSTP,SIG_IGN); /* Various TTY signals */
+	signal(SIGTTOU,SIG_IGN);
+	signal(SIGTTIN,SIG_IGN);
+	signal(SIGHUP, SIG_IGN); /* Ignore hangup signal */
+	signal(SIGTERM,SIG_DFL); /* Die on SIGTERM */
 
-	signal(SIGHUP, SIG_IGN);
+	chdir("/tmp");
+	
+        if (pid) {
+                FILE *pid_out = fopen(pid_file, "w+");
+                if (!pid_out) {
+                        printf("Couldn't open pid file: %s\n", pid_file);
+                        exit(-1);
+                }
+		
+                fprintf(pid_out, "%d", getpid());
+                fclose(pid_out);
+        }
+
+        if (group) {
+                gr = getgrnam(group);
+                if (gr) {
+                        gid = gr->gr_gid;
+                }
+
+                if (!gid) {
+                        fprintf(stderr, "Invalid group '%s'\n", group);
+                        exit(-1);
+                }
+
+                if (setgid(gid) < 0) {
+                        fprintf(stderr, "Couldn't change process group to %s", group);
+                }
+        }
+
+        if (user) {
+                pw = getpwnam(user);
+                if (pw) {
+                        uid = pw->pw_uid;
+                }
+
+                if (!uid) {
+                        fprintf(stderr, "Invalid user '%s'\n", user);
+                        exit(-1);
+                }
+
+                if (setuid(uid) < 0) {
+                        fprintf(stderr, "Couldn't change process user to %s", user);
+                }
+        }
 
 	/* Redirect standard files to /dev/null */
-	freopen( "/dev/null", "r", stdin);
-	freopen( "/dev/null", "w", stdout);
-	freopen( "/dev/null", "w", stderr);
+	freopen("/dev/null", "r", stdin);
+	freopen("/dev/null", "w", stdout);
+	freopen("/dev/null", "w", stderr);
+
+	kill(parent, SIGUSR1);
 
 	return 0;
 }
