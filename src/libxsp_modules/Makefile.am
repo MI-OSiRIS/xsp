@@ -1,6 +1,6 @@
-# this needs to be set as $(libdir)/xsp instead of $(moduledir) so that the RPM
+# this needs to be set as $(libdir)/libxsp instead of $(moduledir) so that the RPM
 # will install to the correct location.
-modulesdir = $(libdir)/modules
+modulesdir = $(libdir)/libxsp
 modules_LTLIBRARIES =
 
 INCLUDES = -I@top_srcdir@/include -I@top_srcdir@/src/libxsp -I@top_srcdir@/libradix -I@top_srcdir@/compat -I@top_srcdir@/libconfig -I@top_srcdir@/src/libxsp_common

@@ -392,7 +392,7 @@ dnl End check for Globus
 CONFIG_FILE=$sysconfdir/xspd.conf
 AC_SUBST(CONFIG_FILE)
 
-moduledir=$libdir/modules
+moduledir=$libdir/libxsp
 AC_SUBST(moduledir)
 
 AC_SUBST(THREAD_LIBS)

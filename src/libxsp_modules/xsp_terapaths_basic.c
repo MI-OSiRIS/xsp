@@ -289,15 +289,15 @@ static int __xsp_terapaths_new_channel(xspPath *path, uint32_t size, xspChannel 
 
 	if (xsp_start_soap_ssl(&(pi->tsc), SOAP_SSL_REQUIRE_SERVER_AUTHENTICATION
 			       | SOAP_SSL_SKIP_HOST_CHECK) != 0) {
-		xsp_err(0, "couldn't start SOAP context");
+	        error_msg = "couldn't start SOAP SSL context";
 		goto error_exit;
 	}
 	
 	xsp_info(10,  "%s: reserving new channel of size: %lld", path->description, pi->bw);
 	
 	new_channel = xsp_alloc_channel();
-	if (!channel) {
-		xsp_err(0, "%s: couldn't allocate channel object", path->description);
+        if (!channel) {
+	        error_msg = "couldn't allocate channel object";
                 goto error_exit;
         }
 
@@ -421,6 +421,7 @@ static int __xsp_terapaths_new_channel(xspPath *path, uint32_t size, xspChannel 
 	xsp_stop_soap_ssl(&(pi->tsc));
         xsp_free_channel(new_channel);
  error_exit:
+	*ret_error_msg = error_msg;
         return -1;
 }
 		

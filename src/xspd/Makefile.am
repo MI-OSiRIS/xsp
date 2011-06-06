@@ -1,8 +1,4 @@
-# this needs to be set as $(libdir)/xspd instead of $(moduledir) so that the RPM
-# will install to the correct location.
-modulesdir = $(libdir)/xspd
 sbin_PROGRAMS = xspd
-modules_LTLIBRARIES = 
 
 xspd_SOURCES = xspd.c xspd_frontend.c
 xspd_INCLUDES = 

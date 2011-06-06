@@ -438,7 +438,7 @@ uint64_t xsp_conn_default_send_msg(xspConn *conn, uint8_t version, uint16_t type
 	msg.flags = 0;
 	msg.msg_body = msg_body;
 
-	// XXX: need to figure out best of EIDs
+	// XXX: need to figure out best use of EIDs
 	msg.src_eid.x_addrc[0] = '\0';
         msg.dst_eid.x_addrc[0] = '\0';
 

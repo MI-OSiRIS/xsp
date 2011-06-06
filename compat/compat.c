@@ -56,6 +56,7 @@
 #include <unistd.h>
 #include <limits.h>
 #include <stdarg.h>
+#include <sys/stat.h>
 
 
 #ifndef HAVE_STRTOUL
@@ -474,20 +475,38 @@ error_exit:
 }
 
 int daemonize() {
-	if (fork()) {
-		exit(0);
+	pid_t pid, sid;
+
+	/* already a daemon */
+	if ( getppid() == 1 ) return 0;
+
+	/* Fork off the parent process */
+	pid = fork();
+	if (pid < 0) {
+		exit(EXIT_FAILURE);
+	}
+	/* If we got a good PID, then we can exit the parent process. */
+	if (pid > 0) {
+		exit(EXIT_SUCCESS);
 	}
 
-	setsid();
+	/* At this point we are executing as the child process */
+
+	/* Change the file mode mask */
+	umask(0);
+
+	/* Create a new SID for the child process */
+	sid = setsid();
+	if (sid < 0) {
+		exit(EXIT_FAILURE);
+	}
 
 	signal(SIGHUP, SIG_IGN);
 
-	if(fork()) {
-		exit(0);
-	}
-	close(0);
-	close(1);
-	close(2);
+	/* Redirect standard files to /dev/null */
+	freopen( "/dev/null", "r", stdin);
+	freopen( "/dev/null", "w", stdout);
+	freopen( "/dev/null", "w", stderr);
 
 	return 0;
 }

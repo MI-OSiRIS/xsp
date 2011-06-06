@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 	sec = xsp_security("ezra", NULL, "/home/ezra/.ssh/id_rsa_pl.pub",
 			   "/home/ezra/.ssh/id_rsa_pl", NULL);
 
-	if (xsp_sess_set_security(sess, sec, XSP_SEC_SSH)) {
+	if (xsp_sess_set_security(sess, sec, XSP_SEC_NONE)) {
 		fprintf(stderr, "could not set requested xsp security method\n");
 		exit(-1);
 	}
@@ -49,23 +49,23 @@ int main(int argc, char *argv[])
 	}
 
 	char buf[20] = "This is a test";
-	char *ret_buf;
+	char *ret_buf = NULL;
 	uint64_t ret_len;
 	int ret_type;
 
-	xsp_send_msg(sess, buf, strlen(buf)+1, 0x20);
-	xsp_recv_msg(sess, (void**)&ret_buf, &ret_len, &ret_type);
+	//xsp_send_msg(sess, buf, strlen(buf)+1, 0x20);
+	//xsp_recv_msg(sess, (void**)&ret_buf, &ret_len, &ret_type);
 
-	ret_buf[ret_len] = '\0';
-
-	printf("got message[%d]: %s\n", ret_type, ret_buf);
-
-	free(ret_buf);
-
+	if (ret_buf) {
+	  ret_buf[ret_len] = '\0';
+	  printf("got message[%d]: %s\n", ret_type, ret_buf);
+	  free(ret_buf);
+	}
+	
 	libxspNetPath *path;
 	path = xsp_net_path("OSCARS", XSP_NET_PATH_CREATE);
 	
-	xsp_sess_signal_path(sess, path);
+	//xsp_sess_signal_path(sess, path);
 
 	xsp_close2(sess);
 

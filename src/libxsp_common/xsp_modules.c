@@ -64,7 +64,10 @@ static unsigned int xsp_modules_htable_hash(const void *k1) {
 	return retval;
 }
 
-int xsp_modules_init() {
+int xsp_modules_init(char *module_dir) {
+
+	if (module_dir)
+		xspModulesConfig.module_dir = module_dir;
 
 	table = create_hashtable(7, xsp_modules_htable_hash, xsp_modules_htable_equal);
 	if (!table) {
