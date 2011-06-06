@@ -152,7 +152,11 @@ int __setup_ssh(libxspSess *sess) {
 	if (!(keypass = getenv("XSP_SSH_KEYPASS")))
 		keypass = NULL;
 	
+#ifdef HAVE_SSH
 	return xsp_ssh2_setup(sess, user, pass, privkey, pubkey, keypass);
+#else
+	return -1;
+#endif
 }
 
 int __setup_ssl(libxspSess *sess) {
@@ -474,6 +478,7 @@ int xsp_sess_set_security(libxspSess *sess, xspSecInfo *sec, int type) {
 			sess->recvfn = xsp_ssh2_recv;
 #else
 			d_printf("SSH support was not found\n");
+			return -1;
 #endif
 		}
 		break;
@@ -487,6 +492,7 @@ int xsp_sess_set_security(libxspSess *sess, xspSecInfo *sec, int type) {
 			sess->recvfn = __xsp_recv_default;
 #else
 			d_printf("SSL support was not found\n");
+			return -1;
 #endif	       
                 }
                 break;
@@ -1426,7 +1432,7 @@ xspMsg *xsp_get_msg(libxspSess *sess, unsigned int flags) {
                 return __xsp_get_msg_v1(sess, flags);
                 break;
         default:
-                fprintf(stderr, "unsupported version\n");
+	        fprintf(stderr, "unsupported version: %d\n", version);
                 goto error_exit;
         }
 

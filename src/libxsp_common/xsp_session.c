@@ -629,7 +629,7 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
 	
 	parent_conn = LIST_FIRST(&sess->parent_conns);
 
-	xsp_info(0, "Setting up path type %s for client=%s\n",
+	xsp_info(0, "Setting up path type %s for client=%s",
 		 net_path->type, parent_conn->description);
 
 	// just get main paths section from the config for now
@@ -639,8 +639,8 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
                 settings = xsp_settings_alloc();
         }
 
-	if (!strcasecmp(net_path->type, "TERAPATHS")) {
-		// set src and dst in the settings to start
+	if (!strcasecmp(net_path->type, "TERAPATHS") && sess->child_count) {
+	  // set src and dst in the settings to start
 		xsp_settings_set_2(settings, "terapaths", "src", strtok(parent_conn->description, "/"));
 		xsp_settings_set_2(settings, "terapaths", "dst", strtok(xsp_hop_getid(sess->child[0]), "/"));
 	}
@@ -664,7 +664,9 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
 		xspNetPathRule rule;
 		memset(&rule, 0, sizeof(xspNetPathRule));
 		
-		if (path->new_channel(path, net_path->rules[i], &channel, &error_msg) != 0) {
+		// add some rule stuff here
+
+		if (path->new_channel(path, &rule, &channel, &error_msg) != 0) {
 			xsp_err(0, "couldn't allocate a channel: %s", error_msg);
 			goto error_exit;
 		}

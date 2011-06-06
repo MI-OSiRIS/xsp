@@ -26,7 +26,8 @@ int xsp_start_soap_ssl(xspSoapContext *sc, int soap_ssl_flags) {
 				    ))
 		{
 			//soap_print_fault(soap, stderr);
-			fprintf(stderr, "Could not initialize SOAP SSL context\n");
+		        //fprintf(stderr, "Could not initialize SOAP SSL context\n");
+		        free(soap);
 			return -1;
 		}
 

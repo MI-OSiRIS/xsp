@@ -20,9 +20,11 @@
 #include "xsp_config.h"
 #include "xsp_tpool.h"
 #include "xsp_session.h"
+#include "xsp_path_handler.h"
 
 #include "xsp_protocols.h"
 #include "xsp_default_settings.h"
+#include "xsp_main_settings.h"
 #include "xsp_modules.h"
 
 #include "xspd_frontend.h"
@@ -46,12 +48,13 @@ int main(int argc, char *argv[]) {
 	uid_t uid;
 	gid_t gid;
 	struct group *gr;
-	struct passwd *pw;
+        struct passwd *pw;
 #ifdef CONFIG_FILE
 	char *conf_file = CONFIG_FILE;
 #else
 	char *conf_file = NULL;
 #endif
+	char *modules_dir = NULL;
 
 #ifdef NETLOGGER
 	for (c=0; c<MAX_ID; c++)
@@ -117,6 +120,10 @@ int main(int argc, char *argv[]) {
 				logger_file = strdup(optarg);
 				break;
 
+		        case 'l':
+				modules_dir = strdup(optarg);
+				break;
+
 			case 'V':
 				printf("eXtensible Session Protocol Daemon, version 0.5\n");
 				exit(1);
@@ -137,9 +144,72 @@ int main(int argc, char *argv[]) {
 		goto error_exit;
 	}
 
+	if (do_background)
+	        daemonize();
+
 
 	chdir("/tmp");
 
+	if (!pid_file) {
+                if (xsp_main_settings_get_1("pid_file", &pid_file) != 0) {
+                        pid_file = NULL;
+                }
+        }
+
+        if (pid_file) {
+                FILE *pid_out = fopen(pid_file, "w+");
+                if (!pid_out) {
+                        printf("Couldn't open pid file: %s\n", pid_file);
+                        exit(-1);
+                }
+
+                fprintf(pid_out, "%d", getpid());
+                fclose(pid_out);
+        }
+
+	if (!user) {
+                if (xsp_main_settings_get_1("user", &user) != 0) {
+                        user = NULL;
+                }
+        }
+
+        if (!group) {
+                if (xsp_main_settings_get_1("group", &group) != 0) {
+                        group = NULL;
+                }
+        }
+
+        if (group) {
+                gr = getgrnam(group);
+                if (gr) {
+                        gid = gr->gr_gid;
+                }
+
+                if (!gid) {
+                        xsp_err(0, "Invalid group '%s'\n", group);
+                        exit(-1);
+                }
+
+                if (setgid(gid) < 0) {
+                        xsp_err(0, "Couldn't change process group to %s", group);
+                }
+        }
+
+        if (user) {
+                pw = getpwnam(user);
+                if (pw) {
+                        uid = pw->pw_uid;
+                }
+
+                if (!uid) {
+                        xsp_err(0, "Invalid user '%s'\n", user);
+                        exit(-1);
+                }
+
+                if (setuid(uid) < 0) {
+                        xsp_err(0, "Couldn't change process user to %s", user);
+                }
+        }
 
 #if HAVE_SYS_PRCTL_H
 	// ensure that we can generate a core dump even if we changed uids
@@ -151,7 +221,7 @@ int main(int argc, char *argv[]) {
 		goto error_exit;
 	}
 	
-	if (xsp_modules_init() != 0) {
+	if (xsp_modules_init(modules_dir) != 0) {
 		xsp_err(0, "couldn't initialize moduler loader");
 		goto error_exit;
 	}

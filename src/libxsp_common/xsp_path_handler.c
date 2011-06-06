@@ -145,5 +145,6 @@ error_exit_path:
 error_exit_unlock:
 	pthread_mutex_unlock(&path_list_lock);
 error_exit:
+	*ret_error_msg = "XSP GET PATH ERROR";
 	return -1;
 }

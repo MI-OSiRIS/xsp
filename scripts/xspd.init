@@ -1,0 +1,116 @@
+#!/bin/bash
+#
+# Init file for XSP Daemon
+
+# chkconfig: 2345 60 20
+# description: XSP Daemon
+#
+# processname: xspd 
+#
+
+
+#PREFIX=/prefixdir
+if [ -z ${PREFIX} ]; then
+XSPDBINDIR=/usr/sbin
+else
+XSPDBINDIR=${PREFIX}/sbin
+fi
+CONFDIR=${PREFIX}/etc
+CONFFILE=${PREFIX}/etc/xspd/xspd.conf
+XSPDVARDIR=${PREFIX}/var
+PIDFILE=${XSPDVARDIR}/run/xspd.pid
+LOGFILE=${XSPDVARDIR}/log/xspd.log
+DEBUGLEVEL=9
+
+XSPD="${XSPDBINDIR}/xspd -c ${CONFFILE} -d ${DEBUGLEVEL} -o ${LOGFILE} -p ${PIDFILE} -B"
+
+ERROR=0
+ARGV="$@"
+if [ "x$ARGV" = "x" ] ; then
+    ARGS="help"
+fi
+
+for ARG in $@ $ARGS
+do
+    # check for pidfile
+    if [ -f $PIDFILE ] ; then
+        PID=`cat $PIDFILE`
+        if [ "x$PID" != "x" ] && kill -0 $PID 2>/dev/null ; then
+            STATUS="xspd (pid $PID) running"
+            RUNNING=1
+        else
+            STATUS="xspd (pid $PID?) not running"
+            RUNNING=0
+        fi
+    else
+        STATUS="xspd (no pid file) not running"
+        RUNNING=0
+    fi
+
+    case $ARG in
+    start)
+        if [ $RUNNING -eq 1 ]; then
+            echo "$0 $ARG: xspd (pid $PID) already running"
+            continue
+        fi
+
+        echo $XSPD
+
+        if $XSPD ; then
+            echo "$0 $ARG: xspd started"
+        else
+            echo "$0 $ARG: xspd could not be started"
+            ERROR=3
+        fi
+        ;;
+    stop)
+        if [ $RUNNING -eq 0 ]; then
+            echo "$0 $ARG: $STATUS"
+            continue
+        fi
+        if kill $PID ; then
+            echo "$0 $ARG: xspd stopped"
+        else
+            echo "$0 $ARG: xspd could not be stopped"
+            ERROR=4
+        fi
+        ;;
+    restart)
+        $0 stop; echo "waiting..."; sleep 10; $0 start;
+        ;;
+#       if [ $RUNNING -eq 0 ]; then
+#           echo "$0 $ARG: xspd not running, trying to start"
+#           if $XSPD ; then
+#               echo "$0 $ARG: xspd started"
+#           else
+#               echo "$0 $ARG: xspd could not be started"
+#               ERROR=5
+#           fi
+#       else
+#           if kill -HUP $PID ; then
+#              echo "$0 $ARG: xspd restarted"
+#           else
+#              echo "$0 $ARG: xspd could not be restarted"
+#              ERROR=6
+#           fi
+#       fi
+#       ;;
+    *)
+        echo "usage: $0 (start|stop|restart|help)"
+        cat <<EOF
+
+start      - start xspd
+stop       - stop xspd
+restart    - restart xspd if running by sending a SIGHUP or start if 
+             not running
+help       - this screen
+
+EOF
+        ERROR=2
+    ;;
+
+    esac
+
+done
+
+exit $ERROR
