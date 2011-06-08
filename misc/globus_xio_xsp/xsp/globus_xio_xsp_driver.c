@@ -639,26 +639,24 @@ globus_l_xio_xsp_connect_handle(
 	}
 
 	if (handle->xsp_sec && !strcasecmp(handle->xsp_sec, "ssh")) {
-	    if (xsp_sess_set_security(handle->xfer->sess, NULL, XSP_SEC_SSH)) {
-                ret = -1;
+	    if ((ret = xsp_sess_set_security(handle->xfer->sess, NULL, XSP_SEC_SSH)) != 0) {
 		goto error_sess;
 	    }
 	}
-
+	
 	ret = xsp_connect(handle->xfer->sess);
 	if (ret != 0)
 	{
 	    goto error_sess;
 	}
-	
+
 	if (handle->xsp_net_path &&
 	    globus_l_xio_xsp_xfer_default.xsp_signal_path)
 	{
 	    libxspNetPath *path;
 	    path = xsp_net_path(handle->xsp_net_path, XSP_NET_PATH_CREATE);
-	    if (xsp_sess_signal_path(handle->xfer->sess, path) != 0)
+	    if ((ret = xsp_sess_signal_path(handle->xfer->sess, path)) != 0)
 	    {
-		ret = -1;
 		goto error_sess;
 	    }
 	    free(path);
@@ -1227,21 +1225,12 @@ globus_l_xio_xsp_open_cb(
 	    goto error_return;
 	}
 
-	//printf("LOCAL CONTACT INFO: %s:%s\n", handle->local_contact->host,
-	//       handle->local_contact->port);
-	//printf("REMOTE CONTACT INFO: %s:%s\n", handle->remote_contact->host,
-	//       handle->remote_contact->port);
-
-	/***
-	   contact info in open() is not always populated on some systems
-	   XXX: why?
-	   so we set things up here after we can get the remote contact info
-	   XXX: refactor so we don't duplicate what happens in open()
-	***/
+	//char *tmp;
+	//globus_xio_contact_info_to_string(handle->remote_contact, &tmp);
+	//printf("CONTACT INFO: %s\n", tmp);
+	
 	if (handle->xfer == NULL)
 	{
-	  //sprintf(hstring, "%s:%s", handle->remote_contact->host,
-	  //        handle->remote_contact->port);
 	  if (handle->remote_contact->host)
 	  {
 	      sprintf(hstring, "%s", handle->remote_contact->host);
@@ -1255,13 +1244,14 @@ globus_l_xio_xsp_open_cb(
 
 	  if (xfer_handle == NULL)
 	  {
+	      //printf("NEW XFER 2\n");
 	      globus_l_xio_xsp_xfer_init((void**)&xfer_handle);
 	      xfer_handle->hash_str = strdup(hstring);
 	      globus_hashtable_insert(&xsp_l_xfer_table, xfer_handle->hash_str, xfer_handle);
-	    }
+	  }
 	  else
-	    {
-	    }
+	  {
+	  }
 	  
 	  handle->xfer = xfer_handle;
 	  
@@ -1309,14 +1299,17 @@ globus_l_xio_xsp_open_cb(
 	    {   
 		res = globus_l_xio_xsp_connect_handle(handle);
 		if (res != GLOBUS_SUCCESS)
-		{
-		    res = GlobusXIOErrorWrapFailedWithMessage(res,
-		        "The XSP XIO driver failed to establish a connection%s",
-		        " to XSPd.");
-		    goto error_return;
-		    // this will try again for subsequent streams, if any
-		}
-
+		    {
+			res = GlobusXIOErrorWrapFailedWithMessage(res,
+				  "The XSP XIO driver failed to establish a connection%s",
+				  " to XSPd.");
+			goto error_return;
+			// this will try again for subsequent streams, if any
+		    }
+	    }
+	    if ((handle->xfer->xsp_connected == GLOBUS_TRUE) &&
+		(handle->xfer->streams == 1))
+	    {
 		res = globus_l_xio_xsp_do_xfer_notify(handle, GLOBUS_XIO_XSP_NEW_XFER);
 		if (res != GLOBUS_SUCCESS)
 		{
@@ -1326,7 +1319,8 @@ globus_l_xio_xsp_open_cb(
 		    goto error_return;
 		}
 	    }
-	    else
+	    else if ((handle->xfer->xsp_connected == GLOBUS_TRUE) &&
+		     (handle->xfer->streams > 1))
 	    {
 		// maybe we notify monitoring that another stream has been added?
 	    }
@@ -1385,6 +1379,10 @@ globus_l_xio_xsp_open(
     /* get handle for drivers below us */
     handle->xio_driver_handle = globus_xio_operation_get_driver_handle(op);
 
+    //char *tmp;
+    //globus_xio_contact_info_to_string(contact_info, &tmp);
+    //printf("CONTACT INFO: %s\n", tmp);
+
     if (handle->stack == GLOBUS_XIO_XSP_NETSTACK)
     {
         /* save the contact info */
@@ -1426,7 +1424,7 @@ globus_l_xio_xsp_open(
 
 	if (xfer_handle == NULL)
 	{
-	    //printf("NEW XFER HANDLE\n");
+	    //printf("NEW XFER 1\n");
 	    globus_l_xio_xsp_xfer_init((void**)&xfer_handle);
 	    xfer_handle->hash_str = strdup(hstring);
 	    globus_hashtable_insert(&xsp_l_xfer_table, xfer_handle->hash_str, xfer_handle);
@@ -1448,10 +1446,11 @@ globus_l_xio_xsp_open(
 	globus_l_xio_xsp_caliper_init((void**)&(handle->a_caliper), "nl.accept.summary");
 
 	/* if there's a path to setup, do it before the underlying connection start */
-	if (globus_l_xio_xsp_xfer_default.xsp_signal_path)
+	if ((handle->xfer->xsp_connected == GLOBUS_FALSE) &&
+	    globus_l_xio_xsp_xfer_default.xsp_signal_path)
 	{
 	    res = globus_l_xio_xsp_connect_handle(handle);
-	    if (res != GLOBUS_TRUE)
+	    if (res != GLOBUS_SUCCESS)
 	    {
 		GlobusXIOErrorWrapFailed("Could not complete XSP PATH.", res);
 		return res;
