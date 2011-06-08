@@ -957,8 +957,11 @@ int xsp_proto_loop(comSess *sess) {
                         break;
 		case XSP_MSG_NET_PATH:
 			{
-				if (xsp_session_setup_path(sess, msg, &error_msgs) < 0)
-					goto error_exit1;
+				if (xsp_session_setup_path(sess, msg, &error_msgs) < 0) {
+					xsp_session_send_nack(sess, error_msgs);
+					xsp_free_msg(msg);
+					continue;
+				}
 				__xsp_cb_and_free(sess, msg);
 				xsp_conn_send_msg(conn, version, XSP_MSG_SESS_ACK, XSP_OPT_NULL, NULL);
 			}
@@ -972,16 +975,22 @@ int xsp_proto_loop(comSess *sess) {
 			break;
 		case XSP_MSG_DATA_CHAN:
 			{
-				if (xsp_session_data_open(sess, msg, &error_msgs) < 0)
-					goto error_exit1;
+				if (xsp_session_data_open(sess, msg, &error_msgs) < 0) {
+					xsp_session_send_nack(sess, error_msgs);
+					xsp_free_msg(msg);
+					continue;
+				}
 				__xsp_cb_and_free(sess, msg);
-				//xsp_conn_send_msg(conn, version, XSP_MSG_SESS_ACK, XSP_OPT_NULL, NULL);
+				xsp_conn_send_msg(conn, version, XSP_MSG_SESS_ACK, XSP_OPT_NULL, NULL);
 			}
 			break;
 		case XSP_MSG_APP_DATA:
 			{
-				if (xsp_session_app_data(sess, msg, &error_msgs) < 0)
-					goto error_exit1;
+				if (xsp_session_app_data(sess, msg, &error_msgs) < 0) {
+					xsp_session_send_nack(sess, error_msgs);
+					xsp_free_msg(msg);
+					continue;
+				}
 				__xsp_cb_and_free(sess, msg);
 			}
 			break;
@@ -1003,9 +1012,6 @@ int xsp_proto_loop(comSess *sess) {
 
 	return 0;
 
- error_exit1:
-	xsp_session_send_nack(sess, error_msgs);
-	
  error_exit:
 	xsp_end_session(sess);
 	return -1;

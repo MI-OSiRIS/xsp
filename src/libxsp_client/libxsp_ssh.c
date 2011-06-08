@@ -144,6 +144,7 @@ int xsp_ssh2_setup(libxspSess *sess, char *user, char *pass, char *privkey, char
 			int errlen;
 			libssh2_session_last_error(sess->ssh_sess, &errmsg, &errlen, 0); 
 			d_printf("ssh2_setup(): authentication by public key failed (%d): %s\n", ret, errmsg);
+			goto error_exit;
 		}
 		d_printf("ssh2_setup(): authentication by public key succeeded\n");
 		authdone = TRUE;
