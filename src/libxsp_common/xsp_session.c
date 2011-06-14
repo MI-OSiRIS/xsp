@@ -796,7 +796,7 @@ int xsp_session_send_nack(comSess *sess, char **error_msgs) {
 	return 0;
 }
 
-int xsp_set_proto_cb(comSess *sess, void *(*fn) (int, void*)) {
+int xsp_set_proto_cb(comSess *sess, void *(*fn) (void*)) {
 	sess->proto_cb = fn;
 	return 0;
 }
@@ -948,6 +948,12 @@ int xsp_proto_loop(comSess *sess) {
 
                 switch(msg->type) {
 			
+		case XSP_MSG_SESS_OPEN:
+			{
+				__xsp_cb_and_free(sess, msg);
+				xsp_conn_send_msg(conn, version, XSP_MSG_SESS_ACK, XSP_OPT_NULL, NULL);
+			}
+			break;
                 case XSP_MSG_SESS_CLOSE:
                         {
                                 xsp_info(10, "Close session message received.");
@@ -971,6 +977,12 @@ int xsp_proto_loop(comSess *sess) {
 			        xsp_info(10, "PING/PONG");
 				__xsp_cb_and_free(sess, msg);
 				xsp_conn_send_msg(conn, version, XSP_MSG_PONG, XSP_OPT_NULL, NULL);
+			}
+			break;
+		case XSP_MSG_SLAB_INFO:
+			{
+				__xsp_cb_and_free(sess, msg);
+				//xsp_conn_send_msg(conn, version, XSP_MSG_SESS_ACK, XSP_OPT_NULL, NULL);
 			}
 			break;
 		case XSP_MSG_DATA_CHAN:
@@ -1019,7 +1031,7 @@ int xsp_proto_loop(comSess *sess) {
 
 void __xsp_cb_and_free(comSess *sess, xspMsg *msg) {
 	if (sess->proto_cb)
-		sess->proto_cb(msg->type, msg->msg_body);
+		sess->proto_cb(msg);
 	xsp_free_msg(msg);
 }
 
