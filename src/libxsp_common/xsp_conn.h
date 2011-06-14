@@ -24,7 +24,7 @@ typedef struct xsp_connection_t {
 	char *addr;
 	char *description;
 	char *protocol;
-	int gw_peer;
+	int xsp_peer;
 	
 	struct xsp_path_t *path;
 	struct xsp_channel_t *channel;

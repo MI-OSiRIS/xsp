@@ -43,7 +43,7 @@ typedef struct common_session_t {
 	int references;
 	pthread_mutex_t references_lock;
 	
-	void *(*proto_cb) (int type, void *body);
+	void *(*proto_cb) (void *arg);
 
 	LIST_ENTRY(common_session_t) sess_list;
 
@@ -55,7 +55,7 @@ typedef struct common_session_t {
 int xsp_sessions_init();
 
 comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, int (*fn) (comSess *));
-int xsp_set_proto_cb(comSess *sess, void *(*fn) (int, void *));
+int xsp_set_proto_cb(comSess *sess, void *(*fn) (void *));
 int xsp_proto_loop(comSess *sess);
 
 int xsp_setup_session(comSess *sess, char ***error_msgs);
@@ -82,6 +82,7 @@ int xsp_session_setup_path(comSess *sess, const void *msg, char ***error_msgs);
 int xsp_session_data_open(comSess *sess, const void *msg, char ***error_msgs);
 
 int xsp_session_send_nack(comSess *sess, char **error_msgs);
+char *xsp_session_print_nack(const xspMsg *msg);
 
 #include "xsp_listener.h"
 
