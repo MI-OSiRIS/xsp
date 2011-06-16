@@ -120,9 +120,9 @@ void libxsp_wrapper_init() {
         }
 #else
 	// open up the standard library
-	handle = dlopen("/lib64/libc.so.6", RTLD_LAZY);
+	handle = dlopen("libc.so.6", RTLD_LAZY);
 	if (!handle) {
-		handle = dlopen("/lib/libc.so.6", RTLD_LAZY);
+		handle = dlopen("libc.so.6", RTLD_LAZY);
 		if (!handle) {
 			d_printf("xsp_init_wrapper(): couldn't load libc: %s\n", dlerror());
 			goto error_exit2;
