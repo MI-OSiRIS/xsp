@@ -1,66 +1,30 @@
-/* Copyright (c) 2008 The Board of Trustees of The Leland Stanford
- * Junior University
- * 
- * We are making the OpenFlow specification and associated documentation
- * (Software) available for public use and benefit with the expectation
- * that others will use, modify and enhance the Software and contribute
- * those enhancements back to the community. However, since we would
- * like to make the Software available for broadest use, with as few
- * restrictions as possible permission is hereby granted, free of
- * charge, to any person obtaining a copy of this Software to deal in
- * the Software under the copyrights without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- * 
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- * 
- * The name and trademarks of copyright holder(s) may NOT be used in
- * advertising or publicity pertaining to the Software or any
- * derivatives without specific, written prior permission.
+/* derived from openflow reference controller
+ * provide a library to add and remove layer 3 rules
  */
 
 #include <config.h>
-
 #include <errno.h>
 #include <getopt.h>
-#include <limits.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <string.h>
+#include <arpa/inet.h>
+#include <pthread.h>
 
 #include "command-line.h"
-#include "compiler.h"
 #include "daemon.h"
-#include "fault.h"
 #include "learning-switch.h"
 #include "ofpbuf.h"
-#include "openflow/openflow.h"
+#include "openflow.h"
 #include "poll-loop.h"
 #include "rconn.h"
 #include "timeval.h"
-#include "util.h"
-#include "vconn-ssl.h"
 #include "vconn.h"
 #include "vlog-socket.h"
-
 #include "vlog.h"
-/* modification by Miao, includes */
-#include <arpa/inet.h>
 #include "flow.h"
 #include "stp.h"
-#include <time.h>
+#include "controller.h"
 
 #define THIS_MODULE VLM_controller
 #define MAX_SWITCHES 16
@@ -71,16 +35,6 @@ struct switch_ {
     struct rconn *rconn;
 };
 
-/* Learn the ports on which MAC addresses appear? */
-static bool learn_macs = true;
-
-/* Set up flows?  (If not, every packet is processed at the controller.) */
-static bool setup_flows = true;
-
-/* --max-idle: Maximum idle time, in seconds, before flows expire. */
-static int max_idle = 60;
-
-/* modification by Miao, variables and structures */
 /* lswitch is originally defined in learning switch library, move here for compiling */
 struct lswitch {
     /* If nonnegative, the switch sets up flows that expire after the given
@@ -108,32 +62,51 @@ struct lswitch {
     uint32_t query_xid;         /* XID used for query. */
     int n_flows, n_no_recv, n_no_send;
 };
+
+/* the structure storing layer 3 flow entries to be added/removed */
+struct l3_entry {
+    bool valid;
+    char * ip_src;
+    char * ip_dst;
+    uint32_t ip_src_mask;
+    uint32_t ip_dst_mask;
+    uint16_t duration;
+};
+
+/* Learn the ports on which MAC addresses appear? */
+static bool learn_macs = true;
+
+/* Set up flows?  (If not, every packet is processed at the controller.) */
+static bool setup_flows = true;
+
+/* --max-idle: Maximum idle time, in seconds, before flows expire. */
+static int max_idle = 60;
+
+struct l3_entry new_entry = {false, NULL, NULL, 0, 0, 0};
+struct l3_entry del_entry = {false, NULL, NULL, 0, 0, 0};
 static struct vlog_rate_limit rl = VLOG_RATE_LIMIT_INIT(30, 300);
-static bool already_added = false;
-static long time_taken;
-static bool removed = false;
+static struct switch_ switches[MAX_SWITCHES];
+static struct pvconn *listeners[MAX_LISTENERS];
+static int n_switches, n_listeners;
+pthread_t pth;
 
 static int do_switching(struct switch_ *);
 static void new_switch(struct switch_ *, struct vconn *, const char *name);
 static void parse_options(int argc, char *argv[]);
 static void usage(void) NO_RETURN;
 
-/* modification by Miao, functions */
-static void of_add_l3_rule(struct switch_ *, char *, char *, uint32_t, uint32_t, uint16_t);
-static void of_remove_l3_rule(struct switch_ *, char *);
+static void actual_add(struct switch_ *);
+static void actual_remove(struct switch_ *);
 static void queue_tx(struct lswitch *, struct rconn *, struct ofpbuf *);
 
-int
-main(int argc, char *argv[])
+void
+controller_init(int argc, char *argv[])
 {
-    struct switch_ switches[MAX_SWITCHES];
-    struct pvconn *listeners[MAX_LISTENERS];
-    int n_switches, n_listeners;
     int retval;
     int i;
 
     set_program_name(argv[0]);
-    register_fault_handlers();
+    //register_fault_handlers(); CANNOT LINK TO THE OPENFLOW LIBRARY
     time_init();
     vlog_init();
     parse_options(argc, argv);
@@ -143,7 +116,6 @@ main(int argc, char *argv[])
         ofp_fatal(0, "at least one vconn argument required; "
                   "use --help for usage");
     }
-
     n_switches = n_listeners = 0;
     for (i = optind; i < argc; i++) {
         const char *name = argv[i];
@@ -182,7 +154,11 @@ main(int argc, char *argv[])
     if (retval) {
         ofp_fatal(retval, "Could not listen for vlog connections");
     }
+}
 
+void *
+controller_loop(void *ptr)
+{
     while (n_switches > 0 || n_listeners > 0) {
         int iteration;
         int i;
@@ -246,7 +222,19 @@ main(int argc, char *argv[])
         poll_block();
     }
 
-    return 0;
+    return NULL;
+}
+
+void
+controller_start()
+{
+    pthread_create(&pth, NULL, controller_loop, NULL);
+}
+
+void
+controller_stop()
+{
+    pthread_cancel(pth);
 }
 
 static void
@@ -267,35 +255,13 @@ do_switching(struct switch_ *sw)
 
     msg = rconn_recv(sw->rconn);
     if (msg) {
-        /*
-        size_t pkt_ofs, pkt_len;
-        struct ofpbuf pkt;
-        struct flow flow;
-        struct ofp_packet_in *opi = (msg->data);
-        pkt_ofs = offsetof(struct ofp_packet_in, data);
-        pkt_len = ntohs(opi->header.length) - pkt_ofs;
-        pkt.data = opi->data;
-        pkt.size = pkt_len;
-        flow_extract(&pkt, ntohs(opi->in_port), &flow);
-        printf("---------------------------------\n");
-        //printf("nw_src is %d\n", flow.nw_src);
-        //printf("nw_dst is %d\n", flow.nw_dst);
-        printf("in_port is %d\n", flow.in_port);
-        //printf("dl_vlan;
-        //printf("dl_type;
-        //printf("tp_src;
-        //printf("tp_dst;
-        //printf("dl_vlan_pcp;
-        //printf("nw_tos;
-        //printf("nw_proto;
-        printf("---------------------------------\n");
-        */
         //lswitch_process_packet(sw->lswitch, sw->rconn, msg);
         ofpbuf_delete(msg);
     }
-    of_add_l3_rule(sw, "10.0.0.2", "10.0.0.3", 0, 0, 100);
-    if(!removed && time(NULL) - time_taken >= 50 && rconn_is_connected(sw->rconn))
-        of_remove_l3_rule(sw, "10.0.0.2");
+    if(new_entry.valid == true)
+        actual_add(sw);
+    if(del_entry.valid == true && rconn_is_connected(sw->rconn))
+        actual_remove(sw);
 
     rconn_run(sw->rconn);
 
@@ -321,7 +287,7 @@ queue_tx(struct lswitch *sw, struct rconn *rconn, struct ofpbuf *b)
 }
 
 static void
-of_add_l3_rule(struct switch_ *sw, char *ip_src, char *ip_dst, uint32_t ip_src_mask, uint32_t ip_dst_mask, uint16_t duration)
+actual_add(struct switch_ *sw)
 {
     /* ip_src_mask and ip_dst_mask are currently not used, due to the mask wildcard */
     uint32_t buffer_id = -1; // Buffered packet to apply to (or -1). Not meaningful for OFPFC_DELETE*.
@@ -329,35 +295,35 @@ of_add_l3_rule(struct switch_ *sw, char *ip_src, char *ip_dst, uint32_t ip_src_m
     uint16_t out_port2 = 2;
 
     struct flow flow1 = {
-        inet_addr(ip_src),	// uint32_t IP source address.
-        0,//inet_addr(ip_dst),	// uint32_t IP destination address.
-        0,//htons(1),		// uint16_t Input switch port.
-        0,//0xffff,			// uint16_t Input VLAN id.
-        htons(0x0800),		// uint16_t Ethernet frame type.
-        0,//htons(8),		// uint16_t TCP/UDP source port.
-        0,//htons(0),		// uint16_t TCP/UDP destination port.
-        {0,0,0,0,0,0},//2},		// uint8_t Ethernet source address.
-        {0,0,0,0,0,0},//3},		// uint8_t Ethernet destination address.
-        0,//0x00,			// uint8_t Input VLAN priority.
-        0,//0x00,			// uint8_t IPv4 DSCP.
-        0,//0x01,			// uint8_t IP protocol.
-        {0,0,0}			// uint8_t
+        inet_addr(new_entry.ip_src),	// uint32_t IP source address.
+        inet_addr(new_entry.ip_dst),	// uint32_t IP destination address.
+        0,				// uint16_t Input switch port.
+        0,				// uint16_t Input VLAN id.
+        htons(0x0800),			// uint16_t Ethernet frame type.
+        0,				// uint16_t TCP/UDP source port.
+        0,				// uint16_t TCP/UDP destination port.
+        {0,0,0,0,0,0},			// uint8_t Ethernet source address.
+        {0,0,0,0,0,0},			// uint8_t Ethernet destination address.
+        0,				// uint8_t Input VLAN priority.
+        0,				// uint8_t IPv4 DSCP.
+        0,				// uint8_t IP protocol.
+        {0,0,0}				// uint8_t
     };
 
     struct flow flow2 = {
-        inet_addr(ip_dst),	// uint32_t IP source address.
-        inet_addr(ip_src),	// uint32_t IP destination address.
-        htons(2),		// uint16_t Input switch port.
-        0xffff,			// uint16_t Input VLAN id.
-        htons(0x0800),		// uint16_t Ethernet frame type.
-        htons(0),		// uint16_t TCP/UDP source port.
-        htons(0),		// uint16_t TCP/UDP destination port.
-        {0,0,0,0,0,3},		// uint8_t Ethernet source address.
-        {0,0,0,0,0,2},		// uint8_t Ethernet destination address.
-        0x00,			// uint8_t Input VLAN priority.
-        0x00,			// uint8_t IPv4 DSCP.
-        0x01,			// uint8_t IP protocol.
-        {0,0,0}			// uint8_t
+        inet_addr(new_entry.ip_dst),	// uint32_t IP source address.
+        inet_addr(new_entry.ip_src),	// uint32_t IP destination address.
+        htons(2),			// uint16_t Input switch port.
+        0xffff,				// uint16_t Input VLAN id.
+        htons(0x0800),			// uint16_t Ethernet frame type.
+        htons(0),			// uint16_t TCP/UDP source port.
+        htons(0),			// uint16_t TCP/UDP destination port.
+        {0,0,0,0,0,3},			// uint8_t Ethernet source address.
+        {0,0,0,0,0,2},			// uint8_t Ethernet destination address.
+        0x00,				// uint8_t Input VLAN priority.
+        0x00,				// uint8_t IPv4 DSCP.
+        0x01,				// uint8_t IP protocol.
+        {0,0,0}				// uint8_t
     };
 
     /* Note: flow3 and flow4 add flows for arp, so that every arp can go from switch port1 to switch port2,
@@ -398,8 +364,6 @@ of_add_l3_rule(struct switch_ *sw, char *ip_src, char *ip_dst, uint32_t ip_src_m
     struct ofpbuf *temp1, *temp2, *temp3, *temp4;
     struct ofp_flow_mod *ofm1, *ofm2, *ofm3, *ofm4;
 
-    if(already_added) return;
-
     temp1 = make_add_simple_flow(&flow1, htonl(buffer_id), out_port2, OFP_FLOW_PERMANENT);    
     ofm1 = temp1->data;
     ofm1->match.wildcards = htonl(OFPFW_IN_PORT |
@@ -411,12 +375,12 @@ of_add_l3_rule(struct switch_ *sw, char *ip_src, char *ip_dst, uint32_t ip_src_m
                                    OFPFW_TP_SRC |
                                    OFPFW_TP_DST |
                                //OFPFW_NW_SRC_ALL |
-                               OFPFW_NW_DST_ALL |
+                               //OFPFW_NW_DST_ALL |
                               OFPFW_DL_VLAN_PCP |
                                    OFPFW_NW_TOS |
                                                0);
     ofm1->priority = htons(65535);
-    ofm1->hard_timeout = htons(duration);
+    ofm1->hard_timeout = htons(new_entry.duration);
     queue_tx(sw->lswitch, sw->rconn, temp1);
 
     temp2 = make_add_simple_flow(&flow2, htonl(buffer_id), out_port1, OFP_FLOW_PERMANENT);
@@ -435,7 +399,7 @@ of_add_l3_rule(struct switch_ *sw, char *ip_src, char *ip_dst, uint32_t ip_src_m
                                    OFPFW_NW_TOS |
                                                0);
     ofm2->priority = htons(65535);
-    ofm2->hard_timeout = htons(duration);
+    ofm2->hard_timeout = htons(new_entry.duration);
     queue_tx(sw->lswitch, sw->rconn, temp2);
 
     temp3 = make_add_simple_flow(&flow3, htonl(buffer_id), out_port2, OFP_FLOW_PERMANENT);
@@ -454,7 +418,7 @@ of_add_l3_rule(struct switch_ *sw, char *ip_src, char *ip_dst, uint32_t ip_src_m
                                    OFPFW_NW_TOS |
                                                0);
     ofm3->priority = htons(65535);
-    ofm3->hard_timeout = htons(duration);
+    ofm3->hard_timeout = htons(new_entry.duration);
     queue_tx(sw->lswitch, sw->rconn, temp3);
 
     temp4 = make_add_simple_flow(&flow4, htonl(buffer_id), out_port1, OFP_FLOW_PERMANENT);
@@ -473,31 +437,38 @@ of_add_l3_rule(struct switch_ *sw, char *ip_src, char *ip_dst, uint32_t ip_src_m
                                    OFPFW_NW_TOS |
                                                0);
     ofm4->priority = htons(65535);
-    ofm4->hard_timeout = htons(duration);
+    ofm4->hard_timeout = htons(new_entry.duration);
     queue_tx(sw->lswitch, sw->rconn, temp4);
 
-    already_added = true; /* actually it is not sent by rconn yet, rconn_send put 
-                             it in the queue and rconn_run takes care of it */
-    printf("flow added\n");time_taken = time(NULL);
+    /* actually it is not sent by rconn yet, rconn_send put 
+       it in the queue and rconn_run takes care of it */
+    new_entry.ip_src = NULL;
+    new_entry.ip_dst = NULL;
+    new_entry.ip_src_mask = 0;
+    new_entry.ip_dst_mask = 0;
+    new_entry.duration = 0;
+    new_entry.valid = false;
+
+    //printf("flow added\n");
 }
 
 static void
-of_remove_l3_rule(struct switch_ *sw, char * ip_src)
+actual_remove(struct switch_ *sw)
 {
     struct flow flow = {
-        inet_addr(ip_src),	// uint32_t IP source address.
-        0,			// uint32_t IP destination address.
-        0,			// uint16_t Input switch port.
-        0,			// uint16_t Input VLAN id.
-        htons(0x0800),		// uint16_t Ethernet frame type.
-        0,			// uint16_t TCP/UDP source port.
-        0,			// uint16_t TCP/UDP destination port.
-        {0,0,0,0,0,0},		// uint8_t Ethernet source address.
-        {0,0,0,0,0,0},		// uint8_t Ethernet destination address.
-        0,			// uint8_t Input VLAN priority.
-        0,			// uint8_t IPv4 DSCP.
-        0,			// uint8_t IP protocol.
-        {0,0,0}			// uint8_t
+        inet_addr(del_entry.ip_src),	// uint32_t IP source address.
+        inet_addr(del_entry.ip_dst),	// uint32_t IP destination address.
+        0,				// uint16_t Input switch port.
+        0,				// uint16_t Input VLAN id.
+        htons(0x0800),			// uint16_t Ethernet frame type.
+        0,				// uint16_t TCP/UDP source port.
+        0,				// uint16_t TCP/UDP destination port.
+        {0,0,0,0,0,0},			// uint8_t Ethernet source address.
+        {0,0,0,0,0,0},			// uint8_t Ethernet destination address.
+        0,				// uint8_t Input VLAN priority.
+        0,				// uint8_t IPv4 DSCP.
+        0,				// uint8_t IP protocol.
+        {0,0,0}				// uint8_t
     };
     struct ofpbuf *temp;
     struct ofp_flow_mod *ofm;
@@ -513,70 +484,47 @@ of_remove_l3_rule(struct switch_ *sw, char * ip_src)
                                   OFPFW_TP_SRC |
                                   OFPFW_TP_DST |
                               //OFPFW_NW_SRC_ALL |
-                              OFPFW_NW_DST_ALL |
+                              //OFPFW_NW_DST_ALL |
                              OFPFW_DL_VLAN_PCP |
                                   OFPFW_NW_TOS |
                                               0);
 
-    //ofm->command = OFPFC_DELETE;
     ofm->priority = htons(65535);
+    //ofm->command = OFPFC_DELETE;    
     //ofm->hard_timeout = htons(100);
     //ofm->buffer_id = htonl(-1);
 
     queue_tx(sw->lswitch, sw->rconn, temp);
-    removed = true;
-    printf("flow removed\n");
-    /*struct ofp_flow_mod *ofm;
-    struct ofpbuf *b;
-    struct ofp_match match = {
-        0,//-285198336,	// Wildcard fields.
-        0,		// Input switch port.
-        {0,0,0,0,0,0},	// Ethernet source address.
-        {0,0,0,0,0,0},	// Ethernet destination address.
-        0,		// Input VLAN id.
-        0,		// Input VLAN priority.
-        {0},		// Align to 64-bits
-        0,//8,		// Ethernet frame type.
-        0,		// IP ToS (actually DSCP field, 6 bits).
-        0,		// IP protocol or lower 8 bits of ARP opcode.
-        {0,0},		// Align to 64-bits
-        0,//33554442,	// IP source address.
-        0,		// IP destination address.
-        0,		// TCP/UDP source port.
-        0,		// TCP/UDP destination port.
-    };
 
-    ofm = make_openflow(offsetof(struct ofp_flow_mod, actions),
-                        OFPT_FLOW_MOD, &b);
-    ofm->match = match;
+    del_entry.ip_src = NULL;
+    del_entry.ip_dst = NULL;
+    del_entry.ip_src_mask = 0;
+    del_entry.ip_dst_mask = 0;
+    del_entry.duration = 0;
+    del_entry.valid = false;
 
+    //printf("flow removed\n");
+}
 
+void
+of_add_l3_rule(char *ip_src, char *ip_dst, uint32_t ip_src_mask, uint32_t ip_dst_mask, uint16_t duration)
+{
+    new_entry.ip_src = ip_src;
+    new_entry.ip_dst = ip_dst;
+    new_entry.ip_src_mask = ip_src_mask;
+    new_entry.ip_dst_mask = ip_dst_mask;
+    new_entry.duration = duration;
+    new_entry.valid = true;
+}
 
-    //ofm->match.wildcards = htonl(OFPFW_IN_PORT |
-    //                             OFPFW_DL_VLAN |
-    //                              OFPFW_DL_SRC |
-    //                              OFPFW_DL_DST |
-    //                             OFPFW_DL_TYPE |
-    //                            OFPFW_NW_PROTO |
-    //                              OFPFW_TP_SRC |
-    //                              OFPFW_TP_DST |
-    //                          OFPFW_NW_SRC_ALL |
-    //                          OFPFW_NW_DST_ALL |
-    //                         OFPFW_DL_VLAN_PCP |
-    //                              OFPFW_NW_TOS |
-    //                                          0);
-
-
-
-    ofm->command = OFPFC_DELETE;
-    ofm->out_port = htons(OFPP_NONE);
-    ofm->priority = htons(65535);
-    if (!rconn_is_connected(sw->rconn)) {
-            printf("of_remove_l3_rule: sw->rconn not connected\n");
-    } else {
-            printf("of_remove_l3_rule: sw->rconn is good\n");
-    }
-    rconn_send(sw->rconn, b, NULL);printf("flow removed\n");removed = true;*/
+void
+of_remove_l3_rule(char *ip_src, char *ip_dst, uint32_t ip_src_mask, uint32_t ip_dst_mask)
+{
+    del_entry.ip_src = ip_src;
+    del_entry.ip_dst = ip_dst;
+    del_entry.ip_src_mask = ip_src_mask;
+    del_entry.ip_dst_mask = ip_dst_mask;
+    del_entry.valid = true;
 }
 
 static void
