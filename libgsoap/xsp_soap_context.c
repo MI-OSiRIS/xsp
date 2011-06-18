@@ -37,10 +37,8 @@ int xsp_start_soap_ssl(xspSoapContext *sc, int soap_ssl_flags) {
 
 int xsp_stop_soap_ssl(xspSoapContext *sc) {
 	if (sc->soap){
-		//soap_end(sc->soap);
-		//soap_done(sc->soap);
-		//free(sc->soap);
-		//CRYPTO_thread_cleanup(); 
+		soap_done(sc->soap);
+		CRYPTO_thread_cleanup(); 
 	}
 	return 0;
 }

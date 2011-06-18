@@ -298,7 +298,7 @@ int oscars_createReservation(xspSoapContext *osc, const OSCARS_resRequest *reque
 	
         struct ns1__resCreateContent create_req;
 	struct ns1__userRequestConstraintType user_content;
-        struct ns1__createReply *create_res = calloc(1, sizeof(struct ns1__createReply*));
+        struct ns1__createReply *create_res = calloc(1, sizeof(struct ns1__createReply));
 
         bzero(&create_req, sizeof(struct ns1__resCreateContent));
 	bzero(&user_content, sizeof(struct ns1__userRequestConstraintType));
@@ -328,6 +328,7 @@ int oscars_createReservation(xspSoapContext *osc, const OSCARS_resRequest *reque
 	}
 	else {
 		soap_print_fault((struct soap *)osc->soap, stderr);
+		free(create_res);
 		ret = -1;
 	}
 		
@@ -339,7 +340,7 @@ int oscars_modifyReservation(xspSoapContext *osc, const OSCARS_resRequest *reque
 
         struct ns1__modifyResContent modify_req;
 	struct ns1__userRequestConstraintType user_content;
-        struct ns1__modifyResReply *modify_res = calloc(1, sizeof(struct ns1__modifyResReply*));
+        struct ns1__modifyResReply *modify_res = calloc(1, sizeof(struct ns1__modifyResReply));
 
         bzero(&modify_req, sizeof(struct ns1__modifyResContent));
 	bzero(&user_content, sizeof(struct ns1__userRequestConstraintType));
@@ -370,6 +371,7 @@ int oscars_modifyReservation(xspSoapContext *osc, const OSCARS_resRequest *reque
         }
         else {
                 soap_print_fault((struct soap *)osc->soap, stderr);
+		free(modify_res);
                 ret = -1;
         }
 	
