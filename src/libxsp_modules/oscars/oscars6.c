@@ -268,7 +268,7 @@ int oscars_listReservations(xspSoapContext *osc, const OSCARS_listRequest *reque
                                 list_req.vlanTag[i]->__item =
                                         lr->vlan_tags[i]->id;
 				list_req.vlanTag[i]->tagged = 
-					(enum xsd__boolean_)lr->vlan_tags[i]->tagged;
+					(enum xsd__boolean_)*(lr->vlan_tags[i]->tagged);
                         }
                         else
                                 return -1;
@@ -299,11 +299,22 @@ int oscars_createReservation(xspSoapContext *osc, const OSCARS_resRequest *reque
         struct ns1__resCreateContent create_req;
 	struct ns1__userRequestConstraintType user_content;
         struct ns1__createReply *create_res = calloc(1, sizeof(struct ns1__createReply));
-
+	struct ns1__vlanTag src_tag, dst_tag;
+	
         bzero(&create_req, sizeof(struct ns1__resCreateContent));
 	bzero(&user_content, sizeof(struct ns1__userRequestConstraintType));
+	bzero(&src_tag, sizeof(struct ns1__vlanTag));
+	bzero(&dst_tag, sizeof(struct ns1__vlanTag));
 
         OSCARS_resRequest *cr = (OSCARS_resRequest *)request;
+
+	src_tag.__item = cr->path_info->l2_info->src_vlan->id;
+	src_tag.tagged = *(cr->path_info->l2_info->src_vlan->tagged);
+	dst_tag.__item = cr->path_info->l2_info->dst_vlan->id;
+	dst_tag.tagged = *(cr->path_info->l2_info->dst_vlan->tagged);
+
+	cr->path_info->l2_info->src_vlan = &src_tag;
+	cr->path_info->l2_info->dst_vlan = &dst_tag;
 
 	if (cr->res_id)
 		create_req.globalReservationId = cr->res_id;
