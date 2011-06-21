@@ -53,7 +53,7 @@ OSCARS_resRequest create_request = {
 };
 
 OSCARS_resRequest modify_request = {
-	"ion.internet2.edu-235",
+	"testdomain-1-1",
 	1371772039,
 	1371792039,
 	2000,
