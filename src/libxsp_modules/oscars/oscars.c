@@ -2,6 +2,9 @@
 
 void _oscars_pretty_print_path_info(void *path) {
 	struct ns1__pathInfo *pi = (struct ns1__pathInfo*)path;
+
+	if (!pi)
+		return;
 	
 	printf("\t   setup mode: %s\n", pi->pathSetupMode);
 	if (pi->pathType)

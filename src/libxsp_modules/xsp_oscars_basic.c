@@ -348,7 +348,11 @@ static int __xsp_oscars_shared_new_channel(xspPath *path, uint32_t size, xspChan
 	int active = 0;
 
 	path->tag++;
-	pthread_cond_signal(&(path->timeout_cond));
+	OSCARS_resRequest create_req;
+	OSCARS_pathInfo path_info;
+	OSCARS_L2Info l2_info;
+	OSCARS_vlanTag l2_stag;
+pthread_cond_signal(&(path->timeout_cond));
 
 	if (xsp_start_soap_ssl(&(pi->osc), SOAP_SSL_NO_AUTHENTICATION) != 0) {
                 xsp_err(0, "couldn't start SOAP context");
@@ -384,11 +388,11 @@ static int __xsp_oscars_shared_new_channel(xspPath *path, uint32_t size, xspChan
 
 	if (pi->status == OSCARS_DOWN) {
 		time_t stime, etime;
-		OSCARS_resRequest create_req;
-		OSCARS_pathInfo path_info;
-		OSCARS_L2Info l2_info;
-		OSCARS_vlanTag l2_stag;
-		OSCARS_vlanTag l2_dtag;
+		OSCARS_resRequest create_req = {0};
+		OSCARS_pathInfo path_info = {0};
+		OSCARS_L2Info l2_info = {0};
+		OSCARS_vlanTag l2_stag = {0};
+		OSCARS_vlanTag l2_dtag = {0};
 		
 		pi->status = OSCARS_STARTING;		
 		
@@ -400,20 +404,19 @@ static int __xsp_oscars_shared_new_channel(xspPath *path, uint32_t size, xspChan
 		
 		l2_info.src_endpoint = pi->src;
 		l2_info.dst_endpoint = pi->dst;
-		l2_info.src_vlan = NULL;
-		l2_info.dst_vlan = NULL;
-		
+
 		if (pi->src_tagged) {
 			l2_stag.id = pi->vlan_id;
 			l2_stag.tagged = (enum boolean_*)&(pi->src_tagged);
-			l2_info.src_vlan = &l2_stag;
 		}
 		if (pi->dst_tagged) {
 			l2_dtag.id = pi->vlan_id;
 			l2_dtag.tagged = (enum boolean_*)&(pi->dst_tagged);
-			l2_info.dst_vlan = &l2_dtag;
 		}
 		
+		l2_info.src_vlan = &l2_stag;
+		l2_info.dst_vlan = &l2_dtag;
+
 		path_info.setup_mode = "timer-automatic";
 		path_info.type = NULL;
 		path_info.ctrl_plane_path_content = NULL;

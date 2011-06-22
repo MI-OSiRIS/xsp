@@ -2,6 +2,9 @@
 
 void _oscars_pretty_print_path_info(void *path) {
 	struct ns1__pathInfo *pi = (struct ns1__pathInfo*)path;
+
+	if (!pi)
+		return;
 	
 	printf("\t   setup mode: %s\n", pi->pathSetupMode);
 	if (pi->pathType)
@@ -57,7 +60,8 @@ void oscars_pretty_print(int type, void *res) {
 		  printf("\t create:\t%s\t bandwidth: %d\n\t description: %s\n\t pathInfo:\n",
 			 ctime((const time_t*)&det->createTime), det->userRequestConstraint->bandwidth,
 			 det->description);
-		  _oscars_pretty_print_path_info((void*)det->userRequestConstraint->pathInfo);
+		  if (det->userRequestConstraint)
+			  _oscars_pretty_print_path_info((void*)det->userRequestConstraint->pathInfo);
 	  }
 	  break;
 	  case CREATE_RES:
@@ -69,7 +73,8 @@ void oscars_pretty_print(int type, void *res) {
 			  printf("\t token: %s\n", tmp->token);
 		  printf("\t status: %s\n", tmp->status);
 		  printf("\t pathInfo:\n");
-		  _oscars_pretty_print_path_info((void*)tmp->userRequestConstraint->pathInfo);
+		  if (tmp->userRequestConstraint)
+			  _oscars_pretty_print_path_info((void*)tmp->userRequestConstraint->pathInfo);
 	  }
 	  break;
 	  case CANCEL_RES:
@@ -92,7 +97,8 @@ void oscars_pretty_print(int type, void *res) {
 			  printf("\t create:\t%s\t bandwidth: %d\n\t description: %s\n\t pathInfo:\n",
 				 ctime((const time_t*)&det->createTime), det->userRequestConstraint->bandwidth,
 				 det->description);
-			  _oscars_pretty_print_path_info((void*)det->userRequestConstraint->pathInfo);
+			  if (det->userRequestConstraint)
+				  _oscars_pretty_print_path_info((void*)det->userRequestConstraint->pathInfo);
 		  }
 	  }
 	  break;
@@ -309,12 +315,14 @@ int oscars_createReservation(xspSoapContext *osc, const OSCARS_resRequest *reque
         OSCARS_resRequest *cr = (OSCARS_resRequest *)request;
 
 	src_tag.__item = cr->path_info->l2_info->src_vlan->id;
-	src_tag.tagged = *(cr->path_info->l2_info->src_vlan->tagged);
+	if (cr->path_info->l2_info->src_vlan->tagged)
+		src_tag.tagged = *(cr->path_info->l2_info->src_vlan->tagged);
 	dst_tag.__item = cr->path_info->l2_info->dst_vlan->id;
-	dst_tag.tagged = *(cr->path_info->l2_info->dst_vlan->tagged);
+	if (cr->path_info->l2_info->dst_vlan->tagged)
+		dst_tag.tagged = *(cr->path_info->l2_info->dst_vlan->tagged);
 
-	cr->path_info->l2_info->src_vlan = &src_tag;
-	cr->path_info->l2_info->dst_vlan = &dst_tag;
+	cr->path_info->l2_info->src_vlan = (OSCARS_vlanTag*)&src_tag;
+	cr->path_info->l2_info->dst_vlan = (OSCARS_vlanTag*)&dst_tag;
 
 	if (cr->res_id)
 		create_req.globalReservationId = cr->res_id;
