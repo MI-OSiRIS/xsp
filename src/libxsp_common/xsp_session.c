@@ -796,7 +796,7 @@ int xsp_session_send_nack(comSess *sess, char **error_msgs) {
 	return 0;
 }
 
-int xsp_set_proto_cb(comSess *sess, void *(*fn) (void*)) {
+int xsp_set_proto_cb(comSess *sess, void *(*fn) (comSess *, xspMsg *)) {
 	sess->proto_cb = fn;
 	return 0;
 }
@@ -1031,7 +1031,7 @@ int xsp_proto_loop(comSess *sess) {
 
 void __xsp_cb_and_free(comSess *sess, xspMsg *msg) {
 	if (sess->proto_cb)
-		sess->proto_cb(msg);
+		sess->proto_cb(sess, msg);
 	xsp_free_msg(msg);
 }
 
