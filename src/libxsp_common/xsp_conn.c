@@ -185,7 +185,7 @@ uint64_t xsp_conn_send_msg(xspConn *conn, uint8_t version, uint16_t type, uint16
 			}
 			else
 				bl = NULL;
-				
+			
 			return conn->send_msg2(conn, version, type, bl);
 		}
 		break;
@@ -443,9 +443,9 @@ uint64_t xsp_conn_default_send_msg(xspConn *conn, uint8_t version, uint16_t type
         msg.dst_eid.x_addrc[0] = '\0';
 
 	if (conn->session)
-                memcpy(msg.sess_id, xsp_session_get_id(conn->session), 2*XSP_SESSIONID_LEN+1);
-        else
-                bzero(msg.sess_id, XSP_SESSIONID_LEN*2);
+		memcpy(msg.sess_id, xsp_session_get_id(conn->session), 2*XSP_SESSIONID_LEN+1);
+	else
+		bzero(msg.sess_id, 2*XSP_SESSIONID_LEN);
 	
 	if ((version == XSP_v1) && msg_body)
 		msg.opt_cnt = ((xspBlockList*)msg_body)->count;
