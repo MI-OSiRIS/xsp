@@ -220,20 +220,20 @@ comSess *xsp_convert_xspSess(xspMsg *msg) {
 		{
 			xspBlock **blocks;
 			int count;
-			// XXX: not sure why the msg contained the xspSess before...
-			// the msg should have all the info
-			memcpy(new_sess->id, msg->sess_id, 2*XSP_SESSIONID_LEN+1);
 			xsp_session_get_blocks(msg, XSP_OPT_HOP, &blocks, &count);
 			// XXX: use the first found hop block for now
 			if (count > 0) {
-				xspHop *hop = (xspHop*)blocks[0]->data;
-				// XXX: the hop block can be empty...perhaps change this
-				if (hop) {
-					new_sess->child = malloc(sizeof(xspHop*));
-					new_sess->child_count = 1;
-					xsp_hop_copy(&(new_sess->child[0]), hop);
+				xspSess *old_sess = (xspSess*)blocks[0]->data;
+				if (old_sess) {
+					memcpy(new_sess->id, old_sess->sess_id, 2*XSP_SESSIONID_LEN+1);
+					new_sess->child = malloc(old_sess->child_count * sizeof(xspHop*));
+					new_sess->child_count = old_sess->child_count;
+					for (i = 0; i < old_sess->child_count; i++)
+						xsp_hop_copy(&(new_sess->child[i]), old_sess->child[i]);
 				}
 				else {
+					// get what we can from the message
+					memcpy(new_sess->id, msg->sess_id, 2*XSP_SESSIONID_LEN+1);
 					new_sess->child = NULL;
 					new_sess->child_count = 0;
 				}
@@ -254,10 +254,13 @@ comSess *xsp_convert_xspSess(xspMsg *msg) {
 	// initialize the new data
 	new_sess->references = 1;
 	
+	// XXX: this cast is ugly and needs to be fixed
+	// only use is to preserve the session ID
+	// but it loses all the other xspSess fields
 	for(i = 0; i < new_sess->child_count; i++) {
 		new_sess->child[i]->session = (xspSess *) new_sess;
 	}
-	
+		
 	LIST_INIT(&new_sess->parent_conns);
 	LIST_INIT(&new_sess->child_conns);
 	
@@ -769,6 +772,7 @@ int xsp_session_send_nack(comSess *sess, char **error_msgs) {
 	int i;
 	char nack_msg[1024];
 	xspConn *conn = NULL;
+	int plus_one = (sess->child_count == 0) ? 1 : 0;
 
 	conn = LIST_FIRST(&sess->parent_conns);
         if (!conn) {
@@ -780,7 +784,7 @@ int xsp_session_send_nack(comSess *sess, char **error_msgs) {
 	if (!error_msgs) {
 		strlcat(nack_msg, "An internal error occurred", sizeof(nack_msg));
 	} else {
-		for(i = 0; i < sess->child_count+1; i++) {
+		for(i = 0; i < sess->child_count+plus_one; i++) {
 			if (error_msgs[i]) {
 				//strlcat(nack_msg, "Connect to ", sizeof(nack_msg));
 				//strlcat(nack_msg, xsp_hop_getid(sess->child[i]), sizeof(nack_msg));

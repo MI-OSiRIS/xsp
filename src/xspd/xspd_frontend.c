@@ -16,7 +16,7 @@
 #include "xspd_frontend.h"
 
 static int xspd_frontend_connection_handler(xspListener *listener, xspConn *conn, void *arg);
-void *xspd_default_handle_conn(comSess *sess);
+void *xspd_default_handle_conn(void *sess);
 void *xspd_handle_proto_cb(comSess *sess, xspMsg *msg);
 
 int xspd_frontend_start() {

@@ -16,7 +16,7 @@ static int xsp_parse_app_data_block_list(const void *arg, int length, void **msg
 static int xsp_writeout_app_data_block_list(void *arg, char *bug, int remainder);
 
 static int xsp_parse_hops(const void *arg, int remainder, void **msg_body);
-static xspHop *xsp_parsehop(void *arg, int remainder, int *size);
+static xspHop *xsp_parsehop(xspSess *sess, void *arg, int remainder, int *size);
 static int xsp_parse_auth_token_msg(const void *arg, int remainder, void **msg_body);
 static int xsp_parse_auth_type_msg(const void *arg, int remainder, void **msg_body);
 static int xsp_parse_block_msg(const void *arg, int remainder, void **msg_body);
@@ -49,6 +49,11 @@ typedef struct xsp_hop_hdr_t {
     	uint32_t flags;
 	uint16_t child_count;
 } xspHop_HDR;
+
+typedef struct xsp_sess_hdr_t {
+        char sess_id[XSP_SESSIONID_LEN];
+        uint32_t hop_flags;
+} xspSessOpen_HDR;
 
 typedef struct xsp_msg_auth_token_hdr_t {
 	uint32_t token_length;

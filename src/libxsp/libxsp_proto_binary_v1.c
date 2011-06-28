@@ -242,20 +242,65 @@ static int xsp_writeout_app_data_block_list(void *arg, char *buf, int remainder)
 
 static int xsp_parse_hops(const void *arg, int length, void **msg_body) {
 	xspBlock *block = (xspBlock*)arg;
+	char *buf = block->data;
 	xspHop *hop;
+	xspSess *ret_sess = NULL;
+        xspSessOpen_HDR *hdr;
+        int remainder;
+        xspHop *next_hop;
 	int size = 0;
 
-	hop = xsp_parsehop(block->data, length, &size);
+        ret_sess = xsp_alloc_sess();
+        if (!ret_sess)
+                goto parse_error;
+
+        hdr = (xspSessOpen_HDR *) buf;
+
+        remainder = length;
+
+        if (remainder < sizeof(xspSessOpen_HDR))
+                goto parse_error;
+
+        bin2hex(hdr->sess_id, ret_sess->sess_id, XSP_SESSIONID_LEN);
+	ret_sess->hop_flags = ntohl(hdr->hop_flags);
+
+	ret_sess->child = NULL;
+	ret_sess->child_count = 0;
 	
-	block->data = hop;
+	buf += sizeof(xspSessOpen_HDR);
+        remainder -= sizeof(xspSessOpen_HDR);
+
+        while (remainder > 0) {
+                int hop_size;
+
+                d_printf("Grabbing next hop info\n");
+		
+                next_hop = xsp_parsehop(ret_sess, buf, remainder, &hop_size);
+                if (!next_hop)
+                        goto parse_error;
+
+                if (xsp_sess_addhop(ret_sess, next_hop))
+                        goto parse_error;
+		
+                buf += hop_size;
+                remainder -= hop_size;
+        }
+	
+	block->data = ret_sess;
 	block->length = 0;
 
 	*msg_body = block;
 
 	return 0;
+
+ parse_error:
+        if (ret_sess)
+                xsp_free_sess(ret_sess);
+
+        return -1;
 }
 
-static xspHop *xsp_parsehop(void *arg, int remainder, int *size) {
+static xspHop *xsp_parsehop(xspSess *sess, void *arg, int remainder, int *size) {
 	char *buf = (char*) arg;
 	xspHop *new_hop = NULL;
 	xspHop_HDR *hdr = NULL;
@@ -276,8 +321,7 @@ static xspHop *xsp_parsehop(void *arg, int remainder, int *size) {
 	if (!new_hop)
 		return NULL;
 
-	// the session is now defined by the header
-	new_hop->session = NULL;
+	new_hop->session = sess;
 
 	hdr = (xspHop_HDR *) buf;
 
@@ -314,7 +358,7 @@ static xspHop *xsp_parsehop(void *arg, int remainder, int *size) {
 
 		// try to parse each child
 		for(i = 0; i < child_count; i++) {
-			new_hop->child[i] = xsp_parsehop(buf, remainder, &child_size);
+			new_hop->child[i] = xsp_parsehop(sess, buf, remainder, &child_size);
 			if (!new_hop->child[i])
 				goto parse_error;
 
@@ -546,27 +590,32 @@ static int xsp_parse_net_path_msg(const void *arg, int remainder, void **msg_bod
 static int xsp_writeout_hops(void *arg, char *buf, int remainder) {
 	xspBlock *block = arg;
         xspHop *hop = block->data;
-        int bhdr_size;
+	xspSessOpen_HDR *sess_hdr;
+	int bhdr_size;
 	int child_size;
 	int i;
 
-        block->length = xsp_hop_total_child_count(hop) * sizeof(xspHop_HDR);
+        block->length = sizeof(xspSessOpen_HDR) + xsp_hop_total_child_count(hop) * sizeof(xspHop_HDR);
 
         bhdr_size = xsp_writeout_block_hdr(block, buf, remainder);
         if (bhdr_size < 0)
 		goto write_error;
-	
-	// empty hop block
-	if (block->length == 0)
-		return bhdr_size;
 
         remainder -= bhdr_size;
+	buf += bhdr_size;
+
+	sess_hdr = (xspSessOpen_HDR *) buf;
+
+        hex2bin(hop->session->sess_id, sess_hdr->sess_id, 2*XSP_SESSIONID_LEN);
+	sess_hdr->hop_flags = htonl(hop->flags);
+
+        remainder -= sizeof(xspSessOpen_HDR);
+        buf += sizeof(xspSessOpen_HDR);
+
         // if there isn't enough room to write the structure, don't do it
         if (remainder < sizeof(xspHop_HDR)) {
-                return -1;
+                goto write_error;
         }
-
-	buf += bhdr_size;
 
 	for(i = 0; i < hop->child_count; i++) {
 
@@ -834,11 +883,14 @@ static int xsp_writeout_path_open_msg(void *arg, char *buf, int remainder) {
 
 // some slabs additions
 static int xsp_parse_slab_info(const void *arg, int remainder, void **msg_body) {
-	char *buf = (char*) arg;
+        xspBlock *block = (xspBlock*) arg;
+        char *buf = (char*) block->data;
         xspSlabInfo *new_info;
         xspSlabInfo_HDR *in;
         int i;
         int rec_size = 0;
+
+	*msg_body = NULL;
 
         if (remainder < sizeof(xspSlabInfo_HDR)) {
                 return -1;
@@ -874,7 +926,10 @@ static int xsp_parse_slab_info(const void *arg, int remainder, void **msg_body) 
                 }
         }
 
-        *msg_body = new_info;
+        block->data = new_info;
+        block->length = 0;
+
+        *msg_body = block;
 
         return 0;
 }
@@ -913,13 +968,24 @@ static int xsp_writeout_slab_info(void *arg, char *buf, int remainder) {
         xspSlabInfo *info = block->data;
         xspSlabInfo_HDR *out;
         int i;
+	int bhdr_size;
         int rec_size;
         int orig_remainder;
 
-        orig_remainder = remainder;
+	block->length = info->rec_count * sizeof(xspSlabRec_HDR) + sizeof(xspSlabInfo_HDR);
+
+        bhdr_size = xsp_writeout_block_hdr(block, buf, remainder);
+        if (bhdr_size < 0)
+                goto write_error;
+
+        remainder -= bhdr_size;
+        if (remainder < sizeof(xspSlabInfo_HDR))
+                goto write_error;
+
+        buf += bhdr_size;
 
         if (remainder < sizeof(xspSlabInfo_HDR)) {
-                return -1;
+		goto write_error;
         }
 
         out = (xspSlabInfo_HDR *) buf;
@@ -934,13 +1000,16 @@ static int xsp_writeout_slab_info(void *arg, char *buf, int remainder) {
 
                 rec_size = xsp_writeout_slab_record(info->entries[i], buf, remainder);
                 if (rec_size < 0)
-                        return -1;
+			goto write_error;
 
                 buf += rec_size;
                 remainder -= rec_size;
         }
 
-        return orig_remainder - remainder;
+	return bhdr_size + block->length;
+	
+ write_error:
+	return -1;
 }
 
 static int xsp_writeout_slab_record(xspSlabRec *rec, char *buf, int remainder) {

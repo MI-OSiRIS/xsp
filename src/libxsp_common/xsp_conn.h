@@ -46,7 +46,7 @@ typedef struct xsp_connection_t {
 	
 	xspMsg *(*get_msg2) (struct xsp_connection_t *conn, unsigned int flags);
 	uint64_t (*send_msg2) (struct xsp_connection_t *conn, uint8_t version, uint16_t type, void *msg_body);
-
+	
 	int (*get_stat2) (struct xsp_connection_t *conn, uint16_t type, void *optval, size_t *optlen);
 
 	void *auth_info;
