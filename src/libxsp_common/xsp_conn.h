@@ -11,6 +11,7 @@
 #include "xsp_settings.h"
 
 enum xsp_connection_status_t { STATUS_UNCONNECTED, STATUS_CONNECTED, STATUS_FROZEN };
+enum xsp_peer_type_t { EDGE_PEER = 0, STREAM_PEER, SLABS_PEER };
 
 typedef struct xsp_connection_t {
 	pthread_mutex_t lock;

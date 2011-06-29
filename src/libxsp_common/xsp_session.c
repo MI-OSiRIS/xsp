@@ -330,7 +330,7 @@ inline void xsp_session_close_connections(comSess *sess) {
 	
 	// shutdown the parent connections
         LIST_FOREACH(curr_conn, &(sess->parent_data_conns), sess_entries) {
-                xsp_conn_shutdown(curr_conn, (XSP_SEND_SIDE | XSP_RECV_SIDE));
+		xsp_conn_shutdown(curr_conn, (XSP_SEND_SIDE | XSP_RECV_SIDE));
                 /*if (curr_conn->path != NULL) {
                         curr_conn->path->close_channel(curr_conn->path, curr_conn->channel);
 			}*/
@@ -338,7 +338,7 @@ inline void xsp_session_close_connections(comSess *sess) {
 
         // shutdown the children connections
         LIST_FOREACH(curr_conn, &(sess->child_data_conns), sess_entries) {
-                xsp_conn_shutdown(curr_conn, (XSP_SEND_SIDE | XSP_RECV_SIDE));
+		xsp_conn_shutdown(curr_conn, (XSP_SEND_SIDE | XSP_RECV_SIDE));
                 /*if (curr_conn->path != NULL) {
                         curr_conn->path->close_channel(curr_conn->path, curr_conn->channel);
 			}*/
@@ -365,13 +365,13 @@ void xsp_free_session(comSess *sess) {
 	while(!LIST_EMPTY(&sess->parent_data_conns)) {
                 curr_conn = LIST_FIRST(&sess->parent_data_conns);
                 LIST_REMOVE(curr_conn, sess_entries);
-                xsp_conn_free(curr_conn);
+		xsp_conn_free(curr_conn);
         }
 
         while(!LIST_EMPTY(&sess->child_data_conns)) {
                 curr_conn = LIST_FIRST(&sess->child_data_conns);
                 LIST_REMOVE(curr_conn, sess_entries);
-                xsp_conn_free(curr_conn);
+		xsp_conn_free(curr_conn);
         }
 
 	if (sess->child) {
@@ -889,9 +889,10 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, int (*cb) (comS
 	} while (!authenticated || !have_session);
 
 	xsp_info(0, "new session: %s", xsp_session_get_id(sess));
-	
+
+	conn->session = sess;
 	LIST_INSERT_HEAD(&sess->parent_conns, conn, sess_entries);
-	
+
 	sess->credentials = credentials;
 	xsp_session_set_user(sess, strdup(credentials->get_user(credentials)));
 	
@@ -986,7 +987,7 @@ int xsp_proto_loop(comSess *sess) {
 		case XSP_MSG_SLAB_INFO:
 			{
 				__xsp_cb_and_free(sess, msg);
-				//xsp_conn_send_msg(conn, version, XSP_MSG_SESS_ACK, XSP_OPT_NULL, NULL);
+				xsp_conn_send_msg(conn, version, XSP_MSG_SESS_ACK, XSP_OPT_NULL, NULL);
 			}
 			break;
 		case XSP_MSG_DATA_CHAN:
