@@ -36,6 +36,8 @@ typedef struct common_session_t {
 	LIST_HEAD(sess_pdc_listhead, xsp_connection_t) parent_data_conns;
         LIST_HEAD(sess_cdc_listhead, xsp_connection_t) child_data_conns;
 
+	int connected;
+
 	struct xsp_credentials_t *credentials;
 	
 	struct timeval start_time, end_time;
