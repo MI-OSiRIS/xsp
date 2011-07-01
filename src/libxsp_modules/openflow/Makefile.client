@@ -1,0 +1,22 @@
+CC= gcc
+INCLUDES = -I.
+LIBS = -lpthread
+LDFLAGS = -L.
+CFLAGS = -DWITH_NONAMESPACES
+
+ALL= openflow_client
+VER_SRC = openflow_client.c
+SRC = $(wildcard *.c)
+VER_OBJS = ${VER_SRC:.c=.o}
+SRC_OBJS = ${SRC:.c=.o}
+
+all: $(ALL)
+
+openflow_client: $(SRC_OBJS)
+	$(CC) $(LDFLAGS) $(SRC_OBJS) $(LIBS) -o $@
+
+$(SRC_OBJS): $(SRC)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $^
+
+clean:
+	rm -f $(ALL) *.o
