@@ -774,11 +774,14 @@ int xsp_session_send_nack(comSess *sess, char **error_msgs) {
 	xspConn *conn = NULL;
 	int plus_one = (sess->child_count == 0) ? 1 : 0;
 
-	conn = LIST_FIRST(&sess->parent_conns);
-        if (!conn) {
-                xsp_err(0, "no active session conn, aborting");
-		return -1;
-        }
+	conn = sess->cntl_conn;
+	if (!conn) {
+		conn = LIST_FIRST(&sess->parent_conns);
+		if (!conn) {
+			xsp_err(0, "no active session conn, aborting");
+			return -1;
+		}
+	}
 	
 	nack_msg[0] = '\0';
 	if (!error_msgs) {
@@ -956,7 +959,6 @@ int xsp_proto_loop(comSess *sess) {
 		case XSP_MSG_SESS_OPEN:
 			{
 				__xsp_cb_and_free(sess, msg);
-				xsp_conn_send_msg(conn, version, XSP_MSG_SESS_ACK, XSP_OPT_NULL, NULL);
 			}
 			break;
                 case XSP_MSG_SESS_CLOSE:
@@ -987,7 +989,6 @@ int xsp_proto_loop(comSess *sess) {
 		case XSP_MSG_SLAB_INFO:
 			{
 				__xsp_cb_and_free(sess, msg);
-				xsp_conn_send_msg(conn, version, XSP_MSG_SESS_ACK, XSP_OPT_NULL, NULL);
 			}
 			break;
 		case XSP_MSG_DATA_CHAN:
@@ -1028,7 +1029,7 @@ int xsp_proto_loop(comSess *sess) {
 	xsp_session_put_ref(sess);
 
 	return 0;
-
+	
  error_exit:
 	xsp_end_session(sess);
 	return -1;

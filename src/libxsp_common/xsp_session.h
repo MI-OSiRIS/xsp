@@ -38,6 +38,7 @@ typedef struct common_session_t {
 
 	int connected;
 
+	struct xsp_connection_t *cntl_conn;
 	struct xsp_credentials_t *credentials;
 	
 	struct timeval start_time, end_time;
