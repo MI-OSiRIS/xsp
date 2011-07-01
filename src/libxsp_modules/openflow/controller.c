@@ -15,7 +15,7 @@
 #include "daemon.h"
 #include "learning-switch.h"
 #include "ofpbuf.h"
-#include "openflow.h"
+#include "openflow/openflow.h"
 #include "poll-loop.h"
 #include "rconn.h"
 #include "timeval.h"
