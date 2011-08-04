@@ -1,32 +1,26 @@
+noinst_LIBRARIES = libofcontrol.a
 noinst_PROGRAMS = openflow_client
 
-noinst_LIBRARIES = libopenflow.a
-noinst_LTLIBRARIES = libopenflow.la
-noinst_HEADERS = openflow.h
+libofcontrol_a_SOURCES = controller.c
 
-#openflow_client_SOURCES = openflow_client.c
-#openflow_client_LDADD = $(top_builddir)/libgsoap/libgsoap.a libopenflow.a
+openflow_client_SOURCES = openflow_client.c
+openflow_client_LDADD = libofcontrol.a lib/libopenflow.a $(SSL_LIBS) $(THREAD_LIBS)
 
+AUTOMAKE_OPTIONS = foreign -Wno-syntax subdir-objects
+ACLOCAL_AMFLAGS = -I m4
+#SUBDIRS = datapath
+SUBDIRS =
 
+AM_CPPFLAGS = $(SSL_CFLAGS) -g
+AM_CPPFLAGS += -I ./include
+AM_CPPFLAGS += -I ./lib
 
+AM_CFLAGS = -Wstrict-prototypes
 
-libopenflow_a_SOURCES = openflowC.c openflowClient.c openflow.c openflow.h dom.c mecevp.c smdevp.c wsaapi.c wsseapi.c 
+CLEANFILES =
+DISTCLEANFILES =
+EXTRA_DIST =
 
-libopenflow_la_SOURCES = openflowC.c openflowClient.c openflow.c openflow.h dom.c mecevp.c smdevp.c wsaapi.c wsseapi.c
+ro_c = echo '/* -*- mode: c; buffer-read-only: t -*- */'
 
-
-
-
-
-AM_CFLAGS = -DWITH_NONAMESPACES -DWITH_OPENSSL -DWITH_DOM -fPIC
-AM_LDFLAGS = @SSL_LIBS@
-
-openflow_client_CFLAGS = -Dopenflow $(AM_CFLAGS)
-
-
-libopenflow_a_CFLAGS = -Dopenflow $(AM_CFLAGS)
-
-libopenflow_la_CFLAGS = -Dopenflow $(AM_CFLAGS)
-
-
-INCLUDES = -I@top_srcdir@/libgsoap
+include lib/automake.mk
