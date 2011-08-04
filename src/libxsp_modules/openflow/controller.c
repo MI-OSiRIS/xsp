@@ -2,7 +2,6 @@
  * provide a library to add and remove layer 3 rules
  */
 
-#include <config.h>
 #include <errno.h>
 #include <getopt.h>
 #include <signal.h>
@@ -11,6 +10,7 @@
 #include <arpa/inet.h>
 #include <pthread.h>
 
+#include "config.h"
 #include "command-line.h"
 #include "daemon.h"
 #include "learning-switch.h"
@@ -25,6 +25,10 @@
 #include "flow.h"
 #include "stp.h"
 #include "controller.h"
+
+#ifdef HAVE_OPENSSL
+#include "vconn-ssl.h"
+#endif
 
 #define THIS_MODULE VLM_controller
 #define MAX_SWITCHES 16
