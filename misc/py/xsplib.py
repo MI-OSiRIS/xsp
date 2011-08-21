@@ -13,7 +13,9 @@ import time
 
 from netlogger.nllog import DoesLogging, get_logger
 
-XSP_VERSION=0
+XSP_v0=0
+XSP_v1=1
+
 XSP_MAX_LENGTH=65536
 
 XSP_MSG_SESS_OPEN=1
@@ -23,7 +25,7 @@ XSP_MSG_BLOCK_HEADER=4
 XSP_MSG_AUTH_TYPE=8
 XSP_MSG_PING=11
 XSP_MSG_PONG=12
-XSP_MSG_APP_DATA=17
+XSP_MSG_APP_DATA=15
 XSP_MSG_XIO_MIN = 48
 XSP_MSG_XIO_MAX = 50
 XSP_MSG_NLMI_DATA=32
@@ -31,7 +33,11 @@ XSP_MSG_NLMI_DATA=32
 XSP_MSG_OPEN_SIZE=84
 XSP_MSG_AUTH_SIZE=10
 XSP_MSG_BLOCK_SIZE=8
-XSP_MSG_HDR_SIZE=20
+XSP_MSG_BLOCK_HDR_SIZE=6
+XSP_MSG_HDR_SIZE_V0=20
+XSP_MSG_HDR_SIZE_V1=160
+
+XSP_OPT_DATA=5
 
 def msg_has_data(t):
     return (t in (XSP_MSG_APP_DATA, XSP_MSG_NLMI_DATA) or
@@ -87,6 +93,7 @@ class XSPSession(DoesLogging):
 
     def __init__(self, sock=None):
         self.s = sock or socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.version = XSP_v0
         DoesLogging.__init__(self)
 
     def connect(self, host, port):
@@ -95,69 +102,99 @@ class XSPSession(DoesLogging):
         random.seed()
         self.id = "%X" % random.getrandbits(128)
 
-        auth_msg = struct.pack('!hBB16s10s', XSP_MSG_AUTH_SIZE, XSP_VERSION,
-                               XSP_MSG_AUTH_TYPE,
+        auth_msg = struct.pack('!BBh16s10s', self.version, XSP_MSG_AUTH_TYPE,
+                               XSP_MSG_AUTH_SIZE,
                                binascii.a2b_hex(self.id), "ANON")
 
-        open_msg = struct.pack('!hBB16s16s60sii',
-                               XSP_MSG_OPEN_SIZE, XSP_VERSION,
-                               XSP_MSG_SESS_OPEN, binascii.a2b_hex(self.id),
+        open_msg = struct.pack('!BBh16s16s60sii',
+                               self.version, XSP_MSG_SESS_OPEN,
+                               XSP_MSG_OPEN_SIZE, binascii.a2b_hex(self.id),
                                binascii.a2b_hex(self.id),
                                'localhost', 0, 0)
 
         self.s.send(auth_msg)
         self.s.send(open_msg)
-        self.s.recv(XSP_MSG_HDR_SIZE)
+        self.s.recv(XSP_MSG_HDR_SIZE_V0)
         # just ignore ACK, woo!
 
     def send_msg(self, data, length, type_):
-        fmt = '!hBB16shhi' + str(length) + 's'
+        fmt = '!BBh16shhi' + str(length) + 's'
         block_len = XSP_MSG_BLOCK_SIZE + int(length)
-        block_msg = struct.pack(fmt, block_len, XSP_VERSION,
-                                XSP_MSG_APP_DATA, binascii.a2b_hex(self.id),
+        block_msg = struct.pack(fmt, self.version, XSP_MSG_APP_DATA,
+                                block_len, binascii.a2b_hex(self.id),
                                 int(type_), 0, int(length), data)
 
         self.s.send(block_msg)
 
     def send_ack(self):
-        fmt = '!hBB16s'
-        ack_msg = struct.pack(fmt, 0, XSP_VERSION,
-                              XSP_MSG_SESS_ACK, binascii.a2b_hex(self.id))
+        if self.version == XSP_v0:
+            fmt = '!BBh16s'
+            ack_msg = struct.pack(fmt, self.version, XSP_MSG_SESS_ACK, 0,
+                                  binascii.a2b_hex(self.id))
+            
+        elif self.version == XSP_v1:
+            fmt = '!BBhhh68s68s16s'
+            ack_msg = struct.pack(fmt, self.version, 0, XSP_MSG_SESS_ACK,
+                                  0, 0, "", "", binascii.a2b_hex(self.id))
+
         self.s.send(ack_msg)
 
-
     def recv_msg(self):
-        xsp_hdr = readn(self.s, XSP_MSG_HDR_SIZE)
-        hdr = struct.unpack('!hBB16s', xsp_hdr)
-        #print("xsp body type={code:d}".format(code=hdr[2]))
-        if not msg_has_data(hdr[2]):
-            _ = readn(self.s, hdr[0])
-            return hdr[2], 0, None
+        xsp_ver = readn(self.s, 1)
+        ver = struct.unpack('!B', xsp_ver)
+        
+        if ver[0] == XSP_v0:
+            xsp_hdr = readn(self.s, XSP_MSG_HDR_SIZE_V0-1)
+            hdr = struct.unpack('!Bh16s', xsp_hdr)
+            #print("xsp body type={code:d}".format(code=hdr[2]))
 
-        block_msg = readn(self.s, hdr[0])
-        #print("@@ got msg len={0:d} expect={1:d}".format(len(block_msg), hdr[0]))
-        fmt = '!hhi' + str(hdr[0] - XSP_MSG_BLOCK_SIZE) + 's'
-        #print("@@ struct fmt={0}".format(fmt))
-        block = struct.unpack(fmt, block_msg)
-        return block[0], block[2], block[3]
+            if not msg_has_data(hdr[0]):
+                _ = readn(self.s, hdr[1])
+                return hdr[0], 0, None
+
+            block_msg = readn(self.s, hdr[1])
+            #print("@@ got msg len={0:d} expect={1:d}".format(len(block_msg), hdr[0]))
+            fmt = '!hhi' + str(hdr[1] - XSP_MSG_BLOCK_SIZE) + 's'
+            #print("@@ struct fmt={0}".format(fmt))
+            block = struct.unpack(fmt, block_msg)
+            return block[0], block[2], block[3]
+        elif ver[0] == XSP_v1:
+            xsp_hdr = readn(self.s, XSP_MSG_HDR_SIZE_V1-1)
+            hdr = struct.unpack('!Bhhh68s68s16s', xsp_hdr)
+            # set version
+            if hdr[1] == XSP_MSG_SESS_OPEN:
+                self.version = XSP_v1
+            # check option count, only handle single option block
+            if not hdr[2]:
+                return hdr[1], 0, None
+            block_hdr = readn(self.s, XSP_MSG_BLOCK_HDR_SIZE)
+            bhdr = struct.unpack('!hhh', block_hdr)
+            
+            if not msg_has_data(bhdr[0]):
+                _ = readn(self.s, bhdr[2])
+                return hdr[1], 0, None
+
+            data_blob = readn(self.s, bhdr[2])
+            #data = struct.unpack('!' + str(bhdr[2]) + 's', data_blob)
+            return bhdr[0], bhdr[2], data_blob
 
     def close(self):
-        close_msg = struct.pack('!hBB16s', 0, XSP_VERSION,
-                                XSP_MSG_SESS_CLOSE, binascii.a2b_hex(self.id))
+        close_msg = struct.pack('!BBh16s', self.version,
+                                XSP_MSG_SESS_CLOSE, 0, binascii.a2b_hex(self.id))
         self.s.send(close_msg)
 
     def ping(self):
-        ping_msg = struct.pack('!hBB16s', 0, XSP_VERSION,
-                                XSP_MSG_PING, binascii.a2b_hex(self.id))
+        ping_msg = struct.pack('!BBh16s', self.version,
+                                XSP_MSG_PING, 0, binascii.a2b_hex(self.id))
         self.s.send(ping_msg)
-        xsp_hdr = self.s.recv(XSP_MSG_HDR_SIZE)
+        xsp_hdr = self.s.recv(XSP_MSG_HDR_SIZE_V0)
 
         if (len(xsp_hdr) > 0):
-            hdr = struct.unpack('!hBB16s', xsp_hdr)
+            hdr = struct.unpack('!BBh16s', xsp_hdr)
         else:
             return -1
 
-        if (hdr[2] == XSP_MSG_PONG):
+        if (hdr[1] == XSP_MSG_PONG):
             return 0
         else:
             return -1
@@ -252,7 +289,7 @@ def __test():
     sess.connect('localhost', 5006)
 
     my_msg = "This is a test"
-    my_type = 0x30
+    my_type = 0x20
     print '\nSending message [%d,%d]: %s' % (my_type, len(my_msg), my_msg)
     sess.send_msg(my_msg, len(my_msg), my_type)
 
