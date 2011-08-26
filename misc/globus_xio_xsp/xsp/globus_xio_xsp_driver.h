@@ -30,6 +30,12 @@ typedef struct globus_xio_xsp_update_msg_s
 #define GLOBUS_XIO_XSP_NETSTACK     0
 #define GLOBUS_XIO_XSP_FSSTACK      1
 
+typedef enum globus_xio_xsp_send_mask_e
+{
+    GLOBUS_XIO_XSP_SEND_XSPD = 0x1,
+    GLOBUS_XIO_XSP_SEND_BLIPP = 0x2
+} globus_xio_xsp_send_mask;
+
 typedef enum globus_xio_netlogger_log_event_e
 {
     GLOBUS_XIO_XSP_NL_LOG_OPEN = 0x1,
@@ -44,6 +50,7 @@ typedef enum globus_xio_xsp_cntl_e
     GLOBUS_XIO_XSP_CNTL_SET_STACK = 1,
     GLOBUS_XIO_XSP_CNTL_SET_HOP,
     GLOBUS_XIO_XSP_CNTL_SET_SEC,
+    GLOBUS_XIO_XSP_CNTL_SET_BLIPP,
     GLOBUS_XIO_XSP_CNTL_SET_PATH,
     GLOBUS_XIO_XSP_CNTL_SET_USER,
     GLOBUS_XIO_XSP_CNTL_SET_TASK,
