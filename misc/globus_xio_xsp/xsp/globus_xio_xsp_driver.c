@@ -67,6 +67,7 @@ static globus_xio_string_cntl_table_t  xsp_l_string_opts_table[] =
     {"stack", GLOBUS_XIO_XSP_CNTL_SET_STACK, globus_xio_string_cntl_string},
     {"xsp_hop", GLOBUS_XIO_XSP_CNTL_SET_HOP, globus_xio_string_cntl_string},
     {"xsp_sec", GLOBUS_XIO_XSP_CNTL_SET_SEC, globus_xio_string_cntl_string},
+    {"xsp_blipp", GLOBUS_XIO_XSP_CNTL_SET_BLIPP, globus_xio_string_cntl_string},
     {"xsp_net_path", GLOBUS_XIO_XSP_CNTL_SET_PATH, globus_xio_string_cntl_string},
     {"user", GLOBUS_XIO_XSP_CNTL_SET_USER, globus_xio_string_cntl_string},
     {"task_id", GLOBUS_XIO_XSP_CNTL_SET_TASK, globus_xio_string_cntl_string},
@@ -86,7 +87,9 @@ typedef struct xio_l_xsp_xfer_s
     char *                              id;
     char *                              hash_str;
     libxspSess *                        sess;
+    libxspSess *                        blipp_sess;
     int                                 xsp_connected; 
+    int                                 blipp_connected;
     int                                 xsp_signal_path;
     int                                 streams;
 } xio_l_xsp_xfer_t;
@@ -105,6 +108,7 @@ typedef struct xio_l_xsp_send_args_s
     void *                              data;
     unsigned int                        length;
     int                                 msg_type;
+    int                                 send_mask;
 } xio_l_xsp_send_args_t;
 
 typedef struct xio_l_xsp_handle_s
@@ -121,6 +125,7 @@ typedef struct xio_l_xsp_handle_s
     int                                 stack;
     char *                              xsp_hop;
     char *                              xsp_sec;
+    char *                              xsp_blipp;
     char *                              xsp_net_path;
     char *                              user;
     char *                              task_id;
@@ -162,6 +167,7 @@ static xio_l_xsp_handle_t               globus_l_xio_xsp_handle_default =
     GLOBUS_XIO_XSP_NETSTACK,            /* stack */
     GLOBUS_NULL,                        /* xsp_hop */
     GLOBUS_NULL,                        /* xsp_sec */
+    GLOBUS_NULL,                        /* xsp_blipp */
     GLOBUS_NULL,                        /* xsp_net_path */
     GLOBUS_NULL,                        /* user */
     GLOBUS_NULL,                        /* task_id */
@@ -220,6 +226,7 @@ globus_l_xio_xsp_send_args_init(
     void *                             data,
     int                                len,
     int                                msg_type,
+    int                                send_mask,
     xio_l_xsp_handle_t *               handle)
 {
     xio_l_xsp_send_args_t *            args;
@@ -243,6 +250,7 @@ globus_l_xio_xsp_send_args_init(
     args->length = len;
     args->msg_type = msg_type;
     args->xfer = handle->xfer;
+    args->send_mask = send_mask;
     
     *out_arg = args;
     
@@ -269,8 +277,18 @@ globus_l_xio_xsp_send_message(
     {
 	if (args->data && (args->length > 0))
         {
-	    res = xsp_send_msg(args->xfer->sess, args->data,
-			       args->length, args->msg_type);
+	    
+	    if (args->send_mask & GLOBUS_XIO_XSP_SEND_XSPD)
+	    {
+		res = xsp_send_msg(args->xfer->sess, args->data,
+				   args->length, args->msg_type);
+	    }
+	    
+	    if (args->send_mask & GLOBUS_XIO_XSP_SEND_BLIPP)
+	    {
+		res = xsp_send_msg(args->xfer->blipp_sess, args->data,
+				   args->length, args->msg_type);
+	    }
 	    
 	    globus_free(args->data);
 	    globus_free(args);
@@ -427,11 +445,10 @@ globus_l_xio_xsp_do_nl_summary(
 
     GlobusTimeReltimeSet(cb_time, 0, 0);
 
+    // print a helpful warning here...
     if (handle->xfer->xsp_connected == GLOBUS_FALSE)
     {
         fprintf(stderr, "NL_UPDATE: XSP not connected!\n");
-	result = -1;
-	goto error;
     }
 
     /* get nl caliper data */
@@ -464,6 +481,7 @@ globus_l_xio_xsp_do_nl_summary(
 					     bp->data,
 					     bsz,
 					     GLOBUS_XIO_XSP_UPDATE_XFER,
+					     GLOBUS_XIO_XSP_SEND_XSPD,
 					     handle);
     if (result != GLOBUS_SUCCESS)
     {
@@ -554,11 +572,10 @@ globus_l_xio_xsp_do_xfer_notify(
     args->length = strlen(args->data);
     */
 
+    // print a helpful warning here...
     if (handle->xfer->xsp_connected == GLOBUS_FALSE)
     {
         printf("NOTIFY: XSP not connected!\n");
-	result = -1;
-	goto error;
     }
 
     bson_buffer_init(&bb);
@@ -583,6 +600,8 @@ globus_l_xio_xsp_do_xfer_notify(
 					     bp->data,
 					     bsz,
 					     notify_type,
+					     GLOBUS_XIO_XSP_SEND_XSPD | 
+					     GLOBUS_XIO_XSP_SEND_BLIPP,
 					     handle);
     if (result != GLOBUS_SUCCESS)
     {
@@ -613,6 +632,54 @@ globus_l_xio_xsp_do_xfer_notify(
     return result;
 }
 
+static
+globus_result_t
+globus_l_xio_xsp_connect_blipp_handle(
+    xio_l_xsp_handle_t *                handle)
+{
+    globus_result_t                     ret;
+
+    GlobusXIOName(xio_l_xsp_connect_blipp_handle);
+    GlobusXIOXSPDebugEnter();
+
+    if (handle->xsp_blipp)
+    {
+	handle->xfer->blipp_sess = xsp_session();
+	if (!handle->xfer->blipp_sess)
+	{
+	    ret = -1;
+	    goto error_sess;
+	}
+	
+	ret = xsp_sess_appendchild(handle->xfer->blipp_sess, handle->xsp_blipp, XSP_HOP_NATIVE);
+	if (ret != 0)
+	{
+	    goto error_sess;
+	}
+	
+	ret = xsp_connect(handle->xfer->blipp_sess);
+	if (ret != 0)
+	{
+	    goto error_sess;
+	}
+
+	handle->xfer->blipp_connected = GLOBUS_TRUE;
+    }
+    else
+    {
+	ret = -1;
+	goto error;
+    }
+
+    GlobusXIOXSPDebugExit();
+
+    return GLOBUS_SUCCESS;
+
+ error_sess:
+    free(handle->xfer->blipp_sess);
+ error:
+    return ret;
+}
 static
 globus_result_t
 globus_l_xio_xsp_connect_handle(
@@ -695,6 +762,7 @@ globus_l_xio_xsp_xfer_init(
     xfer->hash_str = NULL;
     xfer->sess = NULL;
     xfer->xsp_connected = GLOBUS_FALSE;
+    xfer->blipp_connected = GLOBUS_FALSE;
     xfer->streams = 0;
 
     rc = globus_uuid_create(&uuid);
@@ -814,6 +882,19 @@ globus_l_xio_xsp_attr_copy(
 	dst_attr->xsp_sec = NULL;
     }
 
+    if (src_attr->xsp_blipp != NULL)
+    {
+	dst_attr->xsp_blipp = strdup(src_attr->xsp_blipp);
+    }
+    else if (globus_l_xio_xsp_handle_default.xsp_blipp)
+    {
+	dst_attr->xsp_blipp = strdup(globus_l_xio_xsp_handle_default.xsp_blipp);
+    }
+    else
+    {
+	dst_attr->xsp_blipp = NULL;
+    }
+
     if (src_attr->xsp_net_path != NULL)
     {
 	dst_attr->xsp_net_path = strdup(src_attr->xsp_net_path);
@@ -929,6 +1010,10 @@ globus_l_xio_xsp_cntl(
       case GLOBUS_XIO_XSP_CNTL_SET_SEC:
 	  str = va_arg(ap, char *);
 	  attr->xsp_sec = strdup(str);
+	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_BLIPP:
+	  str = va_arg(ap, char *);
+	  attr->xsp_blipp = strdup(str);
 	  break;
       case GLOBUS_XIO_XSP_CNTL_SET_PATH:
 	  str = va_arg(ap, char *);
@@ -1057,6 +1142,10 @@ globus_l_xio_xsp_handle_destroy(
     if (handle->xsp_sec != NULL)
     {
 	globus_free(handle->xsp_sec);
+    }
+    if (handle->xsp_blipp != NULL)
+    {
+	globus_free(handle->xsp_blipp);
     }
     if (handle->xsp_net_path != NULL)
     {
@@ -1299,24 +1388,37 @@ globus_l_xio_xsp_open_cb(
 	    {   
 		res = globus_l_xio_xsp_connect_handle(handle);
 		if (res != GLOBUS_SUCCESS)
-		    {
-			res = GlobusXIOErrorWrapFailedWithMessage(res,
-				  "The XSP XIO driver failed to establish a connection%s",
-				  " to XSPd.");
-			goto error_return;
-			// this will try again for subsequent streams, if any
-		    }
+		{
+		    res = GlobusXIOErrorWrapFailedWithMessage(res,
+			      "The XSP XIO driver failed to establish a connection%s",
+							      " to XSPd.");
+		    //goto error_return;
+		    // this will try again for subsequent streams, if any
+		}
 	    }
+
+	    if (handle->xfer->blipp_connected == GLOBUS_FALSE)
+	    {
+		res = globus_l_xio_xsp_connect_blipp_handle(handle);
+		if (res != GLOBUS_SUCCESS)
+		{
+		    res = GlobusXIOErrorWrapFailedWithMessage(res,
+			      "The XSP XIO driver failed to establish a connection%s",
+							      " to BLiPP");
+		    //goto error_return;
+		    // this will try again for subsequent streams, if any
+		}
+	    }
+
 	    if ((handle->xfer->xsp_connected == GLOBUS_TRUE) &&
-		(handle->xfer->streams == 1))
+		(handle->xfer->streams >= 1))
 	    {
 		res = globus_l_xio_xsp_do_xfer_notify(handle, GLOBUS_XIO_XSP_NEW_XFER);
 		if (res != GLOBUS_SUCCESS)
 		{
 		    res = GlobusXIOErrorWrapFailedWithMessage(res,
-		        "The XSP XIO driver failed to send new xfer message to%s",
-		        " XSPd");
-		    goto error_return;
+			      "The XSP XIO driver failed to send new xfer%s", " message.");
+		    //goto error_return;
 		}
 	    }
 	    else if ((handle->xfer->xsp_connected == GLOBUS_TRUE) &&
@@ -1822,6 +1924,11 @@ globus_l_xio_xsp_activate(void)
     else
     {
 	fprintf(stderr, "XIO-XSP: XSP_SEC not set in environment, using \"none\".\n");
+    }
+
+    if ((tmp = globus_module_getenv("XSP_BLIPP")))
+    {
+	globus_l_xio_xsp_handle_default.xsp_blipp = tmp;
     }
 
     if ((tmp = globus_module_getenv("XSP_NET_PATH")))
