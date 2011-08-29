@@ -1412,8 +1412,8 @@ globus_l_xio_xsp_open_cb(
 		}
 	    }
 
-	    if ((handle->xfer->xsp_connected == GLOBUS_TRUE) &&
-		(handle->xfer->streams >= 1))
+	    // notify on every new stream
+	    if (handle->xfer->streams >= 1)
 	    {
 		res = globus_l_xio_xsp_do_xfer_notify(handle, GLOBUS_XIO_XSP_NEW_XFER);
 		if (res != GLOBUS_SUCCESS)
@@ -1422,11 +1422,6 @@ globus_l_xio_xsp_open_cb(
 			      "The XSP XIO driver failed to send new xfer%s", " message.");
 		    //goto error_return;
 		}
-	    }
-	    else if ((handle->xfer->xsp_connected == GLOBUS_TRUE) &&
-		     (handle->xfer->streams > 1))
-	    {
-		// maybe we notify monitoring that another stream has been added?
 	    }
 	}
 	globus_mutex_unlock(&xio_l_xsp_mutex);
