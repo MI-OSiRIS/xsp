@@ -277,14 +277,16 @@ globus_l_xio_xsp_send_message(
     {
 	if (args->data && (args->length > 0))
         {
-	    
-	    if (args->send_mask & GLOBUS_XIO_XSP_SEND_XSPD)
+		
+	    if (args->xfer->xsp_connected &&
+		(args->send_mask & GLOBUS_XIO_XSP_SEND_XSPD))
 	    {
 		res = xsp_send_msg(args->xfer->sess, args->data,
 				   args->length, args->msg_type);
 	    }
 	    
-	    if (args->send_mask & GLOBUS_XIO_XSP_SEND_BLIPP)
+	    if (args->xfer->blipp_connected && 
+		(args->send_mask & GLOBUS_XIO_XSP_SEND_BLIPP))
 	    {
 		res = xsp_send_msg(args->xfer->blipp_sess, args->data,
 				   args->length, args->msg_type);
@@ -448,7 +450,7 @@ globus_l_xio_xsp_do_nl_summary(
     // print a helpful warning here...
     if (handle->xfer->xsp_connected == GLOBUS_FALSE)
     {
-        fprintf(stderr, "NL_UPDATE: XSP not connected!\n");
+	    fprintf(stderr, "NL_UPDATE: XSP not connected!\n");
     }
 
     /* get nl caliper data */
