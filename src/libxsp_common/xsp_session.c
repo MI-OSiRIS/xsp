@@ -757,7 +757,7 @@ int xsp_session_app_data(comSess *sess, const void *arg, char ***error_msgs) {
 	
 	// send back a response if necessary
 	if (ret_block) {
-		xsp_conn_send_msg(parent_conn, sess->version, XSP_MSG_APP_DATA, XSP_OPT_NULL, ret_block);
+		xsp_conn_send_msg(parent_conn, sess->version, XSP_MSG_APP_DATA, XSP_OPT_APP, ret_block);
 		xsp_free_block(ret_block, XSP_BLOCK_KEEP_DATA);
 	}
 
@@ -981,9 +981,15 @@ int xsp_proto_loop(comSess *sess) {
 			break;
                 case XSP_MSG_PING:
 		        {
-			        xsp_info(10, "PING/PONG");
+			        xsp_info(10, "PING->PONG");
 				__xsp_cb_and_free(sess, msg);
 				xsp_conn_send_msg(conn, version, XSP_MSG_PONG, XSP_OPT_NULL, NULL);
+			}
+			break;
+		case XSP_MSG_PONG:
+			{
+				xsp_info(10, "PONG");
+				__xsp_cb_and_free(sess, msg);
 			}
 			break;
 		case XSP_MSG_SLAB_INFO:

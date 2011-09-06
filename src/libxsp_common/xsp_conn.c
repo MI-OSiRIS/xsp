@@ -174,15 +174,27 @@ uint64_t xsp_conn_send_msg(xspConn *conn, uint8_t version, uint16_t type, uint16
 			xspBlock *block;
 			xspBlockList *bl;
 
-			if ((opt_type == XSP_OPT_NULL) && msg_body) {
+			// set block list to NULL if call says no options
+			// even if msg_body has junk in it
+			if (opt_type == XSP_OPT_NULL) {
+				bl = NULL;
+			}
+			// app-defined blocks, add to a new list
+			else if ((opt_type == XSP_OPT_APP) && msg_body) {
 				bl = xsp_alloc_block_list();
 				xsp_block_list_push(bl, (xspBlock*)msg_body);
 			}
+			// app-defined list of blocks
+			else if ((opt_type == XSP_OPT_APP_LIST) && msg_body) {
+				bl = (xspBlockList*)msg_body;
+			}
+			// let the proto handler try to figure it out based on opt_type
 			else if (msg_body) {
 				block = xsp_block_new(opt_type, XSP_DEFAULT_SPORT, 0, msg_body);
                                 bl = xsp_alloc_block_list();
                                 xsp_block_list_push(bl, block);
 			}
+			// default case, no blocks
 			else
 				bl = NULL;
 			
