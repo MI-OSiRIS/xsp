@@ -125,12 +125,9 @@ static int xsp_parse_default_block_list(const void *arg, int length, void **msg_
         xspBlock *block;
         int n;
 
-	if (!length) {
-		d_printf("no block data to parse\n");
-		return 0;
-	}
-	
         bl = (xspBlockList *) arg;
+	if (!bl)
+		goto exit;
 	
         for (block = bl->first; block != NULL; block = block->next) {
                 switch (block->type) {
@@ -165,6 +162,8 @@ static int xsp_parse_default_block_list(const void *arg, int length, void **msg_
 			return -1;
 		}
 	}
+
+ exit:
 	*msg_body = bl;
         return 0;
 }
@@ -175,16 +174,15 @@ static int xsp_parse_app_data_block_list(const void *arg, int remainder, void **
         xspBlock *block;
         int n;
 
-	if (!remainder) {
-		d_printf("no app block data to parse\n");
-		return 0;
-	}
-
         bl = (xspBlockList *) arg;
+	if (!bl)
+		goto exit;
 
         for (block = bl->first; block != NULL; block = block->next) {
 		n = xsp_parse_block_msg(block, block->length, (void**)&ret_block);
 	}
+
+ exit:
 	*msg_body = bl;
 	return 0;
 }

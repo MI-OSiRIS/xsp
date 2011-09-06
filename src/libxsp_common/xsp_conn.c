@@ -367,7 +367,7 @@ xspMsg *__xsp_conn_get_msg_v1(xspConn *conn, unsigned int flags) {
 			
 			data_size += amt_read;
 		}
-		
+
 		// make a new xspBlock and add it the block list
 		block = xsp_block_new(bhdr_type, bhdr_sport, block_len, buf);
 		xsp_block_list_push(bl, block);
