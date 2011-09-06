@@ -26,7 +26,8 @@
 #define XSP_OPT_DATA        5
 #define XSP_OPT_PATH        6
 #define XSP_OPT_SLAB        7
-
+#define XSP_OPT_APP         8
+#define XSP_OPT_APP_LIST    9
 
 typedef struct xsp_block_t {
 	int type;

@@ -26,8 +26,8 @@ int libxsp_proto_binary_v1_init() {
 
 	bin_handler_v1.parse[XSP_MSG_INVALID] = NULL;
 	bin_handler_v1.parse[XSP_MSG_SESS_OPEN] = xsp_parse_default_block_list;
-	bin_handler_v1.parse[XSP_MSG_SESS_ACK] = NULL;
-	bin_handler_v1.parse[XSP_MSG_SESS_CLOSE] = NULL;
+	bin_handler_v1.parse[XSP_MSG_SESS_ACK] = xsp_parse_app_data_block_list;
+	bin_handler_v1.parse[XSP_MSG_SESS_CLOSE] = xsp_parse_app_data_block_list;
 	bin_handler_v1.parse[XSP_MSG_AUTH_TYPE] = xsp_parse_default_block_list;
 	bin_handler_v1.parse[XSP_MSG_AUTH_TOKEN] = xsp_parse_default_block_list;
 	bin_handler_v1.parse[XSP_MSG_BLOCK_HEADER] = xsp_parse_default_block_list;
@@ -41,8 +41,8 @@ int libxsp_proto_binary_v1_init() {
 
 	bin_handler_v1.writeout[XSP_MSG_INVALID] = NULL;
 	bin_handler_v1.writeout[XSP_MSG_SESS_OPEN] = xsp_writeout_default_block_list;
-	bin_handler_v1.writeout[XSP_MSG_SESS_ACK] = NULL;
-	bin_handler_v1.writeout[XSP_MSG_SESS_CLOSE] = NULL;
+	bin_handler_v1.writeout[XSP_MSG_SESS_ACK] = xsp_writeout_app_data_block_list;
+	bin_handler_v1.writeout[XSP_MSG_SESS_CLOSE] = xsp_writeout_app_data_block_list;
 	bin_handler_v1.writeout[XSP_MSG_AUTH_TYPE] = xsp_writeout_default_block_list;
 	bin_handler_v1.writeout[XSP_MSG_AUTH_TOKEN] = xsp_writeout_default_block_list;
 	bin_handler_v1.writeout[XSP_MSG_BLOCK_HEADER] = xsp_writeout_default_block_list;
@@ -125,8 +125,13 @@ static int xsp_parse_default_block_list(const void *arg, int length, void **msg_
         xspBlock *block;
         int n;
 
+	if (!length) {
+		d_printf("no block data to parse\n");
+		return 0;
+	}
+	
         bl = (xspBlockList *) arg;
-
+	
         for (block = bl->first; block != NULL; block = block->next) {
                 switch (block->type) {
                 case XSP_OPT_HOP:
@@ -170,6 +175,11 @@ static int xsp_parse_app_data_block_list(const void *arg, int remainder, void **
         xspBlock *block;
         int n;
 
+	if (!remainder) {
+		d_printf("no app block data to parse\n");
+		return 0;
+	}
+
         bl = (xspBlockList *) arg;
 
         for (block = bl->first; block != NULL; block = block->next) {
@@ -188,6 +198,10 @@ static int xsp_writeout_default_block_list(void *arg, char *buf, int remainder) 
 	orig_remainder = remainder;
 	
 	bl = (xspBlockList *) arg;
+	if (!bl) {
+		printf("no blocks\n");
+		return 0;
+	}
 
 	for (block = bl->first; block != NULL; block = block->next) {
 		switch (block->type) {
@@ -231,6 +245,8 @@ static int xsp_writeout_app_data_block_list(void *arg, char *buf, int remainder)
         orig_remainder = remainder;
 
         bl = (xspBlockList *) arg;
+	if (!bl)
+		return 0;
 
         for (block = bl->first; block != NULL; block = block->next) {
 		n = xsp_writeout_block_msg(block, buf, remainder);

@@ -37,7 +37,8 @@ typedef struct common_session_t {
         LIST_HEAD(sess_cdc_listhead, xsp_connection_t) child_data_conns;
 
 	int connected;
-
+	int state;
+	
 	struct xsp_connection_t *cntl_conn;
 	struct xsp_credentials_t *credentials;
 	
