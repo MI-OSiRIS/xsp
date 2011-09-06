@@ -68,6 +68,9 @@ int xsp_block_list_find(xspBlockList *bl, int type, xspBlock ***ret_ary, int *co
 	xspBlock **ba;
 	int num = 0;
 	
+	if (!bl)
+		return -1;
+
 	ba = (xspBlock **)malloc(bl->count * sizeof(xspBlock *));
 	
 	for (block = bl->first; block != NULL; block = block->next) {

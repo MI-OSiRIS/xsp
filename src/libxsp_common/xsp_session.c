@@ -1048,7 +1048,7 @@ void __xsp_cb_and_free(comSess *sess, xspMsg *msg) {
 }
 
 int xsp_session_get_blocks(const xspMsg *msg, int opt_type, xspBlock ***ret_blocks, int *count) {
-	int num;
+	int num = 0;
 
 	switch (msg->version) {
 	case XSP_v0:
