@@ -78,11 +78,21 @@ typedef struct xsp_data_open_header_t {
 	char proto[XSP_PROTO_NAME_LEN];
 } xspDataOpen;
 
+typedef struct xsp_rdma_mr_t {
+	uintptr_t addr;
+	uint64_t size;
+	uint32_t rkey;
+} xspRDMA_MR;
+
 typedef struct slab_record_t {
-        char sess_id[2*XSP_SESSIONID_LEN + 1];
+	char sess_id[2*XSP_SESSIONID_LEN + 1];
+        uint16_t flags;
         uint32_t offset;
         uint32_t length;
         uint32_t crc;
+	union {
+                struct xsp_rdma_mr_t mr;
+        } rdma;
 } xspSlabRec;
 
 typedef struct slabs_info_t {
