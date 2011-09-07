@@ -606,9 +606,12 @@ static xspSlabRec *xsp_parse_slab_record(const void *arg, int remainder, int *si
 
         bin2hex(in->sess_id, new_rec->sess_id, XSP_SESSIONID_LEN);
 
+	new_rec->flags = ntohs(in->flags);
         new_rec->offset = ntohl(in->offset);
         new_rec->length = ntohl(in->length);
         new_rec->crc = ntohl(in->crc);
+
+	memcpy(&new_rec->rdma.mr, &in->rdma.mr, sizeof(struct xsp_rdma_mr_t));
 
         buf += sizeof(xspSlabRec_HDR);
         remainder -= sizeof(xspSlabRec_HDR);
@@ -666,9 +669,12 @@ static int xsp_writeout_slab_record(xspSlabRec *rec, char *buf, int remainder) {
 
         hex2bin(rec->sess_id, out->sess_id, 2*XSP_SESSIONID_LEN);
 
+	out->flags = htons(rec->flags);
         out->offset = htonl(rec->offset);
         out->length = htonl(rec->length);
         out->crc = htonl(rec->crc);
+
+	memcpy(&out->rdma.mr, &rec->rdma.mr, sizeof(struct xsp_rdma_mr_t));
 
         buf += sizeof(xspSlabRec_HDR);
         remainder -= sizeof(xspSlabRec_HDR);

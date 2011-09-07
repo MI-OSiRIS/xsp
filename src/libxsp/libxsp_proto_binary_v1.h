@@ -91,9 +91,13 @@ typedef struct xsp_sess_net_path_hdr_t {
 
 typedef struct slab_record_hdr_t {
         char sess_id[XSP_SESSIONID_LEN];
+	uint16_t flags;
         uint32_t offset;
         uint32_t length;
         uint32_t crc;
+	union {
+		struct xsp_rdma_mr_t mr;
+	} rdma;
 } xspSlabRec_HDR;
 
 typedef struct slabs_info_hdr_t {
