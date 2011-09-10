@@ -21,6 +21,10 @@ if HAVE_SSH
 bindirs += misc/subsys
 endif
 
+if HAVE_RDMA
+libdirs += src/libxsp_rdma
+endif
+
 bindirs += src/libxsp_modules src/modules
 
 SUBDIRS = $(libdirs) $(bindirs)
