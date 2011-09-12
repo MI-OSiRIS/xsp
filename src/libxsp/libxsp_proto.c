@@ -119,7 +119,7 @@ int xsp_parse_msgbody(const xspMsg *hdr, const void *arg, uint64_t length, void 
 
 	*msg_body = NULL;
 
-	d_printf("hdr version: %d\n", hdr->version);
+	d_printf("hdr version: %d, type: %d\n", hdr->version, hdr->type);
 
 	if (proto_list[hdr->version] == NULL || proto_list[hdr->version]->max_msg_type < hdr->type) {
 		d_printf("bad message type: %d\n", hdr->type);

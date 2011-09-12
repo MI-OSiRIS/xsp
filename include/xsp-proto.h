@@ -42,9 +42,9 @@ enum xsp_eid_types_t {
 #define XSP_NET_PATH_LEN        10
 
 typedef struct xsp_message_hdr_t {
-	uint16_t          length;
 	uint8_t           version;
 	uint8_t           type;
+	uint16_t          length;
 	char              sess_id[XSP_SESSIONID_LEN];
 } xspMsgHdr;
 
