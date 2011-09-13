@@ -113,6 +113,8 @@ char *xsp_sa2hopid_r(const struct sockaddr *sa, SOCKLEN_T sa_len, char *output_b
 
 int xsp_make_connection(char *hop_id);
 
+int xsp_set_eid(struct xsp_addr *eid, void *arg, int eid_type);
+
 int xsp_make_hopid(const char *name, const int port, char *output_buf, size_t buflen);
 int xsp_parse_hopid(const char *hop_id, char **ret_server, char **ret_port);
 

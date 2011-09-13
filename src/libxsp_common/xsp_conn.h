@@ -24,6 +24,7 @@ typedef struct xsp_connection_t {
 	char *hostname;
 	char *addr;
 	char *description;
+	char *description_local;
 	char *protocol;
 	int xsp_peer;
 	

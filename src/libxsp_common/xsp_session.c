@@ -228,8 +228,6 @@ comSess *xsp_convert_xspSess(xspMsg *msg) {
 				xspSess *old_sess = (xspSess*)blocks[0]->data;
 				if (old_sess) {
 					memcpy(new_sess->id, old_sess->sess_id, 2*XSP_SESSIONID_LEN+1);
-					memcpy(&new_sess->src_eid, &old_sess->src_eid, sizeof(struct xsp_addr));
-					memcpy(&new_sess->dst_eid, &old_sess->dst_eid, sizeof(struct xsp_addr));
 					new_sess->child = malloc(old_sess->child_count * sizeof(xspHop*));
 					new_sess->child_count = old_sess->child_count;
 					for (i = 0; i < old_sess->child_count; i++)
@@ -247,6 +245,8 @@ comSess *xsp_convert_xspSess(xspMsg *msg) {
 				return NULL;
 			}
 			
+			memcpy(&new_sess->src_eid, &msg->src_eid, sizeof(struct xsp_addr));
+			memcpy(&new_sess->dst_eid, &msg->dst_eid, sizeof(struct xsp_addr));
 			new_sess->version = XSP_v1;
 		}
 		break;

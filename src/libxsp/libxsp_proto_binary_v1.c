@@ -77,7 +77,7 @@ static int xsp_writeout_hdr(void *arg, char *buf) {
         hdr->type = htons(msg->type);
 	hdr->opt_cnt = htons(msg->opt_cnt);
 	hdr->reserved = 0x0000;
-	
+
         memcpy(&(hdr->src_eid), &(msg->src_eid), sizeof(struct xsp_addr));
         memcpy(&(hdr->dst_eid), &(msg->dst_eid), sizeof(struct xsp_addr));
 

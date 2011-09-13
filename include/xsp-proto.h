@@ -20,9 +20,11 @@
 
 /* EID types */
 enum xsp_eid_types_t {
-	XSP_EID_IPv4 = 0,
+	XSP_EID_NULL = 0,
+	XSP_EID_IPv4,
 	XSP_EID_IPv6,
-	XSP_EID_URN
+	XSP_EID_URN,
+	XSP_EID_HOPID
 };
 
 /* result/status codes */
@@ -50,7 +52,7 @@ typedef struct xsp_message_hdr_t {
 
 /* based on ipv6 addrs */
 struct xsp_addr {
-	uint8_t                eid_type;
+	uint8_t                type;
 	union {
 		uint8_t        xsp_addr8[16];
 		uint16_t       xsp_addr16[8];
