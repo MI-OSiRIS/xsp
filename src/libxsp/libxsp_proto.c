@@ -48,8 +48,9 @@ int xsp_proto_init() {
 	return -1;
 }
 
-uint64_t xsp_writeout_msg(char *buf, uint64_t length, int version, int type, void *msg, void *msg_body) {
+uint64_t xsp_writeout_msg(char *buf, uint64_t length, xspMsg *msg, xspBlockList *bl) {
 	char *msg_buf;
+	void *msg_body;
 	uint64_t body_length;
 	int hdr_length;
 	uint64_t remainder;
@@ -57,24 +58,31 @@ uint64_t xsp_writeout_msg(char *buf, uint64_t length, int version, int type, voi
 	if (!msg || length < sizeof(xspMsgHdr))
 		goto write_error;
 
-	if (proto_list[version] == NULL) {
-		d_printf("unknown version: %d %d\n", version, type);
+	if (proto_list[msg->version] == NULL) {
+		d_printf("unknown version: %d %d\n", msg->version, msg->type);
 		goto write_error;
 	}
 	
-	if (proto_list[version]->write_hdr == NULL) {
-		d_printf("write_hdr not defined: %d %d\n", version, type);
+	if (proto_list[msg->version]->write_hdr == NULL) {
+		d_printf("write_hdr not defined: %d %d\n", msg->version, msg->type);
 		goto write_error;
 	}
+	
+	if (bl && msg->version == XSP_v1)
+		msg_body = bl;
+	else if (msg->version == XSP_v0)
+		msg_body = msg->msg_body;
+	else
+		msg_body = NULL;
 
 	msg_buf = buf;
 
-	d_printf("about to write v%d hdr\n", version);
+	d_printf("about to write v%d hdr\n", msg->version);
 
-	hdr_length = proto_list[version]->write_hdr(msg, msg_buf);
+	hdr_length = proto_list[msg->version]->write_hdr(msg, msg_buf);
 	
 	if (hdr_length <= 0) {
-		d_printf("error writing header: %d %d\n", version, type);
+		d_printf("error writing header: %d %d\n", msg->version, msg->type);
 		goto write_error;
 	}
 	
@@ -82,12 +90,12 @@ uint64_t xsp_writeout_msg(char *buf, uint64_t length, int version, int type, voi
 	remainder = length - hdr_length;
 
 	/* fill in the message body */
-	body_length = xsp_writeout_msgbody(msg_buf, remainder, version, type, msg_body);
+	body_length = xsp_writeout_msgbody(msg_buf, remainder, msg->version, msg->type, msg_body);
 	if (body_length < 0)
 		goto write_error;
 
 	/* XXX: v0 requires the body length in the header */
-	if (version == XSP_v0) {
+	if (msg->version == XSP_v0) {
 		xspMsgHdr *hdr = (xspMsgHdr*)buf;
 		hdr->length = htons((uint16_t)body_length);
 		d_printf("v0 hdr length: %d\n", ntohs(hdr->length));

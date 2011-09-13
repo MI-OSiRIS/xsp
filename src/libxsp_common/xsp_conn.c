@@ -34,6 +34,10 @@ void xsp_conn_free_stats_def(xspConn *conn) {
 	free(stats);
 }
 
+void *xsp_conn_get_priv_data(xspConn *conn) {
+	return conn->conn_private;
+}
+
 int xsp_conn_default_get_stat(xspConn *conn, uint16_t type, void *optval, size_t *optlen) {
 	int retval = -1;
 
@@ -164,41 +168,48 @@ xspMsg *xsp_conn_get_msg(xspConn *conn, unsigned int flags) {
 	return conn->get_msg2(conn, flags);
 }
 
-uint64_t xsp_conn_send_msg(xspConn *conn, uint8_t version, uint16_t type, uint16_t opt_type, void *msg_body) {
-	switch (version) {
+uint64_t xsp_conn_send_msg(xspConn *conn, xspMsg *msg, uint16_t opt_type) {
+	switch (msg->version) {
 	case XSP_v0:
-		return conn->send_msg2(conn, version, type, msg_body);
+		return conn->send_msg2(conn, msg, NULL);
 		break;
 	case XSP_v1:
 		{
 			xspBlock *block;
 			xspBlockList *bl;
-
+			
 			// set block list to NULL if call says no options
 			// even if msg_body has junk in it
 			if (opt_type == XSP_OPT_NULL) {
 				bl = NULL;
+				msg->opt_cnt = 0;
+				msg->msg_body = NULL;
 			}
 			// app-defined blocks, add to a new list
-			else if ((opt_type == XSP_OPT_APP) && msg_body) {
+			else if ((opt_type == XSP_OPT_APP) && msg->msg_body) {
 				bl = xsp_alloc_block_list();
-				xsp_block_list_push(bl, (xspBlock*)msg_body);
+				xsp_block_list_push(bl, (xspBlock*)msg->msg_body);
+				msg->opt_cnt = bl->count;
 			}
 			// app-defined list of blocks
-			else if ((opt_type == XSP_OPT_APP_LIST) && msg_body) {
-				bl = (xspBlockList*)msg_body;
+			else if ((opt_type == XSP_OPT_APP_LIST) && msg->msg_body) {
+				bl = (xspBlockList*)msg->msg_body;
+				msg->opt_cnt = bl->count;
 			}
 			// let the proto handler try to figure it out based on opt_type
-			else if (msg_body) {
-				block = xsp_block_new(opt_type, XSP_DEFAULT_SPORT, 0, msg_body);
+			else if (msg->msg_body) {
+				block = xsp_block_new(opt_type, XSP_DEFAULT_SPORT, 0, msg->msg_body);
                                 bl = xsp_alloc_block_list();
                                 xsp_block_list_push(bl, block);
+				msg->opt_cnt = bl->count;
 			}
 			// default case, no blocks
-			else
+			else {
 				bl = NULL;
+				msg->opt_cnt = 0;
+			}
 			
-			return conn->send_msg2(conn, version, type, bl);
+			return conn->send_msg2(conn, msg, bl);
 		}
 		break;
 	default:
@@ -432,12 +443,11 @@ xspMsg *xsp_conn_default_get_msg(xspConn *conn, unsigned int flags) {
 	return NULL;
 }
 	
-uint64_t xsp_conn_default_send_msg(xspConn *conn, uint8_t version, uint16_t type, void *msg_body) {
+uint64_t xsp_conn_default_send_msg(xspConn *conn, xspMsg *msg, xspBlockList *bl) {
 	char *msg_buf;
         int msg_buf_len;
         int msg_len;
         uint64_t retval;
-        xspMsg msg;
 
         msg_buf = (char *) malloc(sizeof(char) * XSP_MAX_LENGTH);
         if (!msg_buf)
@@ -445,26 +455,10 @@ uint64_t xsp_conn_default_send_msg(xspConn *conn, uint8_t version, uint16_t type
 
         msg_buf_len = XSP_MAX_LENGTH;
 	
-	msg.version = version;
-	msg.type = type;
-	msg.flags = 0;
-	msg.msg_body = msg_body;
-
-	// XXX: need to figure out best use of EIDs
-	msg.src_eid.x_addrc[0] = '\0';
-        msg.dst_eid.x_addrc[0] = '\0';
-
-	if (conn->session)
-		memcpy(msg.sess_id, xsp_session_get_id(conn->session), 2*XSP_SESSIONID_LEN+1);
-	else
-		bzero(msg.sess_id, 2*XSP_SESSIONID_LEN);
+	if (!strlen(msg->sess_id) && conn->session)
+		memcpy(msg->sess_id, xsp_session_get_id(conn->session), 2*XSP_SESSIONID_LEN+1);
 	
-	if ((version == XSP_v1) && msg_body)
-		msg.opt_cnt = ((xspBlockList*)msg_body)->count;
-	else
-		msg.opt_cnt = 0;
-	
-	msg_len = xsp_writeout_msg(msg_buf, msg_buf_len, version, type, (void*)&msg, msg_body);
+	msg_len = xsp_writeout_msg(msg_buf, msg_buf_len, msg, bl);
         if (msg_len < 0)
                 goto error_exit2;
 

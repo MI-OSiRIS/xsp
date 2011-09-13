@@ -208,6 +208,8 @@ comSess *xsp_convert_xspSess(xspMsg *msg) {
 			xspSess *old_sess = (xspSess*)msg->msg_body;
 			// copy all the old data over
 			memcpy(new_sess->id, old_sess->sess_id, 2*XSP_SESSIONID_LEN+1);
+			memcpy(&new_sess->src_eid, &old_sess->src_eid, sizeof(struct xsp_addr));
+			memcpy(&new_sess->dst_eid, &old_sess->dst_eid, sizeof(struct xsp_addr));
 			new_sess->child = malloc(old_sess->child_count * sizeof(xspHop*));
 			new_sess->child_count = old_sess->child_count;
 			for (i = 0; i < old_sess->child_count; i++)
@@ -226,6 +228,8 @@ comSess *xsp_convert_xspSess(xspMsg *msg) {
 				xspSess *old_sess = (xspSess*)blocks[0]->data;
 				if (old_sess) {
 					memcpy(new_sess->id, old_sess->sess_id, 2*XSP_SESSIONID_LEN+1);
+					memcpy(&new_sess->src_eid, &old_sess->src_eid, sizeof(struct xsp_addr));
+					memcpy(&new_sess->dst_eid, &old_sess->dst_eid, sizeof(struct xsp_addr));
 					new_sess->child = malloc(old_sess->child_count * sizeof(xspHop*));
 					new_sess->child_count = old_sess->child_count;
 					for (i = 0; i < old_sess->child_count; i++)
@@ -757,7 +761,13 @@ int xsp_session_app_data(comSess *sess, const void *arg, char ***error_msgs) {
 	
 	// send back a response if necessary
 	if (ret_block) {
-		xsp_conn_send_msg(parent_conn, sess->version, XSP_MSG_APP_DATA, XSP_OPT_APP, ret_block);
+		xspMsg msg = {
+			.version = sess->version,
+			.type = XSP_MSG_APP_DATA,
+			.flags = 0,
+			.msg_body = ret_block
+		};
+		xsp_conn_send_msg(parent_conn, &msg, XSP_OPT_APP);
 		xsp_free_block(ret_block, XSP_BLOCK_KEEP_DATA);
 	}
 
@@ -799,7 +809,13 @@ int xsp_session_send_nack(comSess *sess, char **error_msgs) {
 	}
 	
 	xsp_info(5, "Sending NACK: %s", nack_msg);
-	xsp_conn_send_msg(conn, sess->version, XSP_MSG_SESS_NACK, XSP_OPT_NACK, nack_msg);
+	xspMsg msg = {
+		.version = sess->version,
+		.type = XSP_MSG_SESS_NACK,
+		.flags = 0,
+		.msg_body = nack_msg
+	};
+	xsp_conn_send_msg(conn, &msg, XSP_OPT_NACK);
 	return 0;
 }
 
@@ -847,7 +863,12 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, int (*cb) (comS
 			{
 				xsp_info(10, "PING/PONG");
 				xsp_free_msg(msg);
-				xsp_conn_send_msg(conn, version, XSP_MSG_PONG, XSP_OPT_NULL, NULL);
+				xspMsg pong_msg = {
+					.version = version,
+					.type = XSP_MSG_PONG,
+					.flags = 0,
+				};
+				xsp_conn_send_msg(conn, &pong_msg, XSP_OPT_NULL);
 			}
 			break;
 
@@ -917,7 +938,12 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, int (*cb) (comS
 	xsp_conn_set_session_status(conn, STATUS_CONNECTED);
 
 	// send an ACK back once session is ready
-	xsp_conn_send_msg(conn, sess->version, XSP_MSG_SESS_ACK, XSP_OPT_NULL, NULL);
+	xspMsg ack_msg = {
+		.version = sess->version,
+		.type = XSP_MSG_SESS_ACK,
+		.flags = 0
+	};
+	xsp_conn_send_msg(conn, &ack_msg, XSP_OPT_NULL);
 	
 	*ret_sess = sess;
 	return sess;
@@ -976,14 +1002,24 @@ int xsp_proto_loop(comSess *sess) {
 					continue;
 				}
 				__xsp_cb_and_free(sess, msg);
-				xsp_conn_send_msg(conn, version, XSP_MSG_SESS_ACK, XSP_OPT_NULL, NULL);
+				xspMsg ack_msg = {
+					.version = version,
+					.type = XSP_MSG_SESS_ACK,
+					.flags = 0,
+				};
+				xsp_conn_send_msg(conn, &ack_msg, XSP_OPT_NULL);
 			}
 			break;
                 case XSP_MSG_PING:
 		        {
 			        xsp_info(10, "PING->PONG");
 				__xsp_cb_and_free(sess, msg);
-				xsp_conn_send_msg(conn, version, XSP_MSG_PONG, XSP_OPT_NULL, NULL);
+				xspMsg pong_msg = {
+                                        .version = version,
+                                        .type = XSP_MSG_PONG,
+                                        .flags = 0,
+                                };
+				xsp_conn_send_msg(conn, &pong_msg, XSP_OPT_NULL);
 			}
 			break;
 		case XSP_MSG_PONG:
@@ -1005,7 +1041,12 @@ int xsp_proto_loop(comSess *sess) {
 					continue;
 				}
 				__xsp_cb_and_free(sess, msg);
-				xsp_conn_send_msg(conn, version, XSP_MSG_SESS_ACK, XSP_OPT_NULL, NULL);
+				xspMsg ack_msg = {
+                                        .version = version,
+                                        .type = XSP_MSG_SESS_ACK,
+                                        .flags = 0,
+                                };
+				xsp_conn_send_msg(conn, &ack_msg, XSP_OPT_NULL);
 			}
 			break;
 		case XSP_MSG_APP_DATA:

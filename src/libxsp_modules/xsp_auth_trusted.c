@@ -75,7 +75,13 @@ int xsp_auth_trusted_request_authentication (comSess *sess, xspConn *conn) {
 	xsp_token.token_length = strlen(buf);
 	xsp_token.token = buf;
 
-	xsp_conn_send_msg(conn, sess->version, XSP_MSG_AUTH_TOKEN, XSP_OPT_AUTH_TOK, &xsp_token);
+	xspMsg auth_msg = {
+                .version = sess->version,
+                .type = XSP_MSG_AUTH_TOKEN,
+                .flags = 0,
+		.msg_body = &xsp_token
+        };
+	xsp_conn_send_msg(conn, &auth_msg, XSP_OPT_AUTH_TOK);
 
 	return 0;
 }
