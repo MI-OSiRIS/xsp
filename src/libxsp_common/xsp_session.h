@@ -19,6 +19,9 @@
 typedef struct common_session_t {
 	char id[2*XSP_SESSIONID_LEN + 1];
 
+        struct xsp_addr src_eid;
+        struct xsp_addr dst_eid;
+
 	xspHop **child;
 	int child_count;
 	

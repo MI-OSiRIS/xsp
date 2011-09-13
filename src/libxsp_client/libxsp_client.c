@@ -1469,7 +1469,7 @@ uint64_t xsp_put_msg(libxspSess *sess, uint8_t version, uint16_t type, void *msg
 	else
 		msg.opt_cnt = 0;
 
-	msg_len = xsp_writeout_msg(msg_buf, msg_buf_len, version, type, (void*)&msg, msg_body);
+	msg_len = xsp_writeout_msg(msg_buf, msg_buf_len, &msg, msg_body);
 
 	if (msg_len < 0)
 		goto write_error;

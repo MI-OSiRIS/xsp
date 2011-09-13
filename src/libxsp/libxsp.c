@@ -56,6 +56,17 @@ error_exit:
 	return NULL;
 }
 
+int xsp_make_hopid(const char *name, const int port, char *output_buf, size_t buflen) {
+	if (snprintf(output_buf, buflen, "%s/%d", name, port) > buflen) {
+                goto error_exit;
+        }
+
+	return 0;
+
+ error_exit:
+	return -1;
+}
+
 int xsp_parse_hopid(const char *hop_id, char **ret_server, char **ret_port) {
 	char *port;
 	char *copy = NULL;

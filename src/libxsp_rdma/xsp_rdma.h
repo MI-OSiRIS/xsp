@@ -68,6 +68,8 @@ typedef struct xsp_rdma_buf_handle_t {
 
 int xsp_rdma_init(struct xfer_data *data);
 int xsp_rdma_finalize(struct xfer_data *data);
+struct xfer_context *xsp_rdma_init_ctx(void *, struct xfer_data *);
+struct xsp_rdma_buf_handle_t *xsp_rdma_alloc_handle();
 
 int xsp_rdma_post_os_put(struct xsp_rdma_buf_handle_t *handle);
 int xsp_rdma_post_os_get(struct xsp_rdma_buf_handle_t *handle);

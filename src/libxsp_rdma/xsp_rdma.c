@@ -24,7 +24,6 @@ static int sl = 0;
 static int page_size;
 static pid_t pid;
 
-static struct xfer_context *__xsp_rdma_init_ctx(void *, struct xfer_data *);
 static int __xsp_rdma_poll_cq(struct xfer_context *ctx, struct ibv_wc *ret_wc, int sleep);
 static int __xsp_rdma_post_recv(struct xfer_context *ctx);
 static int __xsp_rdma_send_msg(struct xfer_context *ctx, int poll_cq);
@@ -160,7 +159,7 @@ static int __xsp_rdma_send_msg(struct xfer_context *ctx, int poll_cq)
 	return 0;
 }
 
-static struct xfer_context *__xsp_rdma_init_ctx(void *ptr, struct xfer_data *data)
+struct xfer_context *xsp_rdma_init_ctx(void *ptr, struct xfer_data *data)
 {
         struct xfer_context *ctx;
         struct rdma_cm_id *cm_id = NULL;
@@ -336,7 +335,7 @@ struct xfer_context *xsp_rdma_client_connect(struct xfer_data *data)
 			goto err2;
 		}
 		rdma_ack_cm_event(event);
-		ctx = __xsp_rdma_init_ctx(data->cm_id, data);
+		ctx = xsp_rdma_init_ctx(data->cm_id, data);
 		if (!ctx) {
 			fprintf(stderr, "%d:%s: xfer_init_ctx failed\n", pid, __func__);
 			goto err2;
@@ -429,7 +428,7 @@ struct xfer_context *xsp_rdma_server_connect(struct xfer_data *data)
                 }
 
                 child_cm_id = (struct rdma_cm_id *)event->id;
-                ctx = __xsp_rdma_init_ctx(child_cm_id, data);
+                ctx = xsp_rdma_init_ctx(child_cm_id, data);
                 if (!ctx) {
 			goto err2;
                 }
@@ -671,6 +670,23 @@ int xsp_rdma_unregister_buffer(struct xsp_rdma_buf_handle_t *handle) {
 		free(handle->remote_mr);
 
 	return 0;
+}
+
+XSP_RDMA_buf_handle *xsp_rdma_alloc_handle() {
+	XSP_RDMA_buf_handle *handle;
+
+	handle = malloc(sizeof(struct xsp_rdma_buf_handle_t));
+	if (!handle)
+		goto exit;
+
+	handle->buf = NULL;
+	handle->size = 0;
+	handle->remote_size = 0;
+	handle->got_done = 0;
+	handle->id = 0;
+	
+ exit:
+	return handle;
 }
 
 int xsp_rdma_finalize(struct xfer_data *data)

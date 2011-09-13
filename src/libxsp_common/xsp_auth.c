@@ -111,7 +111,13 @@ int xsp_request_authentication(comSess *sess, xspConn *new_conn, const char *aut
 
 	strlcpy(auth_type.name, auth_name, XSP_AUTH_NAME_LEN);
 
-	if (!xsp_conn_send_msg(new_conn, sess->version, XSP_MSG_AUTH_TYPE, XSP_OPT_AUTH_TYP, &auth_type)) {
+	xspMsg msg = {
+		.version = sess->version,
+		.type = XSP_MSG_AUTH_TYPE,
+		.flags = 0,
+		.msg_body = &auth_type
+	};
+	if (!xsp_conn_send_msg(new_conn, &msg, XSP_OPT_AUTH_TYP)) {
 		xsp_err(1, "send msg failed");
 		return -1;
 	}
