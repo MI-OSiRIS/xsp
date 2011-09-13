@@ -455,6 +455,12 @@ uint64_t xsp_conn_default_send_msg(xspConn *conn, xspMsg *msg, xspBlockList *bl)
 
         msg_buf_len = XSP_MAX_LENGTH;
 	
+	if (msg->src_eid.type == XSP_EID_NULL)
+		xsp_set_eid(&(msg->src_eid), conn->description_local, XSP_EID_HOPID);
+
+	if (conn->description && (msg->dst_eid.type == XSP_EID_NULL))
+		xsp_set_eid(&(msg->dst_eid), conn->description, XSP_EID_HOPID);
+	
 	if (!strlen(msg->sess_id) && conn->session)
 		memcpy(msg->sess_id, xsp_session_get_id(conn->session), 2*XSP_SESSIONID_LEN+1);
 	

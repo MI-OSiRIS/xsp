@@ -78,6 +78,10 @@ xspConn *xsp_conn_tcp_alloc(int sd, int use_web100) {
 	new_conn->protocol = "TCP";
 	new_conn->status = STATUS_CONNECTED;
 
+	if (getsockname(sd, (struct sockaddr *) &sa, &sa_len) == 0) {
+                new_conn->description_local = xsp_sa2hopid((struct sockaddr *) &sa, sizeof(sa), 0);
+        }
+
 	if (getpeername(sd, (struct sockaddr *) &sa, &sa_len) == 0) {
 		new_conn->description = xsp_sa2hopid((struct sockaddr *) &sa, sizeof(sa), 0);
 	}

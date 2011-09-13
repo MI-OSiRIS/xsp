@@ -17,6 +17,27 @@
 
 #include "compat.h"
 
+int xsp_set_eid(struct xsp_addr *eid, void *arg, int eid_type) {
+
+	switch (eid_type) {
+	case XSP_EID_IPv4:
+		break;
+	case XSP_EID_IPv6:
+		break;
+	case XSP_EID_URN:
+		break;
+	case XSP_EID_HOPID:
+		memcpy(eid->x_addrc, (char *)arg, XSP_HOPID_LEN);
+		break;
+	default:
+		break;
+	}
+
+	eid->type = eid_type;
+	
+	return 0;
+}	
+
 // XXX: fix this to not allocate an internal structure(probably should swap this
 // and xsp_sa2hopid so that xsp_sa2hopid calls this + strdup or something
 char *xsp_sa2hopid(const struct sockaddr *sa, SOCKLEN_T sa_len, int resolve) {
