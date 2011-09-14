@@ -553,14 +553,6 @@ int xsp_rdma_wait_buffer(struct xsp_rdma_buf_handle_t *handle)
 	if (ctx->recv_msg->type != MSG_READY)
                 fprintf(stderr, "%d:%s: did not get MSG_READY\n", pid, __func__);
 	else {
-		if (!handle->remote_mr) {
-			handle->remote_mr = malloc(sizeof(struct ibv_mr));
-		}
-		if (!handle->remote_mr) {
-			fprintf(stderr, "%d:%s: could not malloc remote_mr\n", pid, __func__);
-			return -1;
-		}
-
 		memcpy(handle->remote_mr, &ctx->recv_msg->mr, sizeof(struct ibv_mr));
 		if (ctx->recv_msg->size > 0) {
 			handle->remote_mr->length = ctx->recv_msg->size;
@@ -673,8 +665,13 @@ int xsp_rdma_register_buffer(struct xfer_context *ctx, struct xsp_rdma_buf_handl
 
 	handle->id = (uintptr_t) handle->buf;
 	handle->got_done = 0;
-	handle->remote_mr = NULL;
 	handle->ctx = ctx;
+
+	handle->remote_mr = malloc(sizeof(struct ibv_mr));
+	if (!handle->remote_mr) {
+		fprintf(stderr, "%d:%s: could not malloc remote_mr\n", pid, __func__);
+		return -1;
+	}
 
 	return 0;
 }
