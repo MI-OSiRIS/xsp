@@ -159,6 +159,16 @@ static int __xsp_rdma_send_msg(struct xfer_context *ctx, int poll_cq)
 	return 0;
 }
 
+void xsp_rdma_destroy_ctx(struct xfer_context *ctx) {
+	rdma_destroy_qp(ctx->cm_id);
+	ibv_destroy_cq(ctx->cq);
+	ibv_destroy_comp_channel(ctx->ch);
+	ibv_dereg_mr(ctx->send_mr);
+	ibv_dereg_mr(ctx->recv_mr);
+	ibv_dealloc_pd(ctx->pd);
+	free(ctx);
+}
+
 struct xfer_context *xsp_rdma_init_ctx(void *ptr, struct xfer_data *data)
 {
         struct xfer_context *ctx;
@@ -245,6 +255,7 @@ struct xfer_context *xsp_rdma_init_ctx(void *ptr, struct xfer_data *data)
                         return NULL;
                 }
                 ctx->qp = cm_id->qp;
+		ctx->cm_id = cm_id;
 		// arm the QP
 		__xsp_rdma_post_recv(ctx);
                 return ctx;
@@ -301,7 +312,7 @@ struct xfer_context *xsp_rdma_client_connect(struct xfer_data *data)
 		
 		if (event->event == RDMA_CM_EVENT_ADDR_ERROR
 		    && n_retries-- > 0) {
-			rdma_ack_cm_event (event);
+			rdma_ack_cm_event(event);
 			goto retry_addr;
 		}
 		
@@ -335,6 +346,7 @@ struct xfer_context *xsp_rdma_client_connect(struct xfer_data *data)
 			goto err2;
 		}
 		rdma_ack_cm_event(event);
+
 		ctx = xsp_rdma_init_ctx(data->cm_id, data);
 		if (!ctx) {
 			fprintf(stderr, "%d:%s: xfer_init_ctx failed\n", pid, __func__);
@@ -375,6 +387,9 @@ struct xfer_context *xsp_rdma_client_connect(struct xfer_data *data)
         rdma_destroy_id(data->cm_id);
         rdma_destroy_event_channel(data->cm_channel);
  err4:
+	if (ctx)
+		xsp_rdma_destroy_ctx(ctx);
+	 
         return NULL;
 
 }

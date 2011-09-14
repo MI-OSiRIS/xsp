@@ -25,6 +25,7 @@ struct xfer_context {
 	struct message     *send_msg;
 	struct ibv_cq      *cq;
 	struct ibv_qp      *qp;
+	struct rdma_cm_id  *cm_id;
 	struct ibv_comp_channel *ch;
 	int                 tx_depth;
 	struct ibv_sge      list;

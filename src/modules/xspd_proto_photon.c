@@ -145,7 +145,13 @@ int xsp_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_
 				(*ret_block)->sport = 0;
 				
 				// so ugly to do this here
-				xsp_conn_send_msg(parent_conn, XSP_MSG_APP_DATA, *ret_block);
+				xspMsg ret_msg = {
+                                        .version = version,
+                                        .type = XSP_MSG_APP_DATA,
+                                        .flags = 0,
+					.msg_body = *ret_block
+                                };
+				xsp_conn_send_msg(parent_conn, &ret_msg, XSP_OPT_APP);
 				
 				// but it's better to wait for the dapl connection right away
 				if (dapl_xsp_wait_connect((xspSess*)sess) != 0) {
