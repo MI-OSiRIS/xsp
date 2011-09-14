@@ -332,6 +332,7 @@ inline void xsp_session_close_connections(comSess *sess) {
 			}*/
 	}
 	
+#if 0
 	// shutdown the parent connections
         LIST_FOREACH(curr_conn, &(sess->parent_data_conns), sess_entries) {
 		xsp_conn_shutdown(curr_conn, (XSP_SEND_SIDE | XSP_RECV_SIDE));
@@ -347,6 +348,7 @@ inline void xsp_session_close_connections(comSess *sess) {
                         curr_conn->path->close_channel(curr_conn->path, curr_conn->channel);
 			}*/
         }
+#endif
 }
 
 void xsp_free_session(comSess *sess) {
@@ -366,6 +368,7 @@ void xsp_free_session(comSess *sess) {
 		xsp_conn_free(curr_conn);
 	}
 	
+#if 0
 	while(!LIST_EMPTY(&sess->parent_data_conns)) {
                 curr_conn = LIST_FIRST(&sess->parent_data_conns);
                 LIST_REMOVE(curr_conn, sess_entries);
@@ -377,6 +380,7 @@ void xsp_free_session(comSess *sess) {
                 LIST_REMOVE(curr_conn, sess_entries);
 		xsp_conn_free(curr_conn);
         }
+#endif
 
 	if (sess->child) {
 		int i;
