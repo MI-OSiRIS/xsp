@@ -730,7 +730,7 @@ int xsp_rdma_finalize(struct xfer_data *data)
 
 int xsp_rdma_init(struct xfer_data *data)
 {
-        int                      duplex = 0;
+        int duplex = 0;
 	
 	/* Get the PID and prepend it to every output on stdout/stderr
          * This helps to parse output when multiple client/server are
@@ -741,23 +741,20 @@ int xsp_rdma_init(struct xfer_data *data)
         printf("%d: | port=%d | ib_port=%d | tx_depth=%d | sl=%d | duplex=%d | cma=%d |\n",
 	       pid, data->port, data->ib_port, data->tx_depth, sl, duplex, data->use_cma);
 
-        /* Done with parameter parsing. Perform setup. */
-
         srand48(pid * time(NULL));
-
         page_size = sysconf(_SC_PAGESIZE);
 
         if (data->use_cma) {
-                data->cm_channel = rdma_create_event_channel();
+		data->cm_channel = rdma_create_event_channel();
                 if (!data->cm_channel) {
                         fprintf(stderr, "%d:%s: rdma_create_event_channel failed\n",
 				pid, __func__);
-                        return 1;
+                        return -1;
                 }
                 if (rdma_create_id(data->cm_channel, &data->cm_id, NULL, RDMA_PS_TCP)) {
                         fprintf(stderr, "%d:%s: rdma_create_id failed\n",
 				pid, __func__);
-                        return 1;
+                        return -1;
                 }
         } else {
 		// use an alternative to CMA here
