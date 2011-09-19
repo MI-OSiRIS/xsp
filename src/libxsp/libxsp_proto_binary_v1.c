@@ -965,7 +965,7 @@ static xspSlabRec *xsp_parse_slab_record(const void *arg, int remainder, int *si
 
         bin2hex(in->sess_id, new_rec->sess_id, XSP_SESSIONID_LEN);
 
-	new_rec->flags = ntohs(in->offset);
+	new_rec->flags = ntohs(in->flags);
         new_rec->offset = ntohl(in->offset);
         new_rec->length = ntohl(in->length);
         new_rec->crc = ntohl(in->crc);
