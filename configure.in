@@ -4,6 +4,9 @@ AM_INIT_AUTOMAKE(xsp,0.1)
 
 AM_CONFIG_HEADER(include/config.h)
 
+# Prevent autoconf from setting CFLAGS="-g -O2" on AC_PROG_CC
+${CFLAGS=""}
+
 AC_GNU_SOURCE
 AC_PROG_CC
 AC_PROG_CPP
@@ -48,7 +51,8 @@ AC_DEFINE_UNQUOTED(SOCKLEN_T, socklen_t)
 
 AC_ARG_ENABLE(debug,
 		[  --enable-debug          turn on debugging],
-		[CFLAGS="-g -Wall -DDEBUG ${CFLAGS}"])
+		[CFLAGS="-g -O0 -Wall -DDEBUG ${CFLAGS}"],
+		[CFLAGS="-O2 -Wall ${CFLAGS}"])
 
 AC_ARG_ENABLE(netlogger,
 		[  --enable-netlogger	  turn on netlogger],
