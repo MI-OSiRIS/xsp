@@ -3,8 +3,9 @@
 
 #define PHOTON_CI                    0x00
 #define PHOTON_RI                    0x01
-#define PHOTON_FI                    0x02
-#define PHOTON_IO                    0x03
+#define PHOTON_SI                    0x02
+#define PHOTON_FI                    0x03
+#define PHOTON_IO                    0x06
 #define PHOTON_MIN                   PHOTON_CI
 #define PHOTON_MAX                   PHOTON_IO
 
