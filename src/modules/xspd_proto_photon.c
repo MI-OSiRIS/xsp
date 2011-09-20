@@ -22,56 +22,40 @@
 #include "xsp_conn.h"
 
 #include "photon_xsp.h"
-
-#include "option_types.h"
 #include "compat.h"
 
 /* XXX: Is there a way to forward declare MPI_Aint and MPI_Datatype? */
 #include <mpi.h>
 
+// FIXME: XSP shouldn't know internals of Photon; right now this is a mess.
+#define MAX_QP 1
+typedef struct gen2_cnct_info {
+    int lid;
+    int qpn;
+    int psn;
+} gen2_cnct_info_t;
+
 ///////////////////
 // phorwarder libphoton util
-int dapl_xsp_register_session(xspSess *sess);
-int dapl_xsp_unregister_session(xspSess *sess);
-int dapl_xsp_wait_connect(xspSess *sess);
-int dapl_xsp_get_ci(xspSess *sess, PhotonConnectInfo *ci);
-int dapl_xsp_set_ci(xspSess *sess, PhotonConnectInfo *ci, PhotonConnectInfo **ret_ci);
-int dapl_xsp_get_ri(xspSess *sess, PhotonRIInfo *ri);
-int dapl_xsp_set_ri(xspSess *sess, PhotonRIInfo *ri, PhotonRIInfo **ret_ri);
-int dapl_xsp_get_fi(xspSess *sess, PhotonFINInfo *fi);
-int dapl_xsp_set_fi(xspSess *sess, PhotonFINInfo *fi, PhotonFINInfo **ret_fi);
-int dapl_xsp_set_io(xspSess *sess, PhotonIOInfo *io);
+int gen2_xsp_register_session(xspSess *sess);
+int gen2_xsp_unregister_session(xspSess *sess);
+int gen2_xsp_get_local_ci(xspSess *sess, gen2_cnct_info_t **ci);
+int gen2_xsp_server_connect_peer(xspSess *sess, gen2_cnct_info_t *local_ci, gen2_cnct_info_t *remote_ci);
+int gen2_xsp_set_ri(xspSess *sess, PhotonLedgerInfo *ri, PhotonLedgerInfo **ret_ri);
+int gen2_xsp_set_si(xspSess *sess, PhotonLedgerInfo *si, PhotonLedgerInfo **ret_si);
+int gen2_xsp_set_fi(xspSess *sess, PhotonLedgerInfo *fi, PhotonLedgerInfo **ret_fi);
+int gen2_xsp_set_io(xspSess *sess, PhotonIOInfo *io);
 
-int dapl_xsp_do_io(xspSess *sess);
+int gen2_xsp_do_io(xspSess *sess);
 void print_photon_io_info(PhotonIOInfo *io);
-
-/* XXX: I don't think we will need these for now */
-int dapl_xsp_post_recv(xspSess* sess, char *ptr, uint32_t size, uint32_t *request);
-int dapl_xsp_post_send(xspSess* sess, char *ptr, uint32_t size, uint32_t *request);
-int dapl_xsp_post_recv_buffer_rdma(xspSess* sess, char *ptr, uint32_t size, int tag, uint32_t *request);
-int dapl_xsp_post_send_buffer_rdma(xspSess* sess, char *ptr, uint32_t size, int tag, uint32_t *request);
-int dapl_xsp_post_send_request_rdma(xspSess* sess, uint32_t size, int tag, uint32_t *request);
-int dapl_xsp_wait_recv_buffer_rdma(xspSess* sess, int tag);
-int dapl_xsp_post_os_put(xspSess* sess, char *ptr, uint32_t size, int tag, uint32_t remote_offset, uint32_t *request);
-int dapl_xsp_post_os_get(xspSess *sess, char *ptr, uint32_t size, int tag, uint32_t remote_offset, uint32_t *request);
-
 
 int xspd_proto_photon_init();
 int xspd_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block);
 
 static PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg);
-static xspConn *xspd_proto_photon_connect(const char *hop_id, xspSettings *settings);
-static xspListener *xspd_proto_photon_setup_listener(const char *listener_id, xspSettings *settings, int one_shot, listener_cb callback, void *arg);
 
 pthread_mutex_t ci_lock;
 pthread_mutex_t rfi_lock;
-
-// maybe we eventually want this to be a generic protocal handler
-static xspProtocolHandler xspd_photon_handler = {
-	.connect = xspd_proto_photon_connect,
-	.setup_listener = xspd_proto_photon_setup_listener,
-	.name = "photon"
-};
 
 static xspModule xspd_photon_module = {
 	.desc = "Photon Forwarder Module",
@@ -80,6 +64,7 @@ static xspModule xspd_photon_module = {
 	.opt_handler = xspd_proto_photon_opt_handler
 };
 
+
 xspModule *module_info() {
 	return &xspd_photon_module;
 }
@@ -87,9 +72,9 @@ xspModule *module_info() {
 int xspd_proto_photon_init() {
 	int maxclients;
 	xspSettings *settings;
-	
+
 	if (xsp_main_settings_get_section("photon", &settings) != 0 ||
-	    xsp_settings_get_int(settings, "maxclients", &maxclients) != 0) {
+			xsp_settings_get_int(settings, "maxclients", &maxclients) != 0) {
 		maxclients = 46; /* default */
 	}
 
@@ -100,10 +85,10 @@ int xspd_proto_photon_init() {
 
 	pthread_mutex_init(&ci_lock, NULL);
 	pthread_mutex_init(&rfi_lock, NULL);
-	
+
 	return 0;
 
- error_exit:
+error_exit:
 	return -1;
 }
 
@@ -114,152 +99,157 @@ int xsp_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_
 	switch(block->type) {
 
 	case PHOTON_CI:
-		{
-			xspConn *parent_conn;
-			PhotonConnectInfo *ci;
-			PhotonConnectInfo *ret_ci = malloc(sizeof(PhotonConnectInfo));
-			
-			parent_conn = LIST_FIRST(&sess->parent_conns);
+	{
+		xspConn *parent_conn;
+		gen2_cnct_info_t *ci;
+		gen2_cnct_info_t *ret_ci;
 
-			ci = (PhotonConnectInfo*) block->data;
-			
-			pthread_mutex_lock(&ci_lock);
-			{
-				// does not currently check for duplicate registrations
-				// duplicate messages, etc.
-				if (dapl_xsp_register_session((xspSess*)sess) != 0) {
-					xsp_err(0, "could not register session with libphoton");
-					goto error_exit;
-				}
-				
-				if (dapl_xsp_set_ci((xspSess*)sess, ci, &ret_ci) != 0) {
-					xsp_err(0, "could not set photon connect info");
-					goto error_exit;
-				}
-				
-				
-				*ret_block = xsp_alloc_block();
-				(*ret_block)->data = ret_ci;
-				(*ret_block)->length = sizeof(PhotonConnectInfo);
-				(*ret_block)->type = block->type;
-				(*ret_block)->sport = 0;
-				
-				// so ugly to do this here
-				xspMsg ret_msg = {
-                                        .version = version,
-                                        .type = XSP_MSG_APP_DATA,
-                                        .flags = 0,
-					.msg_body = *ret_block
-                                };
-				xsp_conn_send_msg(parent_conn, &ret_msg, XSP_OPT_APP);
-				
-				// but it's better to wait for the dapl connection right away
-				if (dapl_xsp_wait_connect((xspSess*)sess) != 0) {
-					xsp_err(0, "could not complete dapl connections");
-					goto error_exit;
-				}
-			}
-			pthread_mutex_unlock(&ci_lock);
+		parent_conn = LIST_FIRST(&sess->parent_conns);
+		ci = (gen2_cnct_info_t*) block->data;
 
-			// we already sent our PHOTON_CI message back
-			*ret_block = NULL;
+		// does not currently check for duplicate registrations
+		// duplicate messages, etc.
+		if (gen2_xsp_register_session((xspSess*)sess) != 0) {
+			xsp_err(0, "could not register session with libphoton");
+			goto error_exit;
 		}
+
+		if (gen2_xsp_get_local_ci((xspSess*)sess, &ret_ci) != 0) {
+			xsp_err(0, "could not set photon connect info");
+			goto error_ci;
+		}
+
+		*ret_block = xsp_alloc_block();
+		(*ret_block)->data = ret_ci;
+		(*ret_block)->length = sizeof(gen2_cnct_info_t);
+		(*ret_block)->type = block->type;
+		(*ret_block)->sport = 0;
+
+		// so ugly to do this here
+		xsp_conn_send_msg(parent_conn, XSP_MSG_APP_DATA, *ret_block);
+
+		// but it's better to wait for the ib connection right away
+		if (gen2_xsp_server_connect_peer((xspSess*)sess, ret_ci, ci) != 0) {
+			xsp_err(0, "could not complete IB qp connections");
+			goto error_qps;
+		}
+
+		free(ret_ci);
+
+		// we already sent our PHOTON_CI message back
+		*ret_block = NULL;
+
 		break;
+
+error_qps:
+		free(ret_ci);
+error_ci:
+		gen2_xsp_unregister_session((xspSess*)sess);
+		goto error_exit;
+    }
+
 	case PHOTON_RI:
-		{
-			PhotonRIInfo *ri;
-                        PhotonRIInfo *ret_ri = malloc(sizeof(PhotonRIInfo));
-			
-			ri = (PhotonRIInfo*) block->data;
-			
-			pthread_mutex_lock(&rfi_lock);
-			{
-				if (dapl_xsp_set_ri((xspSess*)sess, ri, &ret_ri) != 0) {
-					xsp_err(0, "could not set photon snd/rcv ledgers");
-					goto error_exit;
-				}
-			}
-			pthread_mutex_unlock(&rfi_lock);
-			
-			*ret_block = xsp_alloc_block();
-                        (*ret_block)->data = ret_ri;
-                        (*ret_block)->length = sizeof(PhotonRIInfo);
-                        (*ret_block)->type = block->type;
-                        (*ret_block)->sport = 0;
+	{
+		PhotonLedgerInfo *ri;
+		PhotonLedgerInfo *ret_ri;
+
+		ri = (PhotonLedgerInfo*) block->data;
+
+		if (gen2_xsp_set_ri((xspSess*)sess, ri, &ret_ri) != 0) {
+			xsp_err(0, "could not set photon rcv ledgers");
+			goto error_exit;
 		}
+
+		*ret_block = xsp_alloc_block();
+		(*ret_block)->data = ret_ri;
+		(*ret_block)->length = sizeof(PhotonLedgerInfo);
+		(*ret_block)->type = block->type;
+		(*ret_block)->sport = 0;
+
 		break;
+    }
+
+    case PHOTON_SI:
+	{
+		PhotonLedgerInfo *si;
+		PhotonLedgerInfo *ret_si;
+
+		si = (PhotonLedgerInfo*) block->data;
+
+		if (gen2_xsp_set_si((xspSess*)sess, si, &ret_si) != 0) {
+			xsp_err(0, "could not set photon snd ledgers");
+			goto error_exit;
+		}
+
+		*ret_block = xsp_alloc_block();
+		(*ret_block)->data = ret_si;
+		(*ret_block)->length = sizeof(PhotonLedgerInfo);
+		(*ret_block)->type = block->type;
+		(*ret_block)->sport = 0;
+
+		break;
+	}
+
 	case PHOTON_FI:
-		{
-			PhotonFINInfo *fi;
-                        PhotonFINInfo *ret_fi = malloc(sizeof(PhotonFINInfo));
-			
-                        fi = (PhotonFINInfo*) block->data;
+	{
+		PhotonLedgerInfo *fi;
+		PhotonLedgerInfo *ret_fi;
 
-			pthread_mutex_lock(&rfi_lock);
-			{
-				if (dapl_xsp_set_fi((xspSess*)sess, fi, &ret_fi) != 0) {
-					xsp_err(0, "could not set photon FIN ledger");
-					goto error_exit;
-				}
-			}
-			pthread_mutex_unlock(&rfi_lock);
+		fi = (PhotonLedgerInfo*) block->data;
 
-                        *ret_block = xsp_alloc_block();
-                        (*ret_block)->data = ret_fi;
-                        (*ret_block)->length = sizeof(PhotonFINInfo);
-                        (*ret_block)->type = block->type;
-                        (*ret_block)->sport = 0;
+		if (gen2_xsp_set_fi((xspSess*)sess, fi, &ret_fi) != 0) {
+			xsp_err(0, "could not set photon FIN ledgers");
+			goto error_exit;
 		}
+
+		// FIXME: There's a memory leak because blob is not freed
+		*ret_block = xsp_alloc_block();
+		(*ret_block)->data = ret_fi;
+		(*ret_block)->length = sizeof(PhotonLedgerInfo);
+		(*ret_block)->type = block->type;
+		(*ret_block)->sport = 0;
+
 		break;
+	}
+
 	case PHOTON_IO:
-		{
-		    PhotonIOInfo *io = xspd_proto_photon_parse_io_msg(block->data);
-		    if(io == NULL)
-		        goto error_exit;
-		    
-		    /* XXX: AFAIK the I/O info is session specific, so no need for locks */
-		    if (dapl_xsp_set_io((xspSess*)sess, io) != 0) {
-			    xsp_err(0, "could not set photon I/O info");
-			    goto error_exit;
-		    }
-		    
-		    /*
-		     * TODO: From here the phorwarder needs to start the I/O transfer
-		     *   process. The following method is will block for io->niter RDMA
-		     *   transfers. Does this method (opt_handler) need to return immediately?
-		     *   What is the best way to run the I/O method? Create a new thread?
-		     *   I think there is no problem with the session being unresponsive
-		     *   until the I/O finishes.
-		     */
-		    if (dapl_xsp_do_io((xspSess*)sess) != 0) {
-			    xsp_err(0, "I/O processing failed");
-			    goto error_exit;
-		    }
-		    
-		    *ret_block = NULL;
+	{
+		PhotonIOInfo *io = xspd_proto_photon_parse_io_msg(block->data);
+		if(io == NULL)
+			goto error_exit;
+
+		/* XXX: AFAIK the I/O info is session specific, so no need for locks */
+		if (gen2_xsp_set_io((xspSess*)sess, io) != 0) {
+			xsp_err(0, "could not set photon I/O info");
+			goto error_exit;
 		}
+
+		/*
+		 * TODO: From here the phorwarder needs to start the I/O transfer
+		 *   process. The following method is will block for io->niter RDMA
+		 *   transfers. Does this method (opt_handler) need to return immediately?
+		 *   What is the best way to run the I/O method? Create a new thread?
+		 *   I think there is no problem with the session being unresponsive
+		 *   until the I/O finishes.
+		 */
+		if (gen2_xsp_do_io((xspSess*)sess) != 0) {
+			xsp_err(0, "I/O processing failed");
+			goto error_exit;
+		}
+
+		*ret_block = NULL;
 		break;
+	}
+
 	default:
 		break;
-		
 	}
-	
+
 	return 0;
 
- error_exit:
+error_exit:
 	*ret_block = NULL;
 	return -1;
-}
-
-static xspConn *xspd_proto_photon_connect(const char *hostname, xspSettings *settings) {
-	// we're not connecting with photon from here, yet
-
-	return NULL;
-}
-
-static xspListener *xspd_proto_photon_setup_listener(const char *listener_id, xspSettings *settings, int one_shot, listener_cb callback, void *arg) {
-	
-	return NULL;
 }
 
 PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg) {
@@ -284,7 +274,7 @@ PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg) {
     io->view.nints = *((int *)msg_ptr);
     io->view.integers = malloc(io->view.nints*sizeof(int));
     if(io->view.integers == NULL) {
-        xsp_err(0, "xspd_proto_photon_parse_io_msg: out of memory");
+        xspd_err(0, "xspd_proto_photon_parse_io_msg: out of memory");
         return NULL;
     }
     memcpy(io->view.integers, msg_ptr+sizeof(int), io->view.nints*sizeof(int));
