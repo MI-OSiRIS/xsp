@@ -96,6 +96,7 @@ typedef struct slab_record_t {
 } xspSlabRec;
 
 typedef struct slabs_info_t {
+	uint32_t seq;
         uint32_t length;
         uint32_t rec_count;
         xspSlabRec **entries;
