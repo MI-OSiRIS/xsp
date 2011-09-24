@@ -71,6 +71,7 @@ typedef struct slab_record_hdr_t {
 } xspSlabRec_HDR;
 
 typedef struct slabs_info_hdr_t {
+	uint32_t seq;
         uint32_t length;
         uint32_t rec_count;
 } xspSlabInfo_HDR;

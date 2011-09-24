@@ -561,6 +561,7 @@ static int xsp_parse_slab_info(const void *arg, int remainder, void **msg_body) 
 
         in = (xspSlabInfo_HDR *) buf;
 
+	new_info->seq = ntohl(in->seq);
         new_info->length = ntohl(in->length);
         new_info->rec_count = ntohl(in->rec_count);
 
@@ -636,6 +637,7 @@ static int xsp_writeout_slab_info(void *arg, char *buf, int remainder) {
 
         out = (xspSlabInfo_HDR *) buf;
 
+	out->seq = htonl(info->seq);
         out->length = htonl(info->length);
         out->rec_count = htonl(info->rec_count);
 
