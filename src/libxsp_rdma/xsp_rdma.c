@@ -27,7 +27,7 @@ static pid_t pid;
 static int __xsp_rdma_poll_cq(struct xfer_context *ctx, struct ibv_wc *ret_wc, int sleep);
 static int __xsp_rdma_post_recv(struct xfer_context *ctx);
 static int __xsp_rdma_send_msg(struct xfer_context *ctx, int poll_cq);
-static int __xsp_rdma_do_rdma(struct xsp_rdma_buf_handle_t *handle);
+static int __xsp_rdma_do_rdma(struct xsp_rdma_buf_handle_t **handles, int hcount, int opcode);
 
 static int __xsp_rdma_poll_cq(struct xfer_context *ctx, struct ibv_wc *ret_wc, int sleep)
 {
@@ -49,13 +49,13 @@ static int __xsp_rdma_poll_cq(struct xfer_context *ctx, struct ibv_wc *ret_wc, i
 	*/
 	
 	do {
-		if (sleep)
-			usleep(100);
 		ne = ibv_poll_cq(ctx->cq, 1, ret_wc);
 		if (ne < 0) {
 			fprintf(stderr, "Failed to poll completions from the CQ\n");
 			return -1;
 		}
+		if (sleep)
+			usleep(100);
 	} while (ne == 0);
 	
 	if (ret_wc->status != IBV_WC_SUCCESS) {
@@ -73,7 +73,7 @@ static int __xsp_rdma_post_recv(struct xfer_context *ctx)
         int rc;
 
 	memset(&wr, 0, sizeof(wr));
-
+	
         list.addr = (uintptr_t) ctx->recv_msg;
         list.length = sizeof(struct message);
         list.lkey = ctx->recv_mr->lkey;
@@ -93,31 +93,56 @@ static int __xsp_rdma_post_recv(struct xfer_context *ctx)
 	return 0;
 }
 
-static int __xsp_rdma_do_rdma(struct xsp_rdma_buf_handle_t *handle)
+static int __xsp_rdma_do_rdma(struct xsp_rdma_buf_handle_t **handles, int hcount, int opcode)
 {
-	struct xfer_context *ctx = handle->ctx;
+	struct xfer_context *ctx = handles[0]->ctx;
+	struct ibv_sge *sge;
+	struct ibv_send_wr *wr;
+	struct ibv_send_wr *curr_wr;
         struct ibv_send_wr *bad_wr;
+	int i;
+	int ret = 0;
 
-	ctx->list.addr = (uintptr_t) handle->buf;
-	ctx->list.length = handle->size;
-	ctx->list.lkey = handle->local_mr->lkey;
+	for (i=0; i < hcount; i++) {
+		curr_wr = malloc(sizeof(struct ibv_send_wr));
+		sge = malloc(sizeof(struct ibv_sge));
+		
+		sge->addr = (uintptr_t) handles[i]->buf;
+		sge->length = handles[i]->size;
+		sge->lkey = handles[i]->local_mr->lkey;
+		
+		curr_wr->wr.rdma.remote_addr = (uintptr_t) handles[i]->remote_mr->addr;
+		curr_wr->wr.rdma.rkey = handles[i]->remote_mr->rkey;
+		curr_wr->wr_id      = handles[i]->id;
+		curr_wr->sg_list    = sge;
+		curr_wr->num_sge    = 1;
+		curr_wr->opcode     = opcode;
+		curr_wr->send_flags = IBV_SEND_SIGNALED;
 
-        ctx->wr.wr.rdma.remote_addr = (uintptr_t) handle->remote_mr->addr;
-        ctx->wr.wr.rdma.rkey = handle->remote_mr->rkey;
-        ctx->wr.wr_id      = handle->id;
-	ctx->wr.sg_list    = &ctx->list;
-	ctx->wr.num_sge    = 1;
-	ctx->wr.opcode     = handle->opcode;
-        ctx->wr.send_flags = IBV_SEND_SIGNALED;
-	ctx->wr.next       = NULL;
-	
-        if (ibv_post_send(ctx->qp, &ctx->wr, &bad_wr)) {
+		if (i == 0)
+			wr = curr_wr;
+		
+		if (i == hcount-1)
+			curr_wr->next = NULL;
+		else
+			curr_wr = curr_wr->next;
+		
+		handles[i]->opcode = opcode;
+	}
+
+        if (ibv_post_send(ctx->qp, wr, &bad_wr)) {
                 fprintf(stderr, "%d:%s: ibv_post_send failed\n", pid, __func__);
 		perror("ibv_post_send");
-                return -1;
+		ret = -1;
         }
 
-	return 0;
+	// free the wr
+	for (curr_wr = wr; curr_wr != NULL; curr_wr = curr_wr->next) {
+		free(curr_wr->sg_list);
+		free(curr_wr);
+	}
+
+	return ret;
 }
 
 static int __xsp_rdma_send_msg(struct xfer_context *ctx, int poll_cq)
@@ -354,8 +379,8 @@ struct xfer_context *xsp_rdma_client_connect(struct xfer_data *data)
 		}
 
 		memset(&conn_param, 0, sizeof conn_param);
-		conn_param.responder_resources = 1;
-		conn_param.initiator_depth = 1;
+		conn_param.responder_resources = ctx->tx_depth;
+		conn_param.initiator_depth = ctx->tx_depth;
 		conn_param.retry_count = 5;
 		conn_param.private_data = NULL;
 		conn_param.private_data_len = 0;
@@ -449,8 +474,8 @@ struct xfer_context *xsp_rdma_server_connect(struct xfer_data *data)
                 }
 
                 memset(&conn_param, 0, sizeof conn_param);
-                conn_param.responder_resources = 1;
-                conn_param.initiator_depth = 1;
+                conn_param.responder_resources = ctx->tx_depth;
+                conn_param.initiator_depth = ctx->tx_depth;
 		conn_param.private_data = NULL;
 		conn_param.private_data_len = 0;
 
@@ -473,7 +498,7 @@ struct xfer_context *xsp_rdma_server_connect(struct xfer_data *data)
         } else {
 		// use an alternative to CMA here
 	}
-
+	
 	freeaddrinfo(res);
         return ctx;
 
@@ -595,25 +620,44 @@ int xsp_rdma_wait_done(struct xsp_rdma_buf_handle_t *handle)
         return 0;	
 }
 
-int xsp_rdma_post_os_get(struct xsp_rdma_buf_handle_t *handle)
+int xsp_rdma_post_os_get(struct xsp_rdma_buf_handle_t **handles, int hcount)
 {
-	handle->opcode = IBV_WR_RDMA_READ;
-	if (__xsp_rdma_do_rdma(handle) != 0)
+	if (hcount <= 0)
+		return -1;
+
+	if (__xsp_rdma_do_rdma(handles, hcount, IBV_WR_RDMA_READ) != 0)
                 return -1;
 
 	return 0;
 }
 
-int xsp_rdma_post_os_put(struct xsp_rdma_buf_handle_t *handle)
+int xsp_rdma_post_os_put(struct xsp_rdma_buf_handle_t **handles, int hcount)
 {
-	handle->opcode = IBV_WR_RDMA_WRITE;
-	if (__xsp_rdma_do_rdma(handle) != 0)
+	if (hcount <= 0)
+		return -1;
+
+	if (__xsp_rdma_do_rdma(handles, hcount, IBV_WR_RDMA_WRITE) != 0)
 		return -1;
 
 	// tell the other side we're done sending
 	// will complete after the RDMA_WRITE
-	xsp_rdma_send_done(handle);
+	xsp_rdma_send_done(handles[0]);
 	
+	return 0;
+}
+
+int xsp_rdma_wait_os_event(struct xfer_context *ctx, struct xsp_rdma_poll_info_t *info) {
+	struct ibv_wc wc;
+	
+	if (__xsp_rdma_poll_cq(ctx, &wc, 1))
+		return -1;
+
+	if (info) {
+		info->opcode = wc.opcode;
+		info->status = wc.status;
+		info->id = wc.wr_id;
+	}
+
 	return 0;
 }
 
