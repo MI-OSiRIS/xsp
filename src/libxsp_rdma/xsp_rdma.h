@@ -67,15 +67,23 @@ typedef struct xsp_rdma_buf_handle_t {
 	struct xfer_context             *ctx;
 } XSP_RDMA_buf_handle;
 
+typedef struct xsp_rdma_poll_info_t {
+	int                            opcode;
+	int                            status;
+	uint64_t                       id;
+} XSP_RDMA_poll_info;
+
+
 int xsp_rdma_init(struct xfer_data *data);
 int xsp_rdma_finalize(struct xfer_data *data);
 struct xfer_context *xsp_rdma_init_ctx(void *, struct xfer_data *);
 void xsp_rdma_destroy_ctx(struct xfer_context *ctx);
 struct xsp_rdma_buf_handle_t *xsp_rdma_alloc_handle();
 
-int xsp_rdma_post_os_put(struct xsp_rdma_buf_handle_t *handle);
-int xsp_rdma_post_os_get(struct xsp_rdma_buf_handle_t *handle);
+int xsp_rdma_post_os_put(struct xsp_rdma_buf_handle_t **handles, int hcount);
+int xsp_rdma_post_os_get(struct xsp_rdma_buf_handle_t **handles, int hcount);
 int xsp_rdma_wait_os(struct xsp_rdma_buf_handle_t *handle);
+int xsp_rdma_wait_os_event(struct xfer_context *ctx, struct xsp_rdma_poll_info_t *info);
 
 int xsp_rdma_wait_buffer(struct xsp_rdma_buf_handle_t *handle);
 int xsp_rdma_post_buffer(struct xsp_rdma_buf_handle_t *handle);
