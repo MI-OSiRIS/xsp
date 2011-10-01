@@ -45,6 +45,15 @@ oscars6_la_CFLAGS = $(AM_CFLAGS) -DOSCARS6 -DWITH_NONAMESPACES -DWITH_DOM
 INCLUDES += -I$(srcdir)/oscars -I$(top_srcdir)/libgsoap
 endif
 
+if ENABLE_OPENFLOW
+modules_LTLIBRARIES += openflow.la
+openflow_la_SOURCES = xsp_openflow_basic.c xsp_openflow_basic.h
+openflow_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+openflow_la_LIBADD = openflow/lib/libopenflow.a
+openflow_la_CFLAGS = $(AM_CFLAGS) -DWITH_NONAMESPACES -DWITH_DOM
+INCLUDES += -I$(srcdir)/openflow/include
+endif
+
 if HAVE_WEB100
 modules_LTLIBRARIES += tcp.la
 tcp_la_SOURCES = xsp_conn_tcp.c xsp_conn_tcp.h xsp_proto_tcp.c xsp_web100.c xsp_web100.h
@@ -64,6 +73,12 @@ auth_anon_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
 modules_LTLIBRARIES += auth_pass.la
 auth_pass_la_SOURCES = xsp_auth_pass.c xsp_auth_pass.h
 auth_pass_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+
+if HAVE_OPENSSL
+modules_LTLIBRARIES += auth_ssl.la
+auth_ssl_la_SOURCES = xsp_auth_ssl.c xsp_auth_ssl.h
+auth_ssl_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+endif
 
 modules_LTLIBRARIES += auth_pass_file.la
 auth_pass_file_la_SOURCES = xsp_auth_pass_file.c

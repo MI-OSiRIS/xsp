@@ -13,6 +13,10 @@ libdirs += libgsoap
 bindirs += src/libxsp_modules/oscars
 endif
 
+if ENABLE_OPENFLOW
+bindirs += src/libxsp_modules/openflow
+endif
+
 if ENABLE_CLIENT
 libdirs += libradix src/libxsp_client
 endif
