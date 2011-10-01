@@ -39,6 +39,10 @@
 
 #include "compat.h"
 
+#ifdef HAVE_OPENSSL
+#include <openssl/ssl.h>
+#endif
+
 /* Functions */
 int libxsp_init();
 void xsp_globus_init(void);
@@ -65,6 +69,11 @@ int xsp_globus_get_token( void *arg, void ** token, size_t * token_length);
 int xsp_globus_send_token( void *arg, void * token, size_t token_length);
 #endif
 
+#ifdef HAVE_OPENSSL
+static int password_cb(char *buf, int num, int rwflag, void *userdata);
+SSL_CTX *initialize_ctx(char *keyfile, char *password);
+#endif
+
 /* Local Variables */
 static pthread_once_t init_once_globus = PTHREAD_ONCE_INIT;
 
@@ -80,6 +89,14 @@ static int (*std_close)(int);
 static ssize_t (*std_send)(int, const void *, size_t, int);
 static ssize_t (*std_recv)(int, void *, size_t, int);
 static int (*std_shutdown)(int, int);
+
+#ifdef HAVE_OPENSSL
+static BIO *bio_err = 0;
+static int s_server_session_id_context = 1;
+static char *pass;
+static char *client_pem;
+static char *client_root_pem;
+#endif
 
 char *__print_nack_msg(xspMsg *msg) {
 	switch (msg->version) {
@@ -160,10 +177,20 @@ int __setup_ssh(libxspSess *sess) {
 }
 
 int __setup_ssl(libxspSess *sess) {
+#ifdef HAVE_OPENSSL
+	sess->ctx = initialize_ctx(client_pem, "password");
+	sess->ssl = SSL_new(sess->ctx);
+	return 0;
+#endif
 	return -1;
 }
 
 int libxsp_init() {
+#ifdef HAVE_OPENSSL
+	client_pem = getenv("CLIENT_PEM");
+	client_root_pem = getenv("CLIENT_ROOT");
+#endif
+
 	void *handle;
 	const char *error;
 	long int seed;
@@ -484,12 +511,10 @@ int xsp_sess_set_security(libxspSess *sess, xspSecInfo *sec, int type) {
 		break;
 	case XSP_SEC_SSL:
 		{
-#ifdef HAVE_SSL
+#ifdef HAVE_OPENSSL
 			d_printf("setting session security to XSP_SEC_SSL\n");
                         sess->security = XSP_SEC_SSL;
-			sess->sec_info = sec;
-			sess->sendfn = __xsp_send_default;
-			sess->recvfn = __xsp_recv_default;
+			sess->sec_info = NULL;
 #else
 			d_printf("SSL support was not found\n");
 			return -1;
@@ -683,13 +708,96 @@ int xsp_connect(libxspSess *sess) {
 				std_close(connfd);
 				return -1;
 			}
+
 		} else {
+#ifdef HAVE_OPENSSL
+			strlcpy(auth_type.name, "SSL", XSP_AUTH_NAME_LEN);
+			if (__xsp_send_one_block(sess, XSP_MSG_AUTH_TYPE, XSP_OPT_AUTH_TYP, 0, &auth_type) < 0) {
+				d_printf("xsp_connect(): error: authorization failed\n");
+				errno = ECONNREFUSED;
+				std_close(connfd);
+			}
+
+			// at this point, the client should expect the notice from server for SSL_accept
+			msg = xsp_get_msg(sess, 0);
+			if (!msg) {
+				d_printf("xsp_connect(): error: did not receive a AUTH response\n");
+				std_close(connfd);
+				errno = ECONNREFUSED;
+				return -1;
+			}
+
+			if (msg->type == XSP_MSG_SESS_NACK) {
+				fprintf(stderr, "xsp_connect(): could not connect to destination using XSP, error received: %s\n", (char *) msg->msg_body);
+				std_close(connfd);
+				errno = ECONNREFUSED;
+				return -1;
+			} else if (msg->type != XSP_MSG_SESS_ACK) {
+				d_printf("xsp_connect(): error: did not receive a session ACK\n");
+				std_close(connfd);
+				errno = ECONNREFUSED;
+				return -1;
+			}
+
+			if(sess->sbio == NULL) {
+				sess->sbio = BIO_new_socket(connfd, BIO_NOCLOSE);
+				SSL_set_bio(sess->ssl, sess->sbio, sess->sbio);
+			}
+
+			int ret = SSL_connect(sess->ssl);
+			if(ret <= 0) {
+				
+				switch(SSL_get_error(sess->ssl, ret)) {
+				case SSL_ERROR_NONE:
+					d_printf("SSL_ERROR_NONE\n");
+					break;
+				case SSL_ERROR_ZERO_RETURN:
+					d_printf("SSL_ERROR_ZERO_RETURN\n");
+					break;
+				case SSL_ERROR_WANT_READ:
+					d_printf("SSL_ERROR_WANT_READ\n");
+					break;
+				case SSL_ERROR_WANT_WRITE:
+					d_printf("SSL_ERROR_WANT_WRITE\n");
+					break;
+				case SSL_ERROR_WANT_CONNECT:
+					d_printf("SSL_ERROR_WANT_CONNECT\n");
+					break;
+				case SSL_ERROR_WANT_ACCEPT:
+					d_printf("SSL_ERROR_WANT_ACCEPT\n");
+					break;
+				case SSL_ERROR_WANT_X509_LOOKUP:
+					d_printf("SSL_ERROR_WANT_X509_LOOKUP\n");
+					break;
+				case SSL_ERROR_SYSCALL:
+					d_printf("SSL_ERROR_SYSCALL\n");
+					break;
+				case SSL_ERROR_SSL:
+					d_printf("SSL_ERROR_SSL\n");
+					break;
+				default:
+					d_printf("default\n");
+				}
+				char buf[256];
+				ERR_error_string(ERR_get_error(), buf);
+				d_printf("%s\n", buf);
+
+				xsp_free_msg(msg);
+				BIO_free(sess->sbio);
+				d_printf("xsp_connect(): error: SSL authorization failed\n");
+				errno = ECONNREFUSED;
+				std_close(connfd);
+				return -1;
+			}
+			xsp_free_msg(msg);
+#else
 			strlcpy(auth_type.name, "ANON", XSP_AUTH_NAME_LEN);
 			if (__xsp_send_one_block(sess, XSP_MSG_AUTH_TYPE, XSP_OPT_AUTH_TYP, 0, &auth_type) < 0) {
 				d_printf("xsp_connect(): error: authorization failed\n");
 				errno = ECONNREFUSED;
 				std_close(connfd);
 			}
+#endif
 		}
 #else
 		auth_info.type = 1;
@@ -1595,3 +1703,52 @@ ssize_t __xsp_send_default(libxspSess *sess, const void *buf, size_t len, int fl
 ssize_t __xsp_recv_default(libxspSess *sess, void *buf, size_t len, int flags) {
 	return recv(sess->sock, buf, len, flags);
 }
+
+#ifdef HAVE_OPENSSL
+SSL_CTX *initialize_ctx(char *keyfile, char *password){
+	SSL_METHOD *meth;
+	SSL_CTX *ctx;
+
+	if(!bio_err){
+		/* Global system initialization*/
+		SSL_library_init();
+		SSL_load_error_strings();
+
+		/* An error write context */
+  	   bio_err=BIO_new_fp(stderr,BIO_NOCLOSE);
+    }
+
+	/* Set up a SIGPIPE handler */
+	//signal(SIGPIPE,sigpipe_handle);
+
+	/* Create our context*/
+	meth=SSLv23_method();
+	ctx=SSL_CTX_new(meth);
+
+        /* Load our keys and certificates*/
+	if(!(SSL_CTX_use_certificate_chain_file(ctx, keyfile)))
+		printf("Can't read certificate file\n");
+
+	pass=password;
+	SSL_CTX_set_default_passwd_cb(ctx, password_cb);
+	if(!(SSL_CTX_use_PrivateKey_file(ctx, keyfile, SSL_FILETYPE_PEM)))
+		printf("Can't read key file\n");
+
+	/* Load the CAs we trust*/
+	if(!(SSL_CTX_load_verify_locations(ctx, client_root_pem, 0)))
+		printf("client can't read CA list\n");
+#if (OPENSSL_VERSION_NUMBER < 0x00905100L)
+	SSL_CTX_set_verify_depth(ctx,1);
+#endif
+
+	return ctx;
+}
+
+static int password_cb(char *buf, int num, int rwflag, void *userdata){
+	if(num<strlen(pass)+1)
+		return(0);
+
+	strcpy(buf,pass);
+	return(strlen(pass));
+}
+#endif
