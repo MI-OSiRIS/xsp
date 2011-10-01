@@ -1715,8 +1715,8 @@ SSL_CTX *initialize_ctx(char *keyfile, char *password){
 		SSL_load_error_strings();
 
 		/* An error write context */
-  	   bio_err=BIO_new_fp(stderr,BIO_NOCLOSE);
-    }
+  		bio_err=BIO_new_fp(stderr,BIO_NOCLOSE);
+        }
 
 	/* Set up a SIGPIPE handler */
 	//signal(SIGPIPE,sigpipe_handle);

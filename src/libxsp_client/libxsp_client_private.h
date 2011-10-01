@@ -13,6 +13,11 @@
 #define MAX_FD 256
 #endif
 
+#ifdef HAVE_OPENSSL
+#include <openssl/sha.h>
+#include <openssl/ssl.h>
+#endif
+
 
 /* Objects */
 typedef struct libxsp_sess_info_t {
@@ -53,6 +58,12 @@ typedef struct libxsp_sess_info_t {
 	LIBSSH2_SESSION *ssh_sess;
 	LIBSSH2_CHANNEL *ssh_chan;
 	LIBSSH2_AGENT *agent;
+#endif
+
+#ifdef HAVE_OPENSSL
+	SSL_CTX *ctx;
+	BIO *sbio;
+	SSL *ssl;
 #endif
 
 #ifdef HAVE_GLOBUS

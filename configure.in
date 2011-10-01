@@ -111,6 +111,13 @@ AC_ARG_ENABLE(dragon,
 
 AM_CONDITIONAL(ENABLE_DRAGON, test x$enable_dragon = xyes)
 
+AC_ARG_ENABLE(openflow,
+        AC_HELP_STRING([--enable-openflow], [enable openflow support [default=no]]),
+        [enable_openflow=$enableval],
+        [enable_openflow=no])
+
+AM_CONDITIONAL(ENABLE_OPENFLOW, test x$enable_openflow = xyes)
+
 #AC_ARG_ENABLE(udt-embed,
 #	AC_HELP_STRING([--enable-udt-embed], [compile UDT into the daemon instead of as a module [default=no]]),
 #	enable_udt_embed=yes,
@@ -380,7 +387,7 @@ fi
 AM_CONDITIONAL(HAVE_RDMA, test x$have_rdma = xyes)
 
 dnl Check for OpenSSL
-AC_ARG_ENABLE(openssl, AC_HELP_STRING([--disable-openssl], [disable OpenSSL support (default is autodetect)]),[enable_openssl=$enableval],[enable_openssl=try])
+AC_ARG_ENABLE(openssl, AC_HELP_STRING([--disable-openssl], [disable OpenSSL support (default is autodetect)]),[enable_openssl=$enableval],[enable_openssl=no])
 
 if test "$enable_openssl" != "no" ; then
 	AH_TEMPLATE(HAVE_OPENSSL, Whether or not OpenSSL is installed on the system)

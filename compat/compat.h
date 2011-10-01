@@ -86,7 +86,7 @@ typedef struct {
 void sha1_init(SHA1_CTX *ctx);
 void sha1_update(SHA1_CTX *ctx, const uchar data[], uint len);
 void sha1_final(SHA1_CTX *ctx, uchar hash[]);
-void SHA1(const uchar *buf, unsigned long int, uchar *hash);
+//void SHA1(const uchar *buf, unsigned long int, uchar *hash);
 
 #endif
 
