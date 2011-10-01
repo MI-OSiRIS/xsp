@@ -6,6 +6,10 @@
 #include "xsp-proto.h"
 #include "libxsp_proto.h"
 
+#ifdef HAVE_OPENSSL
+#include <openssl/ssl.h>
+#endif
+
 
 typedef struct xsp_credentials_t {
 	char *type;
@@ -14,6 +18,11 @@ typedef struct xsp_credentials_t {
 	const char *(*get_email) (struct xsp_credentials_t *credentials);
 	const char *(*get_institution) (struct xsp_credentials_t *credentials);
 	void (*free) (struct xsp_credentials_t *credentials);
+#ifdef HAVE_OPENSSL
+	SSL_CTX *ctx;
+	BIO *sbio;
+	SSL *ssl;
+#endif
 } xspCreds;
 
 /*
