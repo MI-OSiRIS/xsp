@@ -66,9 +66,11 @@ SOAP_FMAC1 struct soap_dom_attribute * SOAP_FMAC2 soap_in_xsd__anyAttribute(stru
 extern "C" {
 #endif
 
+#ifndef WITH_NOIDREF
 SOAP_FMAC1 void SOAP_FMAC2 soap_markelement(struct soap*, const void*, int);
 SOAP_FMAC1 int SOAP_FMAC2 soap_putelement(struct soap*, const void*, const char*, int, int);
 SOAP_FMAC1 void *SOAP_FMAC2 soap_getelement(struct soap*, int*);
+#endif
 
 #ifdef __cplusplus
 }
@@ -387,7 +389,7 @@ soap_out_xsd__anyAttribute(struct soap *soap, const char *tag, int id, const str
     { if (node->nstr && !(soap->mode & SOAP_DOM_ASIS) && strncmp(node->name, "xml", 3) && !strchr(node->name, ':'))
       { const char *p;
         p = soap_lookup_ns_prefix(soap, node->nstr);
-        if (!p && (p = soap_push_ns_prefix(soap, NULL, node->nstr, 1)) == NULL)
+	if (!p && !(p = soap_push_ns_prefix(soap, NULL, node->nstr, 1)))
           return soap->error;
         if (out_attribute(soap, p, node->name, node->data, node->wide, 1))
           return soap->error;
@@ -409,7 +411,20 @@ soap_in_xsd__anyType(struct soap *soap, const char *tag, struct soap_dom_element
 { register struct soap_attribute *tp;
   register struct soap_dom_attribute **att;
   if (soap_peek_element(soap))
-    return NULL;
+  { if (soap->error != SOAP_NO_TAG)
+      return NULL;
+    if (!node)
+    { if (!(node = (struct soap_dom_element*)soap_malloc(soap, sizeof(struct soap_dom_element))))
+      { soap->error = SOAP_EOM;
+        return NULL;
+      }
+    }
+    soap_default_xsd__anyType(soap, node);
+    if (!(node->data = soap_string_in(soap, 1, -1, -1)) || !*node->data)
+      return NULL;
+    soap->error = SOAP_OK;
+    return node;
+  }
   if (!node)
   { if (!(node = (struct soap_dom_element*)soap_malloc(soap, sizeof(struct soap_dom_element))))
     { soap->error = SOAP_EOM;
