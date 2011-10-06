@@ -654,8 +654,6 @@ int xsp_connect(libxspSess *sess) {
 			break;
 		}
 		
-
-#ifndef HAVE_GLOBUS
 		if (getenv("XSP_USERNAME") && getenv("XSP_PASSWORD")) {
 			unsigned char hash[SHA_DIGEST_LENGTH];
 			strlcpy(auth_type.name, "PASS", XSP_AUTH_NAME_LEN);
@@ -709,8 +707,9 @@ int xsp_connect(libxspSess *sess) {
 				return -1;
 			}
 
-		} else {
+		} 
 #ifdef HAVE_OPENSSL
+		else if (sess->security == XSP_SEC_SSL) {
 			strlcpy(auth_type.name, "SSL", XSP_AUTH_NAME_LEN);
 			if (__xsp_send_one_block(sess, XSP_MSG_AUTH_TYPE, XSP_OPT_AUTH_TYP, 0, &auth_type) < 0) {
 				d_printf("xsp_connect(): error: authorization failed\n");
@@ -778,10 +777,11 @@ int xsp_connect(libxspSess *sess) {
 				default:
 					d_printf("default\n");
 				}
+
 				char buf[256];
 				ERR_error_string(ERR_get_error(), buf);
 				d_printf("%s\n", buf);
-
+				
 				xsp_free_msg(msg);
 				BIO_free(sess->sbio);
 				d_printf("xsp_connect(): error: SSL authorization failed\n");
@@ -790,16 +790,17 @@ int xsp_connect(libxspSess *sess) {
 				return -1;
 			}
 			xsp_free_msg(msg);
-#else
+		}
+#endif
+		else {
 			strlcpy(auth_type.name, "ANON", XSP_AUTH_NAME_LEN);
 			if (__xsp_send_one_block(sess, XSP_MSG_AUTH_TYPE, XSP_OPT_AUTH_TYP, 0, &auth_type) < 0) {
 				d_printf("xsp_connect(): error: authorization failed\n");
 				errno = ECONNREFUSED;
 				std_close(connfd);
 			}
-#endif
 		}
-#else
+#if 0
 		auth_info.type = 1;
 		if (__xsp_send_one_block(sess, XSP_MSG_AUTHORIZATION_START, XSP_OPT_AUTH_INF, 0, &auth_info) < 0) {
 			d_printf("Error: authorization failed\n");

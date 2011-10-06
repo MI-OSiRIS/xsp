@@ -1504,6 +1504,20 @@ soap_wsse_add_Timestamp(struct soap *soap, const char *id, time_t lifetime)
   security->wsu__Timestamp->wsu__Id = soap_strdup(soap, id);
   security->wsu__Timestamp->Created = created;
   security->wsu__Timestamp->Expires = expired;
+
+  struct tm *time_s;
+  char temp[25];
+  time_t new_t = now;
+
+  time_s = gmtime(&new_t);
+  strftime(temp, 25, "%FT%H:%M:%S.000Z", time_s);
+  security->wsu__Timestamp->Created = strdup(temp);
+  
+  new_t += lifetime;
+  time_s = gmtime(&new_t);
+  strftime(temp, 25, "%FT%H:%M:%S.000Z", time_s);
+  security->wsu__Timestamp->Expires = strdup(temp);
+
   return SOAP_OK;
 }
 
