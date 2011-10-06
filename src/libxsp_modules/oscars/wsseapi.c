@@ -1504,20 +1504,6 @@ soap_wsse_add_Timestamp(struct soap *soap, const char *id, time_t lifetime)
   security->wsu__Timestamp->wsu__Id = soap_strdup(soap, id);
   security->wsu__Timestamp->Created = created;
   security->wsu__Timestamp->Expires = expired;
-
-  struct tm *time_s;
-  char temp[25];
-  time_t new_t = now;
-
-  time_s = gmtime(&new_t);
-  strftime(temp, 25, "%FT%H:%M:%S.000Z", time_s);
-  security->wsu__Timestamp->Created = strdup(temp);
-  
-  new_t += lifetime;
-  time_s = gmtime(&new_t);
-  strftime(temp, 25, "%FT%H:%M:%S.000Z", time_s);
-  security->wsu__Timestamp->Expires = strdup(temp);
-
   return SOAP_OK;
 }
 
@@ -1894,7 +1880,7 @@ soap_wsse_get_BinarySecurityToken(struct soap *soap, const char *id, char **valu
 X509*
 soap_wsse_get_BinarySecurityTokenX509(struct soap *soap, const char *id)
 { X509 *cert = NULL;
-  char *valueType;
+  char *valueType = NULL;
 #if (OPENSSL_VERSION_NUMBER >= 0x0090800fL)
   const unsigned char *data;
 #else
@@ -3075,7 +3061,7 @@ soap_wsse_add_EncryptedKey_DataReferenceURI(struct soap *soap, const char *URI)
   if (!(ref->__union_ReferenceList = (struct __xenc__union_ReferenceList*)soap_malloc(soap, sizeof(struct __xenc__union_ReferenceList))))
     return soap->error = SOAP_EOM;
   soap_default___xenc__union_ReferenceList(soap, ref->__union_ReferenceList);
-  if (!(ref->__union_ReferenceList->DataReference = soap_malloc(soap, sizeof(struct xenc__ReferenceType))))
+  if (!(ref->__union_ReferenceList->DataReference = (struct xenc__ReferenceType*)soap_malloc(soap, sizeof(struct xenc__ReferenceType))))
     return soap->error = SOAP_EOM;
   soap_default_xenc__ReferenceType(soap, ref->__union_ReferenceList->DataReference);
   ref->__union_ReferenceList->DataReference->URI = soap_strdup(soap, URI);
@@ -3103,7 +3089,7 @@ soap_wsse_add_DataReferenceURI(struct soap *soap, const char *URI)
   if (!(ref->__union_ReferenceList = (struct __xenc__union_ReferenceList*)soap_malloc(soap, sizeof(struct __xenc__union_ReferenceList))))
     return soap->error = SOAP_EOM;
   soap_default___xenc__union_ReferenceList(soap, ref->__union_ReferenceList);
-  if (!(ref->__union_ReferenceList->DataReference = soap_malloc(soap, sizeof(struct xenc__ReferenceType))))
+  if (!(ref->__union_ReferenceList->DataReference = (struct xenc__ReferenceType*)soap_malloc(soap, sizeof(struct xenc__ReferenceType))))
     return soap->error = SOAP_EOM;
   soap_default_xenc__ReferenceType(soap, ref->__union_ReferenceList->DataReference);
   ref->__union_ReferenceList->DataReference->URI = soap_strdup(soap, URI);
@@ -4010,7 +3996,7 @@ soap_wsse_decrypt_begin(struct soap *soap, const unsigned char *key)
     { /* retrieve key from token handler callback */
       DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Getting shared secret key %s through security_token_handler callback\n", info.KeyName));
       if (info.KeyName)
-        key = data->security_token_handler(soap, SOAP_MEC_DEC_DES_CBC, info.KeyName, &keylen);
+        key = (const unsigned char*)data->security_token_handler(soap, SOAP_MEC_DEC_DES_CBC, info.KeyName, &keylen);
     }
   }
   if (soap_element_begin_in(soap, "xenc:CipherData", 0, NULL)

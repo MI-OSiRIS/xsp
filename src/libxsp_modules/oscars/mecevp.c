@@ -38,6 +38,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 Author contact information:
 engelen@genivia.com / engelen@acm.org
+
+This program is released under the GPL with the additional exemption that
+compiling, linking, and/or using OpenSSL is allowed.
 --------------------------------------------------------------------------------
 A commercial use license is available from Genivia, Inc., contact@genivia.com
 --------------------------------------------------------------------------------
@@ -277,13 +280,17 @@ soap_mec_init(struct soap *soap, struct soap_mec_data *data, int alg, SOAP_MEC_K
   { case SOAP_MEC_ENV_ENC_DES_CBC:
       ok = EVP_CIPHER_CTX_rand_key(data->ctx, data->ekey);
       /* generate ephemeral secret key */
+#if (OPENSSL_VERSION_NUMBER >= 0x01000000L)
+      *keylen = EVP_PKEY_encrypt_old(key, data->ekey, EVP_CIPHER_CTX_key_length(data->ctx), pkey);
+#else
       *keylen = EVP_PKEY_encrypt(key, data->ekey, EVP_CIPHER_CTX_key_length(data->ctx), pkey);
+#endif
       key = data->ekey;
       /* fall through to next arm */
     case SOAP_MEC_ENC_DES_CBC:
       data->bufidx = 0;
       data->buflen = 1024; /* > iv in base64 must fit */
-      data->buf = SOAP_MALLOC(soap, data->buflen);
+      data->buf = (char*)SOAP_MALLOC(soap, data->buflen);
       data->key = key;
       break;
     case SOAP_MEC_ENV_DEC_DES_CBC:
@@ -292,7 +299,7 @@ soap_mec_init(struct soap *soap, struct soap_mec_data *data, int alg, SOAP_MEC_K
       data->key = key;
       data->keylen = *keylen;
       data->buflen = 2 * sizeof(soap->buf) + EVP_CIPHER_block_size(data->type);
-      data->buf = SOAP_MALLOC(soap, data->buflen);
+      data->buf = (char*)SOAP_MALLOC(soap, data->buflen);
       break;
     default:
       return soap_set_receiver_error(soap, "Unsupported encryption algorithm", NULL, SOAP_SSL_ERROR);
@@ -590,7 +597,7 @@ soap_mec_upd_enc(struct soap *soap, struct soap_mec_data *data, const char **s, 
   if (m > data->buflen)
   { char *t = data->buf;
     data->buflen = m; /* + slack? */
-    data->buf = SOAP_MALLOC(soap, data->buflen);
+    data->buf = (char*)SOAP_MALLOC(soap, data->buflen);
     if (t)
     { memcpy(data->buf, t, data->bufidx); /* copy in-use part */
       SOAP_FREE(soap, t);
@@ -648,7 +655,7 @@ soap_mec_upd_dec(struct soap *soap, struct soap_mec_data *data, const char **s, 
   const char *t;
   size_t k, l, m;
   int len;
-  int state;
+  enum SOAP_MEC_STATE state;
   int ok = 1;
   if (final && data->state == SOAP_MEC_STATE_DECRYPT)
     data->state = SOAP_MEC_STATE_FINAL;
@@ -662,7 +669,7 @@ soap_mec_upd_dec(struct soap *soap, struct soap_mec_data *data, const char **s, 
         data->buflen += sizeof(soap->buf);
       while (data->buflen < data->bufidx + *n);
       DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Enlarging buffer n=%lu\n", (unsigned long)data->buflen));
-      data->buf = SOAP_MALLOC(soap, data->buflen);
+      data->buf = (char*)SOAP_MALLOC(soap, data->buflen);
       if (t)
       { memcpy(data->buf, t, data->bufidx); /* copy old */
         SOAP_FREE(soap, t);
@@ -695,7 +702,7 @@ soap_mec_upd_dec(struct soap *soap, struct soap_mec_data *data, const char **s, 
       data->buflen += sizeof(soap->buf);
     while (data->buflen < data->bufidx + m + k);
     DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Enlarging buffer n=%lu\n", (unsigned long)data->buflen));
-    data->buf = SOAP_MALLOC(soap, data->buflen);
+    data->buf = (char*)SOAP_MALLOC(soap, data->buflen);
     if (t)
     { memcpy(data->buf, t, data->bufidx); /* copy old part */
       SOAP_FREE(soap, t);
@@ -731,7 +738,7 @@ soap_mec_upd_dec(struct soap *soap, struct soap_mec_data *data, const char **s, 
     if (data->restlen < l)
     { if (data->rest)
         SOAP_FREE(soap, data->rest);
-      data->rest = SOAP_MALLOC(soap, l);
+      data->rest = (char*)SOAP_MALLOC(soap, l);
     }
     data->restlen = l;
     memcpy(data->rest, r, l);
@@ -1053,7 +1060,7 @@ soap_mec_filtersend(struct soap *soap, const char **s, size_t *n)
 */
 static int
 soap_mec_filterrecv(struct soap *soap, char *buf, size_t *len, size_t maxlen)
-{ struct soap_mec_data *data = soap->data[1];
+{ struct soap_mec_data *data = (struct soap_mec_data*)soap->data[1];
   const char *s = buf;
   if (!data || data->alg == SOAP_MEC_NONE || (data->alg & SOAP_MEC_ENC))
      return SOAP_OK;

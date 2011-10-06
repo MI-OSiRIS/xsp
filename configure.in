@@ -387,7 +387,7 @@ fi
 AM_CONDITIONAL(HAVE_RDMA, test x$have_rdma = xyes)
 
 dnl Check for OpenSSL
-AC_ARG_ENABLE(openssl, AC_HELP_STRING([--disable-openssl], [disable OpenSSL support (default is autodetect)]),[enable_openssl=$enableval],[enable_openssl=no])
+AC_ARG_ENABLE(openssl, AC_HELP_STRING([--disable-openssl], [disable OpenSSL support (default is autodetect)]),[enable_openssl=$enableval],[enable_openssl=try])
 
 if test "$enable_openssl" != "no" ; then
 	AH_TEMPLATE(HAVE_OPENSSL, Whether or not OpenSSL is installed on the system)
