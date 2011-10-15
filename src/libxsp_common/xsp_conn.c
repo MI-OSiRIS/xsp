@@ -342,7 +342,7 @@ xspMsg *__xsp_conn_get_msg_v1(xspConn *conn, unsigned int flags) {
 		bhdr_type = ntohs(bhdr->type);
 		bhdr_sport = ntohs(bhdr->sport);
 		bhdr_len = ntohs(bhdr->length);
-		
+
 		d_printf("block hdr type: %d, len: %d\n", bhdr_type, bhdr_len);
 		
 		// figure out the length of the block

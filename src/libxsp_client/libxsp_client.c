@@ -460,12 +460,12 @@ int __xsp_addchild(xspHop *curr_node, char *parent, xspHop *new_child) {
 
 xspNetPath *xsp_net_path(char *type, int action) {
 	xspNetPath *new = xsp_alloc_net_path();
-	
-	if (new) {
-		memcpy(new->type, type, XSP_NET_PATH_LEN);
+	xspNetPathRule *rule = xsp_alloc_net_path_rule();
+
+	if (new && rule) {
 		new->action = action;
-		new->rule_count = 0;
-		new->rules = NULL;
+		memcpy(rule->type, type, XSP_NET_PATH_LEN);
+		xsp_net_path_add_rule(new, rule);
 	}
 
 	return new;

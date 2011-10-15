@@ -18,11 +18,25 @@ xspNetPath *xsp_alloc_net_path() {
         return NULL;
 }
 
+xspNetPathRule *xsp_alloc_net_path_rule() {
+	xspNetPathRule *new_rule;
+	
+	new_rule = malloc(sizeof(xspNetPathRule));
+	if (!new_rule)
+		goto error_exit;
+	
+	memset(new_rule, 0, sizeof(xspNetPathRule));
+	
+	return new_rule;
+
+ error_exit:
+	return NULL;
+}
+
 xspNetPath *xsp_net_path_new(char *type, int action) {
 	xspNetPath *new_path = xsp_alloc_net_path();
 	
 	if (new_path) {
-		strncpy(new_path->type, type, XSP_NET_PATH_LEN);
 		new_path->action = action;
 		new_path->rules = NULL;
 		new_path->rule_count = 0;

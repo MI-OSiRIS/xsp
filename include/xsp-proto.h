@@ -82,6 +82,7 @@ typedef struct xsp_v1_option_hdr_t {
 	uint16_t          type;
 	uint16_t          sport;
 	uint16_t          length;
+	uint16_t          reserved;
 } xspv1BlockHdr;
 	
 	

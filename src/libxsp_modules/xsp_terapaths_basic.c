@@ -79,7 +79,10 @@ int xsp_terapaths_init() {
 }
 
 
-static int xsp_terapaths_allocate_path(const xspSettings *settings, xspPath **ret_path, char **ret_error_msg) {
+static int xsp_terapaths_allocate_path(const xspNetPath *net_path,
+				       const xspSettings *settings,
+				       xspPath **ret_path,
+				       char **ret_error_msg) {
 	xspPath *path;
 	xspTERAPATHSPath *pi;
 	char *tps_server;

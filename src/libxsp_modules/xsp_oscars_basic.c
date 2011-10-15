@@ -15,11 +15,13 @@
 
 #include "xsp_oscars_basic.h"
 
+#include "xsp_tpool.h"
 #include "xsp_modules.h"
 #include "xsp_conn.h"
 #include "xsp_logger.h"
 #include "xsp_session.h"
-#include "xsp_path_handler.h"
+#include "xsp_pathrule.h"
+#include "xsp_pathrule_handler.h"
 #include "hashtable.h"
 #include "xsp_config.h"
 
@@ -32,51 +34,52 @@
 #endif
 
 typedef struct xsp_oscars_timeout_args {
-	xspPath *path;
+	xspPathRule *rule;
 	int tag;
 	int timeout;
 } xspOSCARSTimeoutArgs;
 
-int xsp_oscars_shared_init();
-static int xsp_oscars_shared_allocate_path(const xspSettings *settings, xspPath **ret_path, char **ret_error_msg);
-static char *xsp_oscars_generate_path_id(const xspSettings *settings, char **ret_error_msg);
-static int xsp_oscars_shared_new_channel(xspPath *path, xspNetPathRule *rule, xspChannel **channel, char **ret_error_msg);
-static int xsp_oscars_shared_close_channel(xspPath *path, xspChannel *channel);
-static int xsp_oscars_shared_resize_channel(xspPath *path, xspChannel *channel, uint32_t new_size, char **ret_error_msg);
-static void xsp_oscars_shared_free_path(xspPath *path);
+int xsp_oscars_init();
+static int xsp_oscars_allocate_pathrule_handler(const xspNetPathRule *rule, const xspSettings *settings,
+						xspPathRule **ret_rule, char **ret_error_msg);
+static char *xsp_oscars_generate_pathrule_id(const xspNetPathRule *rule, const xspSettings *settings, char **ret_error_msg);
+static int xsp_oscars_apply_rule(xspPathRule *rule, int action, char **ret_error_msg);
+static void xsp_oscars_free_rule(xspPathRule *rule);
 
-static int __xsp_oscars_shared_new_channel(xspPath *path, uint32_t size, xspChannel **channel, char **ret_error_msg);
-static int __xsp_oscars_shared_resize_channel(xspPath *path, xspChannel *channel, uint32_t new_size, char **ret_error_msg);
-static int __xsp_oscars_shared_close_channel(xspPath *path, xspChannel *channel);
+static int __xsp_oscars_create_rule(xspPathRule *rule, char **ret_error_msg);
+static int __xsp_oscars_delete_rule(xspPathRule *rule, char **ret_error_msg);
+static int __xsp_oscars_modify_rule(xspPathRule *rule, char **ret_error_msg);
 
 static xspOSCARSPath *xsp_alloc_oscars_path();
 static void xsp_free_oscars_path(xspOSCARSPath *pi);
-static void xsp_oscars_reset_path_info();
+static void xsp_oscars_reset_rule_info();
 
 static xspOSCARSTimeoutArgs *xsp_alloc_oscars_timeout_args();
-static void xsp_timeout_handler(void *arg);
+static void *xsp_timeout_handler(void *arg);
 
-xspModule xsp_oscars_shared_module = {
+xspModule xsp_oscars_module = {
 	.desc = "OSCARS Module",
 	.dependencies = "",
-	.init = xsp_oscars_shared_init
+	.init = xsp_oscars_init
 };
 
-xspPathHandler xsp_oscars_shared_path_handler = {
+xspPathRuleHandler xsp_oscars_pathrule_handler = {
 	.name = "OSCARS",
-	.allocate = xsp_oscars_shared_allocate_path,
-	.get_path_id = xsp_oscars_generate_path_id,
+	.allocate = xsp_oscars_allocate_pathrule_handler,
+	.get_pathrule_id = xsp_oscars_generate_pathrule_id,
 };
 
 xspModule *module_info() {
-	return &xsp_oscars_shared_module;
+	return &xsp_oscars_module;
 }
 
-int xsp_oscars_shared_init() {
-	return xsp_add_path_handler(&xsp_oscars_shared_path_handler);
+int xsp_oscars_init() {
+	return xsp_add_pathrule_handler(&xsp_oscars_pathrule_handler);
 }
 
-static char *xsp_oscars_generate_path_id(const xspSettings *settings, char **ret_error_msg) {
+static char *xsp_oscars_generate_pathrule_id(const xspNetPathRule *rule,
+					     const xspSettings *settings,
+					     char **ret_error_msg) {
 	char *oscars_server;
 	char *oscars_src_id;
 	char *oscars_dst_id;
@@ -121,11 +124,9 @@ static char *xsp_oscars_generate_path_id(const xspSettings *settings, char **ret
 	}
 
 	if (xsp_settings_get_2(settings, "oscars", "path_id", &path_id) != 0) {
-		if (ret_error_msg) {
-			if (asprintf(&path_id, "%s->%s@%s:%s", oscars_src_id,
-				     oscars_dst_id, oscars_server, oscars_vlan_id) <= 0) {
-				goto error_exit;
-			}
+		if (asprintf(&path_id, "%s->%s@%s:%s", oscars_src_id,
+			     oscars_dst_id, oscars_server, oscars_vlan_id) <= 0) {
+			goto error_exit;
 		}
 	}
 
@@ -136,8 +137,11 @@ error_exit:
 	return NULL;
 }
 
-static int xsp_oscars_shared_allocate_path(const xspSettings *settings, xspPath **ret_path, char **ret_error_msg) {
-	xspPath *path;
+static int xsp_oscars_allocate_pathrule_handler(const xspNetPathRule *net_rule,
+						const xspSettings *settings,
+						xspPathRule **ret_rule,
+						char **ret_error_msg) {
+	xspPathRule *rule;
 	xspOSCARSPath *pi;
 	char *oscars_server;
 	char *oscars_src_id;
@@ -157,7 +161,6 @@ static int xsp_oscars_shared_allocate_path(const xspSettings *settings, xspPath 
 	char *wsse_keypass;
 	char *wsse_certfile;
 	char *mon_server;
-	
 	
 	if (xsp_settings_get_2(settings, "oscars", "server", &oscars_server) != 0) {
 		xsp_err(0, "No OSCARS server specified");
@@ -246,8 +249,8 @@ static int xsp_oscars_shared_allocate_path(const xspSettings *settings, xspPath 
 		oscars_dst_tagged = 1;
 	}
 
-	path = xsp_alloc_path();
-	if (!path)
+	rule = xsp_alloc_pathrule();
+	if (!rule)
 		goto error_exit;
 
 	pi = xsp_alloc_oscars_path();
@@ -276,32 +279,44 @@ static int xsp_oscars_shared_allocate_path(const xspSettings *settings, xspPath 
 	pi->intercircuit_pause_time = oscars_intercircuit_pause_time;
 	pi->shutdown_time = 0;
 	
-	path->path_private = pi;
-	path->new_channel = xsp_oscars_shared_new_channel;
-	path->resize_channel = xsp_oscars_shared_resize_channel;
-	path->close_channel = xsp_oscars_shared_close_channel;
-	path->free = xsp_oscars_shared_free_path;
+	rule->private = pi;
+	rule->apply = xsp_oscars_apply_rule;
+	rule->free = xsp_oscars_free_rule;
 
-	*ret_path = path;
+	*ret_rule = rule;
 
 	return 0;
 
  error_exit_path:
-	xsp_free_path(path);
+	xsp_free_pathrule(rule);
 	*ret_error_msg = strdup("path allocate configuration error");
  error_exit:
 	return -1;
 }
 
-static int xsp_oscars_shared_new_channel(xspPath *path, xspNetPathRule *rule, xspChannel **channel, char **ret_error_msg) {
+static int xsp_oscars_apply_rule(xspPathRule *rule, int action, char **ret_error_msg) {
 	int retval;
 	char *error_msg = NULL;
 
-	pthread_mutex_lock(&(path->lock));
+	pthread_mutex_lock(&(rule->lock));
 	{
-		retval = __xsp_oscars_shared_new_channel(path, rule->bandwidth, channel, &error_msg);
+		switch (action) {
+		case XSP_NET_PATH_CREATE:
+			retval = __xsp_oscars_create_rule(rule, &error_msg);
+			break;
+		case XSP_NET_PATH_DELETE:
+			retval =  __xsp_oscars_delete_rule(rule, &error_msg);
+			break;
+		case XSP_NET_PATH_MODIFY:
+			retval = __xsp_oscars_modify_rule(rule, &error_msg);
+			break;
+		default:
+			xsp_err(0, "xsp_oscars_apply_rule(): unsupported action: %d", action);
+			retval = -1;
+			break;
+		}
 	}
-	pthread_mutex_unlock(&(path->lock));
+	pthread_mutex_unlock(&(rule->lock));
 
 	if (error_msg)
 		*ret_error_msg = error_msg;
@@ -309,66 +324,29 @@ static int xsp_oscars_shared_new_channel(xspPath *path, xspNetPathRule *rule, xs
 	return retval;
 }
 
-static int xsp_oscars_shared_close_channel(xspPath *path, xspChannel *channel) {
-	int retval;
-
-	pthread_mutex_lock(&(path->lock));
-	{
-		retval = __xsp_oscars_shared_close_channel(path, channel);
-	}
-	pthread_mutex_unlock(&(path->lock));
-
-	return retval;
-}
-
-static int xsp_oscars_shared_resize_channel(xspPath *path, xspChannel *channel, uint32_t new_size, char **ret_error_msg) {
-	int retval;
-	char *error_msg = NULL;
-
-	pthread_mutex_lock(&(path->lock));
-	{
-		retval = __xsp_oscars_shared_resize_channel(path, channel, new_size, &error_msg);
-	}
-	pthread_mutex_unlock(&(path->lock));
-
-	if (error_msg)
-		*ret_error_msg = error_msg;
-
-	return retval;
-}
-
-static int __xsp_oscars_shared_new_channel(xspPath *path, uint32_t size, xspChannel **channel, char **ret_error_msg) {
+static int __xsp_oscars_create_rule(xspPathRule *rule, char **ret_error_msg) {
 	char *reservation_id;
-	xspOSCARSPath *pi = path->path_private;
-	xspChannel *new_channel;
-	uint32_t new_bandwidth = size;
+	xspOSCARSPath *pi = rule->private;
+	uint32_t new_bandwidth = pi->bandwidth;
 	char *error_msg;
 	void *response;
 	char *status;
 	int active = 0;
 
-	path->tag++;
+	rule->tag++;
 	OSCARS_resRequest create_req;
 	OSCARS_pathInfo path_info;
 	OSCARS_L2Info l2_info;
 	OSCARS_vlanTag l2_stag;
-pthread_cond_signal(&(path->timeout_cond));
+
+	pthread_cond_signal(&(rule->timeout_cond));
 
 	if (xsp_start_soap_ssl(&(pi->osc), SOAP_SSL_NO_AUTHENTICATION) != 0) {
                 xsp_err(0, "couldn't start SOAP context");
                 goto error_exit;
         }
 	
-	if (pi->bw > 0)
-		new_bandwidth = pi->bw;
-
-	xsp_info(10, "%s: allocating new channel of size: %d", path->description, new_bandwidth);
-
-	new_channel = xsp_alloc_channel();
-	if (!new_channel) {
-		xsp_err(0, "%s: couldn't allocate channel object", path->description);
-		goto error_exit;
-	}
+	xsp_info(10, "%s: applying new rule of size: %d", rule->description, new_bandwidth);
 	
 	if (pi->intercircuit_pause_time > 0) {
 		time_t curr_time;
@@ -376,14 +354,14 @@ pthread_cond_signal(&(path->timeout_cond));
 		time(&curr_time);
 		
 		if (curr_time < (pi->shutdown_time + pi->intercircuit_pause_time)) {
-			xsp_info(5, "%s: sleeping for %d seconds waiting for the circuit to become available",
-				  path->description, ((pi->shutdown_time + pi->intercircuit_pause_time) - curr_time));
+			xsp_info(5, "%s: sleeping for %lu seconds waiting for the circuit to become available",
+				  rule->description, ((pi->shutdown_time + pi->intercircuit_pause_time) - curr_time));
 			sleep((pi->shutdown_time + pi->intercircuit_pause_time) - curr_time);
 		}
 	}
 	
 	while (pi->status == OSCARS_STARTING) {
-		pthread_cond_wait(&(pi->setup_cond), &(path->lock));
+		pthread_cond_wait(&(pi->setup_cond), &(rule->lock));
 	}
 
 	if (pi->status == OSCARS_DOWN) {
@@ -400,7 +378,7 @@ pthread_cond_signal(&(path->timeout_cond));
 		stime += pi->clock_offset;
 		etime = stime + pi->duration;
 		
-		xsp_info(0, "%s: the OSCARS path is down, allocating a new one", path->description);
+		xsp_info(0, "%s: the OSCARS path is down, allocating a new one", rule->description);
 		
 		l2_info.src_endpoint = pi->src;
 		l2_info.dst_endpoint = pi->dst;
@@ -438,7 +416,7 @@ pthread_cond_signal(&(path->timeout_cond));
 			//xsp_event("oscars.circuit.reserve.failure", path,
 			//	   "SRC_ID=\"%s\" DST_ID=\"%s\" IDC=\"%s\" VLAN=%d SIZE=%lu ERROR_MSG=\"%s\"",
 			//	   pi->src, pi->dst, pi->osc.soap_endpoint, pi->vlan_id, size, error_msg);
-			xsp_err(0, "%s: couldn't reserve OSCARS path: %s", path->description, error_msg);
+			xsp_err(0, "%s: couldn't reserve OSCARS path: %s", rule->description, error_msg);
 			*ret_error_msg = error_msg;
 			goto error_exit_channel;
 		}
@@ -456,7 +434,7 @@ pthread_cond_signal(&(path->timeout_cond));
 				//xsp_event("oscars.circuit.create.failure", path,
 				//	   "SRC_ID=\"%s\" DST_ID=\"%s\" IDC=\"%s\" VLAN=%d SIZE=%lu ERROR_MSG=\"%s\"",
 				//	   pi->src, pi->dst, pi->osc.soap_endpoint, pi->vlan_id, size, error_msg);
-				xsp_err(0, "%s: couldn't create OSCARS path: %s", path->description, error_msg);
+				xsp_err(0, "%s: couldn't create OSCARS path: %s", rule->description, error_msg);
 				*ret_error_msg = error_msg;
 				goto error_exit_reservation;
 			}
@@ -475,7 +453,7 @@ pthread_cond_signal(&(path->timeout_cond));
 				//xsp_event("oscars.circuit.create.failure", path,
 				//	   "SRC_ID=\"%s\" DST_ID=\"%s\" IDC=\"%s\" VLAN=%d SIZE=%lu ERROR_MSG=\"%s\"",
 				//	   pi->src, pi->dst, pi->osc.soap_endpoint, pi->vlan_id, size, error_msg);
-				xsp_err(0, "%s: couldn't create OSCARS path: %s", path->description, error_msg);
+				xsp_err(0, "%s: couldn't create OSCARS path: %s", rule->description, error_msg);
 				*ret_error_msg = error_msg;
 				goto error_exit_reservation;
 			}
@@ -492,7 +470,7 @@ pthread_cond_signal(&(path->timeout_cond));
 		sleep(pi->sleep_time);
 		
 		xsp_info(0, "%s: allocated new path of size %d Mbit/s(Start Time: %lu End Time: %lu). Id: %s",
-			  path->description, new_bandwidth, (unsigned long) stime, (unsigned long) etime,
+			  rule->description, new_bandwidth, (unsigned long) stime, (unsigned long) etime,
 			  reservation_id);
 		
 		// save the path information
@@ -501,43 +479,35 @@ pthread_cond_signal(&(path->timeout_cond));
 		
 		pi->status = OSCARS_UP;
 		
-		pthread_cond_signal(&(path->timeout_cond));
+		pthread_cond_signal(&(rule->timeout_cond));
 	} else if (pi->type == PATH_SHARED) {
-		xsp_info(0, "%s: reusing existing path. Amount used: %d/%d",
-			  path->description, pi->bandwidth_used, pi->bandwidth);
+		xsp_info(0, "%s: reusing existing rule. Amount used: %d/%d",
+			 rule->description, pi->bandwidth_used, pi->bandwidth);
 	} else {
 	      /*
 		uint32_t new_bandwidth;
 
-		xsp_info(0, "%s: resizing path from %d to %d", path->description, pi->bandwidth, new_bandwidth);
+		xsp_info(0, "%s: resizing path from %d to %d", rule->description, pi->bandwidth, new_bandwidth);
 
 		// XXX: call oscars_modifyReservation() here
 
-		xsp_info(10, "%s: path resized to %d Mbit/s. New id: %s", path->description, new_bandwidth, reservation_id);
+		xsp_info(10, "%s: path resized to %d Mbit/s. New id: %s", rule->description, new_bandwidth, reservation_id);
 
 		free(pi->reservation_id);
 		pi->reservation_id = reservation_id;
 		pi->bandwidth = new_bandwidth;
 	      */
 		*ret_error_msg = strdup("OSCARS CAN'T SHARE");
-		xsp_err(0, "%s: Can't resize paths", path->description);
+		xsp_err(0, "%s: Can't resize OSCARS rules", rule->description);
 		goto error_exit_channel;
 	}
 	
 	pi->bandwidth_used += new_bandwidth;
 	
-	// set the channels bandwidth
-	new_channel->bandwidth = new_bandwidth;
-
-	// add the channel to the path's list of channels
-	LIST_INSERT_HEAD(&(path->channel_list), new_channel, path_entries);
-
-	*channel = new_channel;
-	
 	xsp_stop_soap_ssl(&(pi->osc));
 
-	xsp_info(10, "%s: allocated new channel of size: %d", path->description, new_channel->bandwidth);
-
+	xsp_info(10, "%s: applied OSCARS rule of size: %d", rule->description, new_bandwidth);
+	
 	return 0;
 
  error_exit_reservation:
@@ -545,125 +515,85 @@ pthread_cond_signal(&(path->timeout_cond));
 		//xsp_event("oscars.circuit.close.failed", path,
 		//	   "SRC_ID=\"%s\" DST_ID=\"%s\" IDC=\"%s\" VLAN=%d SIZE=%lu ERROR_MSG=\"%s\"",
 		//	   pi->src, pi->dst, pi->osc.soap_endpoint, pi->vlan_id, size, error_msg);
-		xsp_err(0, "%s: couldn't create OSCARS path: %s", path->description, error_msg);
+		xsp_err(0, "%s: couldn't apply OSCARS rule: %s", rule->description, error_msg);
 	}
 	pi->status = OSCARS_DOWN;
  error_exit_channel:
 	xsp_stop_soap_ssl(&(pi->osc));
-	*channel = NULL;
-	//xsp_free_channel(new_channel);
  error_exit:
 	return -1;
 }
 
-static int __xsp_oscars_shared_resize_channel(xspPath *path, xspChannel *channel, uint32_t new_size, char **ret_error_msg) {
-	*ret_error_msg = strdup("channel resizing not supported");
-	xsp_err(0, "channel resizing not supported");
+static int __xsp_oscars_modify_rule(xspPathRule *rule, char **ret_error_msg) {
+	*ret_error_msg = strdup("OSCARS resizing not supported");
+	xsp_err(0, "OSCARS resizing not supported");
 	return -1;
 }
 
-static int __xsp_oscars_shared_close_channel(xspPath *path, xspChannel *channel) {
-	xspOSCARSPath *pi = path->path_private;
-	xspChannel *curr_channel;
+static int __xsp_oscars_delete_rule(xspPathRule *rule, char **ret_error_msg) {
+	xspOSCARSPath *pi = rule->private;
 
-	xsp_info(0, "%s: shutting down channel", path->description);
+	xsp_info(0, "%s: shutting down OSCARS rule", rule->description);
 
-	// verify that the channel past is actually in the given path
-	for(curr_channel = path->channel_list.lh_first; curr_channel != NULL; curr_channel = curr_channel->path_entries.le_next) {
-		if (curr_channel == channel)
-			break;
-	}
+	// verify that the rule passed is actually in the given path
 	
 	// if not, error out
-	if (curr_channel == NULL) {
-		xsp_err(0, "%s: tried to close a channel from a different path", path->description);
-		goto error_exit;
-	}
+	pi->bandwidth_used -= pi->bandwidth;
 
-	// remove the channel from the list of channels
-	LIST_REMOVE(channel, path_entries);
-
-	pi->bandwidth_used -= channel->bandwidth;
-
-	// if we have removed the last channel, close the path down
-	if (path->channel_list.lh_first == NULL) {
+	xspOSCARSTimeoutArgs *args = xsp_alloc_oscars_timeout_args();
+	if (!args) {
 		void *response;
-		xsp_info(10, "%s: no more channels, shutting down path", path->description);
+		if (xsp_start_soap_ssl(&(pi->osc), SOAP_SSL_NO_AUTHENTICATION) != 0) {
+			xsp_err(0, "couldn't start SOAP context");
+			goto error_exit;
+		}
 		
-		xspOSCARSTimeoutArgs *args = xsp_alloc_oscars_timeout_args();
-		if (!args) {
-			
-			if (xsp_start_soap_ssl(&(pi->osc), SOAP_SSL_NO_AUTHENTICATION) != 0) {
-				xsp_err(0, "couldn't start SOAP context");
-				goto error_exit_path;
-			}
-			
-			if (oscars_cancelReservation(&(pi->osc), pi->reservation_id, &response) != 0) {
-				xsp_warn(0, "__xsp_oscars_shared_close_channel(%s): failed to close path",
-					  path->description);
-				//xsp_event("oscars.circuit.close.failed", path,
-				//	   "SRC_ID=\"%s\" DST_ID=\"%s\" IDC=\"%s\" VLAN=%d ERROR_MSG=\"%s\"",
-				//	   pi->src, pi->dst, pi->osc.soap_endpoint, pi->vlan_id, error_msg);
-			} else {
-				xsp_info(10, "%s: successfully shutdown path", path->description);
-				//xsp_event("oscars.circuit.close.failed", path,
-				//	   "SRC_ID=\"%s\" DST_ID=\"%s\" IDC=\"%s\" VLAN=%d ERROR_MSG=\"%s\"",
-				//	   pi->src, pi->dst, pi->osc.soap_endpoint, pi->vlan_id, error_msg);
-			}
-			
-			time(&(pi->shutdown_time));
-			xsp_oscars_reset_path_info(pi);
-			xsp_stop_soap_ssl(&(pi->osc));
+		if (oscars_cancelReservation(&(pi->osc), pi->reservation_id, &response) != 0) {
+			xsp_warn(0, "__xsp_oscars_delete_rule(%s): failed to delete rule",
+				 rule->description);
+			//xsp_event("oscars.circuit.close.failed", path,
+			//	   "SRC_ID=\"%s\" DST_ID=\"%s\" IDC=\"%s\" VLAN=%d ERROR_MSG=\"%s\"",
+			//	   pi->src, pi->dst, pi->osc.soap_endpoint, pi->vlan_id, error_msg);
 		} else {
-			args->tag = path->tag;
-			args->path = path;
-			args->timeout = pi->teardown_timeout;
-			xsp_tpool_exec(xsp_timeout_handler, args);
+			xsp_info(10, "%s: successfully shutdown rule", rule->description);
+			//xsp_event("oscars.circuit.close.failed", path,
+			//	   "SRC_ID=\"%s\" DST_ID=\"%s\" IDC=\"%s\" VLAN=%d ERROR_MSG=\"%s\"",
+			//	   pi->src, pi->dst, pi->osc.soap_endpoint, pi->vlan_id, error_msg);
 		}
-
+		
+		time(&(pi->shutdown_time));
+		xsp_oscars_reset_rule_info(pi);
+		xsp_stop_soap_ssl(&(pi->osc));
+	} else {
+		args->tag = rule->tag;
+		args->rule = rule;
+		args->timeout = pi->teardown_timeout;
+		xsp_tpool_exec(xsp_timeout_handler, args);
 	}
-
-	// remove all the connections from the channel list (though, they should be gone already... hrmmm...)
-	if (channel->connlist.lh_first != NULL) {
-		xsp_warn(0, "__xsp_oscars_shared_close_channel(%s): closing channel with outstanding connections",
-			  path->description);
-
-		while(channel->connlist.lh_first != NULL) {
-			xspConn *conn = channel->connlist.lh_first;
-
-			conn->channel = NULL;
-			LIST_REMOVE(conn, channel_entries);
-		}
-	}
-
-	xsp_free_channel(channel);
-
-	xsp_info(10, "%s: successfully shutdown channel", path->description);
+	
+	xsp_info(10, "%s: successfully shutdown OSCARS path", rule->description);
 
 	return 0;
 
- error_exit_path:
-	xsp_stop_soap_ssl(&(pi->osc));
  error_exit:
 	return -1;
 }
 
-static void xsp_timeout_handler(void *arg) {
+static void *xsp_timeout_handler(void *arg) {
 	xspOSCARSTimeoutArgs *args = arg;
-	xspPath *path = args->path;
+	xspPathRule *rule = args->rule;
 	int tag = args->tag;
 	int timeout = args->timeout;
-	xspOSCARSPath *pi = path->path_private;
-	char *error_msg;
+	xspOSCARSPath *pi = rule->private;
 	void *response;
 
-	pthread_mutex_lock(&(path->lock));
+	pthread_mutex_lock(&(rule->lock));
 
 	xsp_info(8, "Sleeping for %d seconds", timeout);
 	// we have the tag check in here to make sure nothing changed between
 	// when the closing thread launched us and when we were able to lock
 	// the path structure.
-	if (path->tag == tag) {
+	if (rule->tag == tag) {
 		int n;
 		struct timespec ts;
 		struct timeval tv;
@@ -672,7 +602,7 @@ static void xsp_timeout_handler(void *arg) {
 		ts.tv_sec = tv.tv_sec + timeout;
 		ts.tv_nsec = tv.tv_usec * 1000;
 
-		n = pthread_cond_timedwait(&(path->timeout_cond), &(path->lock), &ts);
+		n = pthread_cond_timedwait(&(rule->timeout_cond), &(rule->lock), &ts);
 
 		xsp_debug(8, "Timeout handler kicked in");
 		if (n == ETIMEDOUT) {
@@ -684,29 +614,31 @@ static void xsp_timeout_handler(void *arg) {
                         }
 
                         if (oscars_cancelReservation(&(pi->osc), pi->reservation_id, &response) != 0) {
-				xsp_warn(0, "__xsp_oscars_shared_close_channel(%s): failed to close path",
-					  path->description);
+				xsp_warn(0, "__xsp_oscars_delete_rule(%s): failed to delete rule",
+					  rule->description);
 				//xsp_event("oscars.circuit.close.failed", path,
 				//	   "SRC_ID=\"%s\" DST_ID=\"%s\" IDC=\"%s\" VLAN=%d ERROR_MSG=\"%s\"",
 				//	   pi->src, pi->dst, pi->osc.soap_endpoint, pi->vlan_id, error_msg);
 			} else {
-				xsp_info(10, "%s: successfully shutdown path", path->description);
+				xsp_info(10, "%s: successfully shutdown path", rule->description);
 				//xsp_event("oscars.circuit.close.failed", path,
 				//	   "SRC_ID=\"%s\" DST_ID=\"%s\" IDC=\"%s\" VLAN=%d ERROR_MSG=\"%s\"",
 				//	   pi->src, pi->dst, pi->osc.soap_endpoint, pi->vlan_id, error_msg);
 			}
 			time(&(pi->shutdown_time));
-			xsp_oscars_reset_path_info(pi);
+			xsp_oscars_reset_rule_info(pi);
 			xsp_stop_soap_ssl(&(pi->osc));
 		}
 	}
-	pthread_mutex_unlock(&(path->lock));
+	pthread_mutex_unlock(&(rule->lock));
 
  error_exit_path:
 	xsp_stop_soap_ssl(&(pi->osc));
+
+	return NULL;
 }
 
-static void xsp_oscars_reset_path_info(xspOSCARSPath *pi) {
+static void xsp_oscars_reset_rule_info(xspOSCARSPath *pi) {
 	pi->reservation_id = NULL;
 	pi->bandwidth_used = 0;
 	pi->bandwidth = 0;
@@ -731,22 +663,22 @@ error_exit:
 
 static xspOSCARSPath *xsp_alloc_oscars_path() {
 	xspOSCARSPath *pi ;
-
+	
 	pi = malloc(sizeof(xspOSCARSPath));
 	if (!pi) {
 		goto error_exit;
 	}
-
+	
 	bzero(pi, sizeof(xspOSCARSPath));
-
+	
 	if (pthread_cond_init(&(pi->setup_cond), NULL) != 0)
 		goto error_exit_path;
-
+	
 	return pi;
-
-error_exit_path:
-    free(pi);
-error_exit:
+	
+ error_exit_path:
+	free(pi);
+ error_exit:
 	return NULL;
 }
 
@@ -758,7 +690,7 @@ static void xsp_free_oscars_path(xspOSCARSPath *pi) {
 	free(pi);
 }
 
-static void xsp_oscars_shared_free_path(xspPath *path) {
-	xsp_free_oscars_path((xspOSCARSPath *) path->path_private);
-	xsp_free_path(path);
+static void xsp_oscars_free_rule(xspPathRule *rule) {
+	xsp_free_oscars_path((xspOSCARSPath *) rule->private);
+	xsp_free_pathrule(rule);
 }

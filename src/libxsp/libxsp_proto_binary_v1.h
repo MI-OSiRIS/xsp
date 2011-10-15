@@ -67,24 +67,7 @@ typedef struct xsp_msg_sess_nack_hdr_t {
 	uint32_t length;
 } xspSessNack_HDR;
 
-typedef struct xsp_sess_net_path_rule_hdr_t {
-        struct xsp_addr src_eid;
-        struct xsp_addr src_mask;
-        struct xsp_addr dst_eid;
-        struct xsp_addr dst_mask;
-
-        uint16_t src_port_min;
-        uint16_t src_port_max;
-        uint16_t dst_port_min;
-        uint16_t dst_port_max;
-
-        uint16_t direction;
-        uint64_t bandwidth;
-        uint16_t status;
-} xspNetPathRule_HDR;
-
 typedef struct xsp_sess_net_path_hdr_t {
-        char type[XSP_NET_PATH_LEN];
         uint16_t action;
         uint16_t rule_count;
 } xspNetPath_HDR;
