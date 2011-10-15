@@ -67,17 +67,22 @@ int xsp_block_list_find(xspBlockList *bl, int type, xspBlock ***ret_ary, int *co
 	xspBlock *block;
 	xspBlock **ba;
 	int num = 0;
-	
+
 	if (!bl)
 		return -1;
 
 	ba = (xspBlock **)malloc(bl->count * sizeof(xspBlock *));
-	
+	if (!ba) {
+		*ret_ary = NULL;
+		*count = 0;
+		return 0;
+	}
+
 	for (block = bl->first; block != NULL; block = block->next) {
 		if ((block->type == type) || (type < 0))
 			ba[num++] = block;
 	}
-	
+
 	if (num < 1) {
 		free (ba);
 		*ret_ary = NULL;

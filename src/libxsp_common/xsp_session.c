@@ -21,7 +21,7 @@
 #include "xsp_default_settings.h"
 #include "xsp_user_settings.h"
 #include "xsp_path.h"
-#include "xsp_path_handler.h"
+#include "xsp_pathrule_handler.h"
 #include "xsp_config.h"
 #include "xsp_measurement.h"
 
@@ -625,14 +625,12 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
 	int i;
 	char *error_msg;
 	xspPath *path;
-	xspChannel *channel;
 	xspSettings *settings = NULL;
 	xspConn *parent_conn;
 
 	xspBlock **blocks;
 	int block_count;
 	xspNetPath *net_path;
-	xspNetPathRule *rule;
 
 	xsp_session_get_blocks((xspMsg*)arg, XSP_OPT_PATH, &blocks, &block_count);
 	// XXX: taking only the first block!
@@ -640,45 +638,37 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
 	
 	parent_conn = LIST_FIRST(&sess->parent_conns);
 
-	xsp_info(0, "Setting up path type %s for client=%s",
-		 net_path->type, parent_conn->description);
+	xsp_info(0, "Setting up path type for client=%s", parent_conn->description);
 
-	// just get main paths section from the config for now
-	// we can also make our own settings from the session values
+	if (net_path->action == XSP_NET_PATH_MODIFY) {
+		error_msg = "Path action MODIFY currently not supported";
+		xsp_err(0, "%s", error_msg);
+		goto error_exit;
+	}
+
+	// get the paths section from the config
         if (xsp_main_settings_get_section("paths", &settings) != 0) {
                 xsp_info(5, "No path sections found, going with defaults");
                 settings = xsp_settings_alloc();
         }
 
+	/*
 	if (!strcasecmp(net_path->type, "TERAPATHS") && sess->child_count) {
-	  // set src and dst in the settings to start
+		// set src and dst in the settings to start
 		xsp_settings_set_2(settings, "terapaths", "src", strtok(parent_conn->description, "/"));
 		xsp_settings_set_2(settings, "terapaths", "dst", strtok(xsp_hop_getid(sess->child[0]), "/"));
 	}
+	*/
 
-	if (xsp_get_path(net_path->type, settings, &path, &error_msg) != 0) {
-		xsp_err(0, "couldn't get path information: %s", error_msg);
+	if (xsp_get_path(net_path, settings, &path, &error_msg) != 0) {
+		xsp_err(0, "couldn't create new path: %s", error_msg);
 		goto error_exit;
 	}
 
-	if (net_path->rule_count) {
-		// setup channels for each rule in the net path
-		for (i = 0; i < net_path->rule_count; i++) {
-			if (path->new_channel(path, net_path->rules[i], &channel, &error_msg) != 0) {
-				xsp_err(0, "couldn't allocate a channel: %s", error_msg);
-				goto error_exit;
-			}
-		}
-	}
-	// setup a blank rule that uses local settings
-	else {
-		xspNetPathRule rule;
-		memset(&rule, 0, sizeof(xspNetPathRule));
-		
-		// add some rule stuff here
-
-		if (path->new_channel(path, &rule, &channel, &error_msg) != 0) {
-			xsp_err(0, "couldn't allocate a channel: %s", error_msg);
+	// apply each rule in the path
+	for (i = 0; i < path->rule_count; i++) {
+		if (path->rules[i]->apply(path->rules[i], net_path->action, &error_msg) != 0) {
+			xsp_err(0, "couldn't apply path rule: %s", error_msg);
 			goto error_exit;
 		}
 	}

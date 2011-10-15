@@ -18,7 +18,7 @@
 #include "xsp_config.h"
 #include "xsp_tpool.h"
 #include "xsp_session.h"
-#include "xsp_path_handler.h"
+#include "xsp_path.h"
 
 #include "xsp_protocols.h"
 #include "xsp_default_settings.h"
@@ -182,8 +182,8 @@ int main(int argc, char *argv[]) {
 		xsp_err(0, "couldn't initialize session system");
 		goto error_exit;
 	}
-	if (xsp_path_handler_init()) {
-		xsp_err(0, "couldn't initialize path handler system");
+	if (xsp_path_init()) {
+		xsp_err(0, "couldn't initialize path system");
 		goto error_exit;
 	}
 	if (xsp_load_modules() != 0) {

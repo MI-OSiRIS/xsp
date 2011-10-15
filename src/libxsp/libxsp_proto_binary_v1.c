@@ -107,7 +107,7 @@ static int xsp_writeout_block_hdr(void *arg, char *buf, int remainder) {
         hdr->sport = htons(block->sport);
 
         if (block->length >= XSP_MAX_LENGTH) {
-                uint64_t *len = (uint64_t*)(buf+3*sizeof(uint16_t));
+                uint64_t *len = (uint64_t*)(buf+sizeof(uint64_t));
 		uint64_t nbo = htonll(block->length);
                 memcpy(len, &nbo, sizeof(uint64_t));
                 hdr->length = htons(0xFFFF);
@@ -115,6 +115,8 @@ static int xsp_writeout_block_hdr(void *arg, char *buf, int remainder) {
         }
         else
                 hdr->length = htons(block->length);
+
+	hdr->reserved = 0;
 
         return sizeof(xspv1BlockHdr) + len_offset;
 }
@@ -556,12 +558,9 @@ static int xsp_parse_net_path_msg(const void *arg, int remainder, void **msg_bod
 		return -1;
 	
 	hdr = (xspNetPath_HDR *) buf;
-
-	memcpy(new->type, hdr->type, XSP_NET_PATH_LEN);
-	new->type[XSP_NET_PATH_LEN] = '\0';
         new->action = ntohs(hdr->action);
         new->rule_count = ntohs(hdr->rule_count);
-	
+
 	new->rules = (xspNetPathRule **)malloc(new->rule_count * sizeof(xspNetPathRule*));
 	if (!new->rules)
 		return -1;
@@ -569,28 +568,20 @@ static int xsp_parse_net_path_msg(const void *arg, int remainder, void **msg_bod
 	buf += sizeof(xspNetPath_HDR);
 
         for (i = 0; i < new->rule_count; i++) {
-		xspNetPathRule *rule;
-                xspNetPathRule_HDR *rhdr;
+		xspNetPathRule *rule = malloc(sizeof(xspNetPathRule));
+                xspNetPathRule *rhdr;
 
-		rhdr = (xspNetPathRule_HDR *) buf;
+		rhdr = (xspNetPathRule *) buf;
 
-                rule = new->rules[i];
+		memcpy(rule->type, rhdr->type, XSP_NET_PATH_LEN);
+		rule->type[XSP_NET_PATH_LEN] = '\0';
+                rule->op = htons(rhdr->op);
+                memcpy(&(rule->eid), &(rhdr->eid), sizeof(struct xsp_addr));
+                memcpy(&(rule->crit), &(rhdr->crit), sizeof(struct xsp_sess_net_path_rule_crit_t));
+                rule->use_crit = rule->use_crit;
 
-                memcpy(&(rule->src_eid), &(rhdr->src_eid), sizeof(struct xsp_addr));
-                memcpy(&(rule->src_mask), &(rhdr->src_mask), sizeof(struct xsp_addr));
-                memcpy(&(rule->dst_eid), &(rhdr->dst_eid), sizeof(struct xsp_addr));
-                memcpy(&(rule->dst_mask), &(rhdr->dst_mask), sizeof(struct xsp_addr));
-
-                rule->src_port_min = ntohs(rhdr->src_port_min);
-                rule->src_port_max = ntohs(rhdr->src_port_max);
-                rule->dst_port_min = ntohs(rhdr->dst_port_min);
-                rule->dst_port_max = ntohs(rhdr->dst_port_max);
-
-                rule->direction = ntohs(rhdr->direction);
-                rule->bandwidth = ntohll(rhdr->bandwidth);
-                rule->status = ntohs(rhdr->status);
-
-                buf += sizeof(xspNetPathRule_HDR);
+		new->rules[i] = rule;
+                buf += sizeof(xspNetPathRule);
         }
 
 	block->data = new;
@@ -838,7 +829,7 @@ static int xsp_writeout_net_path_msg(void *arg, char *buf, int remainder) {
 	int bhdr_size;
 	int i;
 
-	block->length = net_path->rule_count * sizeof(xspNetPathRule_HDR) + sizeof(xspNetPath_HDR);
+	block->length = net_path->rule_count * sizeof(xspNetPathRule) + sizeof(xspNetPath_HDR);
 	
 	bhdr_size = xsp_writeout_block_hdr(block, buf, remainder);
         if (bhdr_size < 0)
@@ -851,9 +842,6 @@ static int xsp_writeout_net_path_msg(void *arg, char *buf, int remainder) {
 	buf += bhdr_size;
 	hdr = (xspNetPath_HDR *) buf;
 	
-	d_printf("net_path type: %s\n", net_path->type);
-
-	memcpy(hdr->type, net_path->type, XSP_NET_PATH_LEN);
 	hdr->action = htons(net_path->action);
 	hdr->rule_count = htons(net_path->rule_count);
 
@@ -861,26 +849,18 @@ static int xsp_writeout_net_path_msg(void *arg, char *buf, int remainder) {
 	
 	for (i = 0; i < net_path->rule_count; i++) {
 		xspNetPathRule *rule;
-		xspNetPathRule_HDR *rhdr;
-		
-		rule = net_path->rules[i];
-		rhdr = (xspNetPathRule_HDR *) buf;
-		
-		memcpy(&(rhdr->src_eid), &(rule->src_eid), sizeof(struct xsp_addr));
-		memcpy(&(rhdr->src_mask), &(rule->src_mask), sizeof(struct xsp_addr));
-		memcpy(&(rhdr->dst_eid), &(rule->dst_eid), sizeof(struct xsp_addr));
-		memcpy(&(rhdr->dst_mask), &(rule->dst_mask), sizeof(struct xsp_addr));
+		xspNetPathRule *rhdr;
 
-		rhdr->src_port_min = htons(rule->src_port_min);
-		rhdr->src_port_max = htons(rule->src_port_max);
-		rhdr->dst_port_min = htons(rule->dst_port_min);
-		rhdr->dst_port_max = htons(rule->dst_port_max);
+		rule = net_path->rules[i];
+		rhdr = (xspNetPathRule *) buf;
 		
-		rhdr->direction = htons(rule->direction);
-		rhdr->bandwidth = htonll(rule->bandwidth);
-		rhdr->status = htons(rule->status);
+		memcpy(rhdr->type, rule->type, XSP_NET_PATH_LEN);
+		rhdr->op = htons(rule->op);
+		memcpy(&(rhdr->eid), &(rule->eid), sizeof(struct xsp_addr));
+		memcpy(&(rhdr->crit), &(rule->crit), sizeof(struct xsp_sess_net_path_rule_crit_t));
+		rhdr->use_crit = rule->use_crit;
 		
-		buf += sizeof(xspNetPathRule_HDR);
+		buf += sizeof(xspNetPathRule);
 	}
 	
 	return bhdr_size + block->length;

@@ -48,6 +48,7 @@ int main(int argc, char *argv[])
 		exit(errno);
 	}
 
+	/*
 	char buf[20] = "This is a test";
 	char *ret_buf = NULL;
 	uint64_t ret_len;
@@ -61,7 +62,8 @@ int main(int argc, char *argv[])
 	  printf("got message[%d]: %s\n", ret_type, ret_buf);
 	  free(ret_buf);
 	}
-	
+	*/
+
 	libxspNetPath *path;
 	path = xsp_net_path("OSCARS", XSP_NET_PATH_CREATE);
 	
