@@ -406,21 +406,9 @@ fi
 
 AM_CONDITIONAL(HAVE_OPENSSL, test x$have_openssl = xyes)
 
-dnl Check for compiling with phoebus-xsp style client
-AH_TEMPLATE(HAVE_PHOEBUS, Whether or not compiling with Phoebus)
-AC_ARG_ENABLE(phoebus-xsp,
-                [  --enable-phoebus-xsp     enable Phoebus-style XSP client wrapper [default=no]],
-                [
-                  enable_phoebus_xsp=$enableval
-                  AC_DEFINE(HAVE_PHOEBUS)
-                ])
-
-AM_CONDITIONAL(HAVE_PHOEBUS, test "$enable_phoebus_xsp" == "yes")
-
 dnl Check for Globus
 AM_CONDITIONAL(HAVE_GLOBUS, test "${GLOBUS_INCLUDES}" != "")
 dnl End check for Globus
-
 
 CONFIG_FILE=$sysconfdir/xspd.conf
 AC_SUBST(CONFIG_FILE)
