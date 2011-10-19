@@ -21,10 +21,12 @@ xspBlockList *xsp_alloc_block_list() {
 
 void xsp_free_block_list(xspBlockList *bl, int free_data) {
 	xspBlock *block;
-	for (block = bl->first; block != NULL; block = block->next)
-		xsp_free_block(block, free_data);
-
-	free(bl);
+	if (bl) {
+		for (block = bl->first; block != NULL; block = block->next)
+			xsp_free_block(block, free_data);
+		
+		free(bl);
+	}
 }		
 
 void xsp_block_list_push(xspBlockList *bl, xspBlock *new_block) {

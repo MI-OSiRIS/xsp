@@ -21,7 +21,6 @@
 #include "libxsp_net_path.h"
 
 /* XSP Defines */
-
 #define XSP_MSG_NOWAIT                  0x01
 
 #define XSP_SESS_SAVE_STREAM	        0x01
@@ -30,23 +29,25 @@
 #define XSP_HOP_NATIVE 	                0x01
 #define XSP_UNNECESSARY	                0x02
 
-#define XSP_DEFAULT_SPORT               0
+#define XSP_DEFAULT_SPORT               0x01
 
-#define XSP_MSG_INVALID			0
-#define XSP_MSG_SESS_OPEN		1
-#define XSP_MSG_SESS_ACK		2
-#define XSP_MSG_SESS_CLOSE		3
-#define XSP_MSG_BLOCK_HEADER		4
-#define XSP_MSG_AUTH_TYPE		8
-#define XSP_MSG_AUTH_TOKEN		9
-#define XSP_MSG_SESS_NACK		10
-#define XSP_MSG_PING			11
-#define XSP_MSG_PONG			12
-#define XSP_MSG_DATA_CHAN               13
-#define XSP_MSG_NET_PATH                14
-#define XSP_MSG_APP_DATA                15
-#define XSP_MSG_SLAB_INFO               16
-
+enum xsp_message_types_t {
+	XSP_MSG_INVALID = 0,
+	XSP_MSG_SESS_OPEN,
+	XSP_MSG_SESS_ACK,
+	XSP_MSG_SESS_CLOSE,
+	XSP_MSG_BLOCK_HEADER,
+	XSP_MSG_AUTH_TYPE,
+	XSP_MSG_AUTH_TOKEN,
+	XSP_MSG_SESS_NACK,
+	XSP_MSG_PING,
+	XSP_MSG_PONG,
+	XSP_MSG_DATA_CHAN,
+	XSP_MSG_NET_PATH,
+	XSP_MSG_APP_DATA,
+	XSP_MSG_SLAB_INFO,
+	XSP_MSG_INF_DATA
+};
 
 /* XSP Objects */
 
