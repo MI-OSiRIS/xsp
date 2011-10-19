@@ -52,6 +52,8 @@ typedef struct common_session_t {
 	
 	void *(*proto_cb) (struct common_session_t *, xspMsg*);
 
+	void *private;
+
 	LIST_ENTRY(common_session_t) sess_list;
 
 #ifdef NETLOGGER
@@ -88,6 +90,7 @@ void xsp_session_finalize(comSess *sess);
 int xsp_session_setup_path(comSess *sess, const void *msg, char ***error_msgs);
 int xsp_session_data_open(comSess *sess, const void *msg, char ***error_msgs);
 
+int xsp_session_send_ack(comSess *sess, const void *buf, uint64_t len, int opt_type);
 int xsp_session_send_nack(comSess *sess, char **error_msgs);
 char *xsp_session_print_nack(const xspMsg *msg);
 

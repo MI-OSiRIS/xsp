@@ -15,19 +15,21 @@
 
 #include "xsp-proto.h"
 
-#define XSP_BLOCK_KEEP_DATA 0
-#define XSP_BLOCK_FREE_DATA 1
+#define XSP_BLOCK_KEEP_DATA 0x00
+#define XSP_BLOCK_FREE_DATA 0x01
 
-#define XSP_OPT_NULL        0
-#define XSP_OPT_HOP         1
-#define XSP_OPT_AUTH_TYP    2
-#define XSP_OPT_AUTH_TOK    3
-#define XSP_OPT_NACK        4
-#define XSP_OPT_DATA        5
-#define XSP_OPT_PATH        6
-#define XSP_OPT_SLAB        7
-#define XSP_OPT_APP         8
-#define XSP_OPT_APP_LIST    9
+enum xsp_block_types_t {
+	XSP_OPT_NULL = 0,
+	XSP_OPT_HOP,
+	XSP_OPT_AUTH_TYP,
+	XSP_OPT_AUTH_TOK,
+	XSP_OPT_NACK,
+	XSP_OPT_DATA,
+	XSP_OPT_PATH,
+	XSP_OPT_SLAB,
+	XSP_OPT_APP,
+	XSP_OPT_APP_LIST,
+};
 
 typedef struct xsp_block_t {
 	int type;

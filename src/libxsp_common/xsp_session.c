@@ -741,7 +741,8 @@ int xsp_session_app_data(comSess *sess, const void *arg, char ***error_msgs) {
         }
 
 	if (!mstring) {
-		xsp_err(0, "unrecognized option block type\n");
+		asprintf(error_msg, "unrecognized option block type: %d", block->type);
+		xsp_err(0, "%s", error_msg);
 		goto error_exit;
 	}
 
@@ -932,12 +933,7 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, int (*cb) (comS
 	xsp_conn_set_session_status(conn, STATUS_CONNECTED);
 
 	// send an ACK back once session is ready
-	xspMsg ack_msg = {
-		.version = sess->version,
-		.type = XSP_MSG_SESS_ACK,
-		.flags = 0
-	};
-	xsp_conn_send_msg(conn, &ack_msg, XSP_OPT_NULL);
+	xsp_session_send_ack(sess, NULL, 0, XSP_OPT_NULL);
 	
 	*ret_sess = sess;
 	return sess;
@@ -996,12 +992,7 @@ int xsp_proto_loop(comSess *sess) {
 					continue;
 				}
 				__xsp_cb_and_free(sess, msg);
-				xspMsg ack_msg = {
-					.version = version,
-					.type = XSP_MSG_SESS_ACK,
-					.flags = 0,
-				};
-				xsp_conn_send_msg(conn, &ack_msg, XSP_OPT_NULL);
+				xsp_session_send_ack(sess, NULL, 0, XSP_OPT_NULL);
 			}
 			break;
                 case XSP_MSG_PING:
@@ -1035,21 +1026,20 @@ int xsp_proto_loop(comSess *sess) {
 					continue;
 				}
 				__xsp_cb_and_free(sess, msg);
-				xspMsg ack_msg = {
-                                        .version = version,
-                                        .type = XSP_MSG_SESS_ACK,
-                                        .flags = 0,
-                                };
-				xsp_conn_send_msg(conn, &ack_msg, XSP_OPT_NULL);
+				xsp_session_send_ack(sess, NULL, 0, XSP_OPT_NULL);
 			}
 			break;
 		case XSP_MSG_APP_DATA:
 			{
 				if (xsp_session_app_data(sess, msg, &error_msgs) < 0) {
-					xsp_session_send_nack(sess, error_msgs);
-					xsp_free_msg(msg);
-					continue;
+					// XXX: think about sending NACK here
+					//xsp_session_send_nack(sess, error_msgs);
 				}
+				__xsp_cb_and_free(sess, msg);
+			}
+			break;
+		case XSP_MSG_INF_DATA:
+			{
 				__xsp_cb_and_free(sess, msg);
 			}
 			break;
@@ -1073,6 +1063,41 @@ int xsp_proto_loop(comSess *sess) {
 	
  error_exit:
 	xsp_end_session(sess);
+	return -1;
+}
+
+int xsp_session_send_ack(comSess *sess, const void *buf, uint64_t len, int opt_type) {
+	xspConn *conn;
+
+	conn = LIST_FIRST(&sess->parent_conns);
+        if (!conn) {
+                xsp_err(0, "no active session conn, aborting");
+                goto error_exit;
+        }
+
+	xspMsg ack_msg = {
+		.version = sess->version,
+		.type = XSP_MSG_SESS_ACK,
+		.flags = 0,
+	};
+	
+	if (buf && len) {
+		xspBlock ack_block = {
+			.type = opt_type,
+			.sport = XSP_DEFAULT_SPORT,
+			.length = len,
+			.data = buf
+		};
+		
+		ack_msg.msg_body = &ack_block;
+		xsp_conn_send_msg(conn, &ack_msg, XSP_OPT_APP);
+	}
+	else
+		xsp_conn_send_msg(conn, &ack_msg, XSP_OPT_NULL);
+
+	return 0;
+	
+ error_exit:
 	return -1;
 }
 

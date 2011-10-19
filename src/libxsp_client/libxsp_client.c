@@ -458,7 +458,7 @@ int __xsp_addchild(xspHop *curr_node, char *parent, xspHop *new_child) {
 	return retval;
 }
 
-xspNetPath *xsp_net_path(char *type, int action) {
+xspNetPath *xsp_sess_new_net_path(char *type, int action) {
 	xspNetPath *new = xsp_alloc_net_path();
 	xspNetPathRule *rule = xsp_alloc_net_path_rule();
 
@@ -471,7 +471,7 @@ xspNetPath *xsp_net_path(char *type, int action) {
 	return new;
 }
 
-xspSecInfo *xsp_security(char *username, char *password, char *key1, char *key2, char *keypass) {
+xspSecInfo *xsp_sess_new_security(char *username, char *password, char *key1, char *key2, char *keypass) {
 	xspSecInfo *new = malloc(sizeof(xspSecInfo));
 	
 	if (new) {
@@ -528,7 +528,15 @@ int xsp_sess_set_security(libxspSess *sess, xspSecInfo *sec, int type) {
 	return 0;
 }
 
-int xsp_sess_signal_path(libxspSess *sess, xspNetPath *net_path) {
+int xsp_signal_inf_data(libxspSess *sess) {
+	if (xsp_put_msg(sess, XSP_v1, XSP_MSG_INF_DATA, NULL) < 0) {
+		d_printf("xsp_signal_inf_data(): error: failed to send INF DATA message\n");
+		return -1;
+	}
+	return 0;
+}
+
+int xsp_signal_path(libxspSess *sess, xspNetPath *net_path) {
 	xspMsg *msg;
 	
 	if (!net_path)
@@ -1021,6 +1029,28 @@ int xsp_data_connect(libxspSess *sess) {
         sess->data_connected = 1;
 
         return 0;
+}
+
+int xsp_wait_ack(libxspSess *sess) {
+	xspMsg *msg;
+        xspBlock *block;
+        xspBlockList *bl;
+	
+        msg = xsp_get_msg(sess, 0);
+
+        if (!msg) {
+                d_printf("xsp_recv_msg(): error: did not receive message\n");
+		return -1;
+        }
+        if (msg->type == XSP_MSG_SESS_ACK) {
+		return 0;
+        }
+	else if (msg->type == XSP_MSG_SESS_NACK) {
+		fprintf(stderr, "xsp_wait_ack(): got NACK: %s\n", __print_nack_msg(msg));
+		return -1;
+	}
+	
+	return -1;
 }
 
 int xsp_send_msg(libxspSess *sess, const void *buf, uint64_t len, int opt_type) {
@@ -1579,7 +1609,7 @@ uint64_t xsp_put_msg(libxspSess *sess, uint8_t version, uint16_t type, void *msg
 		msg.opt_cnt = 0;
 
 	msg_len = xsp_writeout_msg(msg_buf, msg_buf_len, &msg, msg_body);
-
+	
 	if (msg_len < 0)
 		goto write_error;
 

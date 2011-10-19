@@ -9,7 +9,7 @@
 
 #define LIBXSP_PROTO_BINARY_V1_ID	XSP_v1
 
-#define LIBXSP_PROTO_BINARY_V1_MAX 	XSP_MSG_SLAB_INFO
+#define LIBXSP_PROTO_BINARY_V1_MAX 	XSP_MSG_INF_DATA
 
 static xspProtoHandler bin_handler_v1;
 
@@ -38,6 +38,7 @@ int libxsp_proto_binary_v1_init() {
 	bin_handler_v1.parse[XSP_MSG_NET_PATH] = xsp_parse_default_block_list;
 	bin_handler_v1.parse[XSP_MSG_APP_DATA] = xsp_parse_app_data_block_list;
 	bin_handler_v1.parse[XSP_MSG_SLAB_INFO] = xsp_parse_default_block_list;
+	bin_handler_v1.parse[XSP_MSG_INF_DATA] = NULL;
 
 	bin_handler_v1.writeout[XSP_MSG_INVALID] = NULL;
 	bin_handler_v1.writeout[XSP_MSG_SESS_OPEN] = xsp_writeout_default_block_list;
@@ -53,6 +54,7 @@ int libxsp_proto_binary_v1_init() {
 	bin_handler_v1.writeout[XSP_MSG_NET_PATH] = xsp_writeout_default_block_list;
 	bin_handler_v1.writeout[XSP_MSG_APP_DATA] = xsp_writeout_app_data_block_list;
 	bin_handler_v1.writeout[XSP_MSG_SLAB_INFO] = xsp_writeout_default_block_list;
+	bin_handler_v1.writeout[XSP_MSG_INF_DATA] = NULL;
 
 	bin_handler_v1.max_msg_type = LIBXSP_PROTO_BINARY_V1_MAX;
 

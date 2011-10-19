@@ -33,12 +33,15 @@ typedef void libxspNetPath;
 
 int libxsp_init(void);
 libxspSess *xsp_session();
-libxspSecInfo *xsp_security(char *username, char *password, char *key1, char *key2, char *keypass);
-libxspNetPath *xsp_net_path(char *type, int action);
 int xsp_sess_appendchild(libxspSess *sess, char *child, unsigned int flags);
 int xsp_sess_addchild(libxspSess *sess, char *parent, char *child, uint16_t flags);
 int xsp_sess_set_security(libxspSess *sess, libxspSecInfo *sec, int type);
-int xsp_sess_signal_path(libxspSess *sess, libxspNetPath *path);
+
+libxspSecInfo *xsp_sess_new_security(char *username, char *password, char *key1, char *key2, char *keypass);
+libxspNetPath *xsp_sess_new_net_path(char *type, int action);
+
+int xsp_signal_path(libxspSess *sess, libxspNetPath *path);
+int xsp_signal_inf_data(libxspSess *sess);
 
 int xsp_connect(libxspSess *sess);
 int xsp_setsockopt(libxspSess *sess, int level, int optname, const void *optval, socklen_t optlen);
