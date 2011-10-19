@@ -794,11 +794,8 @@ int xsp_session_send_nack(comSess *sess, char **error_msgs) {
 	} else {
 		for(i = 0; i < sess->child_count+plus_one; i++) {
 			if (error_msgs[i]) {
-				//strlcat(nack_msg, "Connect to ", sizeof(nack_msg));
-				//strlcat(nack_msg, xsp_hop_getid(sess->child[i]), sizeof(nack_msg));
 				strlcat(nack_msg, "failure: ", sizeof(nack_msg));
 				strlcat(nack_msg, error_msgs[i], sizeof(nack_msg));
-				strlcat(nack_msg, "\n", sizeof(nack_msg));
 			}
 		}
 	}
@@ -811,6 +808,7 @@ int xsp_session_send_nack(comSess *sess, char **error_msgs) {
 		.msg_body = nack_msg
 	};
 	xsp_conn_send_msg(conn, &msg, XSP_OPT_NACK);
+	
 	return 0;
 }
 
