@@ -493,34 +493,8 @@ int connect(int sockfd, const struct sockaddr *serv_addr, SOCKLEN_T addrlen) {
 	    }
 	}
 
-#ifndef HAVE_PHOEBUS
 	// just do a regular connect now that the session is configured
 	return std_connect(sockfd, serv_addr, addrlen);
-#else
-	// let the app use the new session sock
-	new_sock = xsp_get_session_socket(sess);	
-	if (new_sock >= 0) {
-		int n;
-		d_printf("connect(): replacing old socket %d with newly allocated socket %d\n", sockfd, new_sock);
-		n = dup2(new_sock, sockfd);
-		if (n < 0) {
-			d_printf("connect(): dup2 failed\n");
-			xsp_del_sess(sess);
-			errno = ENOMEM;
-			retval = -1;
-		} else {
-			// swap the socket in the session object with the one
-			// we've given to the user
-			xsp_set_session_socket(sess, sockfd);
-			close(new_sock);
-		}
-	}
-	
-	sess->end_host_addr = *serv_addr;
-	sess->end_host_addrlen = addrlen;
-
-	return retval;
-#endif
 }
 
 #if 0 // SOLARIS
