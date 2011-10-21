@@ -1,6 +1,6 @@
 Name: libxsp
 Version: 1.0
-Release: 1
+Release: 5
 Summary: XSP RPM
 
 Group: Application/Network
@@ -55,7 +55,7 @@ rm -rf $RPM_BUILD_ROOT
 #--sysconfdir=%{_sysconfdir} \
 #--datadir=%{_datadir} \
 #make %{?_smp_mflags}
-%configure --without-mysql --without-sqlite --enable-oscars --enable-terapaths --enable-nlmi --enable-globus-xio --enable-client
+%configure --without-mysql --without-sqlite --enable-oscars
 make
 
 %install xspd
