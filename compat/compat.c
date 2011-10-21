@@ -499,6 +499,7 @@ int daemonize(char *pid_file, char *user, char *group) {
 
 	/* At this point we are executing as the child process */
 	parent = getppid();
+	pid = getpid();
 
 	/* Change the file mode mask */
 	umask(0);

@@ -1,4 +1,4 @@
-noinst_PROGRAMS = oscars_client oscars6_client
+bin_PROGRAMS = oscars_client oscars6_client
 
 noinst_LIBRARIES = liboscars.a liboscars6.a
 noinst_LTLIBRARIES = liboscars.la liboscars6.la
