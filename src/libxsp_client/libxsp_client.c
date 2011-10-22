@@ -458,6 +458,7 @@ int __xsp_addchild(xspHop *curr_node, char *parent, xspHop *new_child) {
 	return retval;
 }
 
+// these client net path methods only deal with a single rule right now
 xspNetPath *xsp_sess_new_net_path(char *type, int action) {
 	xspNetPath *new = xsp_alloc_net_path();
 	xspNetPathRule *rule = xsp_alloc_net_path_rule();
@@ -470,6 +471,20 @@ xspNetPath *xsp_sess_new_net_path(char *type, int action) {
 
 	return new;
 }
+
+int xsp_sess_set_net_path_crit(xspNetPath *path, libxspNetPathRuleCrit *crit) {
+	xspNetPathRule *rule = path->rules[0];
+	
+	if (!rule)
+		return -1;
+	
+	memcpy(&(rule->crit.src_eid.x_addrc), crit->src, XSP_HOPID_LEN);
+	memcpy(&(rule->crit.dst_eid.x_addrc), crit->dst, XSP_HOPID_LEN);
+	
+	rule->use_crit = TRUE;
+
+	return 0;
+}	
 
 xspSecInfo *xsp_sess_new_security(char *username, char *password, char *key1, char *key2, char *keypass) {
 	xspSecInfo *new = malloc(sizeof(xspSecInfo));
@@ -1033,8 +1048,6 @@ int xsp_data_connect(libxspSess *sess) {
 
 int xsp_wait_ack(libxspSess *sess) {
 	xspMsg *msg;
-        xspBlock *block;
-        xspBlockList *bl;
 	
         msg = xsp_get_msg(sess, 0);
 

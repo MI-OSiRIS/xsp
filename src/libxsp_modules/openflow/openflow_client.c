@@ -7,7 +7,7 @@
 
 int main() {
     char str[64];
-    char *argv[2] = {"controller", "ptcp:"}; /* openflow offical controller has
+    char *argv[2] = {"controller", "ptcp:1716"}; /* openflow offical controller has
                                                 details about the input arguments */
 
     /* first, initialize the controller */

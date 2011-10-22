@@ -34,9 +34,9 @@ int main(int argc, char *argv[])
 
 	xsp_sess_appendchild(sess, argv[argc - 1], XSP_HOP_NATIVE);
 	
-	sec = xsp_security("ezra", NULL, "/home/ezra/.ssh/id_rsa_pl.pub",
-			   "/home/ezra/.ssh/id_rsa_pl", NULL);
-
+	sec = xsp_sess_new_security("ezra", NULL, "/home/ezra/.ssh/id_rsa_pl.pub",
+				    "/home/ezra/.ssh/id_rsa_pl", NULL);
+	
 	if (xsp_sess_set_security(sess, sec, XSP_SEC_NONE)) {
 		fprintf(stderr, "could not set requested xsp security method\n");
 		exit(-1);
@@ -54,7 +54,8 @@ int main(int argc, char *argv[])
 	uint64_t ret_len;
 	int ret_type;
 
-	xsp_send_msg(sess, buf, strlen(buf)+1, 0x20);
+	/*
+	xsp_send_msg(sess, buf, strlen(buf)+1, 0x32);
 	xsp_recv_msg(sess, (void**)&ret_buf, &ret_len, &ret_type);
 
 	if (ret_buf) {
@@ -65,9 +66,17 @@ int main(int argc, char *argv[])
 	*/
 
 	libxspNetPath *path;
-	path = xsp_net_path("OSCARS", XSP_NET_PATH_CREATE);
+	libxspNetPathRuleCrit crit = {
+		.src = "192.168.1.1",
+		.dst = "192.168.1.2"
+	};
 	
-	xsp_sess_signal_path(sess, path);
+	// creates a path with a single rule
+	path = xsp_sess_new_net_path("OPENFLOW", XSP_NET_PATH_CREATE);
+	if (xsp_sess_set_net_path_crit(path, &crit) != 0)
+		fprintf(stderr, "could not set path criteria\n");
+	
+	xsp_signal_path(sess, path);
 
 	xsp_close2(sess);
 

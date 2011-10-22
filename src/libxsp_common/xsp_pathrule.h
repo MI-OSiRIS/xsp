@@ -13,6 +13,7 @@ typedef struct xsp_pathrule_t {
 	char *description;
 	int tag;
 	int status;
+	int op;
 
 	int (*apply) (struct xsp_pathrule_t *rule, int action, char **ret_error_msg);
 	void (*free) (struct xsp_pathrule_t *rule);

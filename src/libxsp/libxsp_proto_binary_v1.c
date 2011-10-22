@@ -574,13 +574,13 @@ static int xsp_parse_net_path_msg(const void *arg, int remainder, void **msg_bod
                 xspNetPathRule *rhdr;
 
 		rhdr = (xspNetPathRule *) buf;
-
+		
 		memcpy(rule->type, rhdr->type, XSP_NET_PATH_LEN);
 		rule->type[XSP_NET_PATH_LEN] = '\0';
                 rule->op = htons(rhdr->op);
                 memcpy(&(rule->eid), &(rhdr->eid), sizeof(struct xsp_addr));
                 memcpy(&(rule->crit), &(rhdr->crit), sizeof(struct xsp_sess_net_path_rule_crit_t));
-                rule->use_crit = rule->use_crit;
+                rule->use_crit = rhdr->use_crit;
 
 		new->rules[i] = rule;
                 buf += sizeof(xspNetPathRule);
@@ -852,7 +852,7 @@ static int xsp_writeout_net_path_msg(void *arg, char *buf, int remainder) {
 	for (i = 0; i < net_path->rule_count; i++) {
 		xspNetPathRule *rule;
 		xspNetPathRule *rhdr;
-
+		
 		rule = net_path->rules[i];
 		rhdr = (xspNetPathRule *) buf;
 		
