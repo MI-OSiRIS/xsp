@@ -148,11 +148,11 @@ controller_init(int argc, char *argv[])
         }
     }
     if (n_switches == 0 && n_listeners == 0) {
-        ofp_fatal(0, "no active or passive switch connections");
+	    ofp_fatal(0, "no active or passive switch connections");
     }
 
-    die_if_already_running();
-    daemonize();
+    //die_if_already_running();
+    //daemonize();
 
     retval = vlog_server_listen(NULL, NULL);
     if (retval) {

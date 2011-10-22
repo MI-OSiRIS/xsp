@@ -12,6 +12,8 @@
 
 #include <unistd.h>
 
+#include "libxsp_client_common.h"
+
 #define XSP_HOP_NATIVE 0x01
 
 enum xsp_sec {
@@ -39,6 +41,7 @@ int xsp_sess_set_security(libxspSess *sess, libxspSecInfo *sec, int type);
 
 libxspSecInfo *xsp_sess_new_security(char *username, char *password, char *key1, char *key2, char *keypass);
 libxspNetPath *xsp_sess_new_net_path(char *type, int action);
+int xsp_sess_set_net_path_crit(libxspNetPath *path, libxspNetPathRuleCrit *crit);
 
 int xsp_signal_path(libxspSess *sess, libxspNetPath *path);
 int xsp_signal_inf_data(libxspSess *sess);

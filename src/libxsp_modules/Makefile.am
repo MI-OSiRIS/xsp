@@ -49,9 +49,9 @@ if ENABLE_OPENFLOW
 modules_LTLIBRARIES += openflow.la
 openflow_la_SOURCES = xsp_openflow_basic.c xsp_openflow_basic.h
 openflow_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
-openflow_la_LIBADD = openflow/lib/libopenflow.a
+openflow_la_LIBADD = openflow/libofcontrol.a openflow/lib/libopenflow.a
 openflow_la_CFLAGS = $(AM_CFLAGS) -DWITH_NONAMESPACES -DWITH_DOM
-INCLUDES += -I$(srcdir)/openflow/include
+INCLUDES += -I$(srcdir)/openflow/include -I$(srcdir)/openflow
 endif
 
 if HAVE_WEB100

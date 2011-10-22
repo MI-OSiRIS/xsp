@@ -4,6 +4,7 @@
 #include <sys/queue.h>
 
 #include "libxsp.h"
+#include "libxsp_client_common.h"
 
 #ifdef HAVE_SSH
 #include "libssh2.h"
@@ -17,7 +18,6 @@
 #include <openssl/sha.h>
 #include <openssl/ssl.h>
 #endif
-
 
 /* Objects */
 typedef struct libxsp_sess_info_t {
@@ -98,6 +98,7 @@ int xsp_sess_set_security(libxspSess *sess, xspSecInfo *sec, int type);
 
 xspSecInfo *xsp_sess_new_security(char *username, char *password, char *privkey, char *pubkey, char *keypass);
 xspNetPath *xsp_sess_new_net_path(char *type, int action);
+int xsp_sess_set_net_path_crit(xspNetPath *path, libxspNetPathRuleCrit *crit);
 
 int xsp_signal_inf_data(libxspSess *sess);
 int xsp_signal_path(libxspSess *sess, xspNetPath *net_path);
