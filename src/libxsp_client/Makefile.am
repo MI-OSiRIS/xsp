@@ -1,6 +1,6 @@
 lib_LIBRARIES = libxsp_client.a
 lib_LTLIBRARIES = libxsp_wrapper.la libxsp_simplewrapper.la libxsp_client.la
-include_HEADERS = libxsp_client.h
+include_HEADERS = libxsp_client.h libxsp_client_common.h
 noinst_HEADERS = libxsp_client_private.h
 
 libxsp_client_la_SOURCES = libxsp_client.c $(top_srcdir)/compat/compat.c $(top_srcdir)/compat/compat.h
