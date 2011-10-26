@@ -111,9 +111,11 @@ int xsp_get_path(xspNetPath *net_path, xspSettings *settings, xspPath **ret_path
 			goto error_exit;
 		}
 		
-		path_desc = realloc(path_desc, desc_len+strlen(rule_id)+1);
-		if (desc_len > 0)
+		path_desc = realloc(path_desc, desc_len+strlen(rule_id)+2);
+		if (desc_len > 0) {
 			strncpy(path_desc+desc_len, "#", 1);
+			desc_len++;
+		}
 		strncpy(path_desc+desc_len, rule_id, strlen(rule_id));
 		desc_len += strlen(rule_id);
 	}
@@ -149,18 +151,18 @@ int xsp_get_path(xspNetPath *net_path, xspSettings *settings, xspPath **ret_path
 				pathrule->description = rule_handler->get_pathrule_id(net_path->rules[i], settings, &error_msg);
 				path->rules[i] = pathrule;
 			}
-		}
-		
-		path->status = XSP_PATH_ALLOCATED;
-		path->description = path_desc;
-		asprintf(&(path->gri), "XSP-netPath-%d\n", path_id);
-		path_id++;
-		
-		if (hashtable_insert(path_list, path->description, path) == 0) {
-			xsp_err(0, "couldn't save reference to %s", path->description);
-			if (ret_error_msg)
-				*ret_error_msg = strdup("Couldn't save path reference");
-			goto error_exit_path;
+			
+			path->status = XSP_PATH_ALLOCATED;
+			path->description = path_desc;
+			asprintf(&(path->gri), "XSP-netPath-%d\n", path_id);
+			path_id++;
+			
+			if (hashtable_insert(path_list, path->description, path) == 0) {
+				xsp_err(0, "couldn't save reference to %s", path->description);
+				if (ret_error_msg)
+					*ret_error_msg = strdup("Couldn't save path reference");
+				goto error_exit_path;
+			}
 		}
 	}
 	pthread_mutex_unlock(&path_list_lock);

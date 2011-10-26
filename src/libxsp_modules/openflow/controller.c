@@ -111,22 +111,20 @@ void wait_for_switch() {
   while (!n_switches) sleep(1);
 }
 
-void
+int
 controller_init(int argc, char *argv[])
 {
     int retval;
     int i;
 
-    set_program_name(argv[0]);
+    //set_program_name(argv[0]);
     //register_fault_handlers(); CANNOT LINK TO THE OPENFLOW LIBRARY
-    time_init();
-    vlog_init();
     parse_options(argc, argv);
-    signal(SIGPIPE, SIG_IGN);
+    //signal(SIGPIPE, SIG_IGN);
 
     if (argc - optind < 1) {
-        ofp_fatal(0, "at least one vconn argument required; "
-                  "use --help for usage");
+	    fprintf(stderr, "at least one vconn argument required;\n  use --help for usage\n");
+	    return -1;
     }
     n_switches = n_listeners = 0;
     for (i = optind; i < argc; i++) {
@@ -137,26 +135,29 @@ controller_init(int argc, char *argv[])
         retval = vconn_open(name, OFP_VERSION, &vconn);
         if (!retval) {
             if (n_switches >= MAX_SWITCHES) {
-                ofp_fatal(0, "max %d switch connections", n_switches);
+		    fprintf(stderr, "max %d switch connections", n_switches);
+		    return -1;
             }
             new_switch(&switches[n_switches++], vconn, name);
             continue;
         } else if (retval == EAFNOSUPPORT) {
-            struct pvconn *pvconn;
+	    struct pvconn *pvconn;
             retval = pvconn_open(name, &pvconn);
             if (!retval) {
                 if (n_listeners >= MAX_LISTENERS) {
-                    ofp_fatal(0, "max %d passive connections", n_listeners);
+			fprintf(stderr, "max %d passive connections", n_listeners);
+			return -1;
                 }
                 listeners[n_listeners++] = pvconn;
             }
         }
-        if (retval) {
-            VLOG_ERR("%s: connect: %s", name, strerror(retval));
-        }
+        //if (retval) {
+	//		VLOG_ERR("%s: connect: %s", name, strerror(retval));
+        //}
     }
     if (n_switches == 0 && n_listeners == 0) {
-        ofp_fatal(0, "no active or passive switch connections");
+	    fprintf(stderr, "no active or passive switch connections\n");
+	    return -1;
     }
 
     //die_if_already_running();
@@ -164,8 +165,14 @@ controller_init(int argc, char *argv[])
 
     retval = vlog_server_listen(NULL, NULL);
     if (retval) {
-        ofp_fatal(retval, "Could not listen for vlog connections");
+        fprintf(stderr, "Could not listen for vlog connections\n");
+	return -1;
     }
+
+    time_init();
+    vlog_init();
+
+    return 0;
 }
 
 void *
@@ -484,7 +491,7 @@ parse_options(int argc, char *argv[])
             } else {
                 max_idle = atoi(optarg);
                 if (max_idle < 1 || max_idle > 65535) {
-                    ofp_fatal(0, "--max-idle argument must be between 1 and "
+			ofp_fatal(0, "--max-idle argument must be between 1 and "
                               "65535 or the word 'permanent'");
                 }
             }

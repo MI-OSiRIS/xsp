@@ -62,7 +62,8 @@ int xsp_openflow_init() {
 	char *argv[2] = {"controller", "ptcp:1716"}; 
 
 	// first, initialize the controller
-	controller_init(2, argv);
+	if (controller_init(2, argv) != 0)
+		return -1;
 	
 	// start the controller
 	controller_start();
@@ -80,14 +81,33 @@ static char *xsp_openflow_generate_pathrule_id(const xspNetPathRule *rule,
 					       char **ret_error_msg) {
 	
 	char *rule_id;
+	char *src_eid;
+	char *dst_eid;
 
-	// compose id from just the src/dst addrs for now
-	if (asprintf(&rule_id, "%s->%s", 
-		     rule->crit.src_eid.x_addrc,
-		     rule->crit.dst_eid.x_addrc) <= 0) {
+        if (rule->use_crit) {
+		// compose id from just the src/dst addrs for now
+		src_eid = (char*)rule->crit.src_eid.x_addrc;
+		dst_eid = (char*)rule->crit.dst_eid.x_addrc;
+        }
+        else {
+                // check the settings for static openflow config
+                if (xsp_settings_get_2(settings, "openflow", "src_eid", &src_eid) != 0) {
+                        xsp_err(0, "No OPENFLOW src specified");
+                        goto error_exit;
+                }
+
+                if (xsp_settings_get_2(settings, "openflow", "dst_eid", &dst_eid) != 0) {
+                        xsp_err(0, "No OPENFLOW dst specified");
+                        goto error_exit;
+                }
+		
+		
+        }
+
+	if (asprintf(&rule_id, "%s->%s",src_eid, dst_eid) <= 0) {
 		goto error_exit;
 	}
-	
+
 	return rule_id;
 	
 error_exit:
@@ -99,6 +119,10 @@ static int xsp_openflow_allocate_pathrule_handler(const xspNetPathRule *net_rule
 						  const xspSettings *settings,
 						  xspPathRule **ret_rule,
 						  char **ret_error_msg) {
+
+	char *src_eid;
+	char *dst_eid;
+
 	xspPathRule *rule;
 	rule = xsp_alloc_pathrule();
 	if (!rule)
@@ -109,6 +133,18 @@ static int xsp_openflow_allocate_pathrule_handler(const xspNetPathRule *net_rule
 	}
 	else {
 		// check the settings for static openflow config
+		if (xsp_settings_get_2(settings, "openflow", "src_eid", &src_eid) != 0) {
+			xsp_err(0, "No OPENFLOW src specified");
+			goto error_exit_pathrule;
+		}
+		
+		if (xsp_settings_get_2(settings, "openflow", "dst_eid", &dst_eid) != 0) {
+                        xsp_err(0, "No OPENFLOW dst specified");
+                        goto error_exit_pathrule;
+                }
+
+		memcpy(rule->crit.src_eid.x_addrc, src_eid, XSP_HOPID_LEN);
+		memcpy(rule->crit.dst_eid.x_addrc, dst_eid, XSP_HOPID_LEN);
 	}
 
 	rule->private = NULL;
@@ -119,7 +155,7 @@ static int xsp_openflow_allocate_pathrule_handler(const xspNetPathRule *net_rule
 
 	return 0;
 
- error_exit_path:
+ error_exit_pathrule:
 	xsp_free_pathrule(rule);
 	*ret_error_msg = strdup("pathrule allocate configuration error");
  error_exit:

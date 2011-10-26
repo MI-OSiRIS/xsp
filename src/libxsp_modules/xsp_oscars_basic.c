@@ -83,7 +83,8 @@ static char *xsp_oscars_generate_pathrule_id(const xspNetPathRule *rule,
 	char *oscars_server;
 	char *oscars_src_id;
 	char *oscars_dst_id;
-	char *oscars_vlan_id;
+	char *oscars_src_vlan_id;
+	char *oscars_dst_vlan_id;
 	char *path_id;
 
 	if (xsp_settings_get_2(settings, "oscars", "server", &oscars_server) != 0) {
@@ -113,9 +114,13 @@ static char *xsp_oscars_generate_pathrule_id(const xspNetPathRule *rule,
 		goto error_exit;
 	}
 
-	if (xsp_settings_get_2(settings, "oscars", "vlan_id", &oscars_vlan_id) != 0) {
-		oscars_vlan_id = "N/A";
+	if (xsp_settings_get_2(settings, "oscars", "src_vlan_id", &oscars_src_vlan_id) != 0) {
+		oscars_src_vlan_id = "N/A";
 	}
+
+	if (xsp_settings_get_2(settings, "oscars", "dst_vlan_id", &oscars_dst_vlan_id) != 0) {
+                oscars_dst_vlan_id = "N/A";
+        }
 
 	if (strcmp(oscars_src_id, oscars_dst_id) > 0) {
 		char *tmp = oscars_src_id;
@@ -124,8 +129,8 @@ static char *xsp_oscars_generate_pathrule_id(const xspNetPathRule *rule,
 	}
 
 	if (xsp_settings_get_2(settings, "oscars", "path_id", &path_id) != 0) {
-		if (asprintf(&path_id, "%s->%s@%s:%s", oscars_src_id,
-			     oscars_dst_id, oscars_server, oscars_vlan_id) <= 0) {
+		if (asprintf(&path_id, "%s(%s)->%s(%s)@%s", oscars_src_id, oscars_src_vlan_id,
+			     oscars_dst_id, oscars_dst_vlan_id, oscars_server) <= 0) {
 			goto error_exit;
 		}
 	}
@@ -149,10 +154,12 @@ static int xsp_oscars_allocate_pathrule_handler(const xspNetPathRule *net_rule,
 	int oscars_src_tagged;
 	int oscars_dst_tagged;
 	int oscars_duration;
-	char *oscars_vlan_id;
+	char *oscars_src_vlan_id;
+	char *oscars_dst_vlan_id;
 	int oscars_sleep_time;
 	int oscars_clock_offset;
 	int oscars_teardown_timeout;
+	int oscars_reservation_timeout;
 	int oscars_intercircuit_pause_time;
 	char *path_type_str;
 	int path_type;
@@ -221,10 +228,14 @@ static int xsp_oscars_allocate_pathrule_handler(const xspNetPathRule *net_rule,
 		goto error_exit;
 	}
 
-	if (xsp_settings_get_2(settings, "oscars", "vlan_id", &oscars_vlan_id) != 0) {
-		oscars_vlan_id = NULL;
+	if (xsp_settings_get_2(settings, "oscars", "src_vlan_id", &oscars_src_vlan_id) != 0) {
+		oscars_src_vlan_id = NULL;
 	}
 	
+	if (xsp_settings_get_2(settings, "oscars", "dst_vlan_id", &oscars_dst_vlan_id) != 0) {
+		oscars_dst_vlan_id = NULL;
+        }
+
 	if (xsp_settings_get_int_2(settings, "oscars", "clock_offset", &oscars_clock_offset) != 0) {
 		oscars_clock_offset = 0;
 	}
@@ -232,6 +243,10 @@ static int xsp_oscars_allocate_pathrule_handler(const xspNetPathRule *net_rule,
 	if (xsp_settings_get_int_2(settings, "oscars", "teardown_timeout", &oscars_teardown_timeout) != 0) {
 		oscars_teardown_timeout = 0;
 	}
+
+	if (xsp_settings_get_int_2(settings, "oscars", "reservation_timeout", &oscars_reservation_timeout) != 0) {
+                oscars_reservation_timeout = 90;
+        }
 
 	if (xsp_settings_get_int_2(settings, "oscars", "intercircuit_pause_time", &oscars_intercircuit_pause_time) != 0) {
 		oscars_intercircuit_pause_time = 0;
@@ -270,12 +285,14 @@ static int xsp_oscars_allocate_pathrule_handler(const xspNetPathRule *net_rule,
 	pi->dst = oscars_dst_id;
 	pi->dst_tagged = oscars_dst_tagged;
 	pi->duration = oscars_duration;
-	pi->vlan_id = oscars_vlan_id;
+	pi->src_vlan_id = oscars_src_vlan_id;
+	pi->dst_vlan_id = oscars_dst_vlan_id;
 	pi->clock_offset = oscars_clock_offset;
 	pi->sleep_time = oscars_sleep_time;
 	pi->type = path_type;
 	pi->bw = bandwidth;
 	pi->teardown_timeout = oscars_teardown_timeout;
+	pi->reservation_timeout = oscars_reservation_timeout;
 	pi->intercircuit_pause_time = oscars_intercircuit_pause_time;
 	pi->shutdown_time = 0;
 	
@@ -327,18 +344,15 @@ static int xsp_oscars_apply_rule(xspPathRule *rule, int action, char **ret_error
 static int __xsp_oscars_create_rule(xspPathRule *rule, char **ret_error_msg) {
 	char *reservation_id;
 	xspOSCARSPath *pi = rule->private;
-	uint32_t new_bandwidth = pi->bandwidth;
+	uint32_t new_bandwidth = pi->bw;
+	int reservation_timeout = pi->reservation_timeout;
 	char *error_msg;
 	void *response;
 	char *status;
 	int active = 0;
+	int waiting = 0;
 
 	rule->tag++;
-	OSCARS_resRequest create_req;
-	OSCARS_pathInfo path_info;
-	OSCARS_L2Info l2_info;
-	OSCARS_vlanTag l2_stag;
-
 	pthread_cond_signal(&(rule->timeout_cond));
 
 	if (xsp_start_soap_ssl(&(pi->osc), SOAP_SSL_NO_AUTHENTICATION) != 0) {
@@ -384,11 +398,11 @@ static int __xsp_oscars_create_rule(xspPathRule *rule, char **ret_error_msg) {
 		l2_info.dst_endpoint = pi->dst;
 
 		if (pi->src_tagged) {
-			l2_stag.id = pi->vlan_id;
+			l2_stag.id = pi->src_vlan_id;
 			l2_stag.tagged = (enum boolean_*)&(pi->src_tagged);
 		}
 		if (pi->dst_tagged) {
-			l2_dtag.id = pi->vlan_id;
+			l2_dtag.id = pi->dst_vlan_id;
 			l2_dtag.tagged = (enum boolean_*)&(pi->dst_tagged);
 		}
 		
@@ -422,6 +436,7 @@ static int __xsp_oscars_create_rule(xspPathRule *rule, char **ret_error_msg) {
 		}
 		
 		reservation_id = ((struct ns1__createReply*)response)->globalReservationId;
+		pi->reservation_id = strdup(reservation_id);
 
 		xsp_info(10, "Sleeping for %d seconds", pi->sleep_time);
 		sleep(pi->sleep_time);
@@ -441,9 +456,11 @@ static int __xsp_oscars_create_rule(xspPathRule *rule, char **ret_error_msg) {
 			
 			status = ((struct ns1__resDetails*)response)->status;
 			reservation_id = ((struct ns1__resDetails*)response)->globalReservationId;
+			xsp_info(10, "GRI %s status: %s", reservation_id, status);
 
 			if (strcmp(status,"ACTIVE") == 0){
 				active=1;
+				break;
 			}
 			
 			if (strcmp(status,"FAILED") ==0){
@@ -458,6 +475,16 @@ static int __xsp_oscars_create_rule(xspPathRule *rule, char **ret_error_msg) {
 				goto error_exit_reservation;
 			}
 			
+			waiting += pi->sleep_time;
+                        if (waiting >= reservation_timeout) {
+				pthread_cond_signal(&(pi->setup_cond));
+				pi->status = OSCARS_DOWN;
+				error_msg = strdup("OSCARS STATUS: TIMEDOUT");
+				xsp_err(0, "%s: timed out waiting for OSCARS path: %s", rule->description, error_msg);
+				*ret_error_msg = error_msg;
+				goto error_exit_reservation;
+                        }
+
 			xsp_info(10, "Sleeping for %d seconds", pi->sleep_time);
 			sleep(pi->sleep_time);
 		}
@@ -474,7 +501,6 @@ static int __xsp_oscars_create_rule(xspPathRule *rule, char **ret_error_msg) {
 			  reservation_id);
 		
 		// save the path information
-		pi->reservation_id = reservation_id;
 		pi->bandwidth = new_bandwidth;
 		
 		pi->status = OSCARS_UP;
@@ -533,46 +559,32 @@ static int __xsp_oscars_modify_rule(xspPathRule *rule, char **ret_error_msg) {
 static int __xsp_oscars_delete_rule(xspPathRule *rule, char **ret_error_msg) {
 	xspOSCARSPath *pi = rule->private;
 
-	xsp_info(0, "%s: shutting down OSCARS rule", rule->description);
+	xsp_info(0, "%s: shutting down OSCARS rule with gri: %s",
+		 rule->description, pi->reservation_id);
 
-	// verify that the rule passed is actually in the given path
-	
-	// if not, error out
-	pi->bandwidth_used -= pi->bandwidth;
-
-	xspOSCARSTimeoutArgs *args = xsp_alloc_oscars_timeout_args();
-	if (!args) {
-		void *response;
-		if (xsp_start_soap_ssl(&(pi->osc), SOAP_SSL_NO_AUTHENTICATION) != 0) {
-			xsp_err(0, "couldn't start SOAP context");
-			goto error_exit;
-		}
-		
-		if (oscars_cancelReservation(&(pi->osc), pi->reservation_id, &response) != 0) {
-			xsp_warn(0, "__xsp_oscars_delete_rule(%s): failed to delete rule",
-				 rule->description);
-			//xsp_event("oscars.circuit.close.failed", path,
-			//	   "SRC_ID=\"%s\" DST_ID=\"%s\" IDC=\"%s\" VLAN=%d ERROR_MSG=\"%s\"",
-			//	   pi->src, pi->dst, pi->osc.soap_endpoint, pi->vlan_id, error_msg);
-		} else {
-			xsp_info(10, "%s: successfully shutdown rule", rule->description);
-			//xsp_event("oscars.circuit.close.failed", path,
-			//	   "SRC_ID=\"%s\" DST_ID=\"%s\" IDC=\"%s\" VLAN=%d ERROR_MSG=\"%s\"",
-			//	   pi->src, pi->dst, pi->osc.soap_endpoint, pi->vlan_id, error_msg);
-		}
-		
-		time(&(pi->shutdown_time));
-		xsp_oscars_reset_rule_info(pi);
-		xsp_stop_soap_ssl(&(pi->osc));
-	} else {
-		args->tag = rule->tag;
-		args->rule = rule;
-		args->timeout = pi->teardown_timeout;
-		xsp_tpool_exec(xsp_timeout_handler, args);
+	void *response;
+	if (xsp_start_soap_ssl(&(pi->osc), SOAP_SSL_NO_AUTHENTICATION) != 0) {
+		xsp_err(0, "couldn't start SOAP context");
+		goto error_exit;
 	}
 	
-	xsp_info(10, "%s: successfully shutdown OSCARS path", rule->description);
-
+	if (oscars_cancelReservation(&(pi->osc), pi->reservation_id, &response) != 0) {
+		xsp_warn(0, "__xsp_oscars_delete_rule(%s): failed to delete rule",
+			 pi->reservation_id);
+		//xsp_event("oscars.circuit.close.failed", path,
+		//	   "SRC_ID=\"%s\" DST_ID=\"%s\" IDC=\"%s\" VLAN=%d ERROR_MSG=\"%s\"",
+		//	   pi->src, pi->dst, pi->osc.soap_endpoint, pi->vlan_id, error_msg);
+	} else {
+		xsp_info(10, "%s: successfully shutdown rule: gri: %s",
+			 rule->description, pi->reservation_id);
+		//xsp_event("oscars.circuit.close.failed", path,
+		//	   "SRC_ID=\"%s\" DST_ID=\"%s\" IDC=\"%s\" VLAN=%d ERROR_MSG=\"%s\"",
+		//	   pi->src, pi->dst, pi->osc.soap_endpoint, pi->vlan_id, error_msg);
+	}
+	
+	xsp_oscars_reset_rule_info(pi);	
+	xsp_stop_soap_ssl(&(pi->osc));
+	
 	return 0;
 
  error_exit:
@@ -683,6 +695,8 @@ static xspOSCARSPath *xsp_alloc_oscars_path() {
 }
 
 static void xsp_free_oscars_path(xspOSCARSPath *pi) {
+	if (pi->reservation_id)
+		free(pi->reservation_id);
 	if (pi->src)
 		free(pi->src);
 	if (pi->dst)

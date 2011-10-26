@@ -53,15 +53,22 @@ void oscars_pretty_print(int type, void *res) {
 	  case QUERY_RES:
 	  {
 		  struct ns1__resDetails *det = (struct ns1__resDetails*)res;
+                  char *stime, *etime, *crtime;
+		  
+		  stime = strdup(ctime((const time_t*)&det->userRequestConstraint->startTime));
+                  etime = strdup(ctime((const time_t*)&det->userRequestConstraint->endTime));
+                  crtime = strdup(ctime((const time_t*)&det->createTime));
+
 		  printf("GRI: %s\n", det->globalReservationId);
 		  printf("\t login: %s\n\t status: %s\n\t start:\t\t%s\t end:\t\t%s",
-			 det->login, det->status, ctime((const time_t*)&det->userRequestConstraint->startTime),
-			 ctime((const time_t*)&det->userRequestConstraint->endTime));
+			 det->login, det->status, stime, etime);
 		  printf("\t create:\t%s\t bandwidth: %d\n\t description: %s\n\t pathInfo:\n",
-			 ctime((const time_t*)&det->createTime), det->userRequestConstraint->bandwidth,
-			 det->description);
+			 crtime, det->userRequestConstraint->bandwidth, det->description);
 		  if (det->userRequestConstraint)
 			  _oscars_pretty_print_path_info((void*)det->userRequestConstraint->pathInfo);
+		  free(stime);
+                  free(etime);
+                  free(crtime);
 	  }
 	  break;
 	  case CREATE_RES:
@@ -90,15 +97,22 @@ void oscars_pretty_print(int type, void *res) {
 		  printf("Total results: %d\n", *(tmp->totalResults));
 		  for (i=0; i<tmp->__sizeresDetails; i++) {
 			  struct ns1__resDetails *det = tmp->resDetails[i];
+			  char *stime, *etime, *crtime;
+
+			  stime = strdup(ctime((const time_t*)&det->userRequestConstraint->startTime));
+			  etime = strdup(ctime((const time_t*)&det->userRequestConstraint->endTime));
+			  crtime = strdup(ctime((const time_t*)&det->createTime));
+
 			  printf("[%d] GRI: %s\n", i, det->globalReservationId);
 			  printf("\t login: %s\n\t status: %s\n\t start:\t\t%s\t end:\t\t%s",
-				 det->login, det->status, ctime((const time_t*)&det->userRequestConstraint->startTime),
-				 ctime((const time_t*)&det->userRequestConstraint->endTime));
+				 det->login, det->status, stime, etime);
 			  printf("\t create:\t%s\t bandwidth: %d\n\t description: %s\n\t pathInfo:\n",
-				 ctime((const time_t*)&det->createTime), det->userRequestConstraint->bandwidth,
-				 det->description);
+				 crtime, det->userRequestConstraint->bandwidth, det->description);
 			  if (det->userRequestConstraint)
 				  _oscars_pretty_print_path_info((void*)det->userRequestConstraint->pathInfo);
+			  free(stime);
+			  free(etime);
+			  free(crtime);
 		  }
 	  }
 	  break;
