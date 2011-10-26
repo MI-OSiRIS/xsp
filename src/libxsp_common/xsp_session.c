@@ -652,27 +652,70 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
                 settings = xsp_settings_alloc();
         }
 
-	/*
-	if (!strcasecmp(net_path->type, "TERAPATHS") && sess->child_count) {
-		// set src and dst in the settings to start
-		xsp_settings_set_2(settings, "terapaths", "src", strtok(parent_conn->description, "/"));
-		xsp_settings_set_2(settings, "terapaths", "dst", strtok(xsp_hop_getid(sess->child[0]), "/"));
-	}
-	*/
+	if (net_path->rule_count && !strcasecmp(net_path->rules[0]->type, "DEFAULT")) {
+		xsp_info(0, "applying local configuration for all loaded pathrule modules!");
+		
+		int netpath_script = 0;
+		int hcount;
+		xspPathRuleHandler **handlers;
+		xspNetPathRuleCrit *crit = &net_path->rules[0]->crit;
+		
+		handlers = xsp_get_pathrule_handlers(&hcount);
 
-	if (xsp_get_path(net_path, settings, &path, &error_msg) != 0) {
-		xsp_err(0, "couldn't create new path: %s", error_msg);
-		goto error_exit;
-	}
+		if (hcount) {
+			int path_action = net_path->action;
+			xspPath *path;
+			xspNetPath *net_path = xsp_alloc_net_path();
+			for (i = 0; i < hcount; i++) {
+				xspNetPathRule *rule = xsp_alloc_net_path_rule();
+				memcpy(rule->type, handlers[i]->name, XSP_NET_PATH_LEN);
+				rule->use_crit = FALSE;
+				
+				xsp_net_path_add_rule(net_path, rule);
+			}
+			
+			if (xsp_get_path(net_path, settings, &path, &error_msg) != 0) {
+				xsp_err(0, "couldn't create new path: %s", error_msg);
+				goto error_exit;
+			}
 
-	// apply each rule in the path
-	for (i = 0; i < path->rule_count; i++) {
-		if (path->rules[i]->apply(path->rules[i], net_path->action, &error_msg) != 0) {
-			xsp_err(0, "couldn't apply path rule: %s", error_msg);
+			// apply each rule in the path
+			for (i = 0; i < path->rule_count; i++) {
+				if (path->rules[i]->apply(path->rules[i], path_action, &error_msg) != 0) {
+					xsp_err(0, "couldn't apply path rule: %s", error_msg);
+					goto error_exit;
+				}
+			
+				if (crit && netpath_script) {
+					xsp_info(0, "src: %s -> dst: %s\n", crit->src_eid.x_addrc, crit->dst_eid.x_addrc);
+				}
+			}
+		}
+		else
+			xsp_info(0, "no default pathrule handlers loaded");
+		
+		return 0;
+	}
+	else if (net_path->rule_count) {
+		if (xsp_get_path(net_path, settings, &path, &error_msg) != 0) {
+			xsp_err(0, "couldn't create new path: %s", error_msg);
 			goto error_exit;
 		}
-	}
 		
+		// apply each rule in the path
+		for (i = 0; i < path->rule_count; i++) {
+			if (path->rules[i]->apply(path->rules[i], net_path->action, &error_msg) != 0) {
+				xsp_err(0, "couldn't apply path rule: %s", error_msg);
+				goto error_exit;
+			}
+		}
+	}
+	else {
+		error_msg = "netPath contains no rules!";
+		xsp_err(10, "%s", error_msg);
+		goto error_exit;
+	}
+	
 	return 0;
 
  error_exit:

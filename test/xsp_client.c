@@ -67,12 +67,12 @@ int main(int argc, char *argv[])
 
 	libxspNetPath *path;
 	libxspNetPathRuleCrit crit = {
-		.src = "192.168.1.1",
-		.dst = "192.168.1.2"
+		.src = "pc5.pgeni",
+		.dst = "pc150"
 	};
 	
 	// creates a path with a single rule
-	path = xsp_sess_new_net_path("OPENFLOW", XSP_NET_PATH_CREATE);
+	path = xsp_sess_new_net_path("DEFAULT", XSP_NET_PATH_CREATE);
 	if (xsp_sess_set_net_path_crit(path, &crit) != 0)
 		fprintf(stderr, "could not set path criteria\n");
 	

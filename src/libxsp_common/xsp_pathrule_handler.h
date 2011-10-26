@@ -11,6 +11,7 @@ typedef struct xsp_pathrule_handler_t {
 
 int xsp_pathrule_handler_init();
 xspPathRuleHandler *xsp_get_pathrule_handler(const char *name);
+xspPathRuleHandler **xsp_get_pathrule_handlers(int *ret_count);
 int xsp_add_pathrule_handler(xspPathRuleHandler *handler);
 
 #endif

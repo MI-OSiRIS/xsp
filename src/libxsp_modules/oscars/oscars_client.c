@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
 
 		time(&stime);
 		stime += 5;
-		etime = stime + atoi(argv[7]);
+		etime = stime + atoi(argv[8]);
 
 		if ((argc > 8) && argv[9])
 			stime = atoi(argv[9]);
@@ -126,7 +126,7 @@ int main(int argc, char* argv[])
                 create_req.res_id = NULL;
                 create_req.start_time = (int64_t)stime;
                 create_req.end_time = (int64_t)etime;
-                create_req.bandwidth = atoi(argv[8]);
+                create_req.bandwidth = atoi(argv[7]);
                 create_req.description = "C client reservation";
                 create_req.path_info = &path_info;
 
@@ -170,7 +170,7 @@ int main(int argc, char* argv[])
 		
 		time(&stime);
 		stime += 5;
-		etime = stime + atoi(argv[8]);
+		etime = stime + atoi(argv[9]);
 		
 		if (argv[10])
 			stime = atoi(argv[10]);
@@ -210,7 +210,7 @@ int main(int argc, char* argv[])
 		modify_request.res_id = NULL;
 		modify_request.start_time = (int64_t)stime;
 		modify_request.end_time = (int64_t)etime;
-		modify_request.bandwidth = atoi(argv[9]);
+		modify_request.bandwidth = atoi(argv[8]);
                 modify_request.description = "C client reservation";
 		modify_request.path_info = &path_info;
 

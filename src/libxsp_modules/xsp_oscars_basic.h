@@ -27,13 +27,16 @@ typedef struct xsp_oscars_path_t {
 
 	int duration;
 
-	char *vlan_id;
+	char *src_vlan_id;
+	char *dst_vlan_id;
 
 	int clock_offset;
 
 	int sleep_time;
 
 	int teardown_timeout;
+
+	int reservation_timeout;
 
 	int intercircuit_pause_time;
 
