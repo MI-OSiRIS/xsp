@@ -1,7 +1,7 @@
 noinst_LIBRARIES = libofcontrol.a
 noinst_PROGRAMS = openflow_client
 
-libofcontrol_a_SOURCES = controller.c
+libofcontrol_a_SOURCES = controller.c ctrl_table.c
 
 openflow_client_SOURCES = openflow_client.c
 openflow_client_LDADD = libofcontrol.a lib/libopenflow.a $(SSL_LIBS) $(THREAD_LIBS)
