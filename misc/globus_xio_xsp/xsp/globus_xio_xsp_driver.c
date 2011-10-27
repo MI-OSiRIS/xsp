@@ -1632,7 +1632,7 @@ globus_l_xio_xsp_close_cb(
 			    .dst = handle->dst
 		    };
 		    
-		    path = xsp_sess_new_net_path("DEFAULT", XSP_NET_PATH_DELETE);
+		    path = xsp_sess_new_net_path(handle->xsp_net_path, XSP_NET_PATH_DELETE);
 		    if (xsp_sess_set_net_path_crit(path, &crit) != 0)
 			    fprintf(stderr, "could not set path criteria\n");
 		    
