@@ -1619,32 +1619,32 @@ globus_l_xio_xsp_close_cb(
 		}
 		done = GLOBUS_TRUE;
 	      */
+		    
+		if (handle->xsp_net_path &&
+		    globus_l_xio_xsp_xfer_default.xsp_signal_path)
+		{
+		
+		    printf("XIO-XSP: deleting path\n");
+		    
+		    libxspNetPath *path;
+		    libxspNetPathRuleCrit crit = {
+			    .src = handle->src,
+			    .dst = handle->dst
+		    };
+		    
+		    path = xsp_sess_new_net_path("DEFAULT", XSP_NET_PATH_DELETE);
+		    if (xsp_sess_set_net_path_crit(path, &crit) != 0)
+			    fprintf(stderr, "could not set path criteria\n");
+		    
+		    if ((res = xsp_signal_path(handle->xfer->sess, path)) != 0)
+		    {
+			    printf("XIO-XSP: could not signal path delete\n");
+		    }
+		}
 	    }
 	    else
 	    {
 		// a stream in the active transfer has closed
-	    }
-	    
-	    if (handle->xsp_net_path &&
-		globus_l_xio_xsp_xfer_default.xsp_signal_path)
-	    {
-		
-		printf("XIO-XSP: deleting path\n");
-    
-		libxspNetPath *path;
-		libxspNetPathRuleCrit crit = {
-			.src = handle->src,
-			.dst = handle->dst
-		};
-	    
-		path = xsp_sess_new_net_path("DEFAULT", XSP_NET_PATH_DELETE);
-		if (xsp_sess_set_net_path_crit(path, &crit) != 0)
-		    fprintf(stderr, "could not set path criteria\n");
-		
-		if ((res = xsp_signal_path(handle->xfer->sess, path)) != 0)
-		{
-		    printf("XIO-XSP: could not signal path delete\n");
-		}
 	    }
 	}
 	globus_mutex_unlock(&xio_l_xsp_mutex);
