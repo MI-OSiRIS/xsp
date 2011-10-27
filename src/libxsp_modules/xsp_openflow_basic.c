@@ -119,10 +119,15 @@ static int xsp_openflow_allocate_pathrule_handler(const xspNetPathRule *net_rule
 						  const xspSettings *settings,
 						  xspPathRule **ret_rule,
 						  char **ret_error_msg) {
-
+	
+	char **src_list;
+	char **dst_list;
+	int src_count;
+	int dst_count;
 	char *src_eid;
 	char *dst_eid;
 
+	struct xsp_openflow_rules_t *prules = NULL;
 	xspPathRule *rule;
 	rule = xsp_alloc_pathrule();
 	if (!rule)
@@ -147,7 +152,19 @@ static int xsp_openflow_allocate_pathrule_handler(const xspNetPathRule *net_rule
 		memcpy(rule->crit.dst_eid.x_addrc, dst_eid, XSP_HOPID_LEN);
 	}
 
-	rule->private = NULL;
+	// let's be sneaky and add more entries if they're defined in the config
+	xsp_settings_get_list_2(settings, "openflow", "src_list", &src_list, &src_count);
+	xsp_settings_get_list_2(settings, "openflow", "dst_list", &dst_list, &dst_count);
+
+	if (src_count && dst_count) {
+		prules = malloc(sizeof(struct xsp_openflow_rules_t));
+		prules->src_list = src_list;
+		prules->dst_list = dst_list;
+		prules->src_count = src_count;
+		prules->dst_count = dst_count;
+	}
+
+	rule->private = prules;
 	rule->apply = xsp_openflow_apply_rule;
 	rule->free = xsp_openflow_free_rule;
 	
@@ -203,12 +220,22 @@ static int __xsp_openflow_create_rule(xspPathRule *rule, char **ret_error_msg) {
 	// which OF fields we care about for a particular rule
 	// the "operation" could be add an ACL, a route, filter, etc.
 
+	struct xsp_openflow_rules_t *prules = rule->private;
+	int i;
+
 	if (ctrl_status == OF_CTRL_UP) {
 		// right now all we can do it set the src/dst IP
 		// ...and they're passed in as strings right now
 		
 		xsp_info(0, "adding OF rule: %s -> %s", rule->crit.src_eid.x_addrc, rule->crit.dst_eid.x_addrc);
 		of_add_l3_rule(rule->crit.src_eid.x_addrc, rule->crit.dst_eid.x_addrc, 0, 0, 100);
+		
+		if (prules && (prules->src_count == prules->dst_count)) {
+			for (i = 0; i < prules->src_count; i++) {
+				xsp_info(0, "adding OF rule: %s -> %s", prules->src_list[i], prules->dst_list[i]);
+				of_add_l3_rule(prules->src_list[i], prules->dst_list[i], 0, 0, 100);
+			}
+		}
 	}
 	else {
 		xsp_err(0, "controller is not active\n");
@@ -228,13 +255,22 @@ static int __xsp_openflow_modify_rule(xspPathRule *rule, char **ret_error_msg) {
 }
 
 static int __xsp_openflow_delete_rule(xspPathRule *rule, char **ret_error_msg) {
+	struct xsp_openflow_rules_t *prules = rule->private;
+        int i;
+
 	if (ctrl_status == OF_CTRL_UP) {
 		// right now all we can do it set the src/dst IP
 		// ...and they're passed in as strings right now
 		
 		xsp_info(0, "removing OF rule: %s -> %s", rule->crit.src_eid.x_addrc, rule->crit.dst_eid.x_addrc);
 		of_remove_l3_rule(rule->crit.src_eid.x_addrc, rule->crit.dst_eid.x_addrc, 0, 0);
-
+		
+		if (prules && (prules->src_count == prules->dst_count)) {
+                        for (i = 0; i < prules->src_count; i++) {
+                                xsp_info(0, "removing OF rule: %s -> %s", prules->src_list[i], prules->dst_list[i]);
+                                of_remove_l3_rule(prules->src_list[i], prules->dst_list[i], 0, 0);
+                        }
+                }
 	}
 	else {
 		xsp_err(0, "controller is not active\n");
