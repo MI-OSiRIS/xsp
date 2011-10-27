@@ -723,11 +723,23 @@ globus_l_xio_xsp_connect_handle(
 	    globus_l_xio_xsp_xfer_default.xsp_signal_path)
 	{
 	    libxspNetPath *path;
-	    path = xsp_net_path(handle->xsp_net_path, XSP_NET_PATH_CREATE);
-	    if ((ret = xsp_sess_signal_path(handle->xfer->sess, path)) != 0)
+	    libxspNetPathRuleCrit crit = {
+		    .src = handle->src,
+		    .dst = handle->dst
+	    };
+	    
+	    printf("XIO-XSP: waiting for path\n");
+
+	    path = xsp_sess_new_net_path(handle->xsp_net_path, XSP_NET_PATH_CREATE);
+	    if (xsp_sess_set_net_path_crit(path, &crit) != 0)
+		    fprintf(stderr, "could not set path criteria\n");
+	    
+	    if ((ret = xsp_signal_path(handle->xfer->sess, path)) != 0)
 	    {
 		goto error_sess;
 	    }
+	    
+	    printf("XIO-XSP: path setup complete\n");
 	    free(path);
 	}
 
@@ -1413,7 +1425,7 @@ globus_l_xio_xsp_open_cb(
 	    }
 
 	    // notify on every new stream
-	    if (handle->xfer->streams >= 1)
+	    if (handle->log_flag && (handle->xfer->streams >= 1))
 	    {
 		res = globus_l_xio_xsp_do_xfer_notify(handle, GLOBUS_XIO_XSP_NEW_XFER);
 		if (res != GLOBUS_SUCCESS)
@@ -1611,6 +1623,28 @@ globus_l_xio_xsp_close_cb(
 	    else
 	    {
 		// a stream in the active transfer has closed
+	    }
+	    
+	    if (handle->xsp_net_path &&
+		globus_l_xio_xsp_xfer_default.xsp_signal_path)
+	    {
+		
+		printf("XIO-XSP: deleting path\n");
+    
+		libxspNetPath *path;
+		libxspNetPathRuleCrit crit = {
+			.src = handle->src,
+			.dst = handle->dst
+		};
+	    
+		path = xsp_sess_new_net_path("DEFAULT", XSP_NET_PATH_DELETE);
+		if (xsp_sess_set_net_path_crit(path, &crit) != 0)
+		    fprintf(stderr, "could not set path criteria\n");
+		
+		if ((res = xsp_signal_path(handle->xfer->sess, path)) != 0)
+		{
+		    printf("XIO-XSP: could not signal path delete\n");
+		}
 	    }
 	}
 	globus_mutex_unlock(&xio_l_xsp_mutex);
@@ -1911,7 +1945,7 @@ globus_l_xio_xsp_activate(void)
     }
     else
     {
-	fprintf(stderr, "XIO-XSP: XSP_HOP not set in environment.\n");
+	    fprintf(stderr, "XIO-XSP: XSP_HOP not set in environment.\n");
     }
 
     if ((tmp = globus_module_getenv("XSP_SEC")))
@@ -1920,7 +1954,7 @@ globus_l_xio_xsp_activate(void)
     }
     else
     {
-	fprintf(stderr, "XIO-XSP: XSP_SEC not set in environment, using \"none\".\n");
+	    //fprintf(stderr, "XIO-XSP: XSP_SEC not set in environment, using \"none\".\n");
     }
 
     if ((tmp = globus_module_getenv("XSP_BLIPP")))
