@@ -23,5 +23,6 @@ int xsp_path_init();
 xspPath *xsp_alloc_path();
 void xsp_free_path(xspPath *path);
 int xsp_get_path(xspNetPath *net_path, xspSettings *settings, xspPath **ret_path, char **error_msg);
+int xsp_delete_path(xspPath *path);
 
 #endif
