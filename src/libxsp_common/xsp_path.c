@@ -46,9 +46,6 @@ error_exit:
 }
 
 void xsp_free_path(xspPath *path) {
-	if (path->description)
-		free(path->description);
-
 	if (path->rule_count)
 		free(path->rules);
 
@@ -61,29 +58,32 @@ static unsigned int xsp_path_hash_str(const void *k1) {
 
 	retval = 0;
 
-	while(*c != 0) {
-		retval += *c;
+	while(*c != '\0') {
+		retval += (int)*c;
 		c++;
 	}
-
+	
 	return retval;
 }
 
 static int xsp_path_hash_equal(const void *k1, const void *k2) {
 	const char *s1, *s2;
+	int count = 0;
 
-	s1 = k1;
-	s2 = k2;
+	s1 = (char*)k1;
+	s2 = (char*)k2;
 
-	while(s1 != 0 && s2 != 0 && s1 == s2) {
+	while(*s1 != '\0' && *s2 != '\0' && *s1 == *s2) {
 		s1++;
 		s2++;
+		count++;
 	}
 
-	if (s1 == 0 && s2 == 0)
-		return 0;
+	if (*s1 == '\0' && *s2 == '\0')
+		return 1;
 
-	return -1;
+	// return 0 for failure!
+	return 0;
 }
 
 int xsp_get_path(xspNetPath *net_path, xspSettings *settings, xspPath **ret_path, char **ret_error_msg) {
@@ -111,20 +111,17 @@ int xsp_get_path(xspNetPath *net_path, xspSettings *settings, xspPath **ret_path
 			goto error_exit;
 		}
 		
-		path_desc = realloc(path_desc, desc_len+strlen(rule_id)+2);
-		if (desc_len > 0) {
-			strncpy(path_desc+desc_len, "#", 1);
-			desc_len++;
-		}
-		strncpy(path_desc+desc_len, rule_id, strlen(rule_id));
+		path_desc = realloc(path_desc, desc_len+strlen(rule_id)+1);
+		strncpy(path_desc+desc_len, rule_id, strlen(rule_id)+1);
 		desc_len += strlen(rule_id);
 	}
 	
+	path_desc[strlen(path_desc)] = '\0';
+
 	pthread_mutex_lock(&path_list_lock);
 	{
 		path = hashtable_search(path_list, path_desc);
 		if (!path) {
-
 			path = xsp_alloc_path();
 			if (!path) {
 				xsp_err(0, "couldn't allocated new path");
@@ -154,7 +151,7 @@ int xsp_get_path(xspNetPath *net_path, xspSettings *settings, xspPath **ret_path
 			
 			path->status = XSP_PATH_ALLOCATED;
 			path->description = path_desc;
-			asprintf(&(path->gri), "XSP-netPath-%d\n", path_id);
+			asprintf(&(path->gri), "XSP-netPath-%d", path_id);
 			path_id++;
 			
 			if (hashtable_insert(path_list, path->description, path) == 0) {
@@ -178,4 +175,10 @@ int xsp_get_path(xspNetPath *net_path, xspSettings *settings, xspPath **ret_path
  error_exit:
 	*ret_error_msg = "XSP GET PATH ERROR";
 	return -1;
+}
+
+int xsp_delete_path(xspPath *path) {
+	void *ret;
+	ret = hashtable_remove(path_list, path->description);
+	xsp_free_path(path);
 }

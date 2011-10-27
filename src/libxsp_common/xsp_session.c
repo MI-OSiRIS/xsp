@@ -631,6 +631,8 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
 	xspBlock **blocks;
 	int block_count;
 	xspNetPath *net_path;
+	int netpath_script = 0;
+	char *netpath_script_dir = NULL;
 
 	xsp_session_get_blocks((xspMsg*)arg, XSP_OPT_PATH, &blocks, &block_count);
 	// XXX: taking only the first block!
@@ -652,16 +654,18 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
                 settings = xsp_settings_alloc();
         }
 
+	xsp_settings_get_bool(settings, "netpath_script", &netpath_script);
+	xsp_settings_get(settings, "netpath_script_dir", &netpath_script_dir);
+	
 	if (net_path->rule_count && !strcasecmp(net_path->rules[0]->type, "DEFAULT")) {
 		xsp_info(0, "applying local configuration for all loaded pathrule modules!");
 		
-		int netpath_script = 0;
 		int hcount;
 		xspPathRuleHandler **handlers;
 		xspNetPathRuleCrit *crit = &net_path->rules[0]->crit;
 		
 		handlers = xsp_get_pathrule_handlers(&hcount);
-
+		
 		if (hcount) {
 			int path_action = net_path->action;
 			xspPath *path;
@@ -686,10 +690,48 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
 					goto error_exit;
 				}
 			
-				if (crit && netpath_script) {
-					xsp_info(0, "src: %s -> dst: %s\n", crit->src_eid.x_addrc, crit->dst_eid.x_addrc);
+				if (crit && netpath_script && netpath_script_dir) {
+					FILE *output;
+					char *command;
+					char *status = "DOWN";
+
+					if (path_action == XSP_NET_PATH_CREATE)
+						status = "UP";
+					else if (path_action == XSP_NET_PATH_DELETE)
+						status = "DOWN";
+
+					asprintf(&command, "%s/%s-%s.sh xxx link %s %s", netpath_script_dir,
+						 crit->src_eid.x_addrc, crit->dst_eid.x_addrc,
+						 handlers[i]->name, status);
+					
+					xsp_info(11, "executing %s", command);
+				        output = popen(command, "r");
+					pclose(output);
 				}
 			}
+			
+			// send a "transfer event" signal
+			if (crit && netpath_script && netpath_script_dir) {
+				FILE *output;
+				char *command;
+				char *status = "DOWN";
+				
+				if (path_action == XSP_NET_PATH_CREATE)
+					status = "UP";
+				else if (path_action == XSP_NET_PATH_DELETE)
+					status = "DOWN";
+				
+				asprintf(&command, "%s/%s-%s.sh %s transfer xxx %s", netpath_script_dir,
+					 crit->src_eid.x_addrc, crit->dst_eid.x_addrc, 
+					 path->gri, status);
+
+				xsp_info(11, "executing %s", command);
+				output = popen(command, "r");
+				pclose(output);
+			}
+			
+			if (path_action == XSP_NET_PATH_DELETE)
+				xsp_delete_path(path);
 		}
 		else
 			xsp_info(0, "no default pathrule handlers loaded");
@@ -709,6 +751,10 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
 				goto error_exit;
 			}
 		}
+
+		if (net_path->action == XSP_NET_PATH_DELETE)
+			xsp_delete_path(path);
+			
 	}
 	else {
 		error_msg = "netPath contains no rules!";

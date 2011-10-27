@@ -129,8 +129,8 @@ static char *xsp_oscars_generate_pathrule_id(const xspNetPathRule *rule,
 	}
 
 	if (xsp_settings_get_2(settings, "oscars", "path_id", &path_id) != 0) {
-		if (asprintf(&path_id, "%s(%s)->%s(%s)@%s", oscars_src_id, oscars_src_vlan_id,
-			     oscars_dst_id, oscars_dst_vlan_id, oscars_server) <= 0) {
+		if (asprintf(&path_id, "%s(%s)->%s(%s)", oscars_src_id, oscars_src_vlan_id,
+			     oscars_dst_id, oscars_dst_vlan_id) <= 0) {
 			goto error_exit;
 		}
 	}
@@ -455,8 +455,7 @@ static int __xsp_oscars_create_rule(xspPathRule *rule, char **ret_error_msg) {
 			}
 			
 			status = ((struct ns1__resDetails*)response)->status;
-			reservation_id = ((struct ns1__resDetails*)response)->globalReservationId;
-			xsp_info(10, "GRI %s status: %s", reservation_id, status);
+			xsp_info(10, "GRI %s status: %s", pi->reservation_id, status);
 
 			if (strcmp(status,"ACTIVE") == 0){
 				active=1;
@@ -487,8 +486,8 @@ static int __xsp_oscars_create_rule(xspPathRule *rule, char **ret_error_msg) {
 
 			xsp_info(10, "Sleeping for %d seconds", pi->sleep_time);
 			sleep(pi->sleep_time);
-		}
-		
+			}
+
 		//xsp_event("oscars.circuit.allocated", path,
 		//	   "SRC_ID=\"%s\" DST_ID=\"%s\" IDC=\"%s\" VLAN=%d SIZE=%lu ERROR_MSG=\"%s\"",
 		//	   pi->src, pi->dst, pi->osc.soap_endpoint, pi->vlan_id, size, error_msg);
@@ -497,8 +496,8 @@ static int __xsp_oscars_create_rule(xspPathRule *rule, char **ret_error_msg) {
 		sleep(pi->sleep_time);
 		
 		xsp_info(0, "%s: allocated new path of size %d Mbit/s(Start Time: %lu End Time: %lu). Id: %s",
-			  rule->description, new_bandwidth, (unsigned long) stime, (unsigned long) etime,
-			  reservation_id);
+			 rule->description, new_bandwidth, (unsigned long) stime, (unsigned long) etime,
+			 pi->reservation_id);
 		
 		// save the path information
 		pi->bandwidth = new_bandwidth;
@@ -567,7 +566,7 @@ static int __xsp_oscars_delete_rule(xspPathRule *rule, char **ret_error_msg) {
 		xsp_err(0, "couldn't start SOAP context");
 		goto error_exit;
 	}
-	
+
 	if (oscars_cancelReservation(&(pi->osc), pi->reservation_id, &response) != 0) {
 		xsp_warn(0, "__xsp_oscars_delete_rule(%s): failed to delete rule",
 			 pi->reservation_id);
@@ -581,7 +580,7 @@ static int __xsp_oscars_delete_rule(xspPathRule *rule, char **ret_error_msg) {
 		//	   "SRC_ID=\"%s\" DST_ID=\"%s\" IDC=\"%s\" VLAN=%d ERROR_MSG=\"%s\"",
 		//	   pi->src, pi->dst, pi->osc.soap_endpoint, pi->vlan_id, error_msg);
 	}
-	
+
 	xsp_oscars_reset_rule_info(pi);	
 	xsp_stop_soap_ssl(&(pi->osc));
 	
@@ -624,7 +623,7 @@ static void *xsp_timeout_handler(void *arg) {
                                 xsp_err(0, "couldn't start SOAP context");
                                 goto error_exit_path;
                         }
-
+			
                         if (oscars_cancelReservation(&(pi->osc), pi->reservation_id, &response) != 0) {
 				xsp_warn(0, "__xsp_oscars_delete_rule(%s): failed to delete rule",
 					  rule->description);
