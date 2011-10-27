@@ -104,7 +104,7 @@ static void parse_options(int argc, char *argv[]);
 static void usage(void) NO_RETURN;
 
 static void actual_add(struct switch_ *);
-static void actual_remove(struct switch_ *);
+static void actual_remove(struct switch_ *, char *, char*);
 static void queue_tx(struct lswitch *, struct rconn *, struct ofpbuf *);
 
 void wait_for_switch() {
@@ -321,9 +321,6 @@ do_switching(struct switch_ *sw)
         ofpbuf_delete(msg);
     }
 
-    if(del_entry.valid == true && rconn_is_connected(sw->rconn))
-        actual_remove(sw);
-
     rconn_run(sw->rconn);
 
     return (!rconn_is_alive(sw->rconn) ? EOF
@@ -350,11 +347,11 @@ queue_tx(struct lswitch *sw, struct rconn *rconn, struct ofpbuf *b)
 
 
 static void
-actual_remove(struct switch_ *sw)
+actual_remove(struct switch_ *sw, char *src, char *dst)
 {
     struct flow flow = {
-        inet_addr(del_entry.ip_src),	// uint32_t IP source address.
-        inet_addr(del_entry.ip_dst),	// uint32_t IP destination address.
+        inet_addr(src),	                // uint32_t IP source address.
+        inet_addr(dst),	                // uint32_t IP destination address.
         0,				// uint16_t Input switch port.
         0,				// uint16_t Input VLAN id.
         htons(0x0800),			// uint16_t Ethernet frame type.
@@ -395,14 +392,14 @@ actual_remove(struct switch_ *sw)
 
     queue_tx(sw->lswitch, sw->rconn, temp);
 
+    /*
     del_entry.ip_src = NULL;
     del_entry.ip_dst = NULL;
     del_entry.ip_src_mask = 0;
     del_entry.ip_dst_mask = 0;
     del_entry.duration = 0;
     del_entry.valid = false;
-
-    //printf("flow removed\n");
+    */
 }
 
 void
@@ -433,13 +430,16 @@ of_remove_l3_rule(char *ip_src, char *ip_dst, uint32_t ip_src_mask, uint32_t ip_
   for (i = 0; i < n_switches; i++) {
     struct switch_ *this = &switches[i];
     ctrl_table_flush(this->ctp);
+    actual_remove(this, ip_src, ip_dst);
   }
 
+  /*
   del_entry.ip_src = ip_src;
   del_entry.ip_dst = ip_dst;
   del_entry.ip_src_mask = ip_src_mask;
   del_entry.ip_dst_mask = ip_dst_mask;
   del_entry.valid = true;
+  */
 
 }
 
