@@ -621,6 +621,28 @@ error_exit_settings:
 	return -1;
 }
 
+int xsp_session_net_path_script(xspPath *path, char *script_dir, char *arg1,
+				char *arg2, char *type, char *rule, 
+				int path_action) {
+	FILE *output;
+	char *command;
+	char *status = "DOWN";
+	
+	if (path_action == XSP_NET_PATH_CREATE)
+		status = "UP";
+	else if (path_action == XSP_NET_PATH_DELETE)
+		status = "DOWN";
+	
+	asprintf(&command, "%s/%s-%s.sh %s %s %s %s", script_dir,
+		 arg1, arg2, path->gri, type, rule, status);
+	
+	xsp_info(11, "executing %s", command);
+	output = popen(command, "r");
+	pclose(output);	
+
+	return 0;
+}
+
 int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
 	int i;
 	char *error_msg;
@@ -631,18 +653,28 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
 	xspBlock **blocks;
 	int block_count;
 	xspNetPath *net_path;
+	int path_action;
+
+	xspPathRuleHandler **handlers;
+	xspNetPathRuleCrit *crit;
 	int netpath_script = 0;
+	int hcount = 0;
 	char *netpath_script_dir = NULL;
 
 	xsp_session_get_blocks((xspMsg*)arg, XSP_OPT_PATH, &blocks, &block_count);
 	// XXX: taking only the first block!
 	net_path = blocks[0]->data;
-	
+	path_action = net_path->action;
+	if (net_path->rule_count) {
+		// get criteria for first rule, if any
+		crit = &net_path->rules[0]->crit;
+	}
+
 	parent_conn = LIST_FIRST(&sess->parent_conns);
 
-	xsp_info(0, "Setting up path type for client=%s", parent_conn->description);
+	xsp_info(0, "Setting up path for client=%s", parent_conn->description);
 
-	if (net_path->action == XSP_NET_PATH_MODIFY) {
+	if (path_action == XSP_NET_PATH_MODIFY) {
 		error_msg = "Path action MODIFY currently not supported";
 		xsp_err(0, "%s", error_msg);
 		goto error_exit;
@@ -658,87 +690,29 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
 	xsp_settings_get(settings, "netpath_script_dir", &netpath_script_dir);
 	
 	if (net_path->rule_count && !strcasecmp(net_path->rules[0]->type, "DEFAULT")) {
-		xsp_info(0, "applying local configuration for all loaded pathrule modules!");
-		
-		int hcount;
-		xspPathRuleHandler **handlers;
-		xspNetPathRuleCrit *crit = &net_path->rules[0]->crit;
-		
 		handlers = xsp_get_pathrule_handlers(&hcount);
-		
+
 		if (hcount) {
-			int path_action = net_path->action;
-			xspPath *path;
-			xspNetPath *net_path = xsp_alloc_net_path();
-			for (i = 0; i < hcount; i++) {
+			net_path = xsp_alloc_net_path();
+			for (i = 0; i < hcount; i++) {				
 				xspNetPathRule *rule = xsp_alloc_net_path_rule();
 				memcpy(rule->type, handlers[i]->name, XSP_NET_PATH_LEN);
 				rule->use_crit = FALSE;
 				
 				xsp_net_path_add_rule(net_path, rule);
 			}
-			
-			if (xsp_get_path(net_path, settings, &path, &error_msg) != 0) {
-				xsp_err(0, "couldn't create new path: %s", error_msg);
-				goto error_exit;
-			}
-
-			// apply each rule in the path
-			for (i = 0; i < path->rule_count; i++) {
-				if (path->rules[i]->apply(path->rules[i], path_action, &error_msg) != 0) {
-					xsp_err(0, "couldn't apply path rule: %s", error_msg);
-					goto error_exit;
-				}
-			
-				if (crit && netpath_script && netpath_script_dir) {
-					FILE *output;
-					char *command;
-					char *status = "DOWN";
-
-					if (path_action == XSP_NET_PATH_CREATE)
-						status = "UP";
-					else if (path_action == XSP_NET_PATH_DELETE)
-						status = "DOWN";
-
-					asprintf(&command, "%s/%s-%s.sh xxx link %s %s", netpath_script_dir,
-						 crit->src_eid.x_addrc, crit->dst_eid.x_addrc,
-						 handlers[i]->name, status);
-					
-					xsp_info(11, "executing %s", command);
-				        output = popen(command, "r");
-					pclose(output);
-				}
-			}
-			
-			// send a "transfer event" signal
-			if (crit && netpath_script && netpath_script_dir) {
-				FILE *output;
-				char *command;
-				char *status = "DOWN";
-				
-				if (path_action == XSP_NET_PATH_CREATE)
-					status = "UP";
-				else if (path_action == XSP_NET_PATH_DELETE)
-					status = "DOWN";
-				
-				asprintf(&command, "%s/%s-%s.sh %s transfer xxx %s", netpath_script_dir,
-					 crit->src_eid.x_addrc, crit->dst_eid.x_addrc, 
-					 path->gri, status);
-
-				xsp_info(11, "executing %s", command);
-				output = popen(command, "r");
-				pclose(output);
-			}
-			
-			if (path_action == XSP_NET_PATH_DELETE)
-				xsp_delete_path(path);
 		}
-		else
+		else {
 			xsp_info(0, "no default pathrule handlers loaded");
-		
-		return 0;
+			return 0;
+		}				
 	}
-	else if (net_path->rule_count) {
+	
+	if (net_path->rule_count) {
+		// DEMO HACK: don't use criteria, only local config
+		for (i = 0; i < net_path->rule_count; i++)
+			net_path->rules[i]->use_crit = FALSE;
+
 		if (xsp_get_path(net_path, settings, &path, &error_msg) != 0) {
 			xsp_err(0, "couldn't create new path: %s", error_msg);
 			goto error_exit;
@@ -746,15 +720,35 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
 		
 		// apply each rule in the path
 		for (i = 0; i < path->rule_count; i++) {
-			if (path->rules[i]->apply(path->rules[i], net_path->action, &error_msg) != 0) {
+			
+			// DEMO HACK: don't delete OSCARS path in the default case
+			if (hcount && !strcasecmp(net_path->rules[i]->type, "OSCARS") &&
+			    (path_action == XSP_NET_PATH_DELETE))
+				continue;
+			
+			if (path->rules[i]->apply(path->rules[i], path_action, &error_msg) != 0) {
 				xsp_err(0, "couldn't apply path rule: %s", error_msg);
 				goto error_exit;
 			}
+
+			// notify rules (links) with external script
+			if (crit && netpath_script && netpath_script_dir) {
+				xsp_session_net_path_script(path, netpath_script_dir,
+							    crit->src_eid.x_addrc, crit->dst_eid.x_addrc,
+							    "link", net_path->rules[i]->type, path_action);
+			}
 		}
 
-		if (net_path->action == XSP_NET_PATH_DELETE)
+		// notify completed path (transfer) with external script
+		if (crit && netpath_script && netpath_script_dir) {
+			xsp_session_net_path_script(path, netpath_script_dir,
+						    crit->src_eid.x_addrc, crit->dst_eid.x_addrc,
+						    "transfer", "xxx", path_action);
+		}
+		
+		// finally, delete the path if requested
+		if (path_action == XSP_NET_PATH_DELETE)
 			xsp_delete_path(path);
-			
 	}
 	else {
 		error_msg = "netPath contains no rules!";
