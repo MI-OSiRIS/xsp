@@ -32,6 +32,7 @@ enum xsp_sess_net_path_actions_t {
 typedef void libxspSess;
 typedef void libxspSecInfo;
 typedef void libxspNetPath;
+typedef void libxspNetPathRule;
 
 int libxsp_init(void);
 libxspSess *xsp_session();
@@ -40,8 +41,9 @@ int xsp_sess_addchild(libxspSess *sess, char *parent, char *child, uint16_t flag
 int xsp_sess_set_security(libxspSess *sess, libxspSecInfo *sec, int type);
 
 libxspSecInfo *xsp_sess_new_security(char *username, char *password, char *key1, char *key2, char *keypass);
-libxspNetPath *xsp_sess_new_net_path(char *type, int action);
-int xsp_sess_set_net_path_crit(libxspNetPath *path, libxspNetPathRuleCrit *crit);
+libxspNetPath *xsp_sess_new_net_path(int action);
+libxspNetPathRule *xsp_sess_new_net_path_rule(libxspNetPath *path, char *type);
+int xsp_sess_set_net_path_rule_crit(libxspNetPathRule *rule, libxspNetPathRuleCrit *crit);
 
 int xsp_signal_path(libxspSess *sess, libxspNetPath *path);
 int xsp_signal_inf_data(libxspSess *sess);

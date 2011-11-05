@@ -458,28 +458,42 @@ int __xsp_addchild(xspHop *curr_node, char *parent, xspHop *new_child) {
 	return retval;
 }
 
-// these client net path methods only deal with a single rule right now
-xspNetPath *xsp_sess_new_net_path(char *type, int action) {
+// XXX(fernandes): Changed the net_path API to handle multiple rules (not backwards compatible).
+xspNetPath *xsp_sess_new_net_path(int action) {
 	xspNetPath *new = xsp_alloc_net_path();
-	xspNetPathRule *rule = xsp_alloc_net_path_rule();
 
-	if (new && rule) {
+	if (new)
 		new->action = action;
-		memcpy(rule->type, type, XSP_NET_PATH_LEN);
-		xsp_net_path_add_rule(new, rule);
-	}
 
 	return new;
 }
 
-int xsp_sess_set_net_path_crit(xspNetPath *path, libxspNetPathRuleCrit *crit) {
-	xspNetPathRule *rule = path->rules[0];
+xspNetPathRule *xsp_sess_new_net_path_rule(xspNetPath *path, char *type) {
+	xspNetPathRule *rule;
+
+	if (!path)
+		return NULL;
+
+	rule = xsp_alloc_net_path_rule();
+	if (!rule)
+		return NULL;
+
+	memcpy(rule->type, type, XSP_NET_PATH_LEN);
+	xsp_net_path_add_rule(path, rule);
 	
+	return rule;
+}
+
+int xsp_sess_set_net_path_rule_crit(xspNetPathRule *rule, libxspNetPathRuleCrit *crit) {
 	if (!rule)
 		return -1;
 	
 	memcpy(&(rule->crit.src_eid.x_addrc), crit->src, XSP_HOPID_LEN);
 	memcpy(&(rule->crit.dst_eid.x_addrc), crit->dst, XSP_HOPID_LEN);
+	// FIXME(fernandes): demo hack for DPID in openflow path.
+	rule->crit.src_mask.x_addrd = crit->src_mask;
+	rule->crit.src_port = crit->src_port;
+	rule->crit.dst_port = crit->dst_port;
 	
 	rule->use_crit = TRUE;
 
