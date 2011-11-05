@@ -12,8 +12,8 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS =
 
 AM_CPPFLAGS = $(SSL_CFLAGS) -g
-AM_CPPFLAGS += -I ./include
-AM_CPPFLAGS += -I ./lib
+AM_CPPFLAGS += -I $(VPATH)/include
+AM_CPPFLAGS += -I $(VPATH)/lib
 
 AM_CFLAGS = -Wstrict-prototypes
 

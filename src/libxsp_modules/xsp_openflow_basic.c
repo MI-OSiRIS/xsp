@@ -1,5 +1,6 @@
 #include <errno.h>
 #include <string.h>
+#include <stdio.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <pthread.h>
@@ -55,11 +56,19 @@ xspModule *module_info() {
 }
 
 int xsp_openflow_init() {
+    const xspSettings *settings;
+    char *pvconn;
 	ctrl_status = OF_CTRL_DOWN;
 
 	// need a better interface for listener args
 	// get OF listening port, etc. from XSP settings
-	char *argv[2] = {"controller", "ptcp:1716"}; 
+	settings = xsp_main_settings();
+    if (xsp_settings_get_2(settings, "openflow", "controller_pvconn", &pvconn) != 0) {
+            xsp_warn(0, "No OPENFLOW controller_pvconn specified, using ptcp:1716");
+            pvconn = "ptcp:1716";
+    }
+
+	char *argv[2] = {"controller", pvconn};
 
 	// first, initialize the controller
 	if (controller_init(2, argv) != 0)
@@ -83,11 +92,19 @@ static char *xsp_openflow_generate_pathrule_id(const xspNetPathRule *rule,
 	char *rule_id;
 	char *src_eid;
 	char *dst_eid;
+	uint32_t sport;
+	uint32_t dport;
+	uint64_t dpid;
+
 
         if (rule->use_crit) {
 		// compose id from just the src/dst addrs for now
 		src_eid = (char*)rule->crit.src_eid.x_addrc;
 		dst_eid = (char*)rule->crit.dst_eid.x_addrc;
+		sport = rule->crit.src_port;
+		dport = rule->crit.dst_port;
+		// FIXME(fernandes): hack for dpid while rule->eid is not being copied.
+		dpid = rule->crit.src_mask.x_addrd;
         }
         else {
                 // check the settings for static openflow config
@@ -101,10 +118,12 @@ static char *xsp_openflow_generate_pathrule_id(const xspNetPathRule *rule,
                         goto error_exit;
                 }
 		
-		
+                sport = 0;
+                dport = 0;
+                dpid = 0;
         }
 
-	if (asprintf(&rule_id, "%s->%s",src_eid, dst_eid) <= 0) {
+	if (asprintf(&rule_id, "%"PRIX64"=>%u:%s->%u:%s", dpid, sport, src_eid, dport, dst_eid) <= 0) {
 		goto error_exit;
 	}
 
@@ -224,16 +243,15 @@ static int __xsp_openflow_create_rule(xspPathRule *rule, char **ret_error_msg) {
 	int i;
 
 	if (ctrl_status == OF_CTRL_UP) {
-		// right now all we can do it set the src/dst IP
-		// ...and they're passed in as strings right now
-		
 		xsp_info(0, "adding OF rule: %s -> %s", rule->crit.src_eid.x_addrc, rule->crit.dst_eid.x_addrc);
-		of_add_l3_rule(rule->crit.src_eid.x_addrc, rule->crit.dst_eid.x_addrc, 0, 0, 100);
+		// FIXME(fernandes): src_mask is used as dpid for now.. where is rule->eid?
+		of_add_l3_rule(rule->crit.src_mask.x_addrd, rule->crit.src_eid.x_addrc,
+				rule->crit.dst_eid.x_addrc, rule->crit.src_port, rule->crit.dst_port, 100);
 		
 		if (prules && (prules->src_count == prules->dst_count)) {
 			for (i = 0; i < prules->src_count; i++) {
 				xsp_info(0, "adding OF rule: %s -> %s", prules->src_list[i], prules->dst_list[i]);
-				of_add_l3_rule(prules->src_list[i], prules->dst_list[i], 0, 0, 100);
+				of_add_l3_rule(0, prules->src_list[i], prules->dst_list[i], 0, 0, 100);
 			}
 		}
 	}
@@ -263,12 +281,12 @@ static int __xsp_openflow_delete_rule(xspPathRule *rule, char **ret_error_msg) {
 		// ...and they're passed in as strings right now
 		
 		xsp_info(0, "removing OF rule: %s -> %s", rule->crit.src_eid.x_addrc, rule->crit.dst_eid.x_addrc);
-		of_remove_l3_rule(rule->crit.src_eid.x_addrc, rule->crit.dst_eid.x_addrc, 0, 0);
+		of_remove_l3_rule(rule->crit.src_mask.x_addrd, rule->crit.src_eid.x_addrc, rule->crit.dst_eid.x_addrc, 0, 0);
 		
 		if (prules && (prules->src_count == prules->dst_count)) {
                         for (i = 0; i < prules->src_count; i++) {
                                 xsp_info(0, "removing OF rule: %s -> %s", prules->src_list[i], prules->dst_list[i]);
-                                of_remove_l3_rule(prules->src_list[i], prules->dst_list[i], 0, 0);
+                                of_remove_l3_rule(0, prules->src_list[i], prules->dst_list[i], 0, 0);
                         }
                 }
 	}
