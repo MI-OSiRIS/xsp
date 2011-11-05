@@ -97,8 +97,9 @@ int xsp_sess_addchild(libxspSess *sess, char *parent, char *child, uint16_t flag
 int xsp_sess_set_security(libxspSess *sess, xspSecInfo *sec, int type);
 
 xspSecInfo *xsp_sess_new_security(char *username, char *password, char *privkey, char *pubkey, char *keypass);
-xspNetPath *xsp_sess_new_net_path(char *type, int action);
-int xsp_sess_set_net_path_crit(xspNetPath *path, libxspNetPathRuleCrit *crit);
+xspNetPath *xsp_sess_new_net_path(int action);
+xspNetPathRule *xsp_sess_new_net_path_rule(xspNetPath *path, char *type);
+int xsp_sess_set_net_path_rule_crit(xspNetPathRule *rule, libxspNetPathRuleCrit *crit);
 
 int xsp_signal_inf_data(libxspSess *sess);
 int xsp_signal_path(libxspSess *sess, xspNetPath *net_path);

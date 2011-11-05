@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#include <string.h>
+
 #include "globus_xio_driver.h"
 #include "globus_xio_load.h"
 #include "globus_common.h"
@@ -73,12 +75,13 @@ static globus_xio_string_cntl_table_t  xsp_l_string_opts_table[] =
     {"task_id", GLOBUS_XIO_XSP_CNTL_SET_TASK, globus_xio_string_cntl_string},
     {"src", GLOBUS_XIO_XSP_CNTL_SET_SRC, globus_xio_string_cntl_string},
     {"dst", GLOBUS_XIO_XSP_CNTL_SET_DST, globus_xio_string_cntl_string},
-    {"sport", GLOBUS_XIO_XSP_CNTL_SET_SPORT, globus_xio_string_cntl_int},
-    {"dport", GLOBUS_XIO_XSP_CNTL_SET_DPORT, globus_xio_string_cntl_int},
+    {"sport", GLOBUS_XIO_XSP_CNTL_SET_SPORT, globus_xio_string_cntl_string},
+    {"dport", GLOBUS_XIO_XSP_CNTL_SET_DPORT, globus_xio_string_cntl_string},
     {"resource", GLOBUS_XIO_XSP_CNTL_SET_RESOURCE, globus_xio_string_cntl_string},
     {"size", GLOBUS_XIO_XSP_CNTL_SET_SIZE, globus_xio_string_cntl_int},
     {"mask", GLOBUS_XIO_XSP_CNTL_SET_MASK, globus_xio_string_cntl_int},
     {"interval", GLOBUS_XIO_XSP_CNTL_SET_INTERVAL, globus_xio_string_cntl_int},
+    {"dpid", GLOBUS_XIO_XSP_CNTL_SET_DPID, globus_xio_string_cntl_string},
     {NULL, 0, NULL}
 };
 
@@ -123,7 +126,8 @@ typedef struct xio_l_xsp_handle_s
     uint64_t                            filesize;
 
     int                                 stack;
-    char *                              xsp_hop;
+    char **                             xsp_hop;
+    int                                 xsp_hop_count;
     char *                              xsp_sec;
     char *                              xsp_blipp;
     char *                              xsp_net_path;
@@ -131,8 +135,9 @@ typedef struct xio_l_xsp_handle_s
     char *                              task_id;
     char *                              src;
     char *                              dst;
-    int                                 sport;
-    int                                 dport;
+    char *                              sport;
+    char *                              dport;
+    char *                              dpid;
     char *                              resource;
     int                                 size;
 
@@ -166,6 +171,7 @@ static xio_l_xsp_handle_t               globus_l_xio_xsp_handle_default =
     0,                                  /* filesize */
     GLOBUS_XIO_XSP_NETSTACK,            /* stack */
     GLOBUS_NULL,                        /* xsp_hop */
+    0,                                  /* xsp_hop_count */
     GLOBUS_NULL,                        /* xsp_sec */
     GLOBUS_NULL,                        /* xsp_blipp */
     GLOBUS_NULL,                        /* xsp_net_path */
@@ -173,8 +179,9 @@ static xio_l_xsp_handle_t               globus_l_xio_xsp_handle_default =
     GLOBUS_NULL,                        /* task_id */
     GLOBUS_NULL,                        /* src */
     GLOBUS_NULL,                        /* dst */
-    0,                                  /* sport */
-    0,                                  /* dport */
+    GLOBUS_NULL,                        /* sport */
+    GLOBUS_NULL,                        /* dport */
+    GLOBUS_NULL,                        /* dpid */
     GLOBUS_NULL,                        /* resource */
     0,                                  /* size */
     0,                                  /* log_flag, default does not NL log anything */
@@ -190,6 +197,8 @@ static globus_hashtable_t               xsp_l_xfer_table;
 static globus_mutex_t                   xio_l_xsp_mutex;
 
 // Forward declarations and module definition
+char **split(char*, char*, int*); /* utility method defined in libxsp_client */
+
 static
 globus_result_t
 globus_l_xio_xsp_fileh_query(globus_xio_driver_handle_t driver, int *, int);
@@ -413,10 +422,12 @@ globus_l_xio_xsp_append_xfer_meta(
         bson_append_string(bb, "u_src", handle->src);
     if (handle->dst)
         bson_append_string(bb, "u_dst", handle->dst);
-    if (handle->sport > 0)
-        bson_append_int(bb, "u_sport", handle->sport);
-    if (handle->dport > 0)
-        bson_append_int(bb, "u_dport", handle->dport);
+    if (handle->sport)
+    	bson_append_string(bb, "u_sport", handle->sport);
+    if (handle->dport)
+    	bson_append_string(bb, "u_dport", handle->dport);
+    if (handle->dpid)
+    	bson_append_string(bb, "u_dpid", handle->dpid);
     if (handle->resource)
         bson_append_string(bb, "u_resource", handle->resource);
     if (handle->size > 0)
@@ -682,12 +693,21 @@ globus_l_xio_xsp_connect_blipp_handle(
  error:
     return ret;
 }
+
 static
 globus_result_t
 globus_l_xio_xsp_connect_handle(
     xio_l_xsp_handle_t *                handle)
 {
     globus_result_t                     ret;
+    char *type;
+    char *src;
+    char *dst;
+    char *sport;
+    char *dport;
+    char *dpid;
+    char *token;
+    int i;
 
     GlobusXIOName(xio_l_xsp_connect_handle);
     GlobusXIOXSPDebugEnter();
@@ -701,10 +721,13 @@ globus_l_xio_xsp_connect_handle(
 	    goto error;
 	}
 	
-	ret = xsp_sess_appendchild(handle->xfer->sess, handle->xsp_hop, XSP_HOP_NATIVE);
-	if (ret != 0)
-	{
-	    goto error_sess;
+    for (i = 0; i < handle->xsp_hop_count; i++) {
+        printf("XIO-XSP: appending hop %s\n", handle->xsp_hop[i]);
+        ret = xsp_sess_appendchild(handle->xfer->sess, handle->xsp_hop[i], XSP_HOP_NATIVE);
+        if (ret != 0)
+        {
+            goto error_sess;
+        }
 	}
 
 	if (handle->xsp_sec && !strcasecmp(handle->xsp_sec, "ssh")) {
@@ -719,21 +742,97 @@ globus_l_xio_xsp_connect_handle(
 	    goto error_sess;
 	}
 
+
 	if (handle->xsp_net_path &&
 	    globus_l_xio_xsp_xfer_default.xsp_signal_path)
 	{
-	    libxspNetPath *path;
-	    libxspNetPathRuleCrit crit = {
-		    .src = handle->src,
-		    .dst = handle->dst
-	    };
-	    
-	    printf("XIO-XSP: waiting for path\n");
+	    libxspNetPath *path = xsp_sess_new_net_path(XSP_NET_PATH_CREATE);
 
-	    path = xsp_sess_new_net_path(handle->xsp_net_path, XSP_NET_PATH_CREATE);
-	    if (xsp_sess_set_net_path_crit(path, &crit) != 0)
-		    fprintf(stderr, "could not set path criteria\n");
+	    type = strdup(handle->xsp_net_path);
+	    src = strdup(handle->src);
+	    dst = strdup(handle->dst);
+
+	    if (handle->sport)
+	    	sport = strdup(handle->sport);
+	    if (handle->dport)
+	    	dport = strdup(handle->dport);
+	    if (handle->dpid)
+	    	dpid = strdup(handle->dpid);
 	    
+	    printf("XIO-XSP: initial path type=%s\n", type);
+	    while ((token = strsep (&type, "#"))) {
+	    	printf("XIO-XSP: parsed type=%s", token);
+
+	    	libxspNetPathRuleCrit crit;
+	    	libxspNetPathRule *rule = xsp_sess_new_net_path_rule(path, token);
+
+	    	// TODO(fernandes): implement custom globus parsing for multiple valued parameters.
+			token = strsep(&src, "#");
+			if(!token) {
+				printf("XIO-XSP: unmatched number of values in parameters for path rule criteria.\n");
+				goto error_token;
+			}
+			crit.src = token;
+			printf(" src=%s", token);
+
+			token = strsep(&dst, "#");
+			if(!token) {
+				fprintf(stderr, "unmatched number of values in parameters for path rule criteria.\n");
+				goto error_token;
+			}
+			crit.dst = token;
+			printf(" dst=%s", token);
+
+			if (handle->sport) {
+				token = strsep(&sport, "#");
+				if(!token) {
+					fprintf(stderr, "unmatched number of values in parameters for path rule criteria.\n");
+					goto error_token;
+				}
+				// TODO(fernandes): add support for *.
+				crit.src_port = atoi(token);
+				printf(" src_port=%s", token);
+			}
+
+			if (handle->dport) {
+				token = strsep(&dport, "#");
+				if(!token) {
+					fprintf(stderr, "unmatched number of values in parameters for path rule criteria.\n");
+					goto error_token;
+				}
+				crit.dst_port = atoi(token);
+				printf(" dst_port=%s", token);
+			}
+
+			if (handle->dpid) {
+				char *tail;
+				token = strsep(&dpid, "#");
+				if(!token) {
+					fprintf(stderr, "unmatched number of values in parameters for path rule criteria.\n");
+					goto error_token;
+				}
+				//rule->eid.xsp_u.xsp_addrd = strtoull (token, &tail, 16);
+				// FIXME(fernandes): hack right now for DPID because it seems like
+				//   rule.eid is lost somewhere in the path signaling.
+				crit.src_mask = strtoull (token, &tail, 16);
+				printf(" dpid=%s", token);
+			}
+
+			printf("\n");
+			fflush(stdout);
+
+			if (xsp_sess_set_net_path_rule_crit(rule, &crit) != 0)
+				fprintf(stderr, "could not set rule criteria\n");
+	    }
+
+	    free(type);
+		free(src);
+		free(dst);
+		if (handle->sport) free(sport);
+		if (handle->dport) free(dport);
+		if (handle->dpid) free(dpid);
+
+	    printf("XIO-XSP: waiting for path\n");
 	    if ((ret = xsp_signal_path(handle->xfer->sess, path)) != 0)
 	    {
 		goto error_sess;
@@ -755,6 +854,13 @@ globus_l_xio_xsp_connect_handle(
 
     return GLOBUS_SUCCESS;
 
+ error_token:
+    free(type);
+    free(src);
+    free(dst);
+ 	if (handle->sport) free(sport);
+ 	if (handle->dport) free(dport);
+ 	if (handle->dpid) free(dpid);
  error_sess:
     free(handle->xfer->sess);
  error:
@@ -831,8 +937,9 @@ globus_l_xio_xsp_attr_init(
     attr->stack = GLOBUS_XIO_XSP_NETSTACK;
     attr->user = NULL;
     attr->task_id = NULL;
-    attr->sport = 0;
-    attr->dport = 0;
+    attr->sport = NULL;
+    attr->dport = NULL;
+    attr->dpid = NULL;
     attr->resource = NULL;
     attr->size = 0;
     attr->log_flag = 0;
@@ -872,15 +979,24 @@ globus_l_xio_xsp_attr_copy(
 
     if (src_attr->xsp_hop != NULL)
     {
-	dst_attr->xsp_hop = strdup(src_attr->xsp_hop);
+    	int i;
+    	dst_attr->xsp_hop_count = src_attr->xsp_hop_count;
+        dst_attr->xsp_hop = malloc(sizeof(char*)*dst_attr->xsp_hop_count);
+        for (i = 0; i < dst_attr->xsp_hop_count; i++)
+            dst_attr->xsp_hop[i] = strdup(src_attr->xsp_hop[i]);
     }
     else if (globus_l_xio_xsp_handle_default.xsp_hop)
     {
-	dst_attr->xsp_hop = strdup(globus_l_xio_xsp_handle_default.xsp_hop);
+    	int i;
+    	dst_attr->xsp_hop_count = globus_l_xio_xsp_handle_default.xsp_hop_count;
+        dst_attr->xsp_hop = malloc(sizeof(char*)*dst_attr->xsp_hop_count);
+        for (i = 0; i < dst_attr->xsp_hop_count; i++)
+            dst_attr->xsp_hop[i] = strdup(globus_l_xio_xsp_handle_default.xsp_hop[i]);
     }
     else 
     {
 	dst_attr->xsp_hop = NULL;
+	dst_attr->xsp_hop_count = 0;
     }
 
     if (src_attr->xsp_sec != NULL)
@@ -951,7 +1067,22 @@ globus_l_xio_xsp_attr_copy(
     {
 	dst_attr->dst = strdup(src_attr->dst);
     }
+
+    if (src_attr->sport)
+    {
+	dst_attr->sport = strdup(src_attr->sport);
+    }
+
+    if (src_attr->dport)
+    {
+	dst_attr->dport = strdup(src_attr->dport);
+    }
     
+    if (src_attr->dpid)
+    {
+	dst_attr->dpid = strdup(src_attr->dpid);
+    }
+
     if (src_attr->resource)
     {
 	dst_attr->resource = strdup(src_attr->resource);
@@ -970,8 +1101,6 @@ globus_l_xio_xsp_attr_copy(
     }
 
     dst_attr->filesize = src_attr->filesize;
-    dst_attr->sport = src_attr->sport;
-    dst_attr->dport = src_attr->dport;
     dst_attr->size = src_attr->size;
     dst_attr->stack = src_attr->stack;
     dst_attr->log_flag = src_attr->log_flag;
@@ -1019,7 +1148,7 @@ globus_l_xio_xsp_cntl(
 	break;
       case GLOBUS_XIO_XSP_CNTL_SET_HOP:
 	  str = va_arg(ap, char *);
-	  attr->xsp_hop = strdup(str);
+	  attr->xsp_hop = split(str, "#", &attr->xsp_hop_count);
 	  break;
       case GLOBUS_XIO_XSP_CNTL_SET_SEC:
 	  str = va_arg(ap, char *);
@@ -1050,10 +1179,16 @@ globus_l_xio_xsp_cntl(
 	  attr->dst = strdup(str);
 	  break;
       case GLOBUS_XIO_XSP_CNTL_SET_SPORT:
-	  attr->sport = va_arg(ap, int);
+	  str = va_arg(ap, char *);
+	  attr->sport = strdup(str);
 	  break;
       case GLOBUS_XIO_XSP_CNTL_SET_DPORT:
-	  attr->dport = va_arg(ap, int);
+	  str = va_arg(ap, char *);
+	  attr->dport = strdup(str);
+	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_DPID:
+	  str = va_arg(ap, char *);
+	  attr->dpid = strdup(str);
 	  break;
       case GLOBUS_XIO_XSP_CNTL_SET_RESOURCE:
 	  str = va_arg(ap, char *);
@@ -1151,7 +1286,10 @@ globus_l_xio_xsp_handle_destroy(
 
     if (handle->xsp_hop != NULL)
     {
-	globus_free(handle->xsp_hop);
+    	int i;
+    	for (i = 0; i < handle->xsp_hop_count; i++)
+    		globus_free(handle->xsp_hop[i]);
+    	globus_free(handle->xsp_hop);
     }
     if (handle->xsp_sec != NULL)
     {
@@ -1188,6 +1326,18 @@ globus_l_xio_xsp_handle_destroy(
     if (handle->dst != NULL)
     {
 	globus_free(handle->dst);
+    }
+    if (handle->sport != NULL)
+    {
+	globus_free(handle->sport);
+    }
+    if (handle->dport != NULL)
+    {
+	globus_free(handle->dport);
+    }
+    if (handle->dpid != NULL)
+    {
+	globus_free(handle->dpid);
     }
     if (handle->resource != NULL)
     {
@@ -1619,7 +1769,7 @@ globus_l_xio_xsp_close_cb(
 		}
 		done = GLOBUS_TRUE;
 	      */
-		    
+		    /* FIXME(fernandes): fix delete for new API and multiple values.
 		if (handle->xsp_net_path &&
 		    globus_l_xio_xsp_xfer_default.xsp_signal_path)
 		{
@@ -1641,6 +1791,7 @@ globus_l_xio_xsp_close_cb(
 			    printf("XIO-XSP: could not signal path delete\n");
 		    }
 		}
+		*/
 	    }
 	    else
 	    {
@@ -1941,7 +2092,9 @@ globus_l_xio_xsp_activate(void)
 
     if ((tmp = globus_module_getenv("XSP_HOP")))
     {
-	globus_l_xio_xsp_handle_default.xsp_hop = tmp;
+        int hop_count;
+        globus_l_xio_xsp_handle_default.xsp_hop = split(tmp, ",", &hop_count);
+        globus_l_xio_xsp_handle_default.xsp_hop_count = hop_count;
     }
     else
     {
