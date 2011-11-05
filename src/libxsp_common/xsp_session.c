@@ -670,6 +670,40 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
 		crit = &net_path->rules[0]->crit;
 	}
 
+	xsp_info(0, "Session has %d child hops.", sess->child_count);
+	for (i = 0; i < sess->child_count; i++) {
+	// FIXME(fernandes): this has been hacked together for a demo,
+	//   there is probably a better way of doing this.
+	    xspConn *conn;
+	    xspAuthType auth_type;
+	    xspMsg authmsg = {
+            .version = XSP_v1,
+            .type = XSP_MSG_AUTH_TYPE,
+            .flags = 0,
+            .msg_body = &auth_type
+	    };
+        xspMsg openmsg = {
+            .version = XSP_v1,
+            .type = XSP_MSG_SESS_OPEN,
+            .flags = 0,
+            .msg_body = sess->child[i]
+        };
+	    xspMsg netmsg = {
+            .version = XSP_v1,
+            .type = XSP_MSG_NET_PATH,
+            .flags = 0,
+            .msg_body = net_path
+        };
+
+	    xsp_info(0, "Hop id is %s.", sess->child[i]->hop_id);
+	    xsp_info(0, "Hop has %d child hops.", sess->child[i]->session->child_count);
+	    conn = xsp_connect_hop_control(sess->child[i]->hop_id);
+
+	    strlcpy(auth_type.name, "ANON", XSP_AUTH_NAME_LEN);
+	    xsp_conn_send_msg(conn, &authmsg, XSP_OPT_AUTH_TYP);
+	    xsp_conn_send_msg(conn, &openmsg, XSP_OPT_HOP);
+        xsp_conn_send_msg(conn, &netmsg, XSP_OPT_PATH);
+	}
 	parent_conn = LIST_FIRST(&sess->parent_conns);
 
 	xsp_info(0, "Setting up path for client=%s", parent_conn->description);
@@ -710,8 +744,8 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
 	
 	if (net_path->rule_count) {
 		// DEMO HACK: don't use criteria, only local config
-		for (i = 0; i < net_path->rule_count; i++)
-			net_path->rules[i]->use_crit = FALSE;
+		//for (i = 0; i < net_path->rule_count; i++)
+		//	net_path->rules[i]->use_crit = FALSE;
 
 		if (xsp_get_path(net_path, settings, &path, &error_msg) != 0) {
 			xsp_err(0, "couldn't create new path: %s", error_msg);
