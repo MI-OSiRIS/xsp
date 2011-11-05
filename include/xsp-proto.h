@@ -24,7 +24,8 @@ enum xsp_eid_types_t {
 	XSP_EID_IPv4,
 	XSP_EID_IPv6,
 	XSP_EID_URN,
-	XSP_EID_HOPID
+	XSP_EID_HOPID,
+	XSP_EID_DPID
 };
 
 /* result/status codes */
@@ -58,12 +59,14 @@ struct xsp_addr {
 		uint16_t       xsp_addr16[8];
 		uint32_t       xsp_addr32[4];
 		uint32_t       xsp_addrs;
+		uint64_t       xsp_addrd;
 		char           xsp_addrc[XSP_HOPID_LEN+1];
 	} xsp_u;
 #define x_addr            xsp_u.xsp_addr8
 #define x_addr16          xsp_u.xsp_addr16
 #define x_addr32          xsp_u.xsp_addr32
 #define x_addrs           xsp_u.xsp_addrs
+#define x_addrd           xsp_u.xsp_addrd
 #define x_addrc           xsp_u.xsp_addrc
 };
 
