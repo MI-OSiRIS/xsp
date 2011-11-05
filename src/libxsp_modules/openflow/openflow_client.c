@@ -25,7 +25,7 @@ int main() {
         str[strlen(str) - 1] = '\0';
 
     printf("adding %s to the switch\n", str);
-    of_add_l3_rule(str, "10.10.5.1", 0, 0, 100); // hard code the dst to .3
+    of_add_l3_rule(0, str, "10.10.5.1", 0, 0, 100); // hard code the dst to .3
 
     /* remove a flow */
     printf("IP address to remove: ");
@@ -34,7 +34,7 @@ int main() {
         str[strlen(str) - 1] = '\0';
 
     printf("removing %s from the switch\n", str);
-    of_remove_l3_rule(str, "10.10.5.1", 0, 0); // hard code the dst to .3
+    of_remove_l3_rule(0, str, "10.10.5.1", 0, 0); // hard code the dst to .3
 
     /* quit and stop the controller */
     printf("Press Enter to stop the controller and exit\n");
