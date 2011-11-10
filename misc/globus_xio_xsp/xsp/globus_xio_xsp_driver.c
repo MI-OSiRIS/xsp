@@ -696,10 +696,11 @@ globus_l_xio_xsp_connect_blipp_handle(
 
 static
 globus_result_t
-globus_l_xio_xsp_connect_handle(
-    xio_l_xsp_handle_t *                handle)
+globus_l_xio_xsp_make_path(
+    xio_l_xsp_handle_t *           handle,
+    int                            path_action,
+    libxspNetPath **               ret_path)
 {
-    globus_result_t                     ret;
     char *type;
     char *src;
     char *dst;
@@ -707,6 +708,122 @@ globus_l_xio_xsp_connect_handle(
     char *dport;
     char *dpid;
     char *token;
+    
+    libxspNetPath *path = xsp_sess_new_net_path(path_action);
+    
+    type = strdup(handle->xsp_net_path);
+
+    if (handle->src)
+	    src = strdup(handle->src);
+    if (handle->dst)
+	    dst = strdup(handle->dst);
+    if (handle->sport)
+	    sport = strdup(handle->sport);
+    if (handle->dport)
+	    dport = strdup(handle->dport);
+    if (handle->dpid)
+	    dpid = strdup(handle->dpid);
+    
+    printf("XIO-XSP: initial path type=%s\n", type);
+    while ((token = strsep (&type, "#"))) {
+	    printf("XIO-XSP: parsed type=%s", token);
+	    
+	    libxspNetPathRuleCrit crit;
+	    libxspNetPathRule *rule = xsp_sess_new_net_path_rule(path, token);
+	    
+	    // TODO(fernandes): implement custom globus parsing for multiple valued parameters.
+	    if (handle->src) {
+		    token = strsep(&src, "#");
+		    if(!token) {
+			    printf("XIO-XSP: unmatched number of values in parameters for path rule criteria.\n");
+			    goto error_token;
+		    }
+		    crit.src = token;
+		    printf(" src=%s", token);
+	    }
+	    else
+		    crit.src = NULL;
+
+	    if (handle->dst) {
+		    token = strsep(&dst, "#");
+		    if(!token) {
+			    fprintf(stderr, "unmatched number of values in parameters for path rule criteria.\n");
+			    goto error_token;
+		    }
+		    crit.dst = token;
+		    printf(" dst=%s", token);
+	    }
+	    else
+		    crit.dst = NULL;
+
+	    if (handle->sport) {
+		    token = strsep(&sport, "#");
+		    if(!token) {
+			    fprintf(stderr, "unmatched number of values in parameters for path rule criteria.\n");
+			    goto error_token;
+		    }
+		    // TODO(fernandes): add support for *.
+		    crit.src_port = atoi(token);
+		    printf(" src_port=%s", token);
+	    }
+	    
+	    if (handle->dport) {
+		    token = strsep(&dport, "#");
+		    if(!token) {
+			    fprintf(stderr, "unmatched number of values in parameters for path rule criteria.\n");
+			    goto error_token;
+		    }
+		    crit.dst_port = atoi(token);
+		    printf(" dst_port=%s", token);
+	    }
+	    
+	    if (handle->dpid) {
+		    char *tail;
+		    token = strsep(&dpid, "#");
+		    if(!token) {
+			    fprintf(stderr, "unmatched number of values in parameters for path rule criteria.\n");
+			    goto error_token;
+		    }
+		    uint64_t dpid_int;
+		    dpid_int = strtoull (token, &tail, 16);
+		    xsp_sess_set_net_path_rule_eid(rule, &dpid_int, XSP_EID_DPID);
+		    printf(" dpid=%s", token);
+	    }
+	    
+	    printf("\n");
+	    fflush(stdout);
+	    
+	    if (xsp_sess_set_net_path_rule_crit(rule, &crit) != 0)
+		    fprintf(stderr, "could not set rule criteria\n");
+    
+    }
+    
+    *ret_path = path;
+
+    if (handle->src)
+            free(src);
+    if (handle->dst)
+	    free(dst);
+    if (handle->sport)
+	    free(sport);
+    if (handle->dport)
+            free(dport);
+    if (handle->dpid)
+	    free(dpid);
+
+    return GLOBUS_SUCCESS;
+    
+ error_token:
+    // need to do proper free here as well
+    return -1;
+}
+
+static
+globus_result_t
+globus_l_xio_xsp_connect_handle(
+    xio_l_xsp_handle_t *                handle)
+{
+    globus_result_t                     ret;
     int i;
 
     GlobusXIOName(xio_l_xsp_connect_handle);
@@ -746,92 +863,9 @@ globus_l_xio_xsp_connect_handle(
 	if (handle->xsp_net_path &&
 	    globus_l_xio_xsp_xfer_default.xsp_signal_path)
 	{
-	    libxspNetPath *path = xsp_sess_new_net_path(XSP_NET_PATH_CREATE);
-
-	    type = strdup(handle->xsp_net_path);
-	    src = strdup(handle->src);
-	    dst = strdup(handle->dst);
-
-	    if (handle->sport)
-	    	sport = strdup(handle->sport);
-	    if (handle->dport)
-	    	dport = strdup(handle->dport);
-	    if (handle->dpid)
-	    	dpid = strdup(handle->dpid);
+	    libxspNetPath *path;
+	    globus_l_xio_xsp_make_path(handle, XSP_NET_PATH_CREATE, &path);
 	    
-	    printf("XIO-XSP: initial path type=%s\n", type);
-	    while ((token = strsep (&type, "#"))) {
-	    	printf("XIO-XSP: parsed type=%s", token);
-
-	    	libxspNetPathRuleCrit crit;
-	    	libxspNetPathRule *rule = xsp_sess_new_net_path_rule(path, token);
-
-	    	// TODO(fernandes): implement custom globus parsing for multiple valued parameters.
-			token = strsep(&src, "#");
-			if(!token) {
-				printf("XIO-XSP: unmatched number of values in parameters for path rule criteria.\n");
-				goto error_token;
-			}
-			crit.src = token;
-			printf(" src=%s", token);
-
-			token = strsep(&dst, "#");
-			if(!token) {
-				fprintf(stderr, "unmatched number of values in parameters for path rule criteria.\n");
-				goto error_token;
-			}
-			crit.dst = token;
-			printf(" dst=%s", token);
-
-			if (handle->sport) {
-				token = strsep(&sport, "#");
-				if(!token) {
-					fprintf(stderr, "unmatched number of values in parameters for path rule criteria.\n");
-					goto error_token;
-				}
-				// TODO(fernandes): add support for *.
-				crit.src_port = atoi(token);
-				printf(" src_port=%s", token);
-			}
-
-			if (handle->dport) {
-				token = strsep(&dport, "#");
-				if(!token) {
-					fprintf(stderr, "unmatched number of values in parameters for path rule criteria.\n");
-					goto error_token;
-				}
-				crit.dst_port = atoi(token);
-				printf(" dst_port=%s", token);
-			}
-
-			if (handle->dpid) {
-				char *tail;
-				token = strsep(&dpid, "#");
-				if(!token) {
-					fprintf(stderr, "unmatched number of values in parameters for path rule criteria.\n");
-					goto error_token;
-				}
-				//rule->eid.xsp_u.xsp_addrd = strtoull (token, &tail, 16);
-				// FIXME(fernandes): hack right now for DPID because it seems like
-				//   rule.eid is lost somewhere in the path signaling.
-				crit.src_mask = strtoull (token, &tail, 16);
-				printf(" dpid=%s", token);
-			}
-
-			printf("\n");
-			fflush(stdout);
-
-			if (xsp_sess_set_net_path_rule_crit(rule, &crit) != 0)
-				fprintf(stderr, "could not set rule criteria\n");
-	    }
-
-	    free(type);
-		free(src);
-		free(dst);
-		if (handle->sport) free(sport);
-		if (handle->dport) free(dport);
-		if (handle->dpid) free(dpid);
-
 	    printf("XIO-XSP: waiting for path\n");
 	    if ((ret = xsp_signal_path(handle->xfer->sess, path)) != 0)
 	    {
@@ -841,7 +875,7 @@ globus_l_xio_xsp_connect_handle(
 	    printf("XIO-XSP: path setup complete\n");
 	    free(path);
 	}
-
+	
 	handle->xfer->xsp_connected = GLOBUS_TRUE;
     }
     else
@@ -854,13 +888,6 @@ globus_l_xio_xsp_connect_handle(
 
     return GLOBUS_SUCCESS;
 
- error_token:
-    free(type);
-    free(src);
-    free(dst);
- 	if (handle->sport) free(sport);
- 	if (handle->dport) free(dport);
- 	if (handle->dpid) free(dpid);
  error_sess:
     free(handle->xfer->sess);
  error:
@@ -1759,7 +1786,6 @@ globus_l_xio_xsp_close_cb(
 	    if ((handle->xfer->streams == 0) &&
 		handle->xfer->xsp_connected)
 	    {
-	      /*
 		res = globus_l_xio_xsp_do_xfer_notify(handle, GLOBUS_XIO_XSP_END_XFER);
 		if (res != GLOBUS_SUCCESS)
 		{
@@ -1768,30 +1794,20 @@ globus_l_xio_xsp_close_cb(
 		        " to XSPd.");
 		}
 		done = GLOBUS_TRUE;
-	      */
-		    /* FIXME(fernandes): fix delete for new API and multiple values.
+
 		if (handle->xsp_net_path &&
 		    globus_l_xio_xsp_xfer_default.xsp_signal_path)
 		{
 		
 		    printf("XIO-XSP: deleting path\n");
-		    
 		    libxspNetPath *path;
-		    libxspNetPathRuleCrit crit = {
-			    .src = handle->src,
-			    .dst = handle->dst
-		    };
-		    
-		    path = xsp_sess_new_net_path(handle->xsp_net_path, XSP_NET_PATH_DELETE);
-		    if (xsp_sess_set_net_path_crit(path, &crit) != 0)
-			    fprintf(stderr, "could not set path criteria\n");
-		    
+		    globus_l_xio_xsp_make_path(handle, XSP_NET_PATH_DELETE, &path);
+
 		    if ((res = xsp_signal_path(handle->xfer->sess, path)) != 0)
 		    {
 			    printf("XIO-XSP: could not signal path delete\n");
 		    }
 		}
-		*/
 	    }
 	    else
 	    {
