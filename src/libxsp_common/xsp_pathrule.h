@@ -9,6 +9,7 @@ typedef struct xsp_pathrule_t {
 	pthread_mutex_t lock;
 	pthread_cond_t timeout_cond;
 
+	struct xsp_addr eid;
 	struct xsp_sess_net_path_rule_crit_t crit;
 	char *description;
 	int tag;

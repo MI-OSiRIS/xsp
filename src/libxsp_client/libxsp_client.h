@@ -16,6 +16,15 @@
 
 #define XSP_HOP_NATIVE 0x01
 
+enum xsp_eid_types_t {
+        XSP_EID_NULL = 0,
+	XSP_EID_IPv4,
+        XSP_EID_IPv6,
+	XSP_EID_URN,
+        XSP_EID_HOPID,
+        XSP_EID_DPID
+};
+
 enum xsp_sec {
         XSP_SEC_NONE = 0,
         XSP_SEC_SSH,
@@ -44,6 +53,7 @@ libxspSecInfo *xsp_sess_new_security(char *username, char *password, char *key1,
 libxspNetPath *xsp_sess_new_net_path(int action);
 libxspNetPathRule *xsp_sess_new_net_path_rule(libxspNetPath *path, char *type);
 int xsp_sess_set_net_path_rule_crit(libxspNetPathRule *rule, libxspNetPathRuleCrit *crit);
+int xsp_sess_set_net_path_rule_eid(libxspNetPathRule *rule, void *eid, int type);
 
 int xsp_signal_path(libxspSess *sess, libxspNetPath *path);
 int xsp_signal_inf_data(libxspSess *sess);

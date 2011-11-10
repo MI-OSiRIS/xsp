@@ -484,14 +484,33 @@ xspNetPathRule *xsp_sess_new_net_path_rule(xspNetPath *path, char *type) {
 	return rule;
 }
 
+int xsp_sess_set_net_path_rule_eid(xspNetPathRule *rule, void *eid, int type) {
+	if (!rule)
+		return -1;
+	
+	switch (type) {
+	case XSP_EID_HOPID:
+		memcpy(&(rule->eid.x_addrc), eid, XSP_HOPID_LEN);
+		break;
+	case XSP_EID_DPID:
+		rule->eid.x_addrd = *(uint64_t *)eid;
+		break;
+	default:
+		break;
+	}
+
+	return 0;
+}		
+
 int xsp_sess_set_net_path_rule_crit(xspNetPathRule *rule, libxspNetPathRuleCrit *crit) {
 	if (!rule)
 		return -1;
 	
-	memcpy(&(rule->crit.src_eid.x_addrc), crit->src, XSP_HOPID_LEN);
-	memcpy(&(rule->crit.dst_eid.x_addrc), crit->dst, XSP_HOPID_LEN);
-	// FIXME(fernandes): demo hack for DPID in openflow path.
-	rule->crit.src_mask.x_addrd = crit->src_mask;
+	if (crit->src)
+		memcpy(&(rule->crit.src_eid.x_addrc), crit->src, XSP_HOPID_LEN);
+	if (crit->dst)
+		memcpy(&(rule->crit.dst_eid.x_addrc), crit->dst, XSP_HOPID_LEN);
+
 	rule->crit.src_port = crit->src_port;
 	rule->crit.dst_port = crit->dst_port;
 	
