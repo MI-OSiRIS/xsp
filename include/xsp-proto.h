@@ -28,6 +28,19 @@ enum xsp_eid_types_t {
 	XSP_EID_DPID
 };
 
+enum xsp_sec {
+	XSP_SEC_NONE = 0,
+	XSP_SEC_SSH,
+	XSP_SEC_SSL
+};
+
+enum xsp_sess_net_path_actions_t {
+	XSP_NET_PATH_CREATE = 0,
+	XSP_NET_PATH_DELETE,
+	XSP_NET_PATH_MODIFY,
+	XSP_NET_PATH_QUERY
+};
+
 /* result/status codes */
 #define XSP_STAT_OK		0x0000
 #define XSP_STAT_NOROUTE        0x0001
