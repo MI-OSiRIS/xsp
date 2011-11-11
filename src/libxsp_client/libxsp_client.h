@@ -12,31 +12,10 @@
 
 #include <unistd.h>
 
+#include "xsp-proto.h"
 #include "libxsp_client_common.h"
 
 #define XSP_HOP_NATIVE 0x01
-
-enum xsp_eid_types_t {
-        XSP_EID_NULL = 0,
-	XSP_EID_IPv4,
-        XSP_EID_IPv6,
-	XSP_EID_URN,
-        XSP_EID_HOPID,
-        XSP_EID_DPID
-};
-
-enum xsp_sec {
-        XSP_SEC_NONE = 0,
-        XSP_SEC_SSH,
-        XSP_SEC_SSL
-};
-
-enum xsp_sess_net_path_actions_t {
-        XSP_NET_PATH_CREATE = 0,
-        XSP_NET_PATH_DELETE,
-        XSP_NET_PATH_MODIFY,
-        XSP_NET_PATH_QUERY
-};
 
 typedef void libxspSess;
 typedef void libxspSecInfo;

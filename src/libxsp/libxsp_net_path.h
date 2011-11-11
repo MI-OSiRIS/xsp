@@ -3,13 +3,6 @@
 
 #include "xsp-proto.h"
 
-enum xsp_sess_net_path_actions_t {
-	XSP_NET_PATH_CREATE = 0,
-	XSP_NET_PATH_DELETE,
-	XSP_NET_PATH_MODIFY,
-	XSP_NET_PATH_QUERY
-};
-
 typedef struct xsp_sess_net_path_rule_crit_t {
 	// all the supported config criteria
 	struct xsp_addr src_eid;
