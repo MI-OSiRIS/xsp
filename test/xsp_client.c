@@ -66,14 +66,14 @@ int main(int argc, char *argv[])
 	*/
 
 	libxspNetPath *path;
-	libxspNetPathRuleCrit crit = {
-		.src = "pc5.pgeni",
-		.dst = "pc150"
-	};
-	
+	libxspNetPathRule *rule;
+	libxspNetPathRuleCrit crit;
+
 	// creates a path with a single rule
-	path = xsp_sess_new_net_path("DEFAULT", XSP_NET_PATH_CREATE);
-	if (xsp_sess_set_net_path_crit(path, &crit) != 0)
+	path = xsp_sess_new_net_path(XSP_NET_PATH_CREATE);
+	rule = xsp_sess_new_net_path_rule(path, "OPENFLOW");
+	
+	if (xsp_sess_set_net_path_rule_crit(rule, &crit) != 0)
 		fprintf(stderr, "could not set path criteria\n");
 	
 	xsp_signal_path(sess, path);

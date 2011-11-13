@@ -32,21 +32,21 @@
 #define XSP_DEFAULT_SPORT               0x01
 
 enum xsp_message_types_t {
-	XSP_MSG_INVALID = 0,
-	XSP_MSG_SESS_OPEN,
-	XSP_MSG_SESS_ACK,
-	XSP_MSG_SESS_CLOSE,
-	XSP_MSG_BLOCK_HEADER,
-	XSP_MSG_AUTH_TYPE,
-	XSP_MSG_AUTH_TOKEN,
-	XSP_MSG_SESS_NACK,
-	XSP_MSG_PING,
-	XSP_MSG_PONG,
-	XSP_MSG_DATA_CHAN,
-	XSP_MSG_NET_PATH,
-	XSP_MSG_APP_DATA,
-	XSP_MSG_SLAB_INFO,
-	XSP_MSG_INF_DATA
+	XSP_MSG_INVALID = 0, 
+	XSP_MSG_SESS_OPEN,              /* 1 */
+	XSP_MSG_SESS_ACK,               /* 2 */
+	XSP_MSG_SESS_CLOSE,             /* 3 */
+	XSP_MSG_BLOCK_HEADER,           /* 4 */
+	XSP_MSG_AUTH_TYPE,              /* 5 */
+	XSP_MSG_AUTH_TOKEN,             /* 6 */
+	XSP_MSG_SESS_NACK,              /* 7 */
+	XSP_MSG_PING,                   /* 8 */
+	XSP_MSG_PONG,                   /* 9 */
+	XSP_MSG_DATA_CHAN,              /* 10 */
+	XSP_MSG_NET_PATH,               /* 11 */
+	XSP_MSG_APP_DATA,               /* 12 */
+	XSP_MSG_SLAB_INFO,              /* 13 */
+	XSP_MSG_INF_DATA                /* 14 */
 };
 
 /* XSP Objects */

@@ -5,10 +5,11 @@ __author__ = "Ezra Kissel <kissel@cis.udel.edu>, Dan Gunter <dkgunter@lbl.gov>"
 __rcsid__ = "$Id: xsplib.py 27238 2011-02-24 23:45:43Z dang $"
 
 import asyncore
+import binascii
+import random
 import socket
 import struct
-import random
-import binascii
+import sys
 import time
 
 from netlogger.nllog import DoesLogging, get_logger
@@ -18,30 +19,42 @@ XSP_v1=1
 
 XSP_MAX_LENGTH=65536
 
+"""
+XSP Message types
+"""
 XSP_MSG_SESS_OPEN=1
 XSP_MSG_SESS_ACK=2
 XSP_MSG_SESS_CLOSE=3
 XSP_MSG_BLOCK_HEADER=4
-XSP_MSG_AUTH_TYPE=8
-XSP_MSG_PING=11
-XSP_MSG_PONG=12
-XSP_MSG_APP_DATA=15
-XSP_MSG_XIO_MIN = 48
-XSP_MSG_XIO_MAX = 50
-XSP_MSG_NLMI_DATA=32
-
+XSP_MSG_AUTH_TYPE=5
+XSP_MSG_PING=8
+XSP_MSG_PONG=9
+XSP_MSG_APP_DATA=12
 XSP_MSG_OPEN_SIZE=84
 XSP_MSG_AUTH_SIZE=10
-XSP_MSG_BLOCK_SIZE=8
-XSP_MSG_BLOCK_HDR_SIZE=6
+XSP_MSG_BLOCK_HDR_SIZE=8
 XSP_MSG_HDR_SIZE_V0=20
 XSP_MSG_HDR_SIZE_V1=160
 
-XSP_OPT_DATA=5
+"""
+XSP_MSG_APP_DATA option types
+"""
+XSP_MSG_XIO_NEW_XFER  = 48 # Beginning of transfer
+XSP_MSG_XIO_END_XFER  = 49 # End of transfer
+XSP_MSG_XIO_UPDATE_XFER = 50 # Intermediate xfer info, eg NL-Calipers summaries
+XSP_MSG_XIO_MIN = 48 # Lowest XSP+XIO event
+XSP_MSG_XIO_MAX = 50 # Highest XSP+XIO event
+XSP_MSG_NLMI_DATA=32 # Monitoring data from Blipp (formerly: NLMI)
+
+# XXX: Not used. XSP_OPT_DATA=5
 
 def msg_has_data(t):
-    return (t in (XSP_MSG_APP_DATA, XSP_MSG_NLMI_DATA) or
-            (t >= XSP_MSG_XIO_MIN and t <= XSP_MSG_XIO_MAX))
+    return (t == XSP_MSG_APP_DATA)
+
+def block_has_data(t):
+    print "has data type: " + str(t)
+    return ((t >= XSP_MSG_XIO_MIN and t <= XSP_MSG_XIO_MAX)
+            or (t == XSP_MSG_NLMI_DATA))
 
 class XSPSessionEOF(Exception):
     pass
@@ -98,40 +111,67 @@ class XSPSession(DoesLogging):
 
     def connect(self, host, port):
         self.s.connect((host, port))
-
         random.seed()
-        self.id = "%X" % random.getrandbits(128)
-
-        auth_msg = struct.pack('!BBh16s10s', self.version, XSP_MSG_AUTH_TYPE,
-                               XSP_MSG_AUTH_SIZE,
-                               binascii.a2b_hex(self.id), "ANON")
-
-        open_msg = struct.pack('!BBh16s16s60sii',
-                               self.version, XSP_MSG_SESS_OPEN,
-                               XSP_MSG_OPEN_SIZE, binascii.a2b_hex(self.id),
-                               binascii.a2b_hex(self.id),
-                               'localhost', 0, 0)
-
-        self.s.send(auth_msg)
-        self.s.send(open_msg)
+        self.id = "%032X" % random.getrandbits(128)
+        self.send_auth()
+        self.send_open()
         self.s.recv(XSP_MSG_HDR_SIZE_V0)
         # just ignore ACK, woo!
 
     def send_msg(self, data, length, type_):
+        """Send a message to an XSP server.
+
+        Args:
+          data - Data portion, uninterpreted
+          length - Length of the data
+          type_ - Message type
+        """
         fmt = '!BBh16shhi' + str(length) + 's'
-        block_len = XSP_MSG_BLOCK_SIZE + int(length)
+        block_len = XSP_MSG_BLOCK_HDR_SIZE + int(length)
         block_msg = struct.pack(fmt, self.version, XSP_MSG_APP_DATA,
                                 block_len, binascii.a2b_hex(self.id),
                                 int(type_), 0, int(length), data)
 
         self.s.send(block_msg)
 
+    def send_auth(self, name="ANON"):
+        """Send an <auth> message to an XSP server.
+        Uses 'self.id' as the key.
+
+        Args:
+          name - Authorization name.
+        """
+        msg = struct.pack('!BBh16s10s', self.version, XSP_MSG_AUTH_TYPE,
+                          XSP_MSG_AUTH_SIZE,
+                          binascii.a2b_hex(self.id), "ANON")
+        self.s.send(msg)
+
+    def send_open(self, host='localhost'):
+        """Send an <open> message to an XSP server.
+
+        Args:
+          host - Sending host name (default 'localhost')
+        """
+        msg = struct.pack('!BBh16s16s60sii',
+                          self.version, XSP_MSG_SESS_OPEN,
+                          XSP_MSG_OPEN_SIZE, binascii.a2b_hex(self.id),
+                          binascii.a2b_hex(self.id),
+                          'localhost', 0, 0)
+        self.s.send(msg)
+
+    def send_close(self):
+        """Send a <close> message to an XSP server.
+        """
+        msg = struct.pack('!BBh16s', self.version,
+                          XSP_MSG_SESS_CLOSE, 0, binascii.a2b_hex(self.id))
+        self.s.send(msg)
+
     def send_ack(self):
         if self.version == XSP_v0:
             fmt = '!BBh16s'
             ack_msg = struct.pack(fmt, self.version, XSP_MSG_SESS_ACK, 0,
                                   binascii.a2b_hex(self.id))
-            
+
         elif self.version == XSP_v1:
             fmt = '!BBhhh68s68s16s'
             ack_msg = struct.pack(fmt, self.version, 0, XSP_MSG_SESS_ACK,
@@ -142,43 +182,50 @@ class XSPSession(DoesLogging):
     def recv_msg(self):
         xsp_ver = readn(self.s, 1)
         ver = struct.unpack('!B', xsp_ver)
-        
+
         if ver[0] == XSP_v0:
             xsp_hdr = readn(self.s, XSP_MSG_HDR_SIZE_V0-1)
             hdr = struct.unpack('!Bh16s', xsp_hdr)
-            #print("xsp body type={code:d}".format(code=hdr[2]))
-
             if not msg_has_data(hdr[0]):
                 _ = readn(self.s, hdr[1])
                 return hdr[0], 0, None
 
             block_msg = readn(self.s, hdr[1])
             #print("@@ got msg len={0:d} expect={1:d}".format(len(block_msg), hdr[0]))
-            fmt = '!hhi' + str(hdr[1] - XSP_MSG_BLOCK_SIZE) + 's'
+            fmt = '!hhi' + str(hdr[1] - XSP_MSG_BLOCK_HDR_SIZE) + 's'
             #print("@@ struct fmt={0}".format(fmt))
             block = struct.unpack(fmt, block_msg)
             return block[0], block[2], block[3]
         elif ver[0] == XSP_v1:
-            xsp_hdr = readn(self.s, XSP_MSG_HDR_SIZE_V1-1)
-            hdr = struct.unpack('!Bhhh68s68s16s', xsp_hdr)
-            # set version
-            if hdr[1] == XSP_MSG_SESS_OPEN:
+            hdr_bytes = readn(self.s, XSP_MSG_HDR_SIZE_V1-1)
+            hdr = struct.unpack('!Bhhh68s68s16s', hdr_bytes)
+            msg_type, msg_data = hdr[1], hdr[2]
+            # Set version when session opens
+            if msg_type == XSP_MSG_SESS_OPEN:
                 self.version = XSP_v1
-            # check option count, only handle single option block
-            if not hdr[2]:
-                return hdr[1], 0, None
-            block_hdr = readn(self.s, XSP_MSG_BLOCK_HDR_SIZE)
-            bhdr = struct.unpack('!hhh', block_hdr)
-            
-            if not msg_has_data(bhdr[0]):
-                _ = readn(self.s, bhdr[2])
-                return hdr[1], 0, None
 
-            data_blob = readn(self.s, bhdr[2])
-            #data = struct.unpack('!' + str(bhdr[2]) + 's', data_blob)
-            return bhdr[0], bhdr[2], data_blob
+            # If there is no message data, stop and return message type
+            if not msg_data:
+                return msg_type, 0, None
+
+            # Read message data
+            block_bytes = readn(self.s, XSP_MSG_BLOCK_HDR_SIZE)
+            block_type, _, block_len, _ = struct.unpack('!hhhh', block_bytes)
+
+            # If this type of block has no data, consume any
+            # additional parts and return the message type
+            if not block_has_data(block_type):
+                _ = readn(self.s, block_len)
+                return msg_type, 0, None
+
+            # Otherwise, read the data and return it along with
+            # the block (or option) type
+
+            block_bytes = readn(self.s, block_len)
+            return block_type, block_len, block_bytes
 
     def close(self):
+        self.send_close()
         close_msg = struct.pack('!BBh16s', self.version,
                                 XSP_MSG_SESS_CLOSE, 0, binascii.a2b_hex(self.id))
         self.s.send(close_msg)
@@ -201,11 +248,11 @@ class XSPSession(DoesLogging):
 
 class XSPServer(asyncore.dispatcher, DoesLogging):
     """Asyncore-based XSP message server.
-    
+
     This class accepts connections then hands them off
     to instances of XSPHandler.
     """
-    def __init__(self, host, port, data_fn=None):
+    def __init__(self, host, port, data_fn=None, cb_map={ }):
         """Create new server listening on local socket.
 
         Args:
@@ -219,8 +266,11 @@ class XSPServer(asyncore.dispatcher, DoesLogging):
         self.set_reuse_addr()
         self.bind((host, port))
         self.listen(5)
-        self._callback = data_fn
-        
+        if cb_map:
+            self._callback = cb_map
+        else:
+            self._callback = data_fn
+
     def handle_accept(self):
         """Accept a new connection.
         """
@@ -231,7 +281,7 @@ class XSPServer(asyncore.dispatcher, DoesLogging):
             sock, addr = pair
             self.log.info("connection.new", addr=repr(addr))
             handler = XSPHandler(sock, self._callback)
-        
+
     def loop(self, **kw):
         asyncore.loop(**kw)
 
@@ -243,14 +293,21 @@ class XSPHandler(asyncore.dispatcher_with_send, DoesLogging):
 
         Args:
           sock - Socket
-          callback - Callback function, invoked as callback(data),
+          callback - If a single callable, invoked as callback(data),
                      where 'data' is a buffer of BSON-encoded info.
+                     If a dictionary, then a mapping of <type>:<fn> for
+                     various XSP message types.
         """
         DoesLogging.__init__(self)
         asyncore.dispatcher_with_send.__init__(self, sock)
         self.sess = XSPSession(sock)
-        self._cb = callback
-        
+        if callable(callback):
+            self._cb = callback
+            self._handler = self._handle_data
+        else:
+            self._cb_map = callback
+            self._handler = self._handle_mapped
+
     def handle_read(self):
         """Read a message, maybe send an ack.
         """
@@ -263,6 +320,13 @@ class XSPHandler(asyncore.dispatcher_with_send, DoesLogging):
             self.log.info("read.eof")
             self.handle_close()
             return
+        self._handler(type_, length, data)
+        if self._dbg:
+            self.log.debug("read.end", length=length)
+
+    def _handle_data(self, type_, length, data):
+        """Handle a message in 'data' mode.
+        """
         if type_ == XSP_MSG_SESS_OPEN:
             if self._dbg: self.log.debug("ack.start", type=type_)
             self.sess.send_ack()
@@ -271,14 +335,40 @@ class XSPHandler(asyncore.dispatcher_with_send, DoesLogging):
             if self._dbg: self.log.debug("callback.start", data__len=len(data))
             self._cb(data)
             if self._dbg: self.log.debug("callback.end")
-        if self._dbg:
-            self.log.debug("read.end", length=length)
+
+    def _handle_mapped(self, type_, length, data):
+        """Handle a message to a map of callbacks.
+        """
+        if type_ == XSP_MSG_SESS_OPEN:
+            if self._dbg: self.log.debug("ack.start", type=type_)
+            self.sess.send_ack()
+            if self._dbg: self.log.debug("ack.end", type=type_)
+        func = self._cb_map.get(type_, None)
+        if func is not None:
+            if self._dbg:
+                self.log.debug("callback.start", type=type_, func=func.__name__)
+            func(data=data)
+            if self._dbg:
+                self.log.debug("callback.end", type=type_, func=func.__name__)
+        elif self._cb_map.has_key(None):
+            func = self._cb_map[None]
+            if self._dbg:
+                self.log.debug("mapped.default-callback.start", type=type_,
+                               func=func.__name__)
+            func(type_=type_, data=data)
+            if self._dbg:
+                self.log.debug("mapped.default-callback.end", type=type_,
+                               func=func.__name__)
+        else:
+            if self._dbg:
+                self.log.debug("callback.noop", type=type_)
 
     def handle_close(self):
         """Close XSP session and underlying socket.
         """
         self.log.info("close.start")
-        self.sess.close()
+        # can't send close if EOF
+        #self.sess.close()
         self.close()
         self.log.info("close.end")
 
