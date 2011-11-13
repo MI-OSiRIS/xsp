@@ -28,6 +28,7 @@
 #define GLOBUS_XIO_XSP_NEW_XFER          0x30
 #define GLOBUS_XIO_XSP_END_XFER          0x31
 #define GLOBUS_XIO_XSP_UPDATE_XFER       0x32
+#define GLOBUS_XIO_XSP_UPDATE_PERFOMETER 0x40
 
 #define GLOBUS_XIO_NL_UPDATE_SIZE        65536
 
@@ -195,6 +196,18 @@ static xio_l_xsp_handle_t               globus_l_xio_xsp_handle_default =
 
 static globus_hashtable_t               xsp_l_xfer_table;
 static globus_mutex_t                   xio_l_xsp_mutex;
+
+static enum speedometer_types {
+    XSPD_SPEEDOMETER_IN = 0,
+    XSPD_SPEEDOMETER_OUT,
+    XSPD_SPEEDOMETER_INIT
+};
+
+static typedef struct speedometer_sample {
+    uint64_t value;
+    time_t time;
+    uint8_t type;
+} speedometer_sample_t;
 
 // Forward declarations and module definition
 char **split(char*, char*, int*); /* utility method defined in libxsp_client */
@@ -439,6 +452,40 @@ globus_l_xio_xsp_append_xfer_meta(
     bson_append_finish_object(bb);
 
     return GLOBUS_SUCCESS;
+}
+
+static
+globus_result_t
+globus_l_xio_xsp_update_speedometer(
+        xio_l_xsp_handle_t *                handle,
+        xio_l_xsp_caliper_t *               c,
+        uint8_t                             type)
+{
+    globus_result_t  result;
+    xio_l_xsp_send_args_t *args;
+    globus_reltime_t cb_time;
+    speedometer_sample_t sample;
+
+    sample.value = c->caliper->sum / c->caliper->interval;
+    sample.time = time();
+    sample.type = type;
+
+    result = globus_l_xio_xsp_send_args_init((void**)&args,
+                         &sample,
+                         sizeof(sample),
+                         GLOBUS_XIO_XSP_UPDATE_PERFOMETER,
+                         GLOBUS_XIO_XSP_SEND_XSPD,
+                         handle);
+    if (result != GLOBUS_SUCCESS)
+        return result;
+
+    globus_callback_register_oneshot(
+    GLOBUS_NULL,
+    &cb_time,
+    globus_l_xio_xsp_send_message,
+    (void*)args);
+
+    return result;
 }
 
 static
@@ -1922,9 +1969,11 @@ globus_l_xio_xsp_read_cb(
 			handle->r_caliper->caliper->first)
 	    >= handle->interval )
 	{
-	    globus_l_xio_xsp_do_nl_summary(handle,
-					   handle->r_caliper);
+	    //globus_l_xio_xsp_do_nl_summary(handle,
+		//			   handle->r_caliper);
 	    //GlobusTimeAbstimeGetCurrent(handle->r_caliper->ts);
+	    globus_l_xio_xsp_update_speedometer(handle, handle->r_caliper,
+	            XSPD_SPEEDOMETER_IN);
 	}
     }
     
@@ -1988,9 +2037,11 @@ globus_l_xio_xsp_write_cb(
 			handle->w_caliper->caliper->first)
 	    >= handle->interval )
 	{
-	    globus_l_xio_xsp_do_nl_summary(handle,
-					   handle->w_caliper);
+	    //globus_l_xio_xsp_do_nl_summary(handle,
+		//			   handle->w_caliper);
 	    //GlobusTimeAbstimeGetCurrent(handle->w_caliper->ts);
+	    globus_l_xio_xsp_update_speedometer(handle, handle->w_caliper,
+	                    XSPD_SPEEDOMETER_OUT);
 	}
     }
     
