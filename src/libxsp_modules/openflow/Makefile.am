@@ -11,7 +11,7 @@ ACLOCAL_AMFLAGS = -I m4
 #SUBDIRS = datapath
 SUBDIRS =
 
-AM_CPPFLAGS = $(SSL_CFLAGS) -g
+AM_CPPFLAGS = $(SSL_CFLAGS) -g -fPIC
 AM_CPPFLAGS += -I $(srcdir)/include
 AM_CPPFLAGS += -I $(srcdir)/lib
 
