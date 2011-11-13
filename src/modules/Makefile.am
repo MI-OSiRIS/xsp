@@ -30,6 +30,14 @@ photon_la_LIBADD = $(PHOTON_LIBADD) -lphoton_xsp -ldat2 -lmpi
 photon_la_CFLAGS = $(AM_CFLAGS) $(PHOTON_CFLAGS) -I../../photon/libphoton/include -DWITH_XSP
 endif
 
+if ENABLE_SPEEDOMETER
+modules_LTLIBRARIES += speedometer.la
+speedometer_la_SOURCES = xspd_speedometer.c
+speedometer_la_LDFLAGS = -no-undefined -module -avoid-version
+speedometer_la_LIBADD =
+speedometer_la_CFLAGS =
+endif
+
 if HAVE_LIBXML
 AM_CFLAGS += @LIBXML_CFLAGS@
 endif
