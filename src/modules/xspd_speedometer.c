@@ -203,8 +203,9 @@ static void dump_samples() {
 
         i++;
     }
-
-    fprintf(graphfile, "]}\n");
+    // Remove last comma
+    fseek(graphfile, -2, SEEK_CUR);
+    fprintf(graphfile, "\n]}\n");
     fclose(graphfile);
 
     fprintf(infile, ""
