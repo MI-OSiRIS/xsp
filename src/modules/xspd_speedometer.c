@@ -17,6 +17,7 @@
 #include "xsp_settings.h"
 #include "xsp_session.h"
 #include "xsp_conn.h"
+#include "xsp_main_settings.h"
 
 #include "option_types.h"
 #include "compat.h"
@@ -25,13 +26,13 @@
 int xspd_speedometer_init();
 int xspd_speedometer_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block);
 
-static enum speedometer_types {
+enum speedometer_types {
     XSPD_SPEEDOMETER_IN = 0,
     XSPD_SPEEDOMETER_OUT,
     XSPD_SPEEDOMETER_INIT
 };
 
-static typedef struct speedometer_sample {
+typedef struct speedometer_sample {
     uint64_t value;
     time_t time;
     uint8_t type;
@@ -86,6 +87,8 @@ static void *xspd_speedometer_server(void *arg) {
         if (res == 0)
             continue;
     }
+
+    return NULL;
 }
 
 int xspd_speedometer_init() {
@@ -94,22 +97,22 @@ int xspd_speedometer_init() {
     time_t current_time;
     xspSettings *settings = xsp_main_settings();
 
-    if (xsp_settings_get_int_3(settings, "speedometer", "num_samples", &num_samples) != 0) {
+    if (xsp_settings_get_int_2(settings, "speedometer", "num_samples", &num_samples) != 0) {
         num_samples = 180;
     }
 
-    if (xsp_settings_get_int_3(settings, "speedometer", "server_port", &server_port) != 0) {
+    if (xsp_settings_get_int_2(settings, "speedometer", "server_port", &server_port) != 0) {
         server_port = 7272;
     }
 
-    if (xsp_settings_get_3(settings, "speedometer", "samples_dir", &samples_dir) != 0) {
+    if (xsp_settings_get_2(settings, "speedometer", "samples_dir", &samples_dir) != 0) {
         samples_dir = "/tmp";
     }
 
-    TAILQ_INIT(values);
+    TAILQ_INIT(&values);
     pthread_mutex_init(&values_mtx, NULL);
 
-    current_time = time();
+    current_time = time(NULL);
     for (i = 0; i < num_samples; i++) {
         speedometer_sample_t *sample = malloc(sizeof(speedometer_sample_t));
         sample->time = current_time;
@@ -144,7 +147,6 @@ static void add_sample(speedometer_sample_t *s) {
 }
 
 static void dump_samples() {
-    int i;
     char file[255];
     char date[30];
     speedometer_sample_t *next;
@@ -152,14 +154,14 @@ static void dump_samples() {
     FILE *infile;
     FILE *outfile;
 
-    sprintf(graphfile, "%s/speedometer_graph_samples.json", samples_dir);
-    graphfile = fopen(graphfile, O_WRONLY | O_CREAT);
+    sprintf(file, "%s/speedometer_graph_samples.json", samples_dir);
+    graphfile = fopen(file, O_WRONLY | O_CREAT);
 
-    sprintf(infile, "%s/speedometer_in_samples.json", samples_dir);
-    infile = fopen(infile, O_WRONLY | O_CREAT);
+    sprintf(file, "%s/speedometer_in_samples.json", samples_dir);
+    infile = fopen(file, O_WRONLY | O_CREAT);
 
-    sprintf(outfile, "%s/speedometer_out_samples.json", samples_dir);
-    outfile = fopen(outfile, O_WRONLY | O_CREAT);
+    sprintf(file, "%s/speedometer_out_samples.json", samples_dir);
+    outfile = fopen(file, O_WRONLY | O_CREAT);
 
     fprintf(graphfile,
 "{\"Results\":\n"
@@ -182,11 +184,11 @@ static void dump_samples() {
         strftime (date, 30, "%m/%d/%Y %H:%M:%S", localtime(next->time));
 
         fprintf(graphfile,
-                "{\"date\":\"%s\", \"inspeed\":\"%f\", \"outspeed\":\"%f\"},\n",
+                "{\"date\":\"%s\", \"inspeed\":\"%ull\", \"outspeed\":\"%ull\"},\n",
                 date, read, write);
 
-        fprintf(infile,  "        [%u,%f],\n", next->time, read);
-        fprintf(outfile, "        [%u,%f],\n", next->time, write);
+        fprintf(infile,  "        [%u,%ull],\n", next->time, read);
+        fprintf(outfile, "        [%u,%ull],\n", next->time, write);
     }
 
     fprintf(graphfile, "]}\n");
@@ -208,7 +210,7 @@ static void dump_samples() {
 static void transfer_samples() {
     char command[255];
     FILE *c;
-    fprintf(command, "/usr/bin/scp %s/perfometer* iu-srs.sc11.org:perfometer/ &> /dev/null", samples_dir);
+    sprintf(command, "/usr/bin/scp %s/perfometer* iu-srs.sc11.org:perfometer/ &> /dev/null", samples_dir);
     c = popen(command, "r");
     pclose(c);
 }
@@ -233,8 +235,4 @@ int xspd_speedometer_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_
     }
 
     return 0;
-
- error_exit:
-    *ret_block = NULL;
-    return -1;
 }
