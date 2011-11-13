@@ -176,6 +176,7 @@ controller_init(int argc, char *argv[])
     return 0;
 }
 
+#if 0
 void install_default_rules (struct switch_ sw) {
     struct ofpbuf *temp1, *temp2;//, *temp3, *temp4;
     struct ofp_flow_mod *ofm1, *ofm2;//, *ofm3, *ofm4;
@@ -236,6 +237,8 @@ void install_default_rules (struct switch_ sw) {
     queue_tx(sw->lswitch, sw->rconn, temp2);
 }
 
+#endif
+
 void *
 controller_loop(void *ptr)
 {
@@ -255,7 +258,7 @@ controller_loop(void *ptr)
                     new_switch(&switches[n_switches++], new_vconn, "tcp");
 					saddr.sin_addr.s_addr = new_vconn->ip;
 					printf("new switch connected: %s\n", inet_ntoa(saddr.sin_addr));
-					install_default_rules(switches[n_switches-1]);
+					//install_default_rules(switches[n_switches-1]);
                 }
                 i++;
             } else {
