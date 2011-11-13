@@ -857,6 +857,11 @@ int xsp_session_app_data(comSess *sess, const void *arg, char ***error_msgs) {
 		mstring = "globus_xio";
         }
 
+    if (block->type >= SPEEDOMETER_MIN &&
+            block->type <= SPEEDOMETER_MAX) {
+        mstring = "speedometer";
+        }
+
 	if (!mstring) {
 		asprintf(error_msg, "unrecognized option block type: %d", block->type);
 		xsp_err(0, "%s", error_msg);
