@@ -41,7 +41,7 @@ typedef struct speedometer_sample {
 
 
 static pthread_mutex_t values_mtx;
-static TAILQ_HEAD(speedometer_values_head, speedometer_sample_t) values;
+static TAILQ_HEAD(speedometer_values_head, speedometer_sample) values;
 
 
 static xspModule xspd_speedometer_module = {
@@ -93,7 +93,7 @@ static void *xspd_speedometer_server(void *arg) {
 
 int xspd_speedometer_init() {
     int i;
-
+    int port;
     time_t current_time;
     xspSettings *settings = xsp_main_settings();
 
@@ -101,9 +101,10 @@ int xspd_speedometer_init() {
         num_samples = 180;
     }
 
-    if (xsp_settings_get_int_2(settings, "speedometer", "server_port", &server_port) != 0) {
+    if (xsp_settings_get_int_2(settings, "speedometer", "server_port", &port) != 0)
         server_port = 7272;
-    }
+    else
+        server_port = (short) port;
 
     if (xsp_settings_get_2(settings, "speedometer", "samples_dir", &samples_dir) != 0) {
         samples_dir = "/tmp";
@@ -129,6 +130,8 @@ int xspd_speedometer_init() {
 static void add_sample(speedometer_sample_t *s) {
     speedometer_sample_t *first;
 
+    xsp_info(8, "received value=%llu time=%u type=%hu", s->value, s->time, s->type);
+
     speedometer_sample_t *sample = malloc(sizeof(speedometer_sample_t));
     // XXX(fernandes): globus side doesn't have TAILQ entry.
     sample->value = s->value;
@@ -139,7 +142,7 @@ static void add_sample(speedometer_sample_t *s) {
     {
         first = TAILQ_FIRST(&values);
         TAILQ_INSERT_TAIL(&values, sample, samples);
-        TAILQ_REMOVE(values, first, samples);
+        TAILQ_REMOVE(&values, first, samples);
     }
     pthread_mutex_unlock(&values_mtx);
 
@@ -147,6 +150,7 @@ static void add_sample(speedometer_sample_t *s) {
 }
 
 static void dump_samples() {
+    int i;
     char file[255];
     char date[30];
     speedometer_sample_t *next;
@@ -154,14 +158,17 @@ static void dump_samples() {
     FILE *infile;
     FILE *outfile;
 
+    pthread_mutex_lock(&values_mtx);
+    {
+
     sprintf(file, "%s/speedometer_graph_samples.json", samples_dir);
-    graphfile = fopen(file, O_WRONLY | O_CREAT);
+    graphfile = fopen(file, "w+");
 
     sprintf(file, "%s/speedometer_in_samples.json", samples_dir);
-    infile = fopen(file, O_WRONLY | O_CREAT);
+    infile = fopen(file, "w+");
 
     sprintf(file, "%s/speedometer_out_samples.json", samples_dir);
-    outfile = fopen(file, O_WRONLY | O_CREAT);
+    outfile = fopen(file, "w+");
 
     fprintf(graphfile,
 "{\"Results\":\n"
@@ -178,17 +185,22 @@ static void dump_samples() {
 "    \"data\": [\n"
             );
 
-    TAILQ_FOREACH(next, values, samples) {
-        uint64_t read = (next->type & XSPD_SPEEDOMETER_IN) ? next->value : 0;
-        uint64_t write = (next->type & XSPD_SPEEDOMETER_OUT) ? next->value : 0;
-        strftime (date, 30, "%m/%d/%Y %H:%M:%S", localtime(next->time));
+    i = 0;
+    TAILQ_FOREACH(next, &values, samples) {
+        float read = (next->type & XSPD_SPEEDOMETER_IN) ? next->value / (double) 1e9: 0;
+        float write = (next->type & XSPD_SPEEDOMETER_OUT) ? next->value / (double) 1e9 : 0;
+        strftime (date, 30, "%m/%d/%Y %H:%M:%S", localtime(&next->time));
 
         fprintf(graphfile,
-                "{\"date\":\"%s\", \"inspeed\":\"%ull\", \"outspeed\":\"%ull\"},\n",
+                "{\"date\":\"%s\", \"inspeed\":\"%f\", \"outspeed\":\"%f\"},\n",
                 date, read, write);
 
-        fprintf(infile,  "        [%u,%ull],\n", next->time, read);
-        fprintf(outfile, "        [%u,%ull],\n", next->time, write);
+        if (i >= (num_samples - 6)) {
+            fprintf(infile,  "        [%u,%f],\n", next->time, read);
+            fprintf(outfile, "        [%u,%f],\n", next->time, write);
+        }
+
+        i++;
     }
 
     fprintf(graphfile, "]}\n");
@@ -205,12 +217,15 @@ static void dump_samples() {
 "    }\n"
 "}\n");
     fclose(outfile);
+
+    }
+    pthread_mutex_unlock(&values_mtx);
 }
 
 static void transfer_samples() {
     char command[255];
     FILE *c;
-    sprintf(command, "/usr/bin/scp %s/perfometer* iu-srs.sc11.org:perfometer/ &> /dev/null", samples_dir);
+    sprintf(command, "/usr/bin/scp %s/speedometer* iu-srs.sc11.org:speedometer/ &> /dev/null", samples_dir);
     c = popen(command, "r");
     pclose(c);
 }
