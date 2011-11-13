@@ -187,17 +187,18 @@ static void dump_samples() {
 
     i = 0;
     TAILQ_FOREACH(next, &values, samples) {
-        float read = (next->type & XSPD_SPEEDOMETER_IN) ? next->value / (double) 1e9: 0;
-        float write = (next->type & XSPD_SPEEDOMETER_OUT) ? next->value / (double) 1e9 : 0;
+        // Transform values to Gb/s
+        float read = (next->type & XSPD_SPEEDOMETER_IN) ? next->value / 125000000.0: 0;
+        float write = (next->type & XSPD_SPEEDOMETER_OUT) ? next->value / 125000000.0 : 0;
         strftime (date, 30, "%m/%d/%Y %H:%M:%S", localtime(&next->time));
 
         fprintf(graphfile,
-                "{\"date\":\"%s\", \"inspeed\":\"%f\", \"outspeed\":\"%f\"},\n",
+                "{\"date\":\"%s\", \"inspeed\":\"%.2f\", \"outspeed\":\"%.2f\"},\n",
                 date, read, write);
 
         if (i >= (num_samples - 6)) {
-            fprintf(infile,  "        [%u,%f],\n", next->time, read);
-            fprintf(outfile, "        [%u,%f],\n", next->time, write);
+            fprintf(infile,  "        [%u,%.2f],\n", next->time, read);
+            fprintf(outfile, "        [%u,%.2f],\n", next->time, write);
         }
 
         i++;
