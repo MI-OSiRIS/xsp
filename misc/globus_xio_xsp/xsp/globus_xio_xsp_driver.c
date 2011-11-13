@@ -197,13 +197,13 @@ static xio_l_xsp_handle_t               globus_l_xio_xsp_handle_default =
 static globus_hashtable_t               xsp_l_xfer_table;
 static globus_mutex_t                   xio_l_xsp_mutex;
 
-static enum speedometer_types {
+enum speedometer_types {
     XSPD_SPEEDOMETER_IN = 0,
     XSPD_SPEEDOMETER_OUT,
     XSPD_SPEEDOMETER_INIT
 };
 
-static typedef struct speedometer_sample {
+typedef struct speedometer_sample {
     uint64_t value;
     time_t time;
     uint8_t type;
@@ -466,7 +466,11 @@ globus_l_xio_xsp_update_speedometer(
     globus_reltime_t cb_time;
     speedometer_sample_t sample;
 
-    sample.value = c->caliper->sum / c->caliper->interval;
+    GlobusTimeReltimeSet(cb_time, 0, 0);
+
+    netlogger_calipers_calc(c->caliper);
+
+    sample.value = c->caliper->sum / handle->interval;
     sample.time = time(NULL);
     sample.type = type;
 
@@ -476,14 +480,19 @@ globus_l_xio_xsp_update_speedometer(
                          GLOBUS_XIO_XSP_UPDATE_PERFOMETER,
                          GLOBUS_XIO_XSP_SEND_XSPD,
                          handle);
-    if (result != GLOBUS_SUCCESS)
+    if (result != GLOBUS_SUCCESS) {
+        printf("XIO-XSP: speedometer unable to init args.\n");
         return result;
+    }
 
     globus_callback_register_oneshot(
     GLOBUS_NULL,
     &cb_time,
     globus_l_xio_xsp_send_message,
     (void*)args);
+
+    netlogger_calipers_clear(c->caliper);
+    c->s_count++;
 
     return result;
 }
