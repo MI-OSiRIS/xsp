@@ -176,6 +176,66 @@ controller_init(int argc, char *argv[])
     return 0;
 }
 
+void install_default_rules (struct switch_ sw) {
+    struct ofpbuf *temp1, *temp2;//, *temp3, *temp4;
+    struct ofp_flow_mod *ofm1, *ofm2;//, *ofm3, *ofm4;
+    uint32_t buffer_id = -1; // Buffered packet to apply to (or -1). Not meaningful for OFPFC_DELETE*.
+
+    struct flow flow1 = {
+        inet_addr(ip_src),          // uint32_t IP source address.
+        inet_addr(ip_dst),          // uint32_t IP destination address.
+        htons((uint16_t)src_port),  // uint16_t Input switch port.
+        0,                          // uint16_t Input VLAN id.
+        htons(0x0800),              // uint16_t Ethernet frame type.
+        0,                          // uint16_t TCP/UDP source port.
+        0,                          // uint16_t TCP/UDP destination port.
+        {0,0,0,0,0,0},              // uint8_t Ethernet source address.
+        {0,0,0,0,0,0},              // uint8_t Ethernet destination address.
+        0,                          // uint8_t Input VLAN priority.
+        0,                          // uint8_t IPv4 DSCP.
+        0,                          // uint8_t IP protocol.
+        {0,0,0}                     // uint8_t
+    };
+
+    temp1 = make_add_simple_flow(&flow1, htonl(buffer_id), dst_port, OFP_FLOW_PERMANENT);
+    ofm1 = temp1->data;
+    ofm1->match.wildcards = htonl(//OFPFW_IN_PORT |
+                                  OFPFW_DL_VLAN |
+                                   OFPFW_DL_SRC |
+                                   OFPFW_DL_DST |
+                                  //OFPFW_DL_TYPE |
+                                 OFPFW_NW_PROTO |
+                                   OFPFW_TP_SRC |
+                                   OFPFW_TP_DST |
+                               //OFPFW_NW_SRC_ALL |
+                               //OFPFW_NW_DST_ALL |
+                              OFPFW_DL_VLAN_PCP |
+                                   OFPFW_NW_TOS |
+                                               0);
+    ofm1->priority = htons(65535);
+    ofm1->hard_timeout = htons(UINT_MAX);
+    queue_tx(sw->lswitch, sw->rconn, temp1);
+
+    temp2 = make_add_simple_flow(&flow2, htonl(buffer_id), src_port, OFP_FLOW_PERMANENT);
+    ofm2 = temp2->data;
+    ofm2->match.wildcards = htonl(//OFPFW_IN_PORT |
+                                  OFPFW_DL_VLAN |
+                                   OFPFW_DL_SRC |
+                                   OFPFW_DL_DST |
+                                  //OFPFW_DL_TYPE |
+                                 OFPFW_NW_PROTO |
+                                   OFPFW_TP_SRC |
+                                   OFPFW_TP_DST |
+                               //OFPFW_NW_SRC_ALL |
+                               //OFPFW_NW_DST_ALL |
+                              OFPFW_DL_VLAN_PCP |
+                                   OFPFW_NW_TOS |
+                                               0);
+    ofm2->priority = htons(65535);
+    ofm2->hard_timeout = htons(UINT_MAX);
+    queue_tx(sw->lswitch, sw->rconn, temp2);
+}
+
 void *
 controller_loop(void *ptr)
 {
@@ -195,6 +255,7 @@ controller_loop(void *ptr)
                     new_switch(&switches[n_switches++], new_vconn, "tcp");
 					saddr.sin_addr.s_addr = new_vconn->ip;
 					printf("new switch connected: %s\n", inet_ntoa(saddr.sin_addr));
+					install_default_rules(switches[n_switches-1]);
                 }
                 i++;
             } else {
@@ -314,7 +375,7 @@ do_switching(struct switch_ *sw)
     msg = rconn_recv(sw->rconn);
     if (msg) {
         //if(ctrl_table_process(sw, sw->rconn, msg->data)) {
-        lswitch_process_packet(sw->lswitch, sw->rconn, msg);
+        //lswitch_process_packet(sw->lswitch, sw->rconn, msg);
         //} else {
 	  // in this case, the controller ignore the packet
 	  //printf("packet dropped\n");
@@ -501,7 +562,7 @@ actual_add(struct switch_ *sw, char *ip_src, char *ip_dst, uint32_t src_port, ui
 static void
 actual_remove(struct switch_ *sw, char *src, char *dst)
 {
-    struct flow flow = {
+    struct flow flow1 = {
         inet_addr(src),	                // uint32_t IP source address.
         inet_addr(dst),	                // uint32_t IP destination address.
         0,				// uint16_t Input switch port.
@@ -516,10 +577,25 @@ actual_remove(struct switch_ *sw, char *src, char *dst)
         0,				// uint8_t IP protocol.
         {0,0,0}				// uint8_t
     };
+    struct flow flow2 = {
+            inet_addr(dst),                 // uint32_t IP source address.
+            inet_addr(src),                 // uint32_t IP destination address.
+            0,              // uint16_t Input switch port.
+            0,              // uint16_t Input VLAN id.
+            htons(0x0800),          // uint16_t Ethernet frame type.
+            0,              // uint16_t TCP/UDP source port.
+            0,              // uint16_t TCP/UDP destination port.
+            {0,0,0,0,0,0},          // uint8_t Ethernet source address.
+            {0,0,0,0,0,0},          // uint8_t Ethernet destination address.
+            0,              // uint8_t Input VLAN priority.
+            0,              // uint8_t IPv4 DSCP.
+            0,              // uint8_t IP protocol.
+            {0,0,0}             // uint8_t
+        };
     struct ofpbuf *temp;
     struct ofp_flow_mod *ofm;
 
-    temp = make_del_flow(&flow);
+    temp = make_del_flow(&flow1);
     ofm = temp->data;
 
     //ofm->match.wildcards = htonl(OFPFW_ALL);
@@ -544,6 +620,31 @@ actual_remove(struct switch_ *sw, char *src, char *dst)
 
     queue_tx(sw->lswitch, sw->rconn, temp);
 
+
+    temp = make_del_flow(&flow2);
+    ofm = temp->data;
+
+    //ofm->match.wildcards = htonl(OFPFW_ALL);
+
+    ofm->match.wildcards = htonl(OFPFW_IN_PORT |
+                 OFPFW_DL_VLAN |
+                 OFPFW_DL_SRC |
+                 OFPFW_DL_DST |
+                 //OFPFW_DL_TYPE |
+                                 OFPFW_NW_PROTO |
+                 OFPFW_TP_SRC |
+                 OFPFW_TP_DST |
+                 //OFPFW_NW_SRC_ALL |
+                 //OFPFW_NW_DST_ALL |
+                 OFPFW_DL_VLAN_PCP |
+                 OFPFW_NW_TOS);
+
+    //ofm->priority = htons(65535);
+    ofm->command = htons(OFPFC_DELETE);
+    //ofm->hard_timeout = htons(100);
+    //ofm->buffer_id = htonl(-1);
+
+    queue_tx(sw->lswitch, sw->rconn, temp);
     /*
     del_entry.ip_src = NULL;
     del_entry.ip_dst = NULL;
@@ -599,7 +700,7 @@ of_remove_l3_rule(uint64_t dpid, char *ip_src, char *ip_dst,
   for (i = 0; i < n_switches; i++) {
     struct switch_ *this = &switches[i];
     if (this->lswitch->datapath_id == dpid) {
-      ctrl_table_flush(this->ctp);
+      //ctrl_table_flush(this->ctp);
       actual_remove(this, ip_src, ip_dst);
     }
   }
