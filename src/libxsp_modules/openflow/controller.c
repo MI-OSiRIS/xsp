@@ -378,7 +378,7 @@ do_switching(struct switch_ *sw)
     msg = rconn_recv(sw->rconn);
     if (msg) {
         //if(ctrl_table_process(sw, sw->rconn, msg->data)) {
-        //lswitch_process_packet(sw->lswitch, sw->rconn, msg);
+        lswitch_process_packet(sw->lswitch, sw->rconn, msg);
         //} else {
 	  // in this case, the controller ignore the packet
 	  //printf("packet dropped\n");
