@@ -467,7 +467,7 @@ globus_l_xio_xsp_update_speedometer(
     speedometer_sample_t sample;
 
     sample.value = c->caliper->sum / c->caliper->interval;
-    sample.time = time();
+    sample.time = time(NULL);
     sample.type = type;
 
     result = globus_l_xio_xsp_send_args_init((void**)&args,
