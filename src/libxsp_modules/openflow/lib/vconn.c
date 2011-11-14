@@ -900,6 +900,9 @@ make_add_flow(const struct flow *flow, uint32_t buffer_id,
     ofm->idle_timeout = htons(idle_timeout);
     ofm->hard_timeout = htons(OFP_FLOW_PERMANENT);
     ofm->buffer_id = htonl(buffer_id);
+    /* XXX(fernandes): reduce priority of learning switch so we can install
+     *   manual rules with higher priority if we so choose. */
+    ofm->priority = 32768;
     return out;
 }
 
