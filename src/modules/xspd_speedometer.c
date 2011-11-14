@@ -52,6 +52,7 @@ static xspModule xspd_speedometer_module = {
 };
 
 static int num_samples;
+static int io_num_samples;
 static char *samples_dir;
 static short int server_port;
 static pthread_t server;
@@ -99,6 +100,10 @@ int xspd_speedometer_init() {
 
     if (xsp_settings_get_int_2(settings, "speedometer", "num_samples", &num_samples) != 0) {
         num_samples = 180;
+    }
+
+    if (xsp_settings_get_int_2(settings, "speedometer", "io_num_samples", &io_num_samples) != 0) {
+        io_num_samples = 6;
     }
 
     if (xsp_settings_get_int_2(settings, "speedometer", "server_port", &port) != 0)
@@ -196,7 +201,7 @@ static void dump_samples() {
                 "{\"date\":\"%s\", \"inspeed\":\"%.2f\", \"outspeed\":\"%.2f\"},\n",
                 date, read, write);
 
-        if (i >= (num_samples - 6)) {
+        if (i >= (num_samples - io_num_samples)) {
             fprintf(infile,  "        [%u,%.2f],\n", next->time, read);
             fprintf(outfile, "        [%u,%.2f],\n", next->time, write);
         }
