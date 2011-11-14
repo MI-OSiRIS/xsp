@@ -186,13 +186,13 @@ void install_default_rules (struct switch_ sw) {
     struct flow flow1;
     memset(&flow1, 0, sizeof(flow1));
 
-    flow1.in_port = 17;
+    flow1.in_port = htons(17);
 
     temp1 = make_add_flow(&flow1, -1, OFP_FLOW_PERMANENT, 0);
     ofm1 = temp1->data;
     ofm1->match.wildcards = htonl( OFPFW_ALL ^ (OFPFW_IN_PORT));
     ofm1->priority = htons(44444);
-    queue_tx(sw->lswitch, sw->rconn, temp1);
+    queue_tx(sw.lswitch, sw.rconn, temp1);
 }
 
 
