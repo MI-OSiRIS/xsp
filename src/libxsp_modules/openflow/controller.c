@@ -176,68 +176,25 @@ controller_init(int argc, char *argv[])
     return 0;
 }
 
-#if 0
+
 void install_default_rules (struct switch_ sw) {
-    struct ofpbuf *temp1, *temp2;//, *temp3, *temp4;
-    struct ofp_flow_mod *ofm1, *ofm2;//, *ofm3, *ofm4;
-    uint32_t buffer_id = -1; // Buffered packet to apply to (or -1). Not meaningful for OFPFC_DELETE*.
+    struct ofpbuf *temp1;
+    struct ofp_flow_mod *ofm1;
 
-    struct flow flow1 = {
-        inet_addr(ip_src),          // uint32_t IP source address.
-        inet_addr(ip_dst),          // uint32_t IP destination address.
-        htons((uint16_t)src_port),  // uint16_t Input switch port.
-        0,                          // uint16_t Input VLAN id.
-        htons(0x0800),              // uint16_t Ethernet frame type.
-        0,                          // uint16_t TCP/UDP source port.
-        0,                          // uint16_t TCP/UDP destination port.
-        {0,0,0,0,0,0},              // uint8_t Ethernet source address.
-        {0,0,0,0,0,0},              // uint8_t Ethernet destination address.
-        0,                          // uint8_t Input VLAN priority.
-        0,                          // uint8_t IPv4 DSCP.
-        0,                          // uint8_t IP protocol.
-        {0,0,0}                     // uint8_t
-    };
+    /* For now we are only installing one default rule: DROP on the NDDI port.
+     * The rest is taken care of by the learning switch. */
+    struct flow flow1;
+    memset(&flow1, 0, sizeof(flow1));
 
-    temp1 = make_add_simple_flow(&flow1, htonl(buffer_id), dst_port, OFP_FLOW_PERMANENT);
+    flow1.in_port = 17;
+
+    temp1 = make_add_flow(&flow1, -1, OFP_FLOW_PERMANENT, 0);
     ofm1 = temp1->data;
-    ofm1->match.wildcards = htonl(//OFPFW_IN_PORT |
-                                  OFPFW_DL_VLAN |
-                                   OFPFW_DL_SRC |
-                                   OFPFW_DL_DST |
-                                  //OFPFW_DL_TYPE |
-                                 OFPFW_NW_PROTO |
-                                   OFPFW_TP_SRC |
-                                   OFPFW_TP_DST |
-                               //OFPFW_NW_SRC_ALL |
-                               //OFPFW_NW_DST_ALL |
-                              OFPFW_DL_VLAN_PCP |
-                                   OFPFW_NW_TOS |
-                                               0);
-    ofm1->priority = htons(65535);
-    ofm1->hard_timeout = htons(UINT_MAX);
+    ofm1->match.wildcards = htonl( OFPFW_ALL ^ (OFPFW_IN_PORT));
+    ofm1->priority = htons(44444);
     queue_tx(sw->lswitch, sw->rconn, temp1);
-
-    temp2 = make_add_simple_flow(&flow2, htonl(buffer_id), src_port, OFP_FLOW_PERMANENT);
-    ofm2 = temp2->data;
-    ofm2->match.wildcards = htonl(//OFPFW_IN_PORT |
-                                  OFPFW_DL_VLAN |
-                                   OFPFW_DL_SRC |
-                                   OFPFW_DL_DST |
-                                  //OFPFW_DL_TYPE |
-                                 OFPFW_NW_PROTO |
-                                   OFPFW_TP_SRC |
-                                   OFPFW_TP_DST |
-                               //OFPFW_NW_SRC_ALL |
-                               //OFPFW_NW_DST_ALL |
-                              OFPFW_DL_VLAN_PCP |
-                                   OFPFW_NW_TOS |
-                                               0);
-    ofm2->priority = htons(65535);
-    ofm2->hard_timeout = htons(UINT_MAX);
-    queue_tx(sw->lswitch, sw->rconn, temp2);
 }
 
-#endif
 
 void *
 controller_loop(void *ptr)
@@ -258,7 +215,7 @@ controller_loop(void *ptr)
                     new_switch(&switches[n_switches++], new_vconn, "tcp");
 					saddr.sin_addr.s_addr = new_vconn->ip;
 					printf("new switch connected: %s\n", inet_ntoa(saddr.sin_addr));
-					//install_default_rules(switches[n_switches-1]);
+					install_default_rules(switches[n_switches-1]);
                 }
                 i++;
             } else {
