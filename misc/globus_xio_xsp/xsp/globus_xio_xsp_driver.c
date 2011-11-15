@@ -456,23 +456,17 @@ globus_l_xio_xsp_append_xfer_meta(
 
 static
 globus_result_t
-globus_l_xio_xsp_update_speedometer(
+globus_l_xio_xsp_send_speedometer_sample(
         xio_l_xsp_handle_t *                handle,
-        xio_l_xsp_caliper_t *               c,
+        uint64_t                            value,
         uint8_t                             type)
 {
     globus_result_t  result;
     xio_l_xsp_send_args_t *args;
     globus_reltime_t cb_time;
-    speedometer_sample_t sample;
+    speedometer_sample_t sample = { value, time(NULL), type };
 
     GlobusTimeReltimeSet(cb_time, 0, 0);
-
-    netlogger_calipers_calc(c->caliper);
-
-    sample.value = c->caliper->sum / handle->interval;
-    sample.time = time(NULL);
-    sample.type = type;
 
     result = globus_l_xio_xsp_send_args_init((void**)&args,
                          &sample,
@@ -490,6 +484,23 @@ globus_l_xio_xsp_update_speedometer(
     &cb_time,
     globus_l_xio_xsp_send_message,
     (void*)args);
+
+    return result;
+}
+
+static
+globus_result_t
+globus_l_xio_xsp_update_speedometer(
+        xio_l_xsp_handle_t *                handle,
+        xio_l_xsp_caliper_t *               c,
+        uint8_t                             type)
+{
+    globus_result_t  result;
+
+    netlogger_calipers_calc(c->caliper);
+
+    result = globus_l_xio_xsp_send_speedometer_sample(handle,
+            c->caliper->sum / handle->interval, type);
 
     netlogger_calipers_clear(c->caliper);
     c->s_count++;
@@ -1864,6 +1875,8 @@ globus_l_xio_xsp_close_cb(
 			    printf("XIO-XSP: could not signal path delete\n");
 		    }
 		}
+
+                globus_l_xio_xsp_send_speedometer_sample(handle, 0, 0);
 	    }
 	    else
 	    {
