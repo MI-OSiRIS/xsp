@@ -902,7 +902,7 @@ make_add_flow(const struct flow *flow, uint32_t buffer_id,
     ofm->buffer_id = htonl(buffer_id);
     /* XXX(fernandes): reduce priority of learning switch so we can install
      *   manual rules with higher priority if we so choose. */
-    ofm->match.wildcards = htonl( OFPFW_ALL ^ (OFPFW_DL_VLAN));
+    ofm->match.wildcards = htonl(OFPFW_DL_VLAN);
     ofm->priority = 32768;
     return out;
 }
