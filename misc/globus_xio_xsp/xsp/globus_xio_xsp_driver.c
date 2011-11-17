@@ -550,19 +550,17 @@ globus_l_xio_xsp_update_speedometer(
     value = c->caliper->sum / handle->interval;
     result = globus_l_xio_xsp_send_speedometer_sample(handle, value, type);
 
-    if (handle->xsp_net_path_thresh) {
+    if (handle->xsp_net_path_thresh && !handle->xsp_net_path_signaled) {
         handle->xsp_thresh_interval_curr -= handle->interval;
         handle->xsp_thresh_sum += c->caliper->sum;
 
-        printf("XIO-XSP: in speedometer update with sum=%llu interval=%u thresh=%llu singaled=%d\n",
-                handle->xsp_thresh_sum, handle->xsp_thresh_interval_curr, handle->xsp_net_path_thresh, handle->xsp_net_path_signaled);
-
         if (handle->xsp_thresh_interval_curr <= 0) {
-            printf("XIO-XSP: interval finished with sum=%llu interval=%u thresh=%llu singaled=%d\n",
-                    handle->xsp_thresh_sum, handle->xsp_thresh_interval, handle->xsp_net_path_thresh, handle->xsp_net_path_signaled);
-            if (!handle->xsp_net_path_signaled)
-                if ((handle->xsp_thresh_sum / handle->xsp_thresh_interval) < handle->xsp_net_path_thresh)
-                    globus_l_xio_xsp_setup_path(handle);
+
+            if ((handle->xsp_thresh_sum / handle->xsp_thresh_interval) < handle->xsp_net_path_thresh) {
+                globus_l_xio_xsp_setup_path(handle);
+                handle->xsp_net_path_signaled = 1;
+            }
+
             handle->xsp_thresh_interval_curr = handle->xsp_thresh_interval;
             handle->xsp_thresh_sum = 0;
         }
