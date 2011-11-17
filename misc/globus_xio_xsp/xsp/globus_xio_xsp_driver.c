@@ -24,6 +24,8 @@
 
 #include "netlogger_calipers.h"
 #include "libxsp_client.h"
+#include "globus_time.h"
+#include "globus_debug.h"
 
 #define GLOBUS_XIO_XSP_NEW_XFER          0x30
 #define GLOBUS_XIO_XSP_END_XFER          0x31
@@ -72,6 +74,8 @@ static globus_xio_string_cntl_table_t  xsp_l_string_opts_table[] =
     {"xsp_sec", GLOBUS_XIO_XSP_CNTL_SET_SEC, globus_xio_string_cntl_string},
     {"xsp_blipp", GLOBUS_XIO_XSP_CNTL_SET_BLIPP, globus_xio_string_cntl_string},
     {"xsp_net_path", GLOBUS_XIO_XSP_CNTL_SET_PATH, globus_xio_string_cntl_string},
+    {"xsp_net_path_thresh", GLOBUS_XIO_XSP_CNTL_SET_THRESH, globus_xio_string_cntl_string},
+    {"xsp_thresh_interval", GLOBUS_XIO_XSP_CNTL_SET_TRESH_INTERVAL, globus_xio_string_cntl_string},
     {"user", GLOBUS_XIO_XSP_CNTL_SET_USER, globus_xio_string_cntl_string},
     {"task_id", GLOBUS_XIO_XSP_CNTL_SET_TASK, globus_xio_string_cntl_string},
     {"src", GLOBUS_XIO_XSP_CNTL_SET_SRC, globus_xio_string_cntl_string},
@@ -132,6 +136,11 @@ typedef struct xio_l_xsp_handle_s
     char *                              xsp_sec;
     char *                              xsp_blipp;
     char *                              xsp_net_path;
+    uint64_t                            xsp_net_path_thresh;
+    uint32_t                            xsp_thresh_interval;
+    uint32_t                            xsp_thresh_interval_curr;
+    uint64_t                            xsp_thresh_sum;
+    int                                 xsp_net_path_signaled;
     char *                              user;
     char *                              task_id;
     char *                              src;
@@ -176,6 +185,11 @@ static xio_l_xsp_handle_t               globus_l_xio_xsp_handle_default =
     GLOBUS_NULL,                        /* xsp_sec */
     GLOBUS_NULL,                        /* xsp_blipp */
     GLOBUS_NULL,                        /* xsp_net_path */
+    0,                                  /* xsp_net_path_thresh */
+    60,                                 /* xsp_thresh_interval */
+    60,                                 /* xsp_thresh_interval_curr */
+    0,                                  /* xsp_thresh_sum */
+    0,                                  /* xsp_net_path_signaled */
     GLOBUS_NULL,                        /* user */
     GLOBUS_NULL,                        /* task_id */
     GLOBUS_NULL,                        /* src */
@@ -240,6 +254,13 @@ GlobusXIODefineModule(xsp) =
     GLOBUS_NULL,
     &local_version
 };
+
+static
+globus_result_t
+globus_l_xio_xsp_make_path(
+    xio_l_xsp_handle_t *           handle,
+    int                            path_action,
+    libxspNetPath **               ret_path);
 
 static
 globus_result_t
@@ -490,17 +511,62 @@ globus_l_xio_xsp_send_speedometer_sample(
 
 static
 globus_result_t
+globus_l_xio_xsp_setup_path(
+        xio_l_xsp_handle_t *                handle)
+{
+    globus_result_t ret;
+
+    if (handle->xsp_net_path &&
+        globus_l_xio_xsp_xfer_default.xsp_signal_path)
+    {
+        libxspNetPath *path;
+        globus_l_xio_xsp_make_path(handle, XSP_NET_PATH_CREATE, &path);
+
+        printf("XIO-XSP: waiting for path\n");
+        ret = xsp_signal_path(handle->xfer->sess, path);
+
+        if (!ret)
+            printf("XIO-XSP: path setup complete\n");
+        free(path);
+
+        return ret;
+    }
+
+    return GLOBUS_SUCCESS;
+}
+
+static
+globus_result_t
 globus_l_xio_xsp_update_speedometer(
         xio_l_xsp_handle_t *                handle,
         xio_l_xsp_caliper_t *               c,
         uint8_t                             type)
 {
+    uint64_t value;
     globus_result_t  result;
 
     netlogger_calipers_calc(c->caliper);
 
-    result = globus_l_xio_xsp_send_speedometer_sample(handle,
-            c->caliper->sum / handle->interval, type);
+    value = c->caliper->sum / handle->interval;
+    result = globus_l_xio_xsp_send_speedometer_sample(handle, value, type);
+
+    if (handle->xsp_net_path_thresh) {
+        handle->xsp_thresh_interval_curr -= handle->interval;
+        handle->xsp_thresh_sum += c->caliper->sum;
+
+        printf("XIO-XSP: in speedometer update with sum=%llu interval=%u thresh=%llu singaled=%d\n",
+                handle->xsp_thresh_sum, handle->xsp_thresh_interval_curr, handle->xsp_net_path_thresh, handle->xsp_net_path_signaled);
+
+        if (handle->xsp_thresh_interval_curr <= 0) {
+            printf("XIO-XSP: interval finished with sum=%llu interval=%u thresh=%llu singaled=%d\n",
+                    handle->xsp_thresh_sum, handle->xsp_thresh_interval, handle->xsp_net_path_thresh, handle->xsp_net_path_signaled);
+            if (!handle->xsp_net_path_signaled)
+                if ((handle->xsp_thresh_sum / handle->xsp_thresh_interval) < handle->xsp_net_path_thresh)
+                    globus_l_xio_xsp_setup_path(handle);
+            handle->xsp_thresh_interval_curr = handle->xsp_thresh_interval;
+            handle->xsp_thresh_sum = 0;
+        }
+    }
 
     netlogger_calipers_clear(c->caliper);
     c->s_count++;
@@ -926,23 +992,9 @@ globus_l_xio_xsp_connect_handle(
 	    goto error_sess;
 	}
 
-
-	if (handle->xsp_net_path &&
-	    globus_l_xio_xsp_xfer_default.xsp_signal_path)
-	{
-	    libxspNetPath *path;
-	    globus_l_xio_xsp_make_path(handle, XSP_NET_PATH_CREATE, &path);
-	    
-	    printf("XIO-XSP: waiting for path\n");
-	    if ((ret = xsp_signal_path(handle->xfer->sess, path)) != 0)
-	    {
-		goto error_sess;
-	    }
-	    
-	    printf("XIO-XSP: path setup complete\n");
-	    free(path);
-	}
-	
+	if (!handle->xsp_net_path_thresh)
+	    if ((ret = globus_l_xio_xsp_setup_path(handle)) != 0)
+	            goto error_sess;
 	handle->xfer->xsp_connected = GLOBUS_TRUE;
     }
     else
@@ -1199,6 +1251,11 @@ globus_l_xio_xsp_attr_copy(
     dst_attr->stack = src_attr->stack;
     dst_attr->log_flag = src_attr->log_flag;
     dst_attr->interval = src_attr->interval;
+    dst_attr->xsp_net_path_thresh = src_attr->xsp_net_path_thresh;
+    dst_attr->xsp_thresh_interval = src_attr->xsp_thresh_interval;
+    dst_attr->xsp_thresh_interval_curr = src_attr->xsp_thresh_interval_curr;
+    dst_attr->xsp_thresh_sum = src_attr->xsp_thresh_sum;
+    dst_attr->xsp_net_path_signaled = src_attr->xsp_net_path_signaled;
 
     if (src_attr->o_caliper)
 	dst_attr->o_caliper = src_attr->o_caliper;
@@ -1297,6 +1354,16 @@ globus_l_xio_xsp_cntl(
       case GLOBUS_XIO_XSP_CNTL_SET_INTERVAL:
 	  attr->interval = va_arg(ap, int);
 	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_THRESH:
+      str = va_arg(ap, char *);
+      // FIXME(fernandes): check for error
+      attr->xsp_net_path_thresh = strtoull(str, NULL, 0);
+      break;
+      case GLOBUS_XIO_XSP_CNTL_SET_TRESH_INTERVAL:
+      str = va_arg(ap, char *);
+      attr->xsp_thresh_interval = strtoul(str, NULL, 0);
+      attr->xsp_thresh_interval_curr = attr->xsp_thresh_interval;
+      break;
     }
 	
     GlobusXIOXSPDebugExit();
