@@ -125,6 +125,13 @@ AC_ARG_ENABLE(openflow,
 
 AM_CONDITIONAL(ENABLE_OPENFLOW, test x$enable_openflow = xyes)
 
+AC_ARG_ENABLE(linuxnet,
+        AC_HELP_STRING([--enable-linuxnet], [enable linuxnet support [default=no]]),
+        [enable_linuxnet=$enableval],
+        [enable_linuxnet=no])
+
+AM_CONDITIONAL(ENABLE_LINUXNET, test x$enable_linuxnet = xyes)
+
 #AC_ARG_ENABLE(udt-embed,
 #	AC_HELP_STRING([--enable-udt-embed], [compile UDT into the daemon instead of as a module [default=no]]),
 #	enable_udt_embed=yes,

@@ -24,6 +24,7 @@ enum xsp_eid_types_t {
 	XSP_EID_IPv4,
 	XSP_EID_IPv6,
 	XSP_EID_URN,
+	XSP_EID_HRN,
 	XSP_EID_HOPID,
 	XSP_EID_DPID
 };
