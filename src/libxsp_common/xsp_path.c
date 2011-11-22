@@ -173,7 +173,7 @@ int xsp_get_path(xspNetPath *net_path, xspSettings *settings, xspPath **ret_path
  error_exit_unlock:
 	pthread_mutex_unlock(&path_list_lock);
  error_exit:
-	*ret_error_msg = "XSP GET PATH ERROR";
+	asprintf(ret_error_msg, "XSP GET PATH ERROR");
 	return -1;
 }
 

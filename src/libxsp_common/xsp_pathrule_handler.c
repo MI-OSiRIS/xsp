@@ -6,6 +6,7 @@ static xspPathRuleHandler *pathrule_handlers[255];
 
 int xsp_pathrule_handler_init() {
 	bzero(pathrule_handlers, sizeof(xspPathRuleHandler *) * 255);
+	return 0;
 }
 
 xspPathRuleHandler *xsp_get_pathrule_handler(const char *name) {
@@ -31,7 +32,7 @@ xspPathRuleHandler **xsp_get_pathrule_handlers(int *ret_count) {
 	
 	ret_handlers = malloc(count * sizeof(xspPathRuleHandler*));
 
-	for(i = 0;  i < pathrule_handlers[i] != NULL; i++)
+	for(i = 0;  i < (pathrule_handlers[i] != NULL); i++)
 		ret_handlers[i] = pathrule_handlers[i];
 	
 	*ret_count = count;

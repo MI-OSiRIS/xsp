@@ -19,6 +19,7 @@
 #include "xsp_logger.h"
 #include "xsp_settings.h"
 #include "xsp_default_settings.h"
+#include "xsp_main_settings.h"
 #include "xsp_user_settings.h"
 #include "xsp_path.h"
 #include "xsp_pathrule_handler.h"
@@ -28,6 +29,7 @@
 int xsp_connect_control_channel(comSess *sess, xspHop *curr_child, xspSettings *settings, xspConn **ret_conn, char **ret_error_msg);
 int xsp_connect_main(comSess *sess, xspHop *curr_child, xspConn **ret_conn, xspConn **ret_data_conn, char **ret_error_msg);
 int xsp_connect_main_protocol(comSess *sess, xspHop *curr_child, xspSettings *policy, const char *protocol, xspConn **ret_conn, char **ret_error_msg);
+void __xsp_forward_msg(comSess *sess, xspMsg *msg);
 void __xsp_cb_and_free(comSess *sess, xspMsg *msg);
 
 static LIST_HEAD(listhead, common_session_t) sessions_list;
@@ -499,14 +501,15 @@ void xsp_session_finalize(comSess *sess) {
 	bytes_written_size = sizeof(bytes_written);
 }
 
-xspConn *xsp_connect_hop_control(const char *hop_id) {
+xspConn *xsp_connect_hop_control(comSess *sess, xspHop *child, char **ret_error_msg) {
         char *hostname, *port_str;
         int port;
-        xspConn *conn;
+	xspMsg *msg;
+        xspConn *new_conn;
         xspSettings *tcp_settings;
 
-        if (xsp_parse_hopid(hop_id, &hostname, &port_str) != 0) {
-                xsp_err(0, "invalid hop id: %s", hop_id);
+        if (xsp_parse_hopid(child->hop_id, &hostname, &port_str) != 0) {
+                xsp_err(0, "invalid hop id: %s", child->hop_id);
                 goto error_exit;
         }
 
@@ -523,14 +526,64 @@ xspConn *xsp_connect_hop_control(const char *hop_id) {
                 goto error_exit_settings;
         }
 
-        conn = xsp_protocol_connect_host(hostname, "tcp", tcp_settings);
-        if (!conn) {
+        new_conn = xsp_protocol_connect_host(hostname, "tcp", tcp_settings);
+        if (!new_conn) {
                 xsp_err(0, "couldn't connect to %s on port %d with tcp", hostname, port);
                 goto error_exit_settings;
         }
+	
+	new_conn->session = sess;
 
-        return conn;
-
+	if (child->flags & XSP_HOP_NATIVE) {
+		xspMsg open_msg = {
+			.version = XSP_v1,
+			.type = XSP_MSG_SESS_OPEN,
+			.flags = 0,
+			.msg_body = child
+		};
+		
+		if (xsp_request_authentication(sess, new_conn, "ANON") != 0) {
+                        asprintf(ret_error_msg, "Authentication failed for hop \"%s\"", xsp_hop_getid(child));
+                        xsp_err(5, "authorization failed for: %s", xsp_hop_getid(child));
+                        goto error_exit_conn;
+                }
+		
+		if (xsp_conn_send_msg(new_conn, &open_msg, XSP_OPT_HOP) < 0) {
+                        asprintf(ret_error_msg, "Connection to \"%s\" closed before we could send a session open message",
+				 xsp_hop_getid(child));
+                        xsp_err(5, "send message to %s failed", xsp_hop_getid(child));
+                        goto error_exit_conn;
+                }
+		
+                msg = xsp_conn_get_msg(new_conn, 0);
+                if (!msg) {
+                        asprintf(ret_error_msg, "Connection to \"%s\" did not respond after we sent a session open message",
+				 xsp_hop_getid(child));
+                        xsp_err(5, "recv message from %s failed", xsp_hop_getid(child));
+                        goto error_exit_conn;
+                }
+		
+                if (msg->type == XSP_MSG_SESS_NACK) {
+                        *ret_error_msg = strdup(xsp_session_print_nack(msg));
+                        xsp_err(5, "received session nack message from %s: %s", xsp_hop_getid(child), xsp_session_print_nack(msg));
+                        goto error_exit_msg;
+                } else if (msg->type != XSP_MSG_SESS_ACK) {
+                        asprintf(ret_error_msg, "Connection to \"%s\" did not send us a session ack or nack in response to the session open message",
+				 xsp_hop_getid(child));
+                        xsp_err(5, "received non-ack message from %s", xsp_hop_getid(child));
+                        goto error_exit_msg;
+                }
+	}
+	
+	// add new connection to session child connection list
+	LIST_INSERT_HEAD(&(sess->child_conns), new_conn, sess_entries);
+		
+	return new_conn;
+	
+ error_exit_msg:
+        xsp_free_msg(msg);
+ error_exit_conn:
+        xsp_conn_shutdown(new_conn, (XSP_RECV_SIDE | XSP_SEND_SIDE));
  error_exit_settings:
         xsp_settings_free(tcp_settings);
  error_exit_parsed:
@@ -664,48 +717,17 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
 	xsp_session_get_blocks((xspMsg*)arg, XSP_OPT_PATH, &blocks, &block_count);
 	// XXX: taking only the first block!
 	net_path = blocks[0]->data;
+
+	// save some initial info
 	path_action = net_path->action;
 	if (net_path->rule_count) {
-		// get criteria for first rule, if any
 		crit = &net_path->rules[0]->crit;
 	}
+	else
+		crit = NULL;
 
-	xsp_info(0, "Session has %d child hops.", sess->child_count);
-	for (i = 0; i < sess->child_count; i++) {
-	// FIXME(fernandes): this has been hacked together for a demo,
-	//   there is probably a better way of doing this.
-	    xspConn *conn;
-	    xspAuthType auth_type;
-	    xspMsg authmsg = {
-            .version = XSP_v1,
-            .type = XSP_MSG_AUTH_TYPE,
-            .flags = 0,
-            .msg_body = &auth_type
-	    };
-        xspMsg openmsg = {
-            .version = XSP_v1,
-            .type = XSP_MSG_SESS_OPEN,
-            .flags = 0,
-            .msg_body = sess->child[i]
-        };
-	    xspMsg netmsg = {
-            .version = XSP_v1,
-            .type = XSP_MSG_NET_PATH,
-            .flags = 0,
-            .msg_body = net_path
-        };
-
-	    xsp_info(0, "Hop id is %s.", sess->child[i]->hop_id);
-	    xsp_info(0, "Hop has %d child hops.", sess->child[i]->session->child_count);
-	    conn = xsp_connect_hop_control(sess->child[i]->hop_id);
-
-	    strlcpy(auth_type.name, "ANON", XSP_AUTH_NAME_LEN);
-	    xsp_conn_send_msg(conn, &authmsg, XSP_OPT_AUTH_TYP);
-	    xsp_conn_send_msg(conn, &openmsg, XSP_OPT_HOP);
-        xsp_conn_send_msg(conn, &netmsg, XSP_OPT_PATH);
-	}
 	parent_conn = LIST_FIRST(&sess->parent_conns);
-
+	
 	xsp_info(0, "Setting up path for client=%s", parent_conn->description);
 
 	if (path_action == XSP_NET_PATH_MODIFY) {
@@ -743,10 +765,6 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
 	}
 	
 	if (net_path->rule_count) {
-		// DEMO HACK: don't use criteria, only local config
-		//for (i = 0; i < net_path->rule_count; i++)
-		//	net_path->rules[i]->use_crit = FALSE;
-
 		if (xsp_get_path(net_path, settings, &path, &error_msg) != 0) {
 			xsp_err(0, "couldn't create new path: %s", error_msg);
 			goto error_exit;
@@ -754,11 +772,6 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
 		
 		// apply each rule in the path
 		for (i = 0; i < path->rule_count; i++) {
-			
-			// DEMO HACK: don't delete OSCARS path in the default case
-			if (hcount && !strcasecmp(net_path->rules[i]->type, "OSCARS") &&
-			    (path_action == XSP_NET_PATH_DELETE))
-				continue;
 			
 			if (path->rules[i]->apply(path->rules[i], path_action, &error_msg) != 0) {
 				xsp_err(0, "couldn't apply path rule: %s", error_msg);
@@ -783,6 +796,7 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
 		// finally, delete the path if requested
 		if (path_action == XSP_NET_PATH_DELETE)
 			xsp_delete_path(path);
+		
 	}
 	else {
 		error_msg = "netPath contains no rules!";
@@ -856,12 +870,12 @@ int xsp_session_app_data(comSess *sess, const void *arg, char ***error_msgs) {
             block->type <= GLOBUS_XIO_MAX) {
 		mstring = "globus_xio";
         }
-
-    if (block->type >= SPEEDOMETER_MIN &&
+	
+	if (block->type >= SPEEDOMETER_MIN &&
             block->type <= SPEEDOMETER_MAX) {
-        mstring = "speedometer";
+		mstring = "speedometer";
         }
-
+	
 	if (!mstring) {
 		asprintf(error_msg, "unrecognized option block type: %d", block->type);
 		xsp_err(0, "%s", error_msg);
@@ -871,7 +885,6 @@ int xsp_session_app_data(comSess *sess, const void *arg, char ***error_msgs) {
 	if ((module = xsp_find_module(mstring)) != NULL)
 		module->opt_handler(sess, block, &ret_block);
 	else {
-		
 		xsp_err(0, "module not loaded: %s", mstring);
 		goto error_exit;
 	}
@@ -939,16 +952,18 @@ int xsp_set_proto_cb(comSess *sess, void *(*fn) (comSess *, xspMsg *)) {
 	return 0;
 }
 
-comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, int (*cb) (comSess *)) {
+comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, xspCBMap *cb_map, int flags) {
 	xspMsg *msg;
 	comSess *sess;
 	xspCreds *credentials;
-	xspAuthType *auth_type;
 	int authenticated;
         int have_session;
 	int sess_close;
 	int version = XSP_v1;
+	int i;
 	
+	char **error_msgs;
+
 	authenticated = FALSE;
 	have_session = FALSE;
 	sess_close = FALSE;
@@ -1041,17 +1056,46 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, int (*cb) (comS
 		 credentials->get_institution(credentials));
 		
 	gettimeofday(&sess->start_time, NULL);
+
+	// allocate space for child error messages
+        error_msgs = (char**)malloc(sess->child_count+1 * sizeof(char*));
+
+	// do the pre child setup callback
+	if (cb_map) {
+		if (cb_map->pre_child_cb) {
+			if (cb_map->pre_child_cb(sess) != 0) {
+				xsp_err(0, "pre_child_cb returned error status");
+				goto error_exit;
+			}
+		}
+	}
 	
-	// XXX: should probably setup child hops here before we ACK
-	// but we leave that task for the callback for now
-	if (cb) {
-		if (cb(sess) != 0) {
-			goto error_exit;
+	// setup child hops
+	if (! (flags & XSP_COMM_CHILD_HOPS_DEFER)) {
+		for (i = 0; i < sess->child_count; i++) {
+			xsp_info(5, "connecting to child hop %s", sess->child[i]->hop_id);
+			
+			conn = xsp_connect_hop_control(sess, sess->child[i], error_msgs);
+			if (!conn) {
+				xsp_err(0, "could not establish connection to child hop %s",
+					sess->child[i]->hop_id);
+				goto error_exit;
+			}
 		}
 	}
 
-	xsp_conn_set_session_status(conn, STATUS_CONNECTED);
+	// do the post child setup callback
+	if (cb_map) {
+		if (cb_map->post_child_cb) {
+			if (cb_map->post_child_cb(sess) != 0) {
+				xsp_err(0, "post_child_cb returned error status");
+				goto error_exit;
+			}
+		}
+	}
 
+	xsp_conn_default_set_session_status(conn, STATUS_CONNECTED);
+	
 	// send an ACK back once session is ready
 	xsp_session_send_ack(sess, NULL, 0, XSP_OPT_NULL);
 	
@@ -1106,11 +1150,14 @@ int xsp_proto_loop(comSess *sess) {
                         break;
 		case XSP_MSG_NET_PATH:
 			{
+				__xsp_forward_msg(sess, msg);
+				
 				if (xsp_session_setup_path(sess, msg, &error_msgs) < 0) {
 					xsp_session_send_nack(sess, error_msgs);
 					xsp_free_msg(msg);
 					continue;
 				}
+
 				__xsp_cb_and_free(sess, msg);
 				xsp_session_send_ack(sess, NULL, 0, XSP_OPT_NULL);
 			}
@@ -1206,7 +1253,7 @@ int xsp_session_send_ack(comSess *sess, const void *buf, uint64_t len, int opt_t
 			.type = opt_type,
 			.sport = XSP_DEFAULT_SPORT,
 			.length = len,
-			.data = buf
+			.data = (void*)buf
 		};
 		
 		ack_msg.msg_body = &ack_block;
@@ -1219,6 +1266,18 @@ int xsp_session_send_ack(comSess *sess, const void *buf, uint64_t len, int opt_t
 	
  error_exit:
 	return -1;
+}
+
+void __xsp_forward_msg(comSess *sess, xspMsg *msg) {
+	xspConn *curr_conn;
+
+	LIST_FOREACH(curr_conn, &(sess->child_conns), sess_entries) {
+		// message body is already a list of option blocks
+		if (xsp_conn_send_msg(curr_conn, msg, XSP_OPT_APP_LIST) < 0) {
+                        xsp_err(5, "forwarding message failed");
+			// XXX: should probably close session if peer is gone
+                }
+	}
 }
 
 void __xsp_cb_and_free(comSess *sess, xspMsg *msg) {
