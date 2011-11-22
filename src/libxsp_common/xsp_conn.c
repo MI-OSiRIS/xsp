@@ -308,7 +308,7 @@ xspMsg *__xsp_conn_get_msg_v1(xspConn *conn, unsigned int flags) {
 
 	if (amt_read < (int)sizeof(xspv1MsgHdr)) {
 		if (amt_read < 0) {
-			perror("error:");
+			//perror("error:");
 		}
 		goto error_exit;
 	}
@@ -351,7 +351,7 @@ xspMsg *__xsp_conn_get_msg_v1(xspConn *conn, unsigned int flags) {
 			amt_read = xsp_conn_read(conn, &nbo, sizeof(uint64_t), MSG_WAITALL);
 			if (amt_read < (int)sizeof(uint64_t)) {
 				if (amt_read < 0) {
-					perror("error:");
+					//perror("error:");
 				}
 				goto error_exit;
 			}
@@ -371,7 +371,7 @@ xspMsg *__xsp_conn_get_msg_v1(xspConn *conn, unsigned int flags) {
 			amt_read = xsp_conn_read(conn, buf, block_len, MSG_WAITALL);
 			if (amt_read < block_len) {
 				if (amt_read < 0) {
-					perror("error:");
+					//perror("error:");
 				}
 				goto error_exit;
 			}
@@ -422,7 +422,7 @@ xspMsg *xsp_conn_default_get_msg(xspConn *conn, unsigned int flags) {
 	amt_read = xsp_conn_read(conn, &version, sizeof(uint8_t), MSG_WAITALL | MSG_PEEK);
 	if (amt_read < (int)sizeof(uint8_t)) {
 		if (amt_read < 0) {
-			perror("error:");
+			//perror("error:");
 		}
 		goto error_exit;
 	}

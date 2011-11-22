@@ -16,6 +16,9 @@
 #include "xsp_settings.h"
 #include "xsp_conn.h"
 
+#define XSP_COMM_NULL             0x00
+#define XSP_COMM_CHILD_HOPS_DEFER 0x01
+
 typedef struct common_session_t {
 	char id[2*XSP_SESSIONID_LEN + 1];
 
@@ -61,9 +64,14 @@ typedef struct common_session_t {
 #endif
 } comSess;
 
+typedef struct xsp_cb_map_t {
+	int (*pre_child_cb) (struct common_session_t *);
+	int (*post_child_cb) (struct common_session_t *);
+} xspCBMap;
+
 int xsp_sessions_init();
 
-comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, int (*fn) (comSess *));
+comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, xspCBMap *cb_map, int flags);
 int xsp_set_proto_cb(comSess *sess, void *(*fn) (comSess *, xspMsg *));
 int xsp_proto_loop(comSess *sess);
 

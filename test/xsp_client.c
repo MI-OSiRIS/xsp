@@ -12,12 +12,16 @@
 
 #include "option_types.h"
 
+#include "compat.h"
 #include "libxsp_client.h"
 
 struct sockaddr_in *nameport2sa(const char *name_port);
 
 int main(int argc, char *argv[])
 {
+	int i;
+	int path_count;
+	char **xsp_path = NULL;
 	libxspSess *sess;
 	libxspSecInfo *sec;
 
@@ -32,7 +36,12 @@ int main(int argc, char *argv[])
 		exit(errno);
 	}
 
-	xsp_sess_appendchild(sess, argv[argc - 1], XSP_HOP_NATIVE);
+	xsp_path = split(argv[argc - 1], ",", &path_count);
+	
+	for (i = 0 ; i < path_count; i++) {
+		printf("appending child hop: %s\n", xsp_path[i]);
+		xsp_sess_appendchild(sess, xsp_path[i], XSP_HOP_NATIVE);
+	}
 	
 	sec = xsp_sess_new_security("ezra", NULL, "/home/ezra/.ssh/id_rsa_pl.pub",
 				    "/home/ezra/.ssh/id_rsa_pl", NULL);
@@ -54,7 +63,6 @@ int main(int argc, char *argv[])
 	uint64_t ret_len;
 	int ret_type;
 
-	/*
 	xsp_send_msg(sess, buf, strlen(buf)+1, 0x32);
 	xsp_recv_msg(sess, (void**)&ret_buf, &ret_len, &ret_type);
 

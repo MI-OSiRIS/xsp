@@ -76,9 +76,13 @@ static int xspd_frontend_connection_handler(xspListener *listener, xspConn *conn
 
 void *xspd_default_handle_conn(void *arg) {
 	xspConn *conn = (xspConn *) arg;
+	xspCBMap cb_map;
 	comSess *sess;
+	
+	cb_map.pre_child_cb = NULL;
+	cb_map.post_child_cb = NULL;
 
-	xsp_wait_for_session(conn, &sess, NULL);
+	xsp_wait_for_session(conn, &sess, &cb_map, XSP_COMM_NULL);
 	
 	if (!sess) {
 		xsp_info(0, "could not get session");
