@@ -10,8 +10,8 @@ typedef struct xsp_sess_net_path_rule_crit_t {
 	struct xsp_addr src_mask;
 	struct xsp_addr dst_mask;
 
-	uint32_t src_port;
-	uint32_t dst_port;
+	uint64_t src_port;
+	uint64_t dst_port;
 
 	uint16_t l4_src_port_min;
 	uint16_t l4_src_port_max;

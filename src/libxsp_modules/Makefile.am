@@ -54,6 +54,15 @@ openflow_la_CFLAGS = $(AM_CFLAGS) -DWITH_NONAMESPACES -DWITH_DOM
 INCLUDES += -I$(srcdir)/openflow/include -I$(srcdir)/openflow
 endif
 
+if ENABLE_LINUXNET
+modules_LTLIBRARIES += linuxnet.la
+linuxnet_la_SOURCES = xsp_linuxnet.c xsp_linuxnet.h
+linuxnet_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+linuxnet_la_LIBADD = 
+linuxnet_la_CFLAGS = $(AM_CFLAGS)
+INCLUDES +=
+endif
+
 if HAVE_WEB100
 modules_LTLIBRARIES += tcp.la
 tcp_la_SOURCES = xsp_conn_tcp.c xsp_conn_tcp.h xsp_proto_tcp.c xsp_web100.c xsp_web100.h

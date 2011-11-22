@@ -57,10 +57,10 @@ xspModule *module_info() {
 }
 
 int xsp_openflow_init() {
-    const xspSettings *settings;
-    char *pvconn;
+	const xspSettings *settings;
+	char *pvconn;
 	ctrl_status = OF_CTRL_DOWN;
-
+	
 	// need a better interface for listener args
 	// get OF listening port, etc. from XSP settings
 	settings = xsp_main_settings();
