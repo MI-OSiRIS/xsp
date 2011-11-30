@@ -90,18 +90,29 @@ int xsp_get_path(xspNetPath *net_path, xspSettings *settings, xspPath **ret_path
 	xspPath *path;
 	xspPathRule *pathrule;
 	xspPathRuleHandler *rule_handler;
+	xspPathRuleHandler **handlers;
 	int i;
 	int desc_len = 0;
+	int handler_count = 0;
 	char *rule_id;
 	char *error_msg;
 	char *path_desc = NULL;
 
+	handlers = malloc(net_path->rule_count * sizeof(xspPathRuleHandler *));
+	if (!handlers) {
+		xsp_err(0, "failed to allocate handlers array");
+		goto error_exit;
+	}
+
 	for (i=0; i<net_path->rule_count; i++) {
 		rule_handler = xsp_get_pathrule_handler(net_path->rules[i]->type);
 		if (!rule_handler) {
-			xsp_err(0, "requested rule type has no handler: %s", net_path->rules[i]->type);
-			goto error_exit;
+			xsp_warn(0, "requested rule type has no handler: %s (skipping)", net_path->rules[i]->type);
+			//goto error_exit;
+			continue;
 		}
+		
+		handlers[handler_count++] = rule_handler;
 		
 		rule_id = rule_handler->get_pathrule_id(net_path->rules[i], settings, &error_msg);
 		if (!rule_id) {
@@ -115,8 +126,15 @@ int xsp_get_path(xspNetPath *net_path, xspSettings *settings, xspPath **ret_path
 		strncpy(path_desc+desc_len, rule_id, strlen(rule_id)+1);
 		desc_len += strlen(rule_id);
 	}
-	
-	path_desc[strlen(path_desc)] = '\0';
+
+	// this XSP NE has no handlers for the specified rules
+	if (!handler_count) {
+		*ret_path = NULL;
+		return 0;
+	}
+	else {
+		path_desc[strlen(path_desc)] = '\0';
+	}
 
 	pthread_mutex_lock(&path_list_lock);
 	{
@@ -133,11 +151,11 @@ int xsp_get_path(xspNetPath *net_path, xspSettings *settings, xspPath **ret_path
 				xsp_err(0, "couldn't allocate rule list");
 				goto error_exit_path;
 			}
-			path->rule_count = net_path->rule_count;
 			
-			for (i=0; i<net_path->rule_count; i++) {
-				rule_handler = xsp_get_pathrule_handler(net_path->rules[i]->type);
-				if (rule_handler->allocate(net_path->rules[i], settings, &pathrule, &error_msg) != 0) {
+			path->rule_count = handler_count;
+			
+			for (i=0; i < handler_count; i++) {
+				if (handlers[i]->allocate(net_path->rules[i], settings, &pathrule, &error_msg) != 0) {
 					xsp_err(0, "couldn't create new pathrule element of type %s: %s",
 						net_path->rules[i]->type, error_msg);
 					if (ret_error_msg)
@@ -145,7 +163,8 @@ int xsp_get_path(xspNetPath *net_path, xspSettings *settings, xspPath **ret_path
 					goto error_exit_unlock;
 				}
 				
-				pathrule->description = rule_handler->get_pathrule_id(net_path->rules[i], settings, &error_msg);
+				pathrule->description = handlers[i]->get_pathrule_id(net_path->rules[i],
+										     settings, &error_msg);
 				path->rules[i] = pathrule;
 			}
 			

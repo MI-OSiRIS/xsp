@@ -101,6 +101,7 @@ xspNetPath *xsp_sess_new_net_path(int action);
 xspNetPathRule *xsp_sess_new_net_path_rule(xspNetPath *path, char *type);
 int xsp_sess_set_net_path_rule_crit(xspNetPathRule *rule, libxspNetPathRuleCrit *crit);
 int xsp_sess_set_net_path_rule_eid(xspNetPathRule *rule, void *eid, int type);
+int xsp_sess_set_net_path_rule_op(xspNetPathRule *rule, int op);
 
 int xsp_signal_inf_data(libxspSess *sess);
 int xsp_signal_path(libxspSess *sess, xspNetPath *net_path);
