@@ -770,33 +770,39 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
 			goto error_exit;
 		}
 		
-		// apply each rule in the path
-		for (i = 0; i < path->rule_count; i++) {
-			
-			if (path->rules[i]->apply(path->rules[i], path_action, &error_msg) != 0) {
-				xsp_err(0, "couldn't apply path rule: %s", error_msg);
-				goto error_exit;
+		// get_path can succeed but return no path
+		// ...which means there are no handlers for the rules at this XSP NE
+		if (path) {
+			// apply each rule in the path
+			for (i = 0; i < path->rule_count; i++) {
+				if (path->rules[i]->apply(path->rules[i], path_action, &error_msg) != 0) {
+					xsp_err(0, "couldn't apply path rule: %s", error_msg);
+					goto error_exit;
+				}
+				
+				// notify rules (links) with external script
+				if (crit && netpath_script && netpath_script_dir) {
+					xsp_session_net_path_script(path, netpath_script_dir,
+								    crit->src_eid.x_addrc, crit->dst_eid.x_addrc,
+								    "link", net_path->rules[i]->type, path_action);
+				}
 			}
-
-			// notify rules (links) with external script
+			
+			// notify completed path (transfer) with external script
 			if (crit && netpath_script && netpath_script_dir) {
 				xsp_session_net_path_script(path, netpath_script_dir,
 							    crit->src_eid.x_addrc, crit->dst_eid.x_addrc,
-							    "link", net_path->rules[i]->type, path_action);
+							    "transfer", "xxx", path_action);
 			}
+			
+			// finally, delete the path if requested
+			if (path_action == XSP_NET_PATH_DELETE)
+				xsp_delete_path(path);
+			
 		}
-
-		// notify completed path (transfer) with external script
-		if (crit && netpath_script && netpath_script_dir) {
-			xsp_session_net_path_script(path, netpath_script_dir,
-						    crit->src_eid.x_addrc, crit->dst_eid.x_addrc,
-						    "transfer", "xxx", path_action);
+		else {
+			xsp_info(5, "No path to setup here.");
 		}
-		
-		// finally, delete the path if requested
-		if (path_action == XSP_NET_PATH_DELETE)
-			xsp_delete_path(path);
-		
 	}
 	else {
 		error_msg = "netPath contains no rules!";

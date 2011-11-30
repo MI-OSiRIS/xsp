@@ -502,18 +502,37 @@ int xsp_sess_set_net_path_rule_eid(xspNetPathRule *rule, void *eid, int type) {
 	return 0;
 }		
 
+int xsp_sess_set_net_path_rule_op(xspNetPathRule *rule, int op) {
+	if (!rule)
+		return -1;
+
+	rule->op = op;
+
+	return 0;
+}
+
 int xsp_sess_set_net_path_rule_crit(xspNetPathRule *rule, libxspNetPathRuleCrit *crit) {
 	if (!rule)
 		return -1;
-	
+
 	if (crit->src)
-		memcpy(&(rule->crit.src_eid.x_addrc), crit->src, XSP_HOPID_LEN);
+		strncpy(rule->crit.src_eid.x_addrc, crit->src, XSP_HOPID_LEN);
 	if (crit->dst)
-		memcpy(&(rule->crit.dst_eid.x_addrc), crit->dst, XSP_HOPID_LEN);
+		strncpy(rule->crit.dst_eid.x_addrc, crit->dst, XSP_HOPID_LEN);
+	if (crit->src_mask)
+                strncpy(rule->crit.src_mask.x_addrc, crit->src_mask, XSP_HOPID_LEN);
+        if (crit->dst_mask)
+                strncpy(rule->crit.dst_mask.x_addrc, crit->dst_mask, XSP_HOPID_LEN);
+
+	// iface name goes in src_eid
+	if (crit->iface)
+		strncpy(rule->crit.src_eid.x_addrc, crit->iface, XSP_HOPID_LEN);
 
 	rule->crit.src_port = crit->src_port;
 	rule->crit.dst_port = crit->dst_port;
-	
+
+	rule->crit.vlan = crit->vlan;	
+
 	rule->use_crit = TRUE;
 
 	return 0;

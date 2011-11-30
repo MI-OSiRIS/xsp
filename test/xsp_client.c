@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
 	rule = xsp_sess_new_net_path_rule(path, "OPENFLOW");
 	
 	if (xsp_sess_set_net_path_rule_crit(rule, &crit) != 0)
-		fprintf(stderr, "could not set path criteria\n");
+		fprintf(stderr, "could not set rule criteria\n");
 	
 	xsp_signal_path(sess, path);
 

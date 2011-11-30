@@ -33,6 +33,7 @@ static int xsp_linuxnet_apply_rule(xspPathRule *rule, int action, char **ret_err
 static void xsp_linuxnet_free_rule(xspPathRule *rule);
 
 static int __xsp_linuxnet_check_iface(char *iface);
+static int __xsp_linuxnet_exec_cmd(char *cmd);
 
 static int __xsp_linuxnet_create_rule(xspPathRule *rule, char **ret_error_msg);
 static int __xsp_linuxnet_delete_rule(xspPathRule *rule, char **ret_error_msg);
@@ -66,7 +67,8 @@ int xsp_linuxnet_init() {
 
 	settings = xsp_main_settings();
 	// check the settings for linuxnet config
-        if (xsp_settings_get_list_2(settings, "linuxnet", "iface_list", &iface_list, &iface_count) != 0) {
+        if (xsp_settings_get_list_3(settings, "paths", "linuxnet", "iface_list",
+				    &iface_list, &iface_count) != 0) {
                 xsp_warn(0, "No LINUXNET ifaces specified");
         }
 
@@ -76,7 +78,7 @@ int xsp_linuxnet_init() {
 	}
 	else {
 		ln_cfg.iface_list = (char**)malloc(sizeof(char *));
-		ln_cfg.iface_list[0] = "eth0";
+		ln_cfg.iface_list[0] = "lo";
 		ln_cfg.iface_count = 1;
 	}
 
@@ -89,7 +91,7 @@ static char *xsp_linuxnet_generate_pathrule_id(const xspNetPathRule *rule,
 	char *rule_id = NULL;
 	char *src_eid;
 	char *dst_eid;
-	uint16_t vlan;
+	uint16_t vlan = 0;
 
         if (rule->use_crit) {
 		switch (rule->op) {
@@ -104,7 +106,7 @@ static char *xsp_linuxnet_generate_pathrule_id(const xspNetPathRule *rule,
 			
 			// dst_eid contains the IP we want to give the interface
 			// assume HRN (dotted octets) form
-			dst_eid = (char*)rule->crit.src_eid.x_addrc;
+			dst_eid = (char*)rule->crit.dst_eid.x_addrc;
 		}
 		break;
 		case XSP_LINUXNET_SET_VLAN:
@@ -154,12 +156,26 @@ static int xsp_linuxnet_allocate_pathrule_handler(const xspNetPathRule *net_rule
 						  const xspSettings *settings,
 						  xspPathRule **ret_rule,
 						  char **ret_error_msg) {
+
+	xspPathRule *rule;
+        rule = xsp_alloc_pathrule();
+        if (!rule)
+                goto error_exit;
+
+	if (net_rule->use_crit) {
+                memcpy(&rule->crit, &net_rule->crit, sizeof(xspNetPathRuleCrit));
+        }
 	
+	memcpy(&(rule->eid), &(net_rule->eid), sizeof(struct xsp_addr));
+	rule->op = net_rule->op;
+        rule->private = NULL;
+        rule->apply = xsp_linuxnet_apply_rule;
+        rule->free = xsp_linuxnet_free_rule;
+
+        *ret_rule = rule;
+
 	return 0;
 
- error_exit_pathrule:
-	//xsp_free_pathrule(rule);
-	*ret_error_msg = strdup("pathrule allocate configuration error");
  error_exit:
 	return -1;
 }
@@ -196,6 +212,42 @@ static int xsp_linuxnet_apply_rule(xspPathRule *rule, int action, char **ret_err
 
 static int __xsp_linuxnet_create_rule(xspPathRule *rule, char **ret_error_msg) {
 
+	FILE *output;
+	char *cmd = NULL;
+
+	switch (rule->op) {
+	case XSP_LINUXNET_SET_IP:
+	{
+		if (rule->crit.vlan > 0) {
+			asprintf(&cmd, "sudo ifconfig %s.%d %s netmask %s up",
+				 rule->crit.src_eid.x_addrc, rule->crit.vlan,
+				 rule->crit.dst_eid.x_addr,
+                                 rule->crit.dst_mask.x_addrc);
+		}
+		else {
+			asprintf(&cmd, "sudo ifconfig %s %s netmask %s up",
+                                 rule->crit.src_eid.x_addrc,
+				 rule->crit.dst_eid.x_addr,
+				 rule->crit.dst_mask.x_addrc);
+		}
+		__xsp_linuxnet_exec_cmd(cmd);
+	}
+	break;
+	case XSP_LINUXNET_SET_VLAN:
+	{
+		asprintf(&cmd, "sudo vconfig add %s %d",
+			 rule->crit.src_eid.x_addrc, rule->crit.vlan);
+		__xsp_linuxnet_exec_cmd(cmd);
+	}
+	break;
+	case XSP_LINUXNET_SET_ROUTE:
+	{
+	}
+	break;
+	default:
+		break;
+	}
+	
 	return 0;
 	
  error_exit:
@@ -209,6 +261,37 @@ static int __xsp_linuxnet_modify_rule(xspPathRule *rule, char **ret_error_msg) {
 }
 
 static int __xsp_linuxnet_delete_rule(xspPathRule *rule, char **ret_error_msg) {
+
+        char *cmd = NULL;
+
+        switch (rule->op) {
+        case XSP_LINUXNET_SET_IP:
+		{
+			if (rule->crit.vlan > 0) {
+				asprintf(&cmd, "sudo ip addr flush dev %s.%d",
+					 rule->crit.src_eid.x_addrc, rule->crit.vlan);
+			}
+			else {
+				asprintf(&cmd, "sudo ip addr flush dev %s",
+					 rule->crit.src_eid.x_addrc);
+			}
+			__xsp_linuxnet_exec_cmd(cmd);
+		}
+		break;
+        case XSP_LINUXNET_SET_VLAN:
+		{
+			asprintf(&cmd, "sudo vconfig rem %s.%d",
+				 rule->crit.src_eid.x_addrc, rule->crit.vlan);
+			__xsp_linuxnet_exec_cmd(cmd);
+		}
+		break;
+        case XSP_LINUXNET_SET_ROUTE:
+		{
+		}
+		break;
+        default:
+                break;
+        }
 
 	return 0;
 
@@ -228,6 +311,16 @@ static int __xsp_linuxnet_check_iface(char *iface) {
 		if (!strncmp(iface, ln_cfg.iface_list[i], strlen(iface)))
 			return 1;
 	}
+	
+	return 0;
+}
+
+static int __xsp_linuxnet_exec_cmd(char *cmd) {
+	FILE *output;
+
+	xsp_info(11, "executing \"%s\"", cmd);
+	output = popen(cmd, "r");
+	pclose(output);
 	
 	return 0;
 }
