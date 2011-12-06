@@ -2056,11 +2056,11 @@ globus_l_xio_xsp_read_cb(
 			handle->r_caliper->caliper->first)
 	    >= handle->interval )
 	{
-	    //globus_l_xio_xsp_do_nl_summary(handle,
-		//			   handle->r_caliper);
+	    globus_l_xio_xsp_do_nl_summary(handle,
+					   handle->r_caliper);
 	    //GlobusTimeAbstimeGetCurrent(handle->r_caliper->ts);
-	    globus_l_xio_xsp_update_speedometer(handle, handle->r_caliper,
-	            XSPD_SPEEDOMETER_IN);
+	    //globus_l_xio_xsp_update_speedometer(handle, handle->r_caliper,
+	    //        XSPD_SPEEDOMETER_IN);
 	}
     }
     
@@ -2124,11 +2124,11 @@ globus_l_xio_xsp_write_cb(
 			handle->w_caliper->caliper->first)
 	    >= handle->interval )
 	{
-	    //globus_l_xio_xsp_do_nl_summary(handle,
-		//			   handle->w_caliper);
+	    globus_l_xio_xsp_do_nl_summary(handle,
+					   handle->w_caliper);
 	    //GlobusTimeAbstimeGetCurrent(handle->w_caliper->ts);
-	    globus_l_xio_xsp_update_speedometer(handle, handle->w_caliper,
-	                    XSPD_SPEEDOMETER_OUT);
+	    //globus_l_xio_xsp_update_speedometer(handle, handle->w_caliper,
+	    //                XSPD_SPEEDOMETER_OUT);
 	}
     }
     
