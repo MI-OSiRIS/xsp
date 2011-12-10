@@ -77,6 +77,8 @@ int main(int argc, char *argv[])
 	libxspNetPathRule *rule;
 	libxspNetPathRuleCrit crit;
 
+	memset(&crit, 0, sizeof(crit));
+
 	// creates a path with a single rule
 	path = xsp_sess_new_net_path(XSP_NET_PATH_CREATE);
 	rule = xsp_sess_new_net_path_rule(path, "OPENFLOW");
