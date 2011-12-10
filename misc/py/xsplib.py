@@ -260,8 +260,6 @@ class XSPSession(DoesLogging):
             if msg_type == XSP_MSG_SESS_OPEN:
                 self.version = XSP_v1
 
-            print "got msg type: " + str(msg_type)
-
             # If there is no message data, stop and return message type
             if not msg_data:
                 return msg_type, 0, None
