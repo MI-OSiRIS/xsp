@@ -17,7 +17,11 @@ from netlogger.nllog import DoesLogging, get_logger
 XSP_v0=0
 XSP_v1=1
 
+XSP_HOPID_LEN=64
 XSP_MAX_LENGTH=65536
+XSP_DEF_FLAGS=0
+XSP_DEF_SPORT=1
+XSP_RESERVED=0
 
 """
 XSP Message types
@@ -30,15 +34,18 @@ XSP_MSG_AUTH_TYPE=5
 XSP_MSG_PING=8
 XSP_MSG_PONG=9
 XSP_MSG_APP_DATA=12
-XSP_MSG_OPEN_SIZE=84
 XSP_MSG_AUTH_SIZE=10
 XSP_MSG_BLOCK_HDR_SIZE=8
+XSP_MSG_OPEN_SIZE_V0=88
+XSP_MSG_OPEN_SIZE_V1=20
 XSP_MSG_HDR_SIZE_V0=20
-XSP_MSG_HDR_SIZE_V1=160
+XSP_MSG_HDR_SIZE_V1=168
 
 """
 XSP_MSG_APP_DATA option types
 """
+XSP_MSG_OPT_HOP = 1 # NEW HOP BLOCK
+XSP_MSG_OPT_AUTH_TYP = 2 # AUTH TYPE BLOCK
 XSP_MSG_XIO_NEW_XFER  = 48 # Beginning of transfer
 XSP_MSG_XIO_END_XFER  = 49 # End of transfer
 XSP_MSG_XIO_UPDATE_XFER = 50 # Intermediate xfer info, eg NL-Calipers summaries
@@ -46,13 +53,20 @@ XSP_MSG_XIO_MIN = 48 # Lowest XSP+XIO event
 XSP_MSG_XIO_MAX = 50 # Highest XSP+XIO event
 XSP_MSG_NLMI_DATA=32 # Monitoring data from Blipp (formerly: NLMI)
 
-# XXX: Not used. XSP_OPT_DATA=5
+"""
+XSP header formats
+"""
+fmt_XSPv     = '!B'
+fmt_v0MsgHdr = '!BBH16s'
+fmt_v0BlkHdr = 'HHI'
+fmt_v1MsgHdr = '!BBHHH72s72s16s'
+fmt_v1BlkHdr = 'HHHH'
+
 
 def msg_has_data(t):
     return (t == XSP_MSG_APP_DATA)
 
 def block_has_data(t):
-    print "has data type: " + str(t)
     return ((t >= XSP_MSG_XIO_MIN and t <= XSP_MSG_XIO_MAX)
             or (t == XSP_MSG_NLMI_DATA))
 
@@ -106,7 +120,7 @@ class XSPSession(DoesLogging):
 
     def __init__(self, sock=None):
         self.s = sock or socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.version = XSP_v0
+        self.version = XSP_v1
         DoesLogging.__init__(self)
 
     def connect(self, host, port):
@@ -115,7 +129,7 @@ class XSPSession(DoesLogging):
         self.id = "%032X" % random.getrandbits(128)
         self.send_auth()
         self.send_open()
-        self.s.recv(XSP_MSG_HDR_SIZE_V0)
+        self.s.recv(XSP_MSG_HDR_SIZE_V1)
         # just ignore ACK, woo!
 
     def send_msg(self, data, length, type_):
@@ -126,12 +140,22 @@ class XSPSession(DoesLogging):
           length - Length of the data
           type_ - Message type
         """
-        fmt = '!BBh16shhi' + str(length) + 's'
-        block_len = XSP_MSG_BLOCK_HDR_SIZE + int(length)
-        block_msg = struct.pack(fmt, self.version, XSP_MSG_APP_DATA,
-                                block_len, binascii.a2b_hex(self.id),
-                                int(type_), 0, int(length), data)
 
+        if self.version == XSP_v0:
+            fmt = fmt_v0MsgHdr + fmt_v0BlkHdr + str(length) + 's'
+            block_len = XSP_MSG_BLOCK_HDR_SIZE + int(length)
+            block_msg = struct.pack(fmt, self.version, XSP_MSG_APP_DATA,
+                                    block_len, binascii.a2b_hex(self.id),
+                                    int(type_), XSP_DEF_SPORT, int(length), data)
+
+        elif self.version == XSP_v1:
+            fmt = fmt_v1MsgHdr + fmt_v1BlkHdr + str(length) + 's'
+            block_len = int(length)
+            block_msg = struct.pack(fmt, self.version, XSP_DEF_FLAGS, XSP_MSG_APP_DATA,
+                                    1, XSP_RESERVED, "", "", binascii.a2b_hex(self.id),
+                                    int(type_), XSP_DEF_SPORT,
+                                    int(length), XSP_RESERVED, data)
+                  
         self.s.send(block_msg)
 
     def send_auth(self, name="ANON"):
@@ -141,9 +165,20 @@ class XSPSession(DoesLogging):
         Args:
           name - Authorization name.
         """
-        msg = struct.pack('!BBh16s10s', self.version, XSP_MSG_AUTH_TYPE,
-                          XSP_MSG_AUTH_SIZE,
-                          binascii.a2b_hex(self.id), "ANON")
+
+        if self.version == XSP_v0:
+            fmt = fmt_v0MsgHdr + str(XSP_MSG_AUTH_SIZE) + 's'
+            msg = struct.pack(fmt, self.version, XSP_MSG_AUTH_TYPE,
+                              XSP_MSG_AUTH_SIZE,
+                              binascii.a2b_hex(self.id), name)
+
+        elif self.version == XSP_v1:
+            fmt = fmt_v1MsgHdr + fmt_v1BlkHdr + str(XSP_MSG_AUTH_SIZE) + 's'
+            msg = struct.pack(fmt, self.version, XSP_DEF_FLAGS, XSP_MSG_AUTH_TYPE,
+                              1, XSP_RESERVED, "", "", binascii.a2b_hex(self.id),
+                              XSP_MSG_OPT_AUTH_TYP, XSP_DEF_SPORT,
+                              XSP_MSG_AUTH_SIZE, XSP_RESERVED, name)
+            
         self.s.send(msg)
 
     def send_open(self, host='localhost'):
@@ -152,28 +187,47 @@ class XSPSession(DoesLogging):
         Args:
           host - Sending host name (default 'localhost')
         """
-        msg = struct.pack('!BBh16s16s60sii',
-                          self.version, XSP_MSG_SESS_OPEN,
-                          XSP_MSG_OPEN_SIZE, binascii.a2b_hex(self.id),
-                          binascii.a2b_hex(self.id),
-                          'localhost', 0, 0)
+        if self.version == XSP_v0:
+            fmt = fmt_v0MsgHdr + '16s' + str(XSP_HOPID_LEN) + 'sII'
+            msg = struct.pack(fmt, self.version, XSP_MSG_SESS_OPEN,
+                              XSP_MSG_OPEN_SIZE_V0, binascii.a2b_hex(self.id),
+                              binascii.a2b_hex(self.id),
+                              'localhost', 0, 0)
+            
+        elif self.version == XSP_v1:
+            fmt = fmt_v1MsgHdr + fmt_v1BlkHdr + '16sI'
+            msg = struct.pack(fmt, self.version, XSP_DEF_FLAGS, XSP_MSG_SESS_OPEN,
+                              1, XSP_RESERVED, "", "", binascii.a2b_hex(self.id),
+                              XSP_MSG_OPT_HOP, XSP_DEF_SPORT, XSP_MSG_OPEN_SIZE_V1,
+                              XSP_RESERVED, binascii.a2b_hex(self.id), 0)
+            
         self.s.send(msg)
 
     def send_close(self):
         """Send a <close> message to an XSP server.
         """
-        msg = struct.pack('!BBh16s', self.version,
-                          XSP_MSG_SESS_CLOSE, 0, binascii.a2b_hex(self.id))
+        if self.version == XSP_v0:
+            fmt = fmt_v0MsgHdr
+            msg = struct.pack(fmt, self.version, XSP_MSG_SESS_CLOSE,
+                              0, binascii.a2b_hex(self.id))
+
+        elif self.version == XSP_v1:
+            fmt = fmt_v1MsgHdr
+            msg = struct.pack(fmt, self.version, 0, XSP_MSG_SESS_CLOSE,
+                              0, 0, "", "", binascii.a2b_hex(self.id))
+            
         self.s.send(msg)
 
     def send_ack(self):
+        """ACK a message
+        """
         if self.version == XSP_v0:
-            fmt = '!BBh16s'
+            fmt = fmt_v0MsgHdr
             ack_msg = struct.pack(fmt, self.version, XSP_MSG_SESS_ACK, 0,
                                   binascii.a2b_hex(self.id))
 
         elif self.version == XSP_v1:
-            fmt = '!BBhhh68s68s16s'
+            fmt = fmt_v1MsgHdr
             ack_msg = struct.pack(fmt, self.version, 0, XSP_MSG_SESS_ACK,
                                   0, 0, "", "", binascii.a2b_hex(self.id))
 
@@ -181,28 +235,32 @@ class XSPSession(DoesLogging):
 
     def recv_msg(self):
         xsp_ver = readn(self.s, 1)
-        ver = struct.unpack('!B', xsp_ver)
+        ver = struct.unpack(fmt_XSPv, xsp_ver)
 
         if ver[0] == XSP_v0:
             xsp_hdr = readn(self.s, XSP_MSG_HDR_SIZE_V0-1)
-            hdr = struct.unpack('!Bh16s', xsp_hdr)
+            hdr = struct.unpack('!' + fmt_v0MsgHdr[2:], xsp_hdr)
             if not msg_has_data(hdr[0]):
                 _ = readn(self.s, hdr[1])
                 return hdr[0], 0, None
 
             block_msg = readn(self.s, hdr[1])
             #print("@@ got msg len={0:d} expect={1:d}".format(len(block_msg), hdr[0]))
-            fmt = '!hhi' + str(hdr[1] - XSP_MSG_BLOCK_HDR_SIZE) + 's'
+            fmt = '!' + fmt_v0BlkHdr + str(hdr[1] - XSP_MSG_BLOCK_HDR_SIZE) + 's'
             #print("@@ struct fmt={0}".format(fmt))
             block = struct.unpack(fmt, block_msg)
             return block[0], block[2], block[3]
+
         elif ver[0] == XSP_v1:
             hdr_bytes = readn(self.s, XSP_MSG_HDR_SIZE_V1-1)
-            hdr = struct.unpack('!Bhhh68s68s16s', hdr_bytes)
+            hdr = struct.unpack('!' + fmt_v1MsgHdr[2:], hdr_bytes)
             msg_type, msg_data = hdr[1], hdr[2]
+
             # Set version when session opens
             if msg_type == XSP_MSG_SESS_OPEN:
                 self.version = XSP_v1
+
+            print "got msg type: " + str(msg_type)
 
             # If there is no message data, stop and return message type
             if not msg_data:
@@ -210,7 +268,7 @@ class XSPSession(DoesLogging):
 
             # Read message data
             block_bytes = readn(self.s, XSP_MSG_BLOCK_HDR_SIZE)
-            block_type, _, block_len, _ = struct.unpack('!hhhh', block_bytes)
+            block_type, _, block_len, _ = struct.unpack('!' + fmt_v1BlkHdr, block_bytes)
 
             # If this type of block has no data, consume any
             # additional parts and return the message type
@@ -226,22 +284,35 @@ class XSPSession(DoesLogging):
 
     def close(self):
         self.send_close()
-        close_msg = struct.pack('!BBh16s', self.version,
-                                XSP_MSG_SESS_CLOSE, 0, binascii.a2b_hex(self.id))
-        self.s.send(close_msg)
 
     def ping(self):
-        ping_msg = struct.pack('!BBh16s', self.version,
-                                XSP_MSG_PING, 0, binascii.a2b_hex(self.id))
-        self.s.send(ping_msg)
-        xsp_hdr = self.s.recv(XSP_MSG_HDR_SIZE_V0)
+        fmt = ''
+        if self.version == XSP_v0:
+            fmt = fmt_v0MsgHdr
+            ping_msg = struct.pack(fmt, self.version, XSP_MSG_PING,
+                                   0, binascii.a2b_hex(self.id))
+            
+        elif self.version == XSP_v1:
+            fmt = fmt_v1MsgHdr
+            ping_msg = struct.pack(fmt, self.version, 0, XSP_MSG_PING,
+                                  0, 0, "", "", binascii.a2b_hex(self.id))
 
+        self.s.send(ping_msg)
+
+        if self.version == XSP_v0:
+            xsp_hdr = self.s.recv(XSP_MSG_HDR_SIZE_V0)
+
+        elif self.version == XSP_v1:
+            xsp_hdr = self.s.recv(XSP_MSG_HDR_SIZE_V1)
+            
         if (len(xsp_hdr) > 0):
-            hdr = struct.unpack('!BBh16s', xsp_hdr)
+            hdr = struct.unpack(fmt, xsp_hdr)
         else:
             return -1
 
-        if (hdr[1] == XSP_MSG_PONG):
+        hdr = struct.unpack(fmt, xsp_hdr)
+        
+        if (hdr[self.version + 1] == XSP_MSG_PONG):
             return 0
         else:
             return -1
@@ -380,6 +451,7 @@ def __test():
 
     my_msg = "This is a test"
     my_type = 0x20
+
     print '\nSending message [%d,%d]: %s' % (my_type, len(my_msg), my_msg)
     sess.send_msg(my_msg, len(my_msg), my_type)
 
