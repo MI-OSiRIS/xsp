@@ -52,7 +52,7 @@ enum xsp_sess_net_path_actions_t {
 #define XSP_MAX_LENGTH          65536
 #define XSP_MAX_OPT_LENGTH      2**64
 
-#define XSP_HOPID_LEN		60
+#define XSP_HOPID_LEN		63
 #define XSP_SESSIONID_LEN	16
 #define XSP_PROTO_NAME_LEN      10
 #define XSP_AUTH_NAME_LEN       10
@@ -78,20 +78,20 @@ struct xsp_addr {
     uint16_t           fill_1;
     uint32_t           fill_2;
 
-    union {                                                                                    
-	uint8_t        xsp_addr8[16];                                                      
-	uint16_t       xsp_addr16[8];                                                      
-	uint32_t       xsp_addr32[4];                                                      
-	uint32_t       xsp_addrs;                                                          
-	uint64_t       xsp_addrd;                                                          
-	char           xsp_addrc[XSP_HOPID_LEN+3];
-    } xsp_u;                                                                                   
-#define x_addr            xsp_u.xsp_addr8                                                          
-#define x_addr16          xsp_u.xsp_addr16                                                         
-#define x_addr32          xsp_u.xsp_addr32                                                         
-#define x_addrs           xsp_u.xsp_addrs                                                          
-#define x_addrd           xsp_u.xsp_addrd                                                          
-#define x_addrc           xsp_u.xsp_addrc                                                          
+    union {
+	uint8_t        xsp_addr8[16];
+	uint16_t       xsp_addr16[8];
+	uint32_t       xsp_addr32[4];
+	uint32_t       xsp_addrs;
+	uint64_t       xsp_addrd;
+	char           xsp_addrc[XSP_HOPID_LEN+1];
+    } xsp_u;
+#define x_addr            xsp_u.xsp_addr8
+#define x_addr16          xsp_u.xsp_addr16
+#define x_addr32          xsp_u.xsp_addr32
+#define x_addrs           xsp_u.xsp_addrs
+#define x_addrd           xsp_u.xsp_addrd
+#define x_addrc           xsp_u.xsp_addrc
 };
 
 typedef struct xsp_v1_message_hdr_t {
