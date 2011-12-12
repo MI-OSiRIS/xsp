@@ -242,6 +242,18 @@ static int __xsp_linuxnet_create_rule(xspPathRule *rule, char **ret_error_msg) {
 	break;
 	case XSP_LINUXNET_SET_ROUTE:
 	{
+		struct in_addr in_addr, in_mask, in_net;
+		char *net_addr;
+		inet_aton(rule->crit.src_eid.x_addrc, &in_addr);
+		inet_aton(rule->crit.src_mask.x_addrc, &in_mask);
+		in_net.s_addr = (in_addr.s_addr & in_mask.s_addr);
+		net_addr = inet_ntoa(in_net);
+
+		asprintf(&cmd, "sudo ip route add %s/%s via %s",
+                         net_addr,
+			 rule->crit.src_mask.x_addrc,
+			 rule->crit.dst_eid.x_addrc);
+		__xsp_linuxnet_exec_cmd(cmd);
 	}
 	break;
 	default:
@@ -287,6 +299,18 @@ static int __xsp_linuxnet_delete_rule(xspPathRule *rule, char **ret_error_msg) {
 		break;
         case XSP_LINUXNET_SET_ROUTE:
 		{
+			struct in_addr in_addr, in_mask, in_net;
+			char *net_addr;
+			inet_aton(rule->crit.src_eid.x_addrc, &in_addr);
+			inet_aton(rule->crit.src_mask.x_addrc, &in_mask);
+			in_net.s_addr = (in_addr.s_addr & in_mask.s_addr);
+			net_addr = inet_ntoa(in_net);
+
+			asprintf(&cmd, "sudo ip route del %s/%s via %s",
+				 net_addr,
+				 rule->crit.src_mask.x_addrc,
+				 rule->crit.dst_eid.x_addrc);
+			__xsp_linuxnet_exec_cmd(cmd);
 		}
 		break;
         default:

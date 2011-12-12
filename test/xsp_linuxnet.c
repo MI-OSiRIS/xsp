@@ -20,8 +20,9 @@ enum xsp_linuxnet_ops_t {
 };
 
 static char usage[] = "usage: xsp_linuxnet [-V] [-i interface] [-v vlan id]\n"
-	"\t[-s src ip address] [-d dst ip address] [-x src mask]\n"
-	"\t[-y dst mask] [-z] [-r] xsp_hops\n";
+	"\t[-a circuit src ip] [-b circuit dst ip]\n"
+	"\t[-s host src ip] [-d host dst ip] [-x src mask] [-y dst mask]\n"
+	"\t[-z] [-r] xsp_hops\n";
 
 int main(int argc, char *argv[])
 {
@@ -34,6 +35,8 @@ int main(int argc, char *argv[])
 
 	char *iface = NULL;
 	char *vlan = NULL;
+	char *csrc = NULL;
+	char *cdst = NULL;
 	char *src = NULL;
 	char *dst = NULL;
 	char *smask = NULL;
@@ -47,7 +50,7 @@ int main(int argc, char *argv[])
 
 	memset(&crit, 0, sizeof(libxspNetPathRuleCrit));
 
-	while((c = getopt(argc, argv, "i:v:s:d:x:y:Vzr")) != -1) {
+	while((c = getopt(argc, argv, "i:v:a:b:s:d:x:y:Vzr")) != -1) {
 		switch(c) {
 		case 'V':
 			printf("XSP LINUXNET Tester\n");
@@ -63,6 +66,14 @@ int main(int argc, char *argv[])
                         vlan = strdup(optarg);
                         break;
 			
+		case 'a':
+			csrc = strdup(optarg);
+			break;
+
+		case 'b':
+			cdst = strdup(optarg);
+			break;
+
 		case 's':
                         src = strdup(optarg);
                         break;
@@ -143,13 +154,13 @@ int main(int argc, char *argv[])
 			fprintf(stderr, "could not set rule criteria\n");
 	}
 	
-	if (iface && dst && dmask) {
+	if (iface && cdst) {
 		rule = xsp_sess_new_net_path_rule(path, "LINUXNET");
 		xsp_sess_set_net_path_rule_op(rule, XSP_LINUXNET_SET_IP);
 
 		crit.iface = iface;
-		crit.dst = dst;
-		crit.dst_mask = dmask;
+		crit.dst = cdst;
+		crit.dst_mask = "255.255.255.0";
 
 		if (vlan)
 			crit.vlan = atoi(vlan);
@@ -158,13 +169,13 @@ int main(int argc, char *argv[])
                         fprintf(stderr, "could not set rule criteria\n");
 	}
 
-	if (src && dst && smask && dmask) {
+	if (src && cdst && smask && dmask) {
 		rule = xsp_sess_new_net_path_rule(path, "LINUXNET");
                 xsp_sess_set_net_path_rule_op(rule, XSP_LINUXNET_SET_ROUTE);
 
 		crit.iface = NULL;
                 crit.src = src;
-		crit.dst = dst;
+		crit.dst = csrc;
 		crit.src_mask = smask;
 		crit.dst_mask = dmask;
 

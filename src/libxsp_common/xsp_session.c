@@ -961,6 +961,7 @@ int xsp_set_proto_cb(comSess *sess, void *(*fn) (comSess *, xspMsg *)) {
 comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, xspCBMap *cb_map, int flags) {
 	xspMsg *msg;
 	comSess *sess;
+	xspConn *next_conn;
 	xspCreds *credentials;
 	int authenticated;
         int have_session;
@@ -1081,8 +1082,8 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, xspCBMap *cb_ma
 		for (i = 0; i < sess->child_count; i++) {
 			xsp_info(5, "connecting to child hop %s", sess->child[i]->hop_id);
 			
-			conn = xsp_connect_hop_control(sess, sess->child[i], error_msgs);
-			if (!conn) {
+			next_conn = xsp_connect_hop_control(sess, sess->child[i], error_msgs);
+			if (!next_conn) {
 				xsp_err(0, "could not establish connection to child hop %s",
 					sess->child[i]->hop_id);
 				goto error_exit;
