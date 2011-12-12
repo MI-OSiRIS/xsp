@@ -114,13 +114,19 @@ static char *xsp_oscars_generate_pathrule_id(const xspNetPathRule *rule,
 		goto error_exit;
 	}
 
-	if (xsp_settings_get_2(settings, "oscars", "src_vlan_id", &oscars_src_vlan_id) != 0) {
-		oscars_src_vlan_id = "N/A";
+	if (rule->crit.vlan > 0) {
+		asprintf(&oscars_src_vlan_id, "%d", rule->crit.vlan);
+		asprintf(&oscars_dst_vlan_id, "%d", rule->crit.vlan);
 	}
+	else {
+		if (xsp_settings_get_2(settings, "oscars", "src_vlan_id", &oscars_src_vlan_id) != 0) {
+			oscars_src_vlan_id = "N/A";
+		}
 
-	if (xsp_settings_get_2(settings, "oscars", "dst_vlan_id", &oscars_dst_vlan_id) != 0) {
-                oscars_dst_vlan_id = "N/A";
-        }
+		if (xsp_settings_get_2(settings, "oscars", "dst_vlan_id", &oscars_dst_vlan_id) != 0) {
+			oscars_dst_vlan_id = "N/A";
+		}
+	}
 
 	if (strcmp(oscars_src_id, oscars_dst_id) > 0) {
 		char *tmp = oscars_src_id;
@@ -228,13 +234,19 @@ static int xsp_oscars_allocate_pathrule_handler(const xspNetPathRule *net_rule,
 		goto error_exit;
 	}
 
-	if (xsp_settings_get_2(settings, "oscars", "src_vlan_id", &oscars_src_vlan_id) != 0) {
-		oscars_src_vlan_id = NULL;
-	}
-	
-	if (xsp_settings_get_2(settings, "oscars", "dst_vlan_id", &oscars_dst_vlan_id) != 0) {
-		oscars_dst_vlan_id = NULL;
+	if (net_rule->crit.vlan > 0) {
+                asprintf(&oscars_src_vlan_id, "%d", net_rule->crit.vlan);
+                asprintf(&oscars_dst_vlan_id, "%d", net_rule->crit.vlan);
         }
+	else {
+		if (xsp_settings_get_2(settings, "oscars", "src_vlan_id", &oscars_src_vlan_id) != 0) {
+			oscars_src_vlan_id = NULL;
+		}
+		
+		if (xsp_settings_get_2(settings, "oscars", "dst_vlan_id", &oscars_dst_vlan_id) != 0) {
+			oscars_dst_vlan_id = NULL;
+		}
+	}
 
 	if (xsp_settings_get_int_2(settings, "oscars", "clock_offset", &oscars_clock_offset) != 0) {
 		oscars_clock_offset = 0;
