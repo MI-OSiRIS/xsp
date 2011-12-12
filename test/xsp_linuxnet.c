@@ -154,13 +154,13 @@ int main(int argc, char *argv[])
 			fprintf(stderr, "could not set rule criteria\n");
 	}
 	
-	if (iface && cdst) {
+	if (iface && csrc) {
 		rule = xsp_sess_new_net_path_rule(path, "LINUXNET");
 		xsp_sess_set_net_path_rule_op(rule, XSP_LINUXNET_SET_IP);
 
 		crit.iface = iface;
-		crit.dst = cdst;
-		crit.dst_mask = "255.255.255.0";
+		crit.dst = csrc;
+		crit.dst_mask = smask;
 
 		if (vlan)
 			crit.vlan = atoi(vlan);
@@ -169,15 +169,15 @@ int main(int argc, char *argv[])
                         fprintf(stderr, "could not set rule criteria\n");
 	}
 
-	if (src && cdst && smask && dmask) {
+	if (dst && cdst) {
 		rule = xsp_sess_new_net_path_rule(path, "LINUXNET");
                 xsp_sess_set_net_path_rule_op(rule, XSP_LINUXNET_SET_ROUTE);
 
 		crit.iface = NULL;
-                crit.src = src;
-		crit.dst = csrc;
-		crit.src_mask = smask;
-		crit.dst_mask = dmask;
+                crit.src = dst;
+		crit.dst = cdst;
+		crit.src_mask = "255.255.255.255";
+		crit.dst_mask = "255.255.255.255";
 
                 if (xsp_sess_set_net_path_rule_crit(rule, &crit) != 0)
                         fprintf(stderr, "could not set rule criteria\n");
@@ -185,6 +185,10 @@ int main(int argc, char *argv[])
 
 	if (do_oscars) {
 		rule = xsp_sess_new_net_path_rule(path, "OSCARS");
+		
+		crit.vlan = atoi(vlan);
+		crit.src = NULL;
+		crit.dst = NULL;
 
                 if (xsp_sess_set_net_path_rule_crit(rule, &crit) != 0)
                         fprintf(stderr, "could not set rule criteria\n");
