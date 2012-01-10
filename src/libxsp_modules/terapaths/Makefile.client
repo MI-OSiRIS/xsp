@@ -1,6 +1,6 @@
 CC= gcc
-INCLUDES= -I. -I../../libgsoap
-LIBS= -lssl -lcrypto ../../libgsoap/libgsoap.a
+INCLUDES= -I. -I../../../libgsoap
+LIBS= -lssl -lcrypto ../../../libgsoap/libgsoap.a
 LDFLAGS=
 CFLAGS= -DWITH_NONAMESPACES -DWITH_OPENSSL
 

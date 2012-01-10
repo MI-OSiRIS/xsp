@@ -38,6 +38,7 @@ typedef struct xsp_terapaths_path_t {
 
 	int start_offset;
 	
+	int monitor;
 	int type;
 	int status;
 	pthread_cond_t setup_cond;
