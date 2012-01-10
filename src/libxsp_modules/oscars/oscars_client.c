@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
 
 	oscars_soap.wsse_pass = getenv("OSCARS_KEYPASS");
 
-	xsp_start_soap_ssl(&oscars_soap, SOAP_SSL_NO_AUTHENTICATION);
+	xsp_start_soap_ssl(&oscars_soap, SOAP_IO_DEFAULT, SOAP_SSL_NO_AUTHENTICATION);
 
 	if (!strcmp(argv[2], "topo")) {
 		printf("\noscars_getNetworkTopology\n\n");

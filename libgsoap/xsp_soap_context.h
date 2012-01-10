@@ -20,9 +20,9 @@ typedef struct xsp_soap_context_t {
 } xspSoapContext;
 
 int xsp_copy_soap_context(xspSoapContext *src, xspSoapContext *dst);
-int xsp_start_soap_ssl(xspSoapContext *sc, int soap_ssl_flags);
+int xsp_start_soap_ssl(xspSoapContext *sc, int soap_init_flags, int soap_ssl_flags);
 int xsp_stop_soap_ssl(xspSoapContext *sc);
-int xsp_start_soap(xspSoapContext *sc);
+int xsp_start_soap(xspSoapContext *sc, int soap_init_flags);
 int xsp_stop_soap(xspSoapContext *sc);
 
 #endif

@@ -5,9 +5,9 @@ int xsp_copy_soap_context(xspSoapContext *src, xspSoapContext *dst) {
 	return 0;
 }
 
-int xsp_start_soap_ssl(xspSoapContext *sc, int soap_ssl_flags) {
+int xsp_start_soap_ssl(xspSoapContext *sc, int soap_init_flags, int soap_ssl_flags) {
 	struct soap *soap = (struct soap*)malloc(sizeof(struct soap));
-	soap_init(soap);
+	soap_init2(soap, soap_init_flags, soap_init_flags);
 	soap_set_namespaces(soap, sc->namespaces);
 	soap_ssl_init();
 
@@ -25,7 +25,7 @@ int xsp_start_soap_ssl(xspSoapContext *sc, int soap_ssl_flags) {
 				    NULL
 				    ))
 		{
-			//soap_print_fault(soap, stderr);
+			soap_print_fault(soap, stderr);
 		        //fprintf(stderr, "Could not initialize SOAP SSL context\n");
 		        free(soap);
 			return -1;
@@ -44,9 +44,9 @@ int xsp_stop_soap_ssl(xspSoapContext *sc) {
 	return 0;
 }
 
-int xsp_start_soap(xspSoapContext *sc) {
+int xsp_start_soap(xspSoapContext *sc, int soap_init_flags) {
 	struct soap *soap = (struct soap *)malloc(sizeof(struct soap));
-        soap_init(soap);
+        soap_init2(soap, soap_init_flags, soap_init_flags);
         soap_set_namespaces(soap, sc->namespaces);
         sc->soap = (void*)(soap);
         return 0;

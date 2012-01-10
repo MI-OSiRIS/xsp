@@ -39,8 +39,8 @@ void __fill_reservation_data(struct ns2__ReservationData *res_data)
   res_data->destPortMax = "";
   res_data->destPortMin = "";
   res_data->id = "";
-  res_data->protocol = "tcp";
-  res_data->relatedReservationIds = "";
+  res_data->protocol = "ip";
+  res_data->relatedReservationIds = NULL;
   res_data->srcMapping = "";
   res_data->userName = "";
   res_data->status = "";

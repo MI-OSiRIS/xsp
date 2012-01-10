@@ -367,7 +367,7 @@ static int __xsp_oscars_create_rule(xspPathRule *rule, char **ret_error_msg) {
 	rule->tag++;
 	pthread_cond_signal(&(rule->timeout_cond));
 
-	if (xsp_start_soap_ssl(&(pi->osc), SOAP_SSL_NO_AUTHENTICATION) != 0) {
+	if (xsp_start_soap_ssl(&(pi->osc), SOAP_IO_DEFAULT, SOAP_SSL_NO_AUTHENTICATION) != 0) {
                 xsp_err(0, "couldn't start SOAP context");
                 goto error_exit;
         }
@@ -574,7 +574,7 @@ static int __xsp_oscars_delete_rule(xspPathRule *rule, char **ret_error_msg) {
 		 rule->description, pi->reservation_id);
 
 	void *response;
-	if (xsp_start_soap_ssl(&(pi->osc), SOAP_SSL_NO_AUTHENTICATION) != 0) {
+	if (xsp_start_soap_ssl(&(pi->osc), SOAP_IO_DEFAULT, SOAP_SSL_NO_AUTHENTICATION) != 0) {
 		xsp_err(0, "couldn't start SOAP context");
 		goto error_exit;
 	}
@@ -631,7 +631,7 @@ static void *xsp_timeout_handler(void *arg) {
 		if (n == ETIMEDOUT) {
 			xsp_debug(8, "A timeout occurred: closing path");
 			
-			if (xsp_start_soap_ssl(&(pi->osc), SOAP_SSL_NO_AUTHENTICATION) != 0) {
+			if (xsp_start_soap_ssl(&(pi->osc), SOAP_IO_DEFAULT, SOAP_SSL_NO_AUTHENTICATION) != 0) {
                                 xsp_err(0, "couldn't start SOAP context");
                                 goto error_exit_path;
                         }
