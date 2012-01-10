@@ -118,12 +118,12 @@ static int xsp_terapaths_allocate_pathrule_handler(const xspNetPathRule *net_pat
 
 	if (xsp_settings_get_2(settings, "terapaths", "keypass", &keypass) != 0) {
                 xsp_err(0, "No TERAPATHS keypass specified");
-                goto error_exit;
+		keypass = NULL;
         }
 
 	if (xsp_settings_get_2(settings, "terapaths", "cacerts", &cacerts) != 0) {
                 xsp_err(0, "No TERAPATHS cacerts specified");
-                goto error_exit;
+                cacerts = NULL;
         }
 
 	if (xsp_settings_get_2(settings, "terapaths", "bw_class", &tps_bw_class) != 0) {
@@ -248,23 +248,27 @@ static char *xsp_terapaths_generate_pathrule_id(const xspNetPathRule *rule,
                 goto error_exit;
         }
 
-	if (xsp_settings_get_2(settings, "terapaths", "src", &tps_src) != 0) {
-                xsp_err(0, "No TERAPATHS source prefix specified");
-                goto error_exit;
+	if (rule->use_crit) {
+		tps_src = strdup((char*)rule->crit.src_eid.x_addrc);
+                tps_dst = strdup((char*)rule->crit.dst_eid.x_addrc);
         }
+	else {
+		if (xsp_settings_get_2(settings, "terapaths", "src", &tps_src) != 0) {
+			xsp_err(0, "No TERAPATHS source prefix specified");
+			goto error_exit;
+		}
+		
+		if (xsp_settings_get_2(settings, "terapaths", "dst", &tps_dst) != 0) {
+			xsp_err(0, "No TERAPATHS destination prefix specified");
+			goto error_exit;
+		}
+	}
 
-        if (xsp_settings_get_2(settings, "terapaths", "dst", &tps_dst) != 0) {
-                xsp_err(0, "No TERAPATHS destination prefix specified");
-                goto error_exit;
-        }
-
-        if (xsp_settings_get_2(settings, "terapaths", "path_id", &path_id) != 0) {
-                if (ret_error_msg) {
-                        if (asprintf(&path_id, "%s->%s@%s", tps_src, tps_dst, tps_server) <= 0) {
-                                goto error_exit;
-                        }
-                }
-        }
+	if (asprintf(&path_id, "%s->%s@%s", tps_src, tps_dst, tps_server) <= 0) {
+		goto error_exit;
+	}
+	
+	printf("returning path id: %s\n", path_id);
 
         return path_id;
 	
@@ -313,8 +317,9 @@ static int __xsp_terapaths_create_rule(xspPathRule *rule, char **ret_error_msg) 
 	rule->tag++;
 	pthread_cond_signal(&(rule->timeout_cond));
 
-	if (xsp_start_soap_ssl(&(pi->tsc), SOAP_SSL_REQUIRE_SERVER_AUTHENTICATION
-			       | SOAP_SSL_SKIP_HOST_CHECK) != 0) {
+	if (xsp_start_soap_ssl(&(pi->tsc), SOAP_XML_NIL,
+			       //SOAP_SSL_REQUIRE_SERVER_AUTHENTICATION
+			       SOAP_SSL_SKIP_HOST_CHECK) != 0) {
 	        error_msg = "couldn't start SOAP SSL context";
 		goto error_exit;
 	}
@@ -328,7 +333,7 @@ static int __xsp_terapaths_create_rule(xspPathRule *rule, char **ret_error_msg) 
 	if (pi->status == TPS_DOWN) {
 		uint64_t stime, etime;
 
-		pi->status = TPS_STARTING;
+		//pi->status = TPS_STARTING;
 
 		// TPs wants ms, not s
 		if (pi->start_time <= 0)
@@ -340,7 +345,6 @@ static int __xsp_terapaths_create_rule(xspPathRule *rule, char **ret_error_msg) 
 		
 		xsp_info(0, "%s: the TERAPATHS path is down, reserving a new one", rule->description);
 		
-		/*
 		printf("soap-endpoint: %s\n", pi->tsc.soap_endpoint);
 		printf("src: %s\n", pi->src);
 		printf("dst: %s\n", pi->dst);
@@ -352,7 +356,6 @@ static int __xsp_terapaths_create_rule(xspPathRule *rule, char **ret_error_msg) 
 		printf("st: %lld\n", stime);
 		printf("duration: %lld\n", pi->duration);
 		fflush(stdout);
-		*/
 
 		if (terapaths_reserve(&(pi->tsc), pi->src, pi->dst, pi->src_ports, pi->dst_ports, pi->direction,
 				      pi->bw_class, new_bw, stime, pi->duration, &reservation_id) != 0) {
@@ -396,7 +399,7 @@ static int __xsp_terapaths_create_rule(xspPathRule *rule, char **ret_error_msg) 
 		pi->reservation_id = reservation_id;
 		pi->bw = new_bw;
 		pi->start_time = stime;
-		pi->status = TPS_UP;
+		//pi->status = TPS_UP;
 
 		if (pi->monitor) {
 			xsp_info(0, "%s: starting path monitoring thread", rule->description);
@@ -421,12 +424,12 @@ static int __xsp_terapaths_create_rule(xspPathRule *rule, char **ret_error_msg) 
         return 0;
 
  error_exit_reservation:
-        if (terapaths_cancel(&(pi->tsc), reservation_id) != 0) {
-		error_msg = "TPS CANCEL";
-                xsp_err(0, "%s: couldn't cancel TERAPATHS path: %s", rule->description, error_msg);
-        }
-	else
-		xsp_info(0, "reservation %s canceled\n", reservation_id);
+        //if (terapaths_cancel(&(pi->tsc), reservation_id) != 0) {
+	//	error_msg = "TPS CANCEL";
+        //       xsp_err(0, "%s: couldn't cancel TERAPATHS path: %s", rule->description, error_msg);
+        //}
+	//else
+	//	xsp_info(0, "reservation %s canceled\n", reservation_id);
 	pi->status = TPS_DOWN;
  error_exit_channel:
 	xsp_stop_soap_ssl(&(pi->tsc));
@@ -441,8 +444,9 @@ static int __xsp_terapaths_delete_rule(xspPathRule *rule, char **ret_error_msg) 
 
 	xsp_info(0, "%s: removing rule", rule->description);
 	
-	if (xsp_start_soap_ssl(&(pi->tsc), SOAP_SSL_REQUIRE_SERVER_AUTHENTICATION
-			       | SOAP_SSL_SKIP_HOST_CHECK) != 0) {
+	if (xsp_start_soap_ssl(&(pi->tsc), SOAP_XML_NIL,
+			       //SOAP_SSL_REQUIRE_SERVER_AUTHENTICATION
+			       SOAP_SSL_SKIP_HOST_CHECK) != 0) {
 		xsp_err(0, "couldn't start SOAP context");
 		goto error_exit;
 	}
@@ -549,13 +553,14 @@ void xsp_terapaths_monitor_path(void *args) {
 	xsp_copy_soap_context(&(pi->msc), &msc);
 	xsp_copy_soap_context(&(pi->tsc), &tsc);
 
-        if (xsp_start_soap_ssl(&tsc, SOAP_SSL_REQUIRE_SERVER_AUTHENTICATION
-			       | SOAP_SSL_SKIP_HOST_CHECK) != 0) {
+        if (xsp_start_soap_ssl(&tsc, SOAP_XML_NIL,
+			       //SOAP_SSL_REQUIRE_SERVER_AUTHENTICATION
+			       SOAP_SSL_SKIP_HOST_CHECK) != 0) {
 		xsp_err(0, "couldn't start TPs SOAP context, thread exiting");
 		return;
         }
 
-	if (xsp_start_soap(&msc) != 0) {
+	if (xsp_start_soap(&msc, SOAP_IO_DEFAULT) != 0) {
 		xsp_err(0, "couldn't start monitor SOAP context, thread exiting");
                 return;
         }

@@ -862,6 +862,8 @@ globus_l_xio_xsp_make_path(
 	    libxspNetPathRuleCrit crit;
 	    libxspNetPathRule *rule = xsp_sess_new_net_path_rule(path, token);
 	    
+	    memset(&crit, 0, sizeof(libxspNetPathRuleCrit));
+	    
 	    // TODO(fernandes): implement custom globus parsing for multiple valued parameters.
 	    if (handle->src) {
 		    token = strsep(&src, "#");

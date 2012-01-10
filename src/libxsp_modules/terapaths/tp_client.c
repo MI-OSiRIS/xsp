@@ -43,12 +43,12 @@ int main(int argc, char* argv[])
   soap_ssl_init();
 
   if (soap_ssl_client_context(&soap,
-			      SOAP_SSL_REQUIRE_SERVER_AUTHENTICATION
-			      | SOAP_SSL_SKIP_HOST_CHECK, /* use SOAP_SSL_DEFAULT in production code */
-			      "ecert.pem",       /* keyfile: required only when client must authenticate to 
+			      //SOAP_SSL_REQUIRE_SERVER_AUTHENTICATION
+			      SOAP_SSL_SKIP_HOST_CHECK, /* use SOAP_SSL_DEFAULT in production code */
+			      "/work/kissel/xspd/etc/doecert-new.pem",       /* keyfile: required only when client must authenticate to 
 					     server (see SSL docs on how to obtain this file) */
-			      "foobar",       /* password to read the keyfile */
-			      "tps_server.pem",      /* optional cacert file to store trusted certificates */
+			      NULL,       /* password to read the keyfile */
+			      NULL,      /* optional cacert file to store trusted certificates */
 			      NULL,      /* optional capath to directory with trusted certificates */
 			      NULL      /* if randfile!=NULL: use a file with random data to seed randomness */ 
 			      ))
@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
   
   // SOAP context is ready to go
   tps_soap.soap = &soap;
-  tps_soap.soap_endpoint = "https://ezra.homelinux.com:8081/terapathsAPI/tpsAPI";
+  tps_soap.soap_endpoint = "https://tps.damslab.org:48588/terapathsAPI/tpsAPI";
   tps_soap.soap_action = NULL;
 
   //configure a terapaths reservation

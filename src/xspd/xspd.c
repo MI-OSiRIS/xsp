@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
 	signal(SIGUSR1, sig_exit);
 	signal(SIGPIPE, SIG_IGN); 
 
-	while((c = getopt(argc, argv, "Bsd:c:Vo:p:U:G:")) != -1) {
+	while((c = getopt(argc, argv, "Bsd:c:Vo:p:U:G:l:")) != -1) {
 		switch(c) {
 			case 'U':
 				user = strdup(optarg);
