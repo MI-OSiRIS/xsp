@@ -19,7 +19,8 @@
 #include "xsp_soap_context.h"
 #include "xsp_terapaths_basic.h"
 
-#include "xsp_path_handler.h"
+#include "xsp_pathrule.h"
+#include "xsp_pathrule_handler.h"
 #include "xsp_modules.h"
 #include "xsp_conn.h"
 #include "xsp_logger.h"
@@ -34,26 +35,23 @@
 //} xspTERAPATHStimeoutArgs;
 
 int xsp_terapaths_init();
-void *xsp_terapaths_monitor_path(void *args);
+void xsp_terapaths_monitor_path(void *args);
 int xsp_terapaths_update_path_status(xspTERAPATHSPath *pi, xspSoapContext *msc, xspSoapContext *tsc, char **status);
 
-// need to figure out where we get parameters from (protocol, settings, combination?
-// could have an internal map to match src/dst prefixes with suitable reservation info
-static int xsp_terapaths_allocate_path(const xspSettings *settings, xspPath **ret_path, char ** ret_error_msg);
-static char *xsp_terapaths_generate_path_id(const xspSettings *settings, char **ret_error_msg);
+int xsp_terapaths_init();
+static int xsp_terapaths_allocate_pathrule_handler(const xspNetPathRule *rule, const xspSettings *settings,
+						   xspPathRule **ret_rule, char **ret_error_msg);
+static char *xsp_terapaths_generate_pathrule_id(const xspNetPathRule *rule, const xspSettings *settings, char **ret_error_msg);
+static int xsp_terapaths_apply_rule(xspPathRule *rule, int action, char **ret_error_msg);
+static void xsp_terapaths_free_rule(xspPathRule *rule);
 
-static int xsp_terapaths_new_channel(xspPath *path, xspNetPathRule *rule, xspChannel **channel, char **ret_error_msg);
-static int xsp_terapaths_close_channel(xspPath *path, xspChannel *channel);
-static int xsp_terapaths_resize_channel(xspPath *path, xspChannel *channel, uint32_t new_size, char **ret_error_msg);
-static void xsp_terapaths_free_path(xspPath *path);
-
-static int __xsp_terapaths_new_channel(xspPath *path, uint32_t size, xspChannel **channel, char **ret_error_msg);
-static int __xsp_terapaths_close_channel(xspPath *path, xspChannel *channel);
-static int __xsp_terapaths_resize_channel(xspPath *path, xspChannel *channel, uint32_t new_size, char **ret_error_msg);
+static int __xsp_terapaths_create_rule(xspPathRule *rule, char **ret_error_msg);
+static int __xsp_terapaths_delete_rule(xspPathRule *rule, char **ret_error_msg);
+static int __xsp_terapaths_modify_rule(xspPathRule *rule, char **ret_error_msg);
 
 static xspTERAPATHSPath *xsp_alloc_terapaths_path();
 static void xsp_free_terapaths_path(xspTERAPATHSPath *pi);
-static void xsp_terapaths_reset_path_info();
+static void xsp_terapaths_reset_path_info(xspTERAPATHSPath *pi);
 
 static xspModule xsp_terapaths_module = {
 	.desc = "TERAPATHS Module",
@@ -63,10 +61,10 @@ static xspModule xsp_terapaths_module = {
 
 // might have to extend the path handler for terapaths, but maybe not
 // xsp could just monitor the path and report if/when it goes down
-xspPathHandler xsp_terapaths_path_handler = {
+xspPathRuleHandler xsp_terapaths_path_handler = {
 	.name = "TERAPATHS",
-	.allocate = xsp_terapaths_allocate_path,
-	.get_path_id = xsp_terapaths_generate_path_id,
+	.allocate = xsp_terapaths_allocate_pathrule_handler,
+	.get_pathrule_id = xsp_terapaths_generate_pathrule_id,
 };
 
 xspModule *module_info() {
@@ -75,15 +73,14 @@ xspModule *module_info() {
 
 // now this just registers TP module as a generic path handler for later use
 int xsp_terapaths_init() {
-	return xsp_add_path_handler(&xsp_terapaths_path_handler);
+	return xsp_add_pathrule_handler(&xsp_terapaths_path_handler);
 }
 
-
-static int xsp_terapaths_allocate_path(const xspNetPath *net_path,
-				       const xspSettings *settings,
-				       xspPath **ret_path,
-				       char **ret_error_msg) {
-	xspPath *path;
+static int xsp_terapaths_allocate_pathrule_handler(const xspNetPathRule *net_path,
+						   const xspSettings *settings,
+						   xspPathRule **ret_rule,
+						   char **ret_error_msg) {
+	xspPathRule *rule;
 	xspTERAPATHSPath *pi;
 	char *tps_server;
 	char *mon_server;
@@ -139,16 +136,6 @@ static int xsp_terapaths_allocate_path(const xspNetPath *net_path,
                 goto error_exit;
         }
 
-	if (xsp_settings_get_2(settings, "terapaths", "src", &tps_src) != 0) {
-                xsp_err(0, "No TERAPATHS source prefix specified");
-                goto error_exit;
-        }
-
-        if (xsp_settings_get_2(settings, "terapaths", "dst", &tps_dst) != 0) {
-                xsp_err(0, "No TERAPATHS destination PREFIX specified");
-                goto error_exit;
-        }
-
 	if (xsp_settings_get_2(settings, "terapaths", "direction", &tps_direction) != 0) {
                 xsp_err(0, "No TERAPATHS direction specified");
                 goto error_exit;
@@ -177,9 +164,25 @@ static int xsp_terapaths_allocate_path(const xspNetPath *net_path,
 	if (xsp_settings_get_int_2(settings, "terapaths", "bandwidth", &tps_bw) != 0) {
 		tps_bw = 0;
         }
+	
+	if (net_path->use_crit) {
+		tps_src = strdup((char*)net_path->crit.src_eid.x_addrc);
+		tps_dst = strdup((char*)net_path->crit.dst_eid.x_addrc);
+	}
+	else {
+		if (xsp_settings_get_2(settings, "terapaths", "src", &tps_src) != 0) {
+			xsp_err(0, "No TERAPATHS source prefix specified");
+			goto error_exit;
+		}
+		
+		if (xsp_settings_get_2(settings, "terapaths", "dst", &tps_dst) != 0) {
+			xsp_err(0, "No TERAPATHS destination PREFIX specified");
+			goto error_exit;
+		}
+	}
 
-	path = xsp_alloc_path();
-	if (!path)
+	rule = xsp_alloc_pathrule();
+	if (!rule)
 		goto error_exit;
 
 	pi = xsp_alloc_terapaths_path();
@@ -197,6 +200,9 @@ static int xsp_terapaths_allocate_path(const xspNetPath *net_path,
 	pi->msc.soap_endpoint = mon_server;
 	pi->msc.soap_action = NULL;
 	pi->msc.namespaces = mntr_namespaces;
+
+	if (mon_server)
+		pi->monitor = TRUE;
 	
 	pi->src = tps_src;
 	pi->dst = tps_dst;
@@ -214,24 +220,24 @@ static int xsp_terapaths_allocate_path(const xspNetPath *net_path,
 	pi->status = TPS_DOWN;
 	pi->reservation_id = NULL;
 	
-	path->path_private = pi;
-	path->new_channel = xsp_terapaths_new_channel;
-	path->resize_channel = xsp_terapaths_resize_channel;
-	path->close_channel = xsp_terapaths_close_channel;
-	path->free = xsp_terapaths_free_path;
+	rule->private = pi;
+	rule->apply = xsp_terapaths_apply_rule;
+	rule->free = xsp_terapaths_free_rule;
 
-	*ret_path = path;
+	*ret_rule = rule;
 	
 	return 0;
 	
  error_exit_path:
-	*ret_error_msg = "path allocate configuration error";
-	xsp_free_path(path);
+	*ret_error_msg = "pathrule allocate configuration error";
+	xsp_free_pathrule(rule);
  error_exit:
 	return -1;
 }
 
-static char *xsp_terapaths_generate_path_id(const xspSettings *settings, char **ret_error_msg) {
+static char *xsp_terapaths_generate_pathrule_id(const xspNetPathRule *rule,
+						const xspSettings *settings,
+						char **ret_error_msg) {
 	char *tps_server;
 	char *tps_src;
 	char *tps_dst;
@@ -267,28 +273,45 @@ static char *xsp_terapaths_generate_path_id(const xspSettings *settings, char **
 
 }
 
-static int xsp_terapaths_new_channel(xspPath *path, xspNetPathRule *rule, xspChannel **channel, char **ret_error_msg) {
-	int retval;
+static int xsp_terapaths_apply_rule(xspPathRule *rule, int action, char **ret_error_msg) {
+        int retval;
+        char *error_msg = NULL;
 
-        pthread_mutex_lock(&(path->lock));
+        pthread_mutex_lock(&(rule->lock));
         {
-                retval = __xsp_terapaths_new_channel(path, rule->bandwidth, channel, ret_error_msg);
+                switch (action) {
+                case XSP_NET_PATH_CREATE:
+                        retval = __xsp_terapaths_create_rule(rule, &error_msg);
+                        break;
+                case XSP_NET_PATH_DELETE:
+                        retval =  __xsp_terapaths_delete_rule(rule, &error_msg);
+                        break;
+                case XSP_NET_PATH_MODIFY:
+                        retval = __xsp_terapaths_modify_rule(rule, &error_msg);
+                        break;
+                default:
+                        xsp_err(0, "xsp_terapaths_apply_rule(): unsupported action: %d", action);
+                        retval = -1;
+                        break;
+                }
         }
-        pthread_mutex_unlock(&(path->lock));
+        pthread_mutex_unlock(&(rule->lock));
+
+        if (error_msg)
+                *ret_error_msg = error_msg;
 
         return retval;
 }
 
-static int __xsp_terapaths_new_channel(xspPath *path, uint32_t size, xspChannel **channel, char **ret_error_msg) {
+static int __xsp_terapaths_create_rule(xspPathRule *rule, char **ret_error_msg) {
 	char *reservation_id;
-	xspTERAPATHSPath *pi = path->path_private;
-	xspChannel *new_channel;
-	uint64_t new_bw = size;
+	xspTERAPATHSPath *pi = rule->private;
+	uint64_t new_bw = pi->bw;
 	char *error_msg;
 	char *status;
 
-	path->tag++;
-	pthread_cond_signal(&(path->timeout_cond));
+	rule->tag++;
+	pthread_cond_signal(&(rule->timeout_cond));
 
 	if (xsp_start_soap_ssl(&(pi->tsc), SOAP_SSL_REQUIRE_SERVER_AUTHENTICATION
 			       | SOAP_SSL_SKIP_HOST_CHECK) != 0) {
@@ -296,16 +319,10 @@ static int __xsp_terapaths_new_channel(xspPath *path, uint32_t size, xspChannel 
 		goto error_exit;
 	}
 	
-	xsp_info(10,  "%s: reserving new channel of size: %lld", path->description, pi->bw);
+	xsp_info(10,  "%s: applying new rule of size: %lld", rule->description, pi->bw);
 	
-	new_channel = xsp_alloc_channel();
-        if (!channel) {
-	        error_msg = "couldn't allocate channel object";
-                goto error_exit;
-        }
-
 	while (pi->status == TPS_STARTING) {
-                pthread_cond_wait(&(pi->setup_cond), &(path->lock));
+                pthread_cond_wait(&(pi->setup_cond), &(rule->lock));
         }
 
 	if (pi->status == TPS_DOWN) {
@@ -321,12 +338,7 @@ static int __xsp_terapaths_new_channel(xspPath *path, uint32_t size, xspChannel 
 
 		etime = stime + (uint64_t)pi->duration;
 		
-		if (pi->bw <= 0)
-			new_bw = size;
-		else
-			new_bw = pi->bw;
-
-		xsp_info(0, "%s: the TERAPATHS path is down, reserving a new one", path->description);
+		xsp_info(0, "%s: the TERAPATHS path is down, reserving a new one", rule->description);
 		
 		/*
 		printf("soap-endpoint: %s\n", pi->tsc.soap_endpoint);
@@ -347,14 +359,14 @@ static int __xsp_terapaths_new_channel(xspPath *path, uint32_t size, xspChannel 
 			pthread_cond_signal(&(pi->setup_cond));
 			pi->status = TPS_DOWN;
 			error_msg = "TPS RESERVE FAIL";
-			xsp_err(0, "%s: could not reserve TERAPATHS path: %s", path->description, error_msg);
+			xsp_err(0, "%s: could not reserve TERAPATHS path: %s", rule->description, error_msg);
 			fflush(stdout);
 			*ret_error_msg = error_msg;
 			goto error_exit_channel;
 		}
 		
 		if (reservation_id)
-			xsp_info(0, "%s: reservation accepted with ID: %s", path->description, reservation_id);
+			xsp_info(0, "%s: reservation accepted with ID: %s", rule->description, reservation_id);
 		
 
 		if (terapaths_commit(&(pi->tsc), reservation_id) != 0) {
@@ -362,22 +374,22 @@ static int __xsp_terapaths_new_channel(xspPath *path, uint32_t size, xspChannel 
                         pi->status = TPS_DOWN;
                         error_msg = "TPS COMMIT FAIL";
                         xsp_err(0, "%s: could not commit TERAPATHS reservation %s: %s",
-				 path->description, reservation_id, error_msg);
+				 rule->description, reservation_id, error_msg);
                         *ret_error_msg = error_msg;
 			goto error_exit_reservation;
 		}
 
 		xsp_info(0, "%s: allocated new path of size %lld (Start Time: %lld End Time: %lld). ID: %s",
-			  path->description, new_bw, stime, etime, reservation_id);
+			  rule->description, new_bw, stime, etime, reservation_id);
 
 		if (terapaths_get_related_ids(&(pi->tsc), reservation_id, &(pi->related_res_ids)) != 0) {
 			error_msg = "TPS GET RELATED IDs FAIL";
 			xsp_err(0, "%s: could not get related TERAPATHS reservation IDs %s: %s",
-				 path->description, reservation_id, error_msg);
+				 rule->description, reservation_id, error_msg);
 			*ret_error_msg = error_msg;
 		}
 		
-		xsp_info(5, "%s: related reservation IDs: %s", path->description, pi->related_res_ids);
+		xsp_info(5, "%s: related reservation IDs: %s", rule->description, pi->related_res_ids);
 
 		strtok(pi->related_res_ids, "&");
 		pi->vlan_tag = strtok(NULL, "&");
@@ -386,105 +398,65 @@ static int __xsp_terapaths_new_channel(xspPath *path, uint32_t size, xspChannel 
 		pi->start_time = stime;
 		pi->status = TPS_UP;
 
-		xsp_info(0, "%s: starting path monitoring thread", path->description);
-		xsp_tpool_exec(xsp_terapaths_monitor_path, path);
+		if (pi->monitor) {
+			xsp_info(0, "%s: starting path monitoring thread", rule->description);
+			xsp_tpool_exec(xsp_terapaths_monitor_path, rule);
+		}
 		
-		pthread_cond_signal(&(path->timeout_cond));
+		pthread_cond_signal(&(rule->timeout_cond));
 	}
 	else if (pi->type == PATH_SHARED) {
 		new_bw = pi->bw;
-		xsp_info(0, "%s: reusing existing path. Amount used: %lld/%lld", path->description, pi->bw_used, pi->bw);
+		xsp_info(0, "%s: reusing existing path. Amount used: %lld/%lld", rule->description, pi->bw_used, pi->bw);
 	}
 	else {
-		xsp_err(0, "%s: Cannot resize paths", path->description);
+		xsp_err(0, "%s: Cannot resize paths", rule->description);
 		goto error_exit_channel;
 	}
 	
 	pi->bw_used += new_bw;
 	
-	new_channel->bandwidth = (unsigned int)new_bw;
-
-	LIST_INSERT_HEAD(&(path->channel_list), new_channel, path_entries);
-
-        *channel = new_channel;
-
-        xsp_info(10, "%s: allocated new channel of size: %u", path->description, new_channel->bandwidth);
+        xsp_info(10, "%s: allocated new path of size: %llu", rule->description, new_bw);
 
         return 0;
 
  error_exit_reservation:
         if (terapaths_cancel(&(pi->tsc), reservation_id) != 0) {
 		error_msg = "TPS CANCEL";
-                xsp_err(0, "%s: couldn't cancel TERAPATHS path: %s", path->description, error_msg);
+                xsp_err(0, "%s: couldn't cancel TERAPATHS path: %s", rule->description, error_msg);
         }
 	else
 		xsp_info(0, "reservation %s canceled\n", reservation_id);
 	pi->status = TPS_DOWN;
  error_exit_channel:
 	xsp_stop_soap_ssl(&(pi->tsc));
-        xsp_free_channel(new_channel);
  error_exit:
 	*ret_error_msg = error_msg;
         return -1;
 }
-		
-static int xsp_terapaths_close_channel(xspPath *path, xspChannel *channel) {
-        int retval;
 
-        pthread_mutex_lock(&(path->lock));
-        {
-                retval = __xsp_terapaths_close_channel(path, channel);
-        }
-        pthread_mutex_unlock(&(path->lock));
+static int __xsp_terapaths_delete_rule(xspPathRule *rule, char **ret_error_msg) {
+	xspTERAPATHSPath *pi = rule->private;
+	char *error_msg;
 
-        return retval;
-}
-
-static int __xsp_terapaths_close_channel(xspPath *path, xspChannel *channel) {
-	xspTERAPATHSPath *pi = path->path_private;
-	xspChannel *curr_channel;
-
-	xsp_info(0, "%s: shutting down channel", path->description);
-
-        // verify that the channel passed is actually in the given path
-        for(curr_channel = path->channel_list.lh_first; curr_channel != NULL; curr_channel = curr_channel->path_entries.le_next) {
-                if (curr_channel == channel)
-                        break;
-        }
-
-        // if not, error out
-        if (curr_channel == NULL) {
-                xsp_err(0, "%s: tried to close a channel from a different path", path->description);
-                goto error_exit;
-        }
-
-        // remove the channel from the list of channels
-        LIST_REMOVE(channel, path_entries);
-
-        pi->bw_used -= channel->bandwidth;
-
-	// if we have removed the last channel, close the path down
-        if (path->channel_list.lh_first == NULL) {
-                char *error_msg;
-                xsp_info(10, "%s: no more channels, shutting down path", path->description);
-
-		if (xsp_start_soap_ssl(&(pi->tsc), SOAP_SSL_REQUIRE_SERVER_AUTHENTICATION
-                                | SOAP_SSL_SKIP_HOST_CHECK) != 0) {
-			xsp_err(0, "couldn't start SOAP context");
-			goto error_exit_path;
-		}
-
-		if (terapaths_cancel(&(pi->tsc), pi->reservation_id) != 0) {
-			error_msg = "TPS CANCEL";
-			xsp_err(0, "%s: couldn't cancel TERAPATHS path: %s", path->description, error_msg);
-		}		
-		xsp_info(10, "%s: successfully shutdown path", path->description);
-		xsp_terapaths_reset_path_info(pi);
-        }
+	xsp_info(0, "%s: removing rule", rule->description);
 	
-        xsp_free_channel(channel);
+	if (xsp_start_soap_ssl(&(pi->tsc), SOAP_SSL_REQUIRE_SERVER_AUTHENTICATION
+			       | SOAP_SSL_SKIP_HOST_CHECK) != 0) {
+		xsp_err(0, "couldn't start SOAP context");
+		goto error_exit;
+	}
 	
-        xsp_info(10, "%s: successfully shutdown channel", path->description);
+	if (terapaths_cancel(&(pi->tsc), pi->reservation_id) != 0) {
+		error_msg = "TPS CANCEL";
+		xsp_err(0, "%s: couldn't cancel TERAPATHS path: %s", rule->description, error_msg);
+		goto error_exit_path;
+	}
+
+	xsp_info(10, "%s: successfully shutdown path", rule->description);
+	xsp_terapaths_reset_path_info(pi);
+
+        xsp_info(10, "%s: successfully removed rule", rule->description);
 	
 	xsp_stop_soap_ssl(&(pi->tsc));
 
@@ -493,30 +465,19 @@ static int __xsp_terapaths_close_channel(xspPath *path, xspChannel *channel) {
  error_exit_path:
 	xsp_stop_soap_ssl(&(pi->tsc));
  error_exit:
+	*ret_error_msg = error_msg;
         return -1;
 }
 
-static int xsp_terapaths_resize_channel(xspPath *path, xspChannel *channel, uint32_t new_size, char **ret_error_msg) {
-	int retval;
-
-        pthread_mutex_lock(&(path->lock));
-        {
-                retval = __xsp_terapaths_resize_channel(path, channel, new_size, ret_error_msg);
-        }
-        pthread_mutex_unlock(&(path->lock));
-
-        return retval;
-}
-
-static int __xsp_terapaths_resize_channel(xspPath *path, xspChannel *channel, uint32_t new_size, char **ret_error_msg) {
-	*ret_error_msg = strdup("channel resizing not supported");
-        xsp_err(0, "channel resizing not supported");
+static int __xsp_terapaths_modify_rule(xspPathRule *rule, char **ret_error_msg) {
+	*ret_error_msg = strdup("modify action not supported");
+        xsp_err(0, "modify action not supported");
         return -1;
 }
 
-static void xsp_terapaths_free_path(xspPath *path) {
-	xsp_free_terapaths_path((xspTERAPATHSPath *) path->path_private);
-	xsp_free_path(path);
+static void xsp_terapaths_free_rule(xspPathRule *rule) {
+        xsp_free_terapaths_path((xspTERAPATHSPath *) rule->private);
+        xsp_free_pathrule(rule);
 }
 
 static xspTERAPATHSPath *xsp_alloc_terapaths_path() {
@@ -574,9 +535,9 @@ static void xsp_terapaths_reset_path_info(xspTERAPATHSPath *pi) {
         pi->status = TPS_DOWN;
 }
 
-void *xsp_terapaths_monitor_path(void *args) {
-	xspPath *path = (xspPath *)args;
-	xspTERAPATHSPath *pi = path->path_private;
+void xsp_terapaths_monitor_path(void *args) {
+	xspPathRule *rule = (xspPathRule *)args;
+	xspTERAPATHSPath *pi = rule->private;
 	uint64_t rtime, ctime, etime, stime;
 	
 	int monitor=0;
@@ -604,11 +565,11 @@ void *xsp_terapaths_monitor_path(void *args) {
         	if (monitoring_notify(&msc, pi->reservation_id, pi->src, pi->dst, pi->src_ports, pi->dst_ports,
                              		pi->vlan_tag, pi->direction, pi->start_time/(uint64_t)1000,
                              		pi->duration, pi->bw, pi->bw_class, "pending") == 0) {
-        		xsp_info(0, "%s: registered path (%s) at %s", path->description, pi->reservation_id, msc.soap_endpoint);
+        		xsp_info(0, "%s: registered path (%s) at %s", rule->description, pi->reservation_id, msc.soap_endpoint);
 			monitor=1;
 		}
         	else {
-         		xsp_err(0, "%s: path notification failed!\n", path->description);
+         		xsp_err(0, "%s: path notification failed!\n", rule->description);
 			sleep(5);
 		}
 	} while (!monitor);
@@ -630,7 +591,7 @@ void *xsp_terapaths_monitor_path(void *args) {
 	// keep checking until active state is seen
 	while (1) {
 		// do some fancy TPs check here
-		xsp_info(5, "%s: checking if path is active", path->description);
+		xsp_info(5, "%s: checking if path is active", rule->description);
 		
 		if (xsp_terapaths_update_path_status(pi, &msc, &tsc, &status) == 0) {
 			
@@ -648,7 +609,7 @@ void *xsp_terapaths_monitor_path(void *args) {
 		// see if we've been checking forever
 		ctime = (uint64_t)time(NULL);
 		if ((long long int)(ctime-stime) > 300) {
-			xsp_info(0, "%s: monitoring thread has timed out on active check");
+			xsp_info(0, "%s: monitoring thread has timed out on active check", rule->description);
 			goto monitor_done;
 		}
 
@@ -675,7 +636,7 @@ void *xsp_terapaths_monitor_path(void *args) {
 		ctime = (uint64_t)time(NULL);
 		
 		if ((long long int)((etime+20)-ctime) < 0) {
-			xsp_err(0, "%s: reservation end time is already here!", path->description);
+			xsp_err(0, "%s: reservation end time is already here!", rule->description);
 			monitoring_set_status(&msc, pi->reservation_id, "done");
 			goto monitor_done;
 		}
@@ -685,7 +646,7 @@ void *xsp_terapaths_monitor_path(void *args) {
 
  monitor_done:	
 	// remove the path from monitoring
-	xsp_info(10, "%s: deactivating monitoring and resetting path", path->description);
+	xsp_info(10, "%s: deactivating monitoring and resetting path", rule->description);
 	//monitoring_remove(&msc, pi->reservation_id);
 
 	// reset the path

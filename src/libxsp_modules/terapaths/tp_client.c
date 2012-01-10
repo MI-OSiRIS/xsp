@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
   char *status;
 
   xspdTPSPath path;
-  xspdSoapContext tps_soap;
+  xspSoapContext tps_soap;
   struct soap soap;
   
   tpsPath tpsPath;
