@@ -11,6 +11,9 @@ typedef struct libxsp_net_path_rule_crit {
 	uint32_t src_port;
 	uint32_t dst_port;
 
+	uint64_t bandwidth;
+	uint64_t duration;
+
 	// add remaining fields exported to clients                                                                              
 } libxspNetPathRuleCrit;
 

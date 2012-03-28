@@ -1,6 +1,6 @@
 Name: libxsp
 Version: 1.0
-Release: 5
+Release: 6
 Summary: XSP RPM
 
 Group: Application/Network
@@ -95,6 +95,9 @@ fi
 %files client
 %defattr(-,root,root)
 %{_includedir}/libxsp_client.h
+%{_includedir}/libxsp_client_common.h
+%{_includedir}/config.h
+%{_includedir}/xsp-proto.h
 %defattr(775,root,root)
 %{_bindir}/*
 %{_libdir}/libxsp_client*
