@@ -111,8 +111,10 @@ static void xsp_oscars_read_map() {
 		tok2 = strtok(NULL, " ");
 		
 		if (tok && tok2) {
+			// strip newline
+			tok2[strlen(tok2) - 1] = '\0';
 			xsp_info(5, "Adding friendly name mapping: %s -> %s", tok, tok2);
-			hashtable_insert(friendly_name, tok, tok2);
+			hashtable_insert(friendly_name, strdup(tok), strdup(tok2));
 		}
 		else {
 			xsp_err(0, "Malformed OSCARS map file");
