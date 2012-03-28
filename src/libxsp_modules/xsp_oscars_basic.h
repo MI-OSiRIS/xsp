@@ -7,10 +7,10 @@
 
 #define OSCARS_DOWN		    0x00
 #define OSCARS_UP		    0x01
-#define OSCARS_STARTING		0x02
+#define OSCARS_STARTING		    0x02
 
-#define PATH_SHARED		0x00
-#define PATH_PRIVATE	0x01
+#define PATH_SHARED		    0x00
+#define PATH_PRIVATE	            0x01
 
 typedef struct xsp_oscars_path_t {
 	xspSoapContext osc;
