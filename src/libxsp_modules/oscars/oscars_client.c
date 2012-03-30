@@ -14,8 +14,8 @@
 
 void usage(char *exec) {
 	printf("usage: %s IDC_URL [create | modify | list | query | cancel | topo ] PARAMS ...\n", exec);
-	printf("\t create PARAMS: l2_src l2_dst src_vlan dst_vlan bandwidth duration start_time end_time\n");
-	printf("\t modify PARAMS: gri l2_src l2_dst src_vlan dst_vlan bandwidth duration start_time end_time\n");
+	printf("\t create PARAMS: l2_src l2_dst src_vlan dst_vlan src_tag dst_tag bandwidth duration start_time end_time\n");
+	printf("\t modify PARAMS: gri l2_src l2_dst src_vlan dst_vlan src_tag dst_tag bandwidth duration start_time end_time\n");
 	printf("\t   list PARAMS: num_results (default 10)\n");
 	printf("\t  query PARAMS: gri\n");
 	printf("\t cancel PARAMS: gri\n");
@@ -28,6 +28,8 @@ void usage(char *exec) {
 
 int main(int argc, char* argv[])
 {
+	int true = 1;
+	int false = 0;
 	int i, j;	
 	void *response;
 	xspSoapContext oscars_soap;
@@ -84,7 +86,6 @@ int main(int argc, char* argv[])
 		OSCARS_L2Info l2_info = {0};
                 OSCARS_vlanTag l2_stag = {0};
 		OSCARS_vlanTag l2_dtag = {0};
-		int true = 1;
 		
 		if (argc < 5) {
 			printf("must at least specify src and dst\n");
@@ -93,25 +94,28 @@ int main(int argc, char* argv[])
 
 		time(&stime);
 		stime += 5;
-		etime = stime + atoi(argv[8]);
+		etime = stime + atoi(argv[10]);
 
-		if ((argc > 8) && argv[9])
-			stime = atoi(argv[9]);
-		if ((argc > 9) && argv[10])
-			etime = atoi(argv[10]);
+		if ((argc > 10) && argv[11])
+			stime = atoi(argv[11]);
+		if ((argc > 11) && argv[12])
+			etime = atoi(argv[12]);
 
 		l2_info.src_endpoint = argv[3];
 		l2_info.dst_endpoint = argv[4];
 
-		if (atoi(argv[5]) > 0) {
-			l2_stag.id = argv[5];
-			l2_stag.tagged = (enum boolean_*)&true;
-		}
+		l2_stag.id = argv[5];
+		l2_dtag.id = argv[6];
 		
-		if (atoi(argv[6]) > 0) {
-			l2_dtag.id = argv[6];
+		if (atoi(argv[7]) > 0)
+			l2_stag.tagged = (enum boolean_*)&true;
+		else
+			l2_stag.tagged = (enum boolean_*)&false;
+
+		if (atoi(argv[8]) > 0)
                         l2_dtag.tagged = (enum boolean_*)&true;
-                }
+		else
+			l2_dtag.tagged = (enum boolean_*)&false;
 		
 		l2_info.src_vlan = &l2_stag;
 		l2_info.dst_vlan = &l2_dtag;
@@ -126,7 +130,7 @@ int main(int argc, char* argv[])
                 create_req.res_id = NULL;
                 create_req.start_time = (int64_t)stime;
                 create_req.end_time = (int64_t)etime;
-                create_req.bandwidth = atoi(argv[7]);
+                create_req.bandwidth = atoi(argv[9]);
                 create_req.description = "C client reservation";
                 create_req.path_info = &path_info;
 
@@ -161,7 +165,6 @@ int main(int argc, char* argv[])
 		OSCARS_L2Info l2_info;
 		OSCARS_vlanTag l2_stag;
 		OSCARS_vlanTag l2_dtag;
-		int true = 1;
 		
 		if (argc < 5) {
 			printf("must at least specify src and dst\n");
@@ -170,35 +173,34 @@ int main(int argc, char* argv[])
 		
 		time(&stime);
 		stime += 5;
-		etime = stime + atoi(argv[9]);
+		etime = stime + atoi(argv[11]);
 		
-		if (argv[10])
-			stime = atoi(argv[10]);
-		if (argv[11])
-			etime = atoi(argv[11]);
+		if (argv[12])
+			stime = atoi(argv[11]);
+		if (argv[13])
+			etime = atoi(argv[14]);
 		
-		l2_info.src_endpoint = argv[4];
-		l2_info.dst_endpoint = argv[5];
-		l2_info.src_vlan = NULL;
-		l2_info.dst_vlan = NULL;
-	       
 		modify_request.res_id = argv[3];
 		l2_info.src_endpoint = argv[4];
 		l2_info.dst_endpoint = argv[5];
                 l2_info.src_vlan = NULL;
                 l2_info.dst_vlan = NULL;
 
-		if (argv[6] > 0) {
-			l2_stag.id = argv[5];
+		l2_stag.id = argv[6];
+		l2_dtag.id = argv[7];
+		
+		if (atoi(argv[8]) > 0)
 			l2_stag.tagged = (enum boolean_*)&true;
-			l2_info.src_vlan = &l2_stag;
-                }
+		else
+			l2_stag.tagged = (enum boolean_*)&false;
 
-		if (argv[7] > 0) {
-                        l2_dtag.id = argv[6];
-                        l2_dtag.tagged = (enum boolean_*)&true;
-			l2_info.dst_vlan = &l2_dtag;
-		}
+		if (atoi(argv[9]) > 0)
+			l2_dtag.tagged = (enum boolean_*)&true;
+                else
+                        l2_dtag.tagged = (enum boolean_*)&false;
+
+		l2_info.src_vlan = &l2_stag;
+		l2_info.dst_vlan = &l2_dtag;
 
                 path_info.setup_mode = "timer-automatic";
                 path_info.type = NULL;
@@ -210,7 +212,7 @@ int main(int argc, char* argv[])
 		modify_request.res_id = NULL;
 		modify_request.start_time = (int64_t)stime;
 		modify_request.end_time = (int64_t)etime;
-		modify_request.bandwidth = atoi(argv[8]);
+		modify_request.bandwidth = atoi(argv[10]);
                 modify_request.description = "C client reservation";
 		modify_request.path_info = &path_info;
 

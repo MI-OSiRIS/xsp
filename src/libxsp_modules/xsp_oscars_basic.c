@@ -476,15 +476,12 @@ static int __xsp_oscars_create_rule(xspPathRule *rule, char **ret_error_msg) {
 			l2_info.src_endpoint = pi->src;
 		if (!(l2_info.dst_endpoint = hashtable_search(friendly_name, pi->dst)))
 			l2_info.dst_endpoint = pi->dst;
+		
+		l2_stag.id = pi->src_vlan_id;
+		l2_dtag.id = pi->dst_vlan_id;
 
-		if (pi->src_tagged) {
-			l2_stag.id = pi->src_vlan_id;
-			l2_stag.tagged = (enum boolean_*)&(pi->src_tagged);
-		}
-		if (pi->dst_tagged) {
-			l2_dtag.id = pi->dst_vlan_id;
-			l2_dtag.tagged = (enum boolean_*)&(pi->dst_tagged);
-		}
+		l2_stag.tagged = (enum boolean_*)&(pi->src_tagged);
+		l2_dtag.tagged = (enum boolean_*)&(pi->dst_tagged);
 		
 		l2_info.src_vlan = &l2_stag;
 		l2_info.dst_vlan = &l2_dtag;
