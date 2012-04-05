@@ -144,7 +144,7 @@ static char *xsp_oscars_generate_pathrule_id(const xspNetPathRule *rule,
 		goto error_exit;
 	}
 
-	if (rule->crit.src_eid.x_addrc) {
+	if (strlen(rule->crit.src_eid.x_addrc)) {
 		oscars_src_id = (char*)rule->crit.src_eid.x_addrc;
 	}
 	else if (xsp_settings_get_2(settings, "oscars", "src_id", &oscars_src_id) != 0) {
@@ -156,7 +156,7 @@ static char *xsp_oscars_generate_pathrule_id(const xspNetPathRule *rule,
 		goto error_exit;
 	}
 
-	if (rule->crit.dst_eid.x_addrc) {
+	if (strlen(rule->crit.dst_eid.x_addrc)) {
 		oscars_dst_id = (char*)rule->crit.dst_eid.x_addrc;
 	}
 	else if (xsp_settings_get_2(settings, "oscars", "dst_id", &oscars_dst_id) != 0) {
@@ -168,19 +168,23 @@ static char *xsp_oscars_generate_pathrule_id(const xspNetPathRule *rule,
 		goto error_exit;
 	}
 
-	if (rule->crit.vlan > 0) {
-		asprintf(&oscars_src_vlan_id, "%d", rule->crit.vlan);
-		asprintf(&oscars_dst_vlan_id, "%d", rule->crit.vlan);
+	if (rule->crit.src_vlan > 0) {
+		asprintf(&oscars_src_vlan_id, "%d", rule->crit.src_vlan);
 	}
 	else {
 		if (xsp_settings_get_2(settings, "oscars", "src_vlan_id", &oscars_src_vlan_id) != 0) {
 			oscars_src_vlan_id = "N/A";
 		}
+	}
 
+	if (rule->crit.dst_vlan > 0) {
+		asprintf(&oscars_dst_vlan_id, "%d", rule->crit.dst_vlan);
+	}
+	else {
 		if (xsp_settings_get_2(settings, "oscars", "dst_vlan_id", &oscars_dst_vlan_id) != 0) {
 			oscars_dst_vlan_id = "N/A";
 		}
-	}
+	}		
 
 	if (strcmp(oscars_src_id, oscars_dst_id) > 0) {
 		char *tmp = oscars_src_id;
@@ -262,7 +266,7 @@ static int xsp_oscars_allocate_pathrule_handler(const xspNetPathRule *net_rule,
 		goto error_exit;
 	}
 
-	if (net_rule->crit.src_eid.x_addrc) {
+	if (strlen(net_rule->crit.src_eid.x_addrc)) {
 		oscars_src_id = strdup(net_rule->crit.src_eid.x_addrc);
 	}
 	else if (xsp_settings_get_2(settings, "oscars", "src_id", &oscars_src_id) != 0) {
@@ -270,7 +274,7 @@ static int xsp_oscars_allocate_pathrule_handler(const xspNetPathRule *net_rule,
 		goto error_exit;
 	}
 	
-	if (net_rule->crit.dst_eid.x_addrc) {
+	if (strlen(net_rule->crit.dst_eid.x_addrc)) {
 		oscars_dst_id = strdup(net_rule->crit.dst_eid.x_addrc);
 	}
 	else if (xsp_settings_get_2(settings, "oscars", "dst_id", &oscars_dst_id) != 0) {

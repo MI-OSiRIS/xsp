@@ -89,7 +89,8 @@ static globus_xio_string_cntl_table_t  xsp_l_string_opts_table[] =
     {"dpid", GLOBUS_XIO_XSP_CNTL_SET_DPID, globus_xio_string_cntl_string},
     {"duration", GLOBUS_XIO_XSP_CNTL_SET_DURATION, globus_xio_string_cntl_int},
     {"bw", GLOBUS_XIO_XSP_CNTL_SET_BANDWIDTH, globus_xio_string_cntl_int},
-    {"vlan", GLOBUS_XIO_XSP_CNTL_SET_VLAN, globus_xio_string_cntl_int},
+    {"src_vlan", GLOBUS_XIO_XSP_CNTL_SET_SVLAN, globus_xio_string_cntl_int},
+    {"dst_vlan", GLOBUS_XIO_XSP_CNTL_SET_DVLAN, globus_xio_string_cntl_int},
     {NULL, 0, NULL}
 };
 
@@ -153,7 +154,8 @@ typedef struct xio_l_xsp_handle_s
     char *                              dpid;
     uint64_t                            bandwidth;
     uint64_t                            duration;
-    int                                 vlan;
+    int                                 svlan;
+    int                                 dvlan;
     char *                              resource;
     int                                 size;
 
@@ -205,7 +207,8 @@ static xio_l_xsp_handle_t               globus_l_xio_xsp_handle_default =
     GLOBUS_NULL,                        /* dpid */
     0,                                  /* bandwidth */
     0,                                  /* duration */
-    0,                                  /* vlan */
+    0,                                  /* svlan */
+    0,                                  /* dvlan */
     GLOBUS_NULL,                        /* resource */
     0,                                  /* size */
     0,                                  /* log_flag, default does not NL log anything */
@@ -943,10 +946,14 @@ globus_l_xio_xsp_make_path(
 		    crit.bandwidth = handle->bandwidth;
 		    printf(" bandwidth=%u", crit.bandwidth);
 	    }
-	    if (handle->vlan > 0) {
-		    crit.vlan = handle->vlan;
-		    printf(" vlan=%u", crit.vlan);
+	    if (handle->svlan > 0) {
+		    crit.src_vlan = handle->svlan;
+		    printf(" src_vlan=%u", crit.src_vlan);
 	    }
+	    if (handle->dvlan > 0) {
+                    crit.dst_vlan = handle->dvlan;
+                    printf(" dst_vlan=%u", crit.dst_vlan);
+            }
 
 	    printf("\n");
 	    fflush(stdout);
@@ -1112,7 +1119,8 @@ globus_l_xio_xsp_attr_init(
     attr->dpid = NULL;
     attr->duration = 0;
     attr->bandwidth = 0;
-    attr->vlan = 0;
+    attr->svlan = 0;
+    attr->dvlan = 0;
     attr->resource = NULL;
     attr->size = 0;
     attr->log_flag = 0;
@@ -1287,7 +1295,8 @@ globus_l_xio_xsp_attr_copy(
 
     dst_attr->duration = src_attr->duration;
     dst_attr->bandwidth = src_attr->bandwidth;
-    dst_attr->vlan = src_attr->vlan;
+    dst_attr->svlan = src_attr->svlan;
+    dst_attr->dvlan = src_attr->dvlan;
 
     if (src_attr->o_caliper)
 	dst_attr->o_caliper = src_attr->o_caliper;
@@ -1379,8 +1388,11 @@ globus_l_xio_xsp_cntl(
       case GLOBUS_XIO_XSP_CNTL_SET_BANDWIDTH:
 	  attr->bandwidth = va_arg(ap, int);
 	  break;
-      case GLOBUS_XIO_XSP_CNTL_SET_VLAN:
-	  attr->vlan = va_arg(ap, int);
+      case GLOBUS_XIO_XSP_CNTL_SET_SVLAN:
+	  attr->svlan = va_arg(ap, int);
+	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_DVLAN:
+	  attr->dvlan = va_arg(ap, int);
 	  break;
       case GLOBUS_XIO_XSP_CNTL_SET_RESOURCE:
 	  str = va_arg(ap, char *);

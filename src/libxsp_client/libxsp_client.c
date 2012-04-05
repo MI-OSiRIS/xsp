@@ -534,6 +534,8 @@ int xsp_sess_set_net_path_rule_crit(xspNetPathRule *rule, libxspNetPathRuleCrit 
 	rule->crit.duration = crit->duration;
 	rule->crit.bandwidth = crit->bandwidth;
 	rule->crit.vlan = crit->vlan;	
+	rule->crit.src_vlan = crit->src_vlan;
+	rule->crit.dst_vlan = crit->dst_vlan;
 
 	rule->use_crit = TRUE;
 
