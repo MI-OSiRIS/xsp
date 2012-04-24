@@ -81,8 +81,14 @@ int main(int argc, char *argv[])
 
 	// creates a path with a single rule
 	path = xsp_sess_new_net_path(XSP_NET_PATH_CREATE);
-	rule = xsp_sess_new_net_path_rule(path, "OPENFLOW");
+	rule = xsp_sess_new_net_path_rule(path, "OSCARS");
 	
+	crit.src="dynes-udel";
+	crit.dst="dynes-udel-port-14";
+	crit.bandwidth=300000;
+	crit.duration=600;
+	crit.vlan=605;
+
 	if (xsp_sess_set_net_path_rule_crit(rule, &crit) != 0)
 		fprintf(stderr, "could not set rule criteria\n");
 	

@@ -87,6 +87,10 @@ static globus_xio_string_cntl_table_t  xsp_l_string_opts_table[] =
     {"mask", GLOBUS_XIO_XSP_CNTL_SET_MASK, globus_xio_string_cntl_int},
     {"interval", GLOBUS_XIO_XSP_CNTL_SET_INTERVAL, globus_xio_string_cntl_int},
     {"dpid", GLOBUS_XIO_XSP_CNTL_SET_DPID, globus_xio_string_cntl_string},
+    {"duration", GLOBUS_XIO_XSP_CNTL_SET_DURATION, globus_xio_string_cntl_int},
+    {"bw", GLOBUS_XIO_XSP_CNTL_SET_BANDWIDTH, globus_xio_string_cntl_int},
+    {"src_vlan", GLOBUS_XIO_XSP_CNTL_SET_SVLAN, globus_xio_string_cntl_int},
+    {"dst_vlan", GLOBUS_XIO_XSP_CNTL_SET_DVLAN, globus_xio_string_cntl_int},
     {NULL, 0, NULL}
 };
 
@@ -148,6 +152,10 @@ typedef struct xio_l_xsp_handle_s
     char *                              sport;
     char *                              dport;
     char *                              dpid;
+    uint64_t                            bandwidth;
+    uint64_t                            duration;
+    int                                 svlan;
+    int                                 dvlan;
     char *                              resource;
     int                                 size;
 
@@ -197,6 +205,10 @@ static xio_l_xsp_handle_t               globus_l_xio_xsp_handle_default =
     GLOBUS_NULL,                        /* sport */
     GLOBUS_NULL,                        /* dport */
     GLOBUS_NULL,                        /* dpid */
+    0,                                  /* bandwidth */
+    0,                                  /* duration */
+    0,                                  /* svlan */
+    0,                                  /* dvlan */
     GLOBUS_NULL,                        /* resource */
     0,                                  /* size */
     0,                                  /* log_flag, default does not NL log anything */
@@ -516,8 +528,8 @@ globus_l_xio_xsp_setup_path(
 {
     globus_result_t ret;
 
-    if (handle->xsp_net_path &&
-        globus_l_xio_xsp_xfer_default.xsp_signal_path)
+    if (handle->xsp_net_path)
+	    //&& globus_l_xio_xsp_xfer_default.xsp_signal_path)
     {
         libxspNetPath *path;
         globus_l_xio_xsp_make_path(handle, XSP_NET_PATH_CREATE, &path);
@@ -527,6 +539,9 @@ globus_l_xio_xsp_setup_path(
 
         if (!ret)
             printf("XIO-XSP: path setup complete\n");
+	else
+	    printf("XIO-XSP: path setup failed!\n");
+
         free(path);
 
         return ret;
@@ -839,7 +854,7 @@ globus_l_xio_xsp_make_path(
     char *dport;
     char *dpid;
     char *token;
-    
+
     libxspNetPath *path = xsp_sess_new_net_path(path_action);
     
     type = strdup(handle->xsp_net_path);
@@ -922,13 +937,29 @@ globus_l_xio_xsp_make_path(
 		    xsp_sess_set_net_path_rule_eid(rule, &dpid_int, XSP_EID_DPID);
 		    printf(" dpid=%s", token);
 	    }
-	    
+
+	    if (handle->duration > 0) {
+		    crit.duration = handle->duration;
+		    printf(" duration=%u", crit.duration);
+	    }
+	    if (handle->bandwidth > 0) {
+		    crit.bandwidth = handle->bandwidth;
+		    printf(" bandwidth=%u", crit.bandwidth);
+	    }
+	    if (handle->svlan > 0) {
+		    crit.src_vlan = handle->svlan;
+		    printf(" src_vlan=%u", crit.src_vlan);
+	    }
+	    if (handle->dvlan > 0) {
+                    crit.dst_vlan = handle->dvlan;
+                    printf(" dst_vlan=%u", crit.dst_vlan);
+            }
+
 	    printf("\n");
 	    fflush(stdout);
 	    
 	    if (xsp_sess_set_net_path_rule_crit(rule, &crit) != 0)
 		    fprintf(stderr, "could not set rule criteria\n");
-    
     }
     
     *ret_path = path;
@@ -1086,11 +1117,16 @@ globus_l_xio_xsp_attr_init(
     attr->sport = NULL;
     attr->dport = NULL;
     attr->dpid = NULL;
+    attr->duration = 0;
+    attr->bandwidth = 0;
+    attr->svlan = 0;
+    attr->dvlan = 0;
     attr->resource = NULL;
     attr->size = 0;
     attr->log_flag = 0;
     attr->interval = 5;
     attr->id = NULL;
+    attr->xsp_blipp = NULL;
     
     attr->local_contact = globus_calloc(1, sizeof(globus_xio_contact_t));
     attr->remote_contact = globus_calloc(1, sizeof(globus_xio_contact_t));
@@ -1257,6 +1293,11 @@ globus_l_xio_xsp_attr_copy(
     dst_attr->xsp_thresh_sum = src_attr->xsp_thresh_sum;
     dst_attr->xsp_net_path_signaled = src_attr->xsp_net_path_signaled;
 
+    dst_attr->duration = src_attr->duration;
+    dst_attr->bandwidth = src_attr->bandwidth;
+    dst_attr->svlan = src_attr->svlan;
+    dst_attr->dvlan = src_attr->dvlan;
+
     if (src_attr->o_caliper)
 	dst_attr->o_caliper = src_attr->o_caliper;
     if (src_attr->c_caliper)
@@ -1340,6 +1381,18 @@ globus_l_xio_xsp_cntl(
       case GLOBUS_XIO_XSP_CNTL_SET_DPID:
 	  str = va_arg(ap, char *);
 	  attr->dpid = strdup(str);
+	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_DURATION:
+	  attr->duration = va_arg(ap, int);
+	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_BANDWIDTH:
+	  attr->bandwidth = va_arg(ap, int);
+	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_SVLAN:
+	  attr->svlan = va_arg(ap, int);
+	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_DVLAN:
+	  attr->dvlan = va_arg(ap, int);
 	  break;
       case GLOBUS_XIO_XSP_CNTL_SET_RESOURCE:
 	  str = va_arg(ap, char *);
@@ -1736,7 +1789,7 @@ globus_l_xio_xsp_open_cb(
 	    }
 
 	    // notify on every new stream
-	    if (handle->log_flag && (handle->xfer->streams >= 1))
+	    if (handle->xsp_blipp && handle->log_flag && (handle->xfer->streams >= 1))
 	    {
 		res = globus_l_xio_xsp_do_xfer_notify(handle, GLOBUS_XIO_XSP_NEW_XFER);
 		if (res != GLOBUS_SUCCESS)
@@ -1869,12 +1922,14 @@ globus_l_xio_xsp_open(
 
 	/* if there's a path to setup, do it before the underlying connection start */
 	if ((handle->xfer->xsp_connected == GLOBUS_FALSE) &&
-	    globus_l_xio_xsp_xfer_default.xsp_signal_path)
+	    handle->xsp_net_path)
 	{
 	    res = globus_l_xio_xsp_connect_handle(handle);
 	    if (res != GLOBUS_SUCCESS)
 	    {
-		GlobusXIOErrorWrapFailed("Could not complete XSP PATH.", res);
+		GlobusXIOErrorWrapFailedWithMessage(res, "Could not signal net path of type %s",
+						    handle->xsp_net_path);
+		GlobusXIOXSPDebugExitWithError();
 		return res;
 	    }
 	}
@@ -1920,17 +1975,21 @@ globus_l_xio_xsp_close_cb(
 	    if ((handle->xfer->streams == 0) &&
 		handle->xfer->xsp_connected)
 	    {
-		res = globus_l_xio_xsp_do_xfer_notify(handle, GLOBUS_XIO_XSP_END_XFER);
-		if (res != GLOBUS_SUCCESS)
+		if (handle->xsp_blipp)
 		{
-		    res = GlobusXIOErrorWrapFailedWithMessage(res,
-			"The XSP XIO driver failed to send end xfer msg%s",
-		        " to XSPd.");
-		}
+		    res = globus_l_xio_xsp_do_xfer_notify(handle, GLOBUS_XIO_XSP_END_XFER);
+		    if (res != GLOBUS_SUCCESS)
+		    {
+		        res = GlobusXIOErrorWrapFailedWithMessage(res,
+			    "The XSP XIO driver failed to send end xfer msg%s",
+		            " to XSPd.");
+		    }
+                }
+
 		done = GLOBUS_TRUE;
 
-		if (handle->xsp_net_path &&
-		    globus_l_xio_xsp_xfer_default.xsp_signal_path)
+		if (handle->xsp_net_path)
+			//&& globus_l_xio_xsp_xfer_default.xsp_signal_path)
 		{
 		
 		    printf("XIO-XSP: deleting path\n");
@@ -1939,11 +1998,12 @@ globus_l_xio_xsp_close_cb(
 
 		    if ((res = xsp_signal_path(handle->xfer->sess, path)) != 0)
 		    {
-			    printf("XIO-XSP: could not signal path delete\n");
+			printf("XIO-XSP: could not signal path delete\n");
 		    }
 		}
-
-                globus_l_xio_xsp_send_speedometer_sample(handle, 0, 0);
+		
+                if (handle->xsp_blipp)
+                    globus_l_xio_xsp_send_speedometer_sample(handle, 0, 0);
 	    }
 	    else
 	    {

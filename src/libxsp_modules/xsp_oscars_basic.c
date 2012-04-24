@@ -23,6 +23,8 @@
 #include "xsp_pathrule.h"
 #include "xsp_pathrule_handler.h"
 #include "hashtable.h"
+#include "hashtable_util.h"
+#include "xsp_main_settings.h"
 #include "xsp_config.h"
 
 #ifdef OSCARS5
@@ -33,6 +35,8 @@
 #include "oscars6.nsmap"
 #endif
 
+static struct hashtable *friendly_name;
+
 typedef struct xsp_oscars_timeout_args {
 	xspPathRule *rule;
 	int tag;
@@ -40,6 +44,7 @@ typedef struct xsp_oscars_timeout_args {
 } xspOSCARSTimeoutArgs;
 
 int xsp_oscars_init();
+static void xsp_oscars_read_map();
 static int xsp_oscars_allocate_pathrule_handler(const xspNetPathRule *rule, const xspSettings *settings,
 						xspPathRule **ret_rule, char **ret_error_msg);
 static char *xsp_oscars_generate_pathrule_id(const xspNetPathRule *rule, const xspSettings *settings, char **ret_error_msg);
@@ -74,7 +79,50 @@ xspModule *module_info() {
 }
 
 int xsp_oscars_init() {
+	xsp_oscars_read_map();
 	return xsp_add_pathrule_handler(&xsp_oscars_pathrule_handler);
+}
+
+static void xsp_oscars_read_map() {
+	const xspSettings *settings;
+	FILE *fp;
+	char *map_file;
+	char *line = NULL;
+	int read;
+	size_t len = 0;
+
+	friendly_name = create_hashtable(16, xsp_hash_string, xsp_equalkeys_string);
+
+	settings = xsp_main_settings();
+	if (xsp_settings_get_3(settings, "paths", "oscars", "name_map", &map_file) != 0) {
+		xsp_info(0, "No OSCARS friendly name map file specified, skipping");
+		return;
+        }
+
+	fp = fopen(map_file, "r");
+	if (!fp) {
+		xsp_err(0, "Could not open OSCARS map file: %s", map_file);
+		return;
+	}
+	
+	while ((read = getline(&line, &len, fp)) != -1) {
+		char *tok, *tok2;
+		tok = strtok(line, " ");
+		tok2 = strtok(NULL, " ");
+		
+		if (tok && tok2) {
+			// strip newline
+			tok2[strlen(tok2) - 1] = '\0';
+			xsp_info(5, "Adding friendly name mapping: %s -> %s", tok, tok2);
+			hashtable_insert(friendly_name, strdup(tok), strdup(tok2));
+		}
+		else {
+			xsp_err(0, "Malformed OSCARS map file");
+			return;
+		}
+	}
+	
+	fclose(fp);
 }
 
 static char *xsp_oscars_generate_pathrule_id(const xspNetPathRule *rule,
@@ -96,16 +144,22 @@ static char *xsp_oscars_generate_pathrule_id(const xspNetPathRule *rule,
 		goto error_exit;
 	}
 
-	if (xsp_settings_get_2(settings, "oscars", "src_id", &oscars_src_id) != 0) {
+	if (strlen(rule->crit.src_eid.x_addrc)) {
+		oscars_src_id = (char*)rule->crit.src_eid.x_addrc;
+	}
+	else if (xsp_settings_get_2(settings, "oscars", "src_id", &oscars_src_id) != 0) {
 		if (ret_error_msg) {
 			xsp_err(0, "No OSCARS source identifier specified");
 			*ret_error_msg = strdup("No OSCARS source identifier specified");
 		}
-
+		
 		goto error_exit;
 	}
 
-	if (xsp_settings_get_2(settings, "oscars", "dst_id", &oscars_dst_id) != 0) {
+	if (strlen(rule->crit.dst_eid.x_addrc)) {
+		oscars_dst_id = (char*)rule->crit.dst_eid.x_addrc;
+	}
+	else if (xsp_settings_get_2(settings, "oscars", "dst_id", &oscars_dst_id) != 0) {
 		if (ret_error_msg) {
 			xsp_err(0, "No OSCARS destination identifier specified");
 			*ret_error_msg = strdup("No OSCARS destination identifier specified");
@@ -114,19 +168,23 @@ static char *xsp_oscars_generate_pathrule_id(const xspNetPathRule *rule,
 		goto error_exit;
 	}
 
-	if (rule->crit.vlan > 0) {
-		asprintf(&oscars_src_vlan_id, "%d", rule->crit.vlan);
-		asprintf(&oscars_dst_vlan_id, "%d", rule->crit.vlan);
+	if (rule->crit.src_vlan > 0) {
+		asprintf(&oscars_src_vlan_id, "%d", rule->crit.src_vlan);
 	}
 	else {
 		if (xsp_settings_get_2(settings, "oscars", "src_vlan_id", &oscars_src_vlan_id) != 0) {
 			oscars_src_vlan_id = "N/A";
 		}
+	}
 
+	if (rule->crit.dst_vlan > 0) {
+		asprintf(&oscars_dst_vlan_id, "%d", rule->crit.dst_vlan);
+	}
+	else {
 		if (xsp_settings_get_2(settings, "oscars", "dst_vlan_id", &oscars_dst_vlan_id) != 0) {
 			oscars_dst_vlan_id = "N/A";
 		}
-	}
+	}		
 
 	if (strcmp(oscars_src_id, oscars_dst_id) > 0) {
 		char *tmp = oscars_src_id;
@@ -200,17 +258,26 @@ static int xsp_oscars_allocate_pathrule_handler(const xspNetPathRule *net_rule,
                 goto error_exit;
         }
 
-	if (xsp_settings_get_int_2(settings, "oscars", "duration", &oscars_duration) != 0) {
+	if (net_rule->crit.duration > 0) {
+		oscars_duration =  net_rule->crit.duration;
+	}
+	else if (xsp_settings_get_int_2(settings, "oscars", "duration", &oscars_duration) != 0) {
 		xsp_err(0, "No duration specified for OSCARS reservation");
 		goto error_exit;
 	}
 
-	if (xsp_settings_get_2(settings, "oscars", "src_id", &oscars_src_id) != 0) {
+	if (strlen(net_rule->crit.src_eid.x_addrc)) {
+		oscars_src_id = strdup(net_rule->crit.src_eid.x_addrc);
+	}
+	else if (xsp_settings_get_2(settings, "oscars", "src_id", &oscars_src_id) != 0) {
 		xsp_err(0, "No OSCARS source identifier specified");
 		goto error_exit;
 	}
 	
-	if (xsp_settings_get_2(settings, "oscars", "dst_id", &oscars_dst_id) != 0) {
+	if (strlen(net_rule->crit.dst_eid.x_addrc)) {
+		oscars_dst_id = strdup(net_rule->crit.dst_eid.x_addrc);
+	}
+	else if (xsp_settings_get_2(settings, "oscars", "dst_id", &oscars_dst_id) != 0) {
 		xsp_err(0, "No OSCARS destination identifier specified");
 		goto error_exit;
 	}
@@ -219,7 +286,10 @@ static int xsp_oscars_allocate_pathrule_handler(const xspNetPathRule *net_rule,
 		path_type_str = "shared";
 	}
 
-	if (xsp_settings_get_int_2(settings, "oscars", "bandwidth", &bandwidth) != 0) {
+	if (net_rule->crit.bandwidth > 0) {
+		bandwidth = net_rule->crit.bandwidth;
+	}
+	else if (xsp_settings_get_int_2(settings, "oscars", "bandwidth", &bandwidth) != 0) {
 		bandwidth = 0;
         }
 	
@@ -406,17 +476,16 @@ static int __xsp_oscars_create_rule(xspPathRule *rule, char **ret_error_msg) {
 		
 		xsp_info(0, "%s: the OSCARS path is down, allocating a new one", rule->description);
 		
-		l2_info.src_endpoint = pi->src;
-		l2_info.dst_endpoint = pi->dst;
+		if (!(l2_info.src_endpoint = hashtable_search(friendly_name, pi->src)))
+			l2_info.src_endpoint = pi->src;
+		if (!(l2_info.dst_endpoint = hashtable_search(friendly_name, pi->dst)))
+			l2_info.dst_endpoint = pi->dst;
+		
+		l2_stag.id = pi->src_vlan_id;
+		l2_dtag.id = pi->dst_vlan_id;
 
-		if (pi->src_tagged) {
-			l2_stag.id = pi->src_vlan_id;
-			l2_stag.tagged = (enum boolean_*)&(pi->src_tagged);
-		}
-		if (pi->dst_tagged) {
-			l2_dtag.id = pi->dst_vlan_id;
-			l2_dtag.tagged = (enum boolean_*)&(pi->dst_tagged);
-		}
+		l2_stag.tagged = (enum boolean_*)&(pi->src_tagged);
+		l2_dtag.tagged = (enum boolean_*)&(pi->dst_tagged);
 		
 		l2_info.src_vlan = &l2_stag;
 		l2_info.dst_vlan = &l2_dtag;

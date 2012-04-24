@@ -27,6 +27,9 @@ typedef struct xsp_sess_net_path_rule_crit_t {
 	uint8_t  l3_proto;
 	int16_t  l2_type;
 
+	/* reservation specific */
+	uint16_t src_vlan;
+	uint16_t dst_vlan;
 	uint8_t  direction;
 	uint64_t bandwidth;
 	uint64_t start_time;

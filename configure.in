@@ -239,10 +239,14 @@ then
 
 	AC_MSG_CHECKING(for MySQL)
 
+	mysql_header="no"
+	AC_CHECK_HEADER(mysql.h, mysql_header=yes, [], [])
+
 	if test "$MYSQL_CFLAGS" != "" -a "$mysql_header" != "no" ; then
 		AC_MSG_RESULT(yes)
 	else
 		AC_MSG_RESULT(no)
+		MYSQL_CFLAGS=""
 		if test "$with_mysql" != "try"; then
 		  if test "$mysql_header" == "no"; then
 			  AC_MSG_ERROR(mysql.h not found)
@@ -256,6 +260,7 @@ fi
 AM_CONDITIONAL(HAVE_MYSQL, test "$MYSQL_CFLAGS" != "")
 AC_SUBST(MYSQL_CFLAGS)
 AC_SUBST(MYSQL_LIBS)
+AC_SUBST(HAVE_MYSQL)
 
 dnl Check for SQLite
 AH_TEMPLATE(HAVE_SQLITE, Whether or not sqlite is used on the system)
