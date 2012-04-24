@@ -6,14 +6,14 @@
 #include "xsp_modules.h"
 
 int xsp_auth_anon_authenticate(xspConn *conn, xspCreds **ret_creds);
-int xsp_auth_anon_request_authentication (xspSess *sess, xspConn *conn);
+int xsp_auth_anon_request_authentication (comSess *sess, xspConn *conn);
 const char *xsp_auth_anon_get_value(xspCreds *credentials);
 void xsp_auth_anon_free_credentials(xspCreds *credentials);
 
 static xspAuthenticationHandler xsp_auth_anon_handler = {
+  .name = "ANON",
 	.authenticate = xsp_auth_anon_authenticate,
 	.request_authentication = xsp_auth_anon_request_authentication,
-	.name = "ANON",
 };
 
 static xspModule xsp_auth_anon_module = {
@@ -39,7 +39,7 @@ void xsp_auth_anon_free_credentials(xspCreds *credentials) {
 	free(credentials);
 }
 
-int xsp_auth_anon_request_authentication (xspSess *sess, xspConn *conn) {
+int xsp_auth_anon_request_authentication (comSess *sess, xspConn *conn) {
 	return 0;
 }
 

@@ -1,10 +1,11 @@
 # this needs to be set as $(libdir)/libxsp instead of $(moduledir) so that the RPM
 # will install to the correct location.
 modulesdir = $(libdir)/libxsp
-modules_LTLIBRARIES =
+modules_LTLIBRARIES = 
 
 INCLUDES = -I@top_srcdir@/include -I@top_srcdir@/src/libxsp -I@top_srcdir@/libradix -I@top_srcdir@/compat -I@top_srcdir@/libconfig -I@top_srcdir@/src/libxsp_common
 AM_CFLAGS = @CFLAGS@ -DWITH_OPENSSL -DMODULE_DIR=\"$(moduledir)\" -DCONFIG_FILE=\"$(CONFIG_FILE)\"
+#AM_LDFLAGS = -L@top_srcdir@/src/libxsp_common -lxsp_common
 
 if HAVE_NETFILTER
 modules_LTLIBRARIES += transparent.la
@@ -78,30 +79,36 @@ endif
 modules_LTLIBRARIES += auth_anon.la
 auth_anon_la_SOURCES = xsp_auth_anon.c xsp_auth_anon.h
 auth_anon_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+auth_anon_la_LDFLAGS += -L@top_srcdir@/src/libxsp_common -lxsp_common
 
 modules_LTLIBRARIES += auth_pass.la
 auth_pass_la_SOURCES = xsp_auth_pass.c xsp_auth_pass.h
 auth_pass_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+auth_pass_la_LDFLAGS += -L@top_srcdir@/src/libxsp_common -lxsp_common -L@top_srcdir@/src/libxsp -lxsp 
 
 if HAVE_OPENSSL
 modules_LTLIBRARIES += auth_ssl.la
 auth_ssl_la_SOURCES = xsp_auth_ssl.c xsp_auth_ssl.h
 auth_ssl_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+auth_ssl_la_LDFLAGS += -L@top_srcdir@/src/libxsp_common -lxsp_common -lssl
 endif
 
-modules_LTLIBRARIES += auth_pass_file.la
+modules_LTLIBRARIES += auth_pass_file.la 
 auth_pass_file_la_SOURCES = xsp_auth_pass_file.c
 auth_pass_file_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+auth_pass_file_la_LDFLAGS += -L@top_srcdir@/src/libxsp_common -lxsp_common -L@top_srcdir@/src/libxsp_modules auth_pass.la
 
 modules_LTLIBRARIES += auth_trust.la
 auth_trust_la_SOURCES = xsp_auth_trusted.c
 auth_trust_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+auth_trust_la_LDFLAGS += -L@top_srcdir@/src/libxsp_common -lxsp_common -L@top_srcdir@/src/libxsp -lxsp
 
 if HAVE_MYSQL
 modules_LTLIBRARIES += auth_pass_mysql.la
 auth_pass_mysql_la_SOURCES = xsp_auth_pass_mysql.c
 auth_pass_mysql_la_CFLAGS = @MYSQL_CFLAGS@
 auth_pass_mysql_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic @MYSQL_LIBS@
+auth_pass_mysql_la_LDFLAGS += -L@top_srcdir@/src/libxsp_common -lxsp_common
 endif
 
 if HAVE_SQLITE
@@ -109,6 +116,7 @@ modules_LTLIBRARIES += auth_pass_sqlite.la
 auth_pass_sqlite_la_SOURCES = xsp_auth_pass_sqlite.c
 auth_pass_sqlite_la_CFLAGS = @SQLITE_CFLAGS@
 auth_pass_sqlite_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic @SQLITE_LIBS@
+auth_pass_sqlite_la_LDFLAGS += -L@top_srcdir@/src/libxsp_common -lxsp_common auth_pass.la
 endif
 
 if HAVE_LIBXML

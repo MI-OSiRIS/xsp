@@ -56,18 +56,18 @@ static struct xsp_pass_auth_config_t xspPassAuthConfig = {
 	.backend = "file",
 };
 
-static void xsp_pass_auth_read_config() {
-	char *str_val;
+//static void xsp_pass_auth_read_config() {
+//	char *str_val;
 
-	if (xsp_depot_settings_get("pass_auth", "backend", &str_val) == 0) {
-		xspPassAuthConfig.backend = str_val;
-	}
-}
+//	if (xsp_depot_settings_get("pass_auth", "backend", &str_val) == 0) {
+//		xspPassAuthConfig.backend = str_val;
+//	}
+//}
 
 int xsp_pass_auth_init() {
 	char module_name[255];
 
-	xsp_pass_auth_read_config();
+	//xsp_pass_auth_read_config();
 
 	if (pthread_mutex_init(&pass_be_lock, NULL)) {
 		xsp_err(0, "couldn't initialize mutex");

@@ -20,7 +20,7 @@ AM_PROG_CC_C_O
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS([arpa/inet.h fcntl.h float.h inttypes.h malloc.h netdb.h netinet/in.h netinet/in_systm.h stdint.h stdlib.h string.h strings.h sys/param.h sys/queue.h sys/socket.h sys/time.h unistd.h values.h sys/sendfile.h])
+AC_CHECK_HEADERS([arpa/inet.h fcntl.h float.h inttypes.h malloc.h netdb.h netinet/in.h netinet/in_systm.h stdint.h stdlib.h string.h strings.h sys/param.h sys/queue.h sys/socket.h sys/time.h unistd.h values.h sys/sendfile.h machine/endian.h byteswap.h libkern/OSByteOrder.h linux/unistd.h splice.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -218,6 +218,7 @@ dnl Check for MySQL
 AH_TEMPLATE(HAVE_MYSQL, Whether or not mysql is used on the system)
 
 AC_ARG_WITH([mysql], [  --with-mysql[=DIR]          use mysql in DIR], [], [with_mysql=try])
+
 if test "$with_mysql" != "no"
 then
 	if test "$with_mysql" = "yes" -o "$with_mysql" = "try"; then
@@ -238,12 +239,16 @@ then
 
 	AC_MSG_CHECKING(for MySQL)
 
-	if test "$MYSQL_CFLAGS" != ""; then
+	if test "$MYSQL_CFLAGS" != "" -a "$mysql_header" != "no" ; then
 		AC_MSG_RESULT(yes)
 	else
 		AC_MSG_RESULT(no)
 		if test "$with_mysql" != "try"; then
-			AC_MSG_ERROR(mysql_config not found or not executable)
+		  if test "$mysql_header" == "no"; then
+			  AC_MSG_ERROR(mysql.h not found)
+			else
+			  AC_MSG_ERROR(mysql_config not found or not executable)
+			fi
 		fi
 	fi
 fi

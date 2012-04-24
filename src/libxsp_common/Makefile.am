@@ -7,7 +7,7 @@ libxsp_common_la_SOURCES = xsp_modules.c xsp_session.c xsp_settings.c xsp_settin
 
 libxsp_common_a_LIBADD =
 libxsp_common_la_LIBADD =
-libxsp_common_la_LDFLAGS = -lm @THREAD_LIBS@ @DL_LIBS@ -export-dynamic @SSL_LIBS@ @NL_LIBS@
+libxsp_common_la_LDFLAGS = -lm @THREAD_LIBS@ @DL_LIBS@ -export-dynamic @SSL_LIBS@ @NL_LIBS@ -L@top_srcdir@/libconfig -lconfig
 
 libxsp_common_a_CFLAGS = @CFLAGS@ -DMODULE_DIR=\"$(moduledir)\" -fPIC
 libxsp_common_la_CFLAGS = @CFLAGS@ -DMODULE_DIR=\"$(moduledir)\" -fPIC
