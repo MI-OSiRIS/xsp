@@ -18,14 +18,21 @@
 #include "xsp_tpool.h"
 #include "xsp_modules.h"
 
-#include "splice.h"
 #include "compat.h"
+
+#ifdef HAVE_SPLICE_H
+#include "splice.h"
+#endif
 
 xspConn *xsp_conn_tcp_alloc(int sd, int use_web100);
 static xspConn_tcpData *xsp_conn_tcp_data_alloc(int sd);
+
+#ifdef HAVE_SPLICE_H
 static int xsp_conn_tcp_splice(xspConn *src, xspConn *sink, size_t len, int flags);
 static int xsp_conn_tcp_src_splice(xspConn *src, int fd, size_t len, int flags);
 static int xsp_conn_tcp_sink_splice(xspConn *sink, int fd, size_t len, int flags);
+#endif
+
 static int xsp_conn_tcp_read(xspConn *src, void *buf, size_t len, int flags);
 static int xsp_conn_tcp_write(xspConn *sink, const void *buf, size_t len, int flags);
 static int xsp_conn_tcp_shutdown(xspConn *conn, uint8_t direction);
@@ -90,10 +97,11 @@ xspConn *xsp_conn_tcp_alloc(int sd, int use_web100) {
 		sprintf(buf, "%d", sd);
 		new_conn->description = strdup(buf);
 	}
-	
+#ifdef HAVE_SPLICE_H
 	new_conn->splice2 = xsp_conn_tcp_splice;
 	new_conn->src_splice2 = xsp_conn_tcp_src_splice;
 	new_conn->sink_splice2 = xsp_conn_tcp_sink_splice;
+#endif
 	new_conn->read2 = xsp_conn_tcp_read;
 	new_conn->write2 = xsp_conn_tcp_write;
 	new_conn->shutdown2 = xsp_conn_tcp_shutdown;
@@ -145,6 +153,7 @@ error_exit:
 	return NULL;
 }
 
+#ifdef HAVE_SPLICE_H
 static xsp_conn_tcp_splice(xspConn *src, xspConn *sink, size_t len, int flags) {
 	int n;
 	xspConn_tcpData *tcp_src = (xspConn_tcpData *) src->conn_private;
@@ -184,6 +193,8 @@ static int xsp_conn_tcp_sink_splice(xspConn *sink, int fd, size_t len, int flags
 
         return n;
 }
+
+#endif /* HAVE_SPLICE_H */
 
 static int xsp_conn_tcp_write(xspConn *sink, const void *buf, size_t len, int flags) {
 	int n;

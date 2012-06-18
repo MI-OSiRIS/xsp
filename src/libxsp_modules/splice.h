@@ -6,7 +6,12 @@
 #include <sys/uio.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
+#ifdef HAVE_LINUX_UNISTD_H
 #include <linux/unistd.h>
+#else
+#error unsupported
+#endif
 
 #if defined(__i386__)
 #define __NR_sys_splice		313

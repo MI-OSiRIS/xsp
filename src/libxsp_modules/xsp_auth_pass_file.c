@@ -11,7 +11,7 @@
 #include "compat.h"
 #include "hashtable.h"
 
-xspModule *module_info();
+//xspModule *module_info();
 static int xsp_file_auth_init();
 static void xsp_file_auth_read_config();
 static xspPassUserInfo *file_get_user_info(const char *username);
@@ -37,9 +37,10 @@ static xspModule xsp_file_auth_module = {
 
 static struct hashtable *table;
 
-xspModule *module_info() {
-	return &xsp_file_auth_module;
-}
+//XXX MS: this is probably not the right thing.
+//xspModule *module_info() {
+//	return &xsp_file_auth_module;
+//}
 
 static void xsp_file_auth_read_config() {
 	char *str_val;

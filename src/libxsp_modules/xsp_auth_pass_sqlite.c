@@ -8,7 +8,7 @@
 #include "xsp_modules.h"
 #include "xsp_auth_pass.h"
 
-xspModule *module_info();
+//xspModule *module_info();
 static int xsp_sqlite_auth_init();
 static void xsp_sqlite_auth_read_config();
 static xspPassUserInfo *xsp_sqlite_auth_get_user_info(const char *username);
@@ -35,9 +35,12 @@ static xspModule xsp_sqlite_auth_module = {
 	.init = xsp_sqlite_auth_init
 };
 
-xspModule *module_info() {
-	return &xsp_sqlite_auth_module;
-}
+// XXX MS: again probably not the right thing
+// I'm not sure how this worked in that it seems to
+// need support from xsp_auth_pass, but then has a dup symbol
+//xspModule *module_info() {
+//	return &xsp_sqlite_auth_module;
+//}
 
 static void xsp_sqlite_auth_read_config() {
 	char *str_val;
