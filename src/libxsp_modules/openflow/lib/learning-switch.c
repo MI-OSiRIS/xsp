@@ -388,6 +388,7 @@ process_switch_features(struct lswitch *sw, struct rconn *rconn, void *osf_)
                        - offsetof(struct ofp_switch_features, ports))
                       / sizeof *osf->ports);
     size_t i;
+    struct sockaddr_in saddr;
 
     sw->datapath_id = ntohll(osf->datapath_id);
     sw->capabilities = ntohl(osf->capabilities);
@@ -397,6 +398,11 @@ process_switch_features(struct lswitch *sw, struct rconn *rconn, void *osf_)
     if (sw->capabilities & OFPC_STP) {
         schedule_query(sw, 1000);
     }
+
+    saddr.sin_addr.s_addr = rconn_get_ip(rconn);
+    printf("switch:\t%s\t[%012llx]\n",
+	   inet_ntoa(saddr.sin_addr),
+	   sw->datapath_id);
 }
 
 static void
