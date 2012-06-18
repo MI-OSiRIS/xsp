@@ -205,25 +205,22 @@ controller_loop(void *ptr)
 
         /* Accept connections on listening vconns. */
         for (i = 0; i < n_listeners && n_switches < MAX_SWITCHES; ) {
-        	struct sockaddr_in saddr;
-            struct vconn *new_vconn;
-            int retval;
-
-            retval = pvconn_accept(listeners[i], OFP_VERSION, &new_vconn);
-            if (!retval || retval == EAGAIN) {
-                if (!retval) {
-                    new_switch(&switches[n_switches++], new_vconn, "tcp");
-					saddr.sin_addr.s_addr = new_vconn->ip;
-					printf("new switch connected: %s\n", inet_ntoa(saddr.sin_addr));
-					install_default_rules(switches[n_switches-1]);
-                }
-                i++;
-            } else {
-                pvconn_close(listeners[i]);
-                listeners[i] = listeners[--n_listeners];
-            }
+	  struct vconn *new_vconn;
+	  int retval;
+	  
+	  retval = pvconn_accept(listeners[i], OFP_VERSION, &new_vconn);
+	  if (!retval || retval == EAGAIN) {
+	    if (!retval) {
+	      new_switch(&switches[n_switches++], new_vconn, "tcp");
+	      //install_default_rules(switches[n_switches-1]);
+	    }
+	    i++;
+	  } else {
+	    pvconn_close(listeners[i]);
+	    listeners[i] = listeners[--n_listeners];
+	  }
         }
-
+	
         /* Do some switching work.  Limit the number of iterations so that
          * callbacks registered with the poll loop don't starve. */
         for (iteration = 0; iteration < 50; iteration++) {
