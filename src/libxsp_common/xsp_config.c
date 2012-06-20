@@ -17,7 +17,7 @@ int xsp_config_read(const char *filename, const char *cgroup) {
 	config_init(&root);
 
 	if (config_read_file(&root, filename) == CONFIG_FALSE) {
-		fprintf(stderr, "%s:%d %s\n", config_error_file(&root),
+		fprintf(stderr, "%s:%d %s\n", filename,
 			config_error_line(&root), config_error_text(&root));
 		goto error_exit;
 	}
