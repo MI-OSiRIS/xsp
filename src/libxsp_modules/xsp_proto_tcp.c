@@ -278,7 +278,7 @@ static xspListener *xsp_proto_tcp_setup_listener(const char *listener_id, xspSet
 	new_listener->status = LISTENER_STOPPED;
 	new_listener->callback = callback;
 	new_listener->arg = arg;
-	new_listener->protocol = "TCP";
+	new_listener->protocol = "tcp";
 	new_listener->proto_private = tcp_args;
 	new_listener->start = xsp_proto_tcp_start_listener;
 	new_listener->stop = xsp_proto_tcp_stop_listener;
