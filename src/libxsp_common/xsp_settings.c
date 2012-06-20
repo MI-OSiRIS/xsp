@@ -23,7 +23,7 @@ int __xsp_settings_getval(const xspSettings *settings, char **value, int num_fie
 
 	data[0] = 0;
 	for(i = 0; i < num_fields; i++) {
-		strlcat(data, "$", sizeof(data));
+		strlcat(data, ".", sizeof(data));
 		strlcat(data, va_arg(ap, const char *), sizeof(data));
 	}
 
@@ -54,7 +54,7 @@ int __xsp_settings_getval_int(const xspSettings *settings, int *value, int num_f
 
 	data[0] = 0;
 	for(i = 0; i < num_fields; i++) {
-		strlcat(data, "$", sizeof(data));
+		strlcat(data, ".", sizeof(data));
 		strlcat(data, va_arg(ap, const char *), sizeof(data));
 	}
 
@@ -85,7 +85,7 @@ int __xsp_settings_getval_bool(const xspSettings *settings, int *value, int num_
 
 	data[0] = 0;
 	for(i = 0; i < num_fields; i++) {
-		strlcat(data, "$", sizeof(data));
+		strlcat(data, ".", sizeof(data));
 		strlcat(data, va_arg(ap, const char *), sizeof(data));
 	}
 
@@ -117,7 +117,7 @@ int __xsp_settings_getval_list(const xspSettings *settings, char ***value, int *
 
 	data[0] = 0;
 	for(i = 0; i < num_fields; i++) {
-		strlcat(data, "$", sizeof(data));
+		strlcat(data, ".", sizeof(data));
 		strlcat(data, va_arg(ap, const char *), sizeof(data));
 	}
 
@@ -169,39 +169,6 @@ error_exit:
 
 }
 
-int __xsp_settings_getval_range(const xspSettings *settings, int *min, int *max, int num_fields, ...) {
-	const config_setting_t *setting;
-	int i, n;
-	char **retval;
-	char data[1024];
-	va_list ap;
-
-	va_start(ap, num_fields);
-
-	data[0] = 0;
-	for(i = 0; i < num_fields; i++) {
-		strlcat(data, "$", sizeof(data));
-		strlcat(data, va_arg(ap, const char *), sizeof(data));
-	}
-
-	va_end(ap);
-
-	setting = config_lookup(&(settings->root), data);
-	if (!setting)
-		goto error_exit;
-
-	if (config_setting_type(setting) != CONFIG_TYPE_RANGE)
-		goto error_exit;
-
-	*min = config_setting_range_get_min(setting);
-	*max = config_setting_range_get_max(setting);
-
-	return 0;
-
-error_exit:
-	return -1;
-}
-
 int __xsp_settings_getval_group(const xspSettings *settings, xspSettings **ret_settings, int num_fields, ...) {
 	config_setting_t *setting;
 	int i, n;
@@ -213,7 +180,7 @@ int __xsp_settings_getval_group(const xspSettings *settings, xspSettings **ret_s
 
 	data[0] = 0;
 	for(i = 0; i < num_fields; i++) {
-		strlcat(data, "$", sizeof(data));
+		strlcat(data, ".", sizeof(data));
 		strlcat(data, va_arg(ap, const char *), sizeof(data));
 	}
 
@@ -326,30 +293,6 @@ error_exit:
 	return -1;
 }
 
-int __xsp_settings_setval_range(xspSettings *settings, int min, int max, int num_fields, ...) {
-	config_setting_t *setting;
-	config_setting_t *range;
-	int i;
-	va_list ap;
-
-	va_start(ap, num_fields);
-
-	range = xsp_settings_get_option(settings, num_fields, ap, CONFIG_TYPE_RANGE, 1);
-	if (!range)
-		goto error_exit;
-
-	if (config_setting_range_set_value(range, 0, min) == CONFIG_FALSE)
-		goto error_exit;
-
-	if (config_setting_range_set_value(range, 1, max) == CONFIG_FALSE)
-		goto error_exit;
-
-	return 0;
-
-error_exit:
-	return -1;
-}
-
 static config_setting_t *xsp_settings_get_option(const xspSettings *settings, int num_fields, va_list ap, int type, int replace) {
 	config_setting_t *group;
 	config_setting_t *setting;
@@ -384,7 +327,7 @@ static config_setting_t *xsp_settings_get_option(const xspSettings *settings, in
 	setting = config_setting_get_member(group, option);
 
 	if (setting && replace) {
-		config_setting_delete_child(group, option);
+		config_setting_remove(group, option);
 		setting = NULL;
 	}
 
@@ -465,12 +408,8 @@ static int libconfig_duplicate_group(config_setting_t *dst, config_setting_t *sr
 
 		if (config_setting_type(curr) == CONFIG_TYPE_GROUP || config_setting_type(curr) == CONFIG_TYPE_ARRAY) {
 			libconfig_duplicate_group(new, curr);
-		} else if (config_setting_type(curr) == CONFIG_TYPE_RANGE) {
-			int min, max;
-			min = config_setting_range_get_min(curr);
-			max = config_setting_range_get_max(curr);
-			config_setting_range_set_value(new, 0, min);
-			config_setting_range_set_value(new, 1, max);
+		} else if (config_setting_type(curr) == CONFIG_TYPE_LIST) {
+			// need to handle LIST case
 		} else if (config_setting_type(curr) == CONFIG_TYPE_STRING) {
 			config_setting_set_string(new, config_setting_get_string(curr));
 		} else if (config_setting_type(curr) == CONFIG_TYPE_INT) {
@@ -496,7 +435,7 @@ static int libconfig_merge_groups(config_setting_t *dst, const config_setting_t 
 
 		// we just end up adding onto the end of the array if it exists so get rid of it
 		if (new && config_setting_type(new) == CONFIG_TYPE_ARRAY) {
-			config_setting_delete_child(dst, config_setting_name(curr));
+			config_setting_remove(dst, config_setting_name(curr));
 			new = NULL;
 		}
 
@@ -506,16 +445,8 @@ static int libconfig_merge_groups(config_setting_t *dst, const config_setting_t 
 
 		if (config_setting_type(curr) == CONFIG_TYPE_GROUP || config_setting_type(curr) == CONFIG_TYPE_ARRAY) {
 			libconfig_merge_groups(new, curr);
-		} else if (config_setting_type(curr) == CONFIG_TYPE_RANGE) {
-			int min, max;
-			min = config_setting_range_get_min(curr);
-			if (config_setting_range_get_min(new) < min)
-				min = config_setting_range_get_min(new);
-			max = config_setting_range_get_max(curr);
-			if (config_setting_range_get_max(new) > min)
-				min = config_setting_range_get_max(new);
-			config_setting_range_set_value(new, 0, min);
-			config_setting_range_set_value(new, 1, max);
+		} else if (config_setting_type(curr) == CONFIG_TYPE_LIST) {
+			// need to handle LIST case
 		} else if (config_setting_type(curr) == CONFIG_TYPE_STRING) {
 			config_setting_set_string(new, config_setting_get_string(curr));
 		} else if (config_setting_type(curr) == CONFIG_TYPE_INT) {
@@ -535,7 +466,7 @@ void xsp_settings_print(const xspSettings *settings) {
 }
 
 void xsp_settings_write(const xspSettings *settings, const char *filename) {
-	config_save_file(&(settings->root), filename);
+	config_write_file(&(settings->root), filename);
 }
 
 inline int xsp_settings_get(const xspSettings *settings, const char *setting, char **value) {
@@ -552,10 +483,6 @@ inline int xsp_settings_get_bool(const xspSettings *settings, const char *settin
 
 inline int xsp_settings_get_list(const xspSettings *settings, const char *setting, char ***value, int *count) {
 	return __xsp_settings_getval_list(settings, value, count, 1, setting);
-}
-
-inline int xsp_settings_get_range(const xspSettings *settings, const char *setting, int *min, int *max) {
-	return __xsp_settings_getval_range(settings, min, max, 1, setting);
 }
 
 inline int xsp_settings_get_group(const xspSettings *settings, const char *setting, xspSettings **value) {
@@ -578,10 +505,6 @@ inline int xsp_settings_set_list(xspSettings *settings, const char *setting, cha
 	return __xsp_settings_setval_list(settings, values, num_values, 1, setting);
 }
 
-inline int xsp_settings_set_range(xspSettings *settings, const char *setting, int min, int max) {
-	return __xsp_settings_setval_range(settings, min, max, 1, setting);
-}
-
 inline int xsp_settings_get_2(const xspSettings *settings, const char *section, const char *setting, char **value) {
 	return __xsp_settings_getval(settings, value, 2, section, setting);
 }
@@ -596,10 +519,6 @@ inline int xsp_settings_get_bool_2(const xspSettings *settings, const char *sect
 
 inline int xsp_settings_get_list_2(const xspSettings *settings, const char *section, const char *setting, char ***values, int *count) {
 	return __xsp_settings_getval_list(settings, values, count, 2, section, setting);
-}
-
-inline int xsp_settings_get_range_2(const xspSettings *settings, const char *section, const char *setting, int *min, int *max) {
-	return __xsp_settings_getval_range(settings, min, max, 2, section, setting);
 }
 
 inline int xsp_settings_get_group_2(const xspSettings *settings, const char *section, const char *setting, xspSettings **value) {
@@ -622,10 +541,6 @@ inline int xsp_settings_set_list_2(xspSettings *settings, const char *section, c
 	return __xsp_settings_setval_list(settings, values, num_values, 2, section, setting);
 }
 
-inline int xsp_settings_set_range_2(xspSettings *settings, const char *section, const char *setting, int min, int max) {
-	return __xsp_settings_setval_range(settings, min, max, 2, section, setting);
-}
-
 // 3 sections deep
 inline int xsp_settings_get_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, char **value) {
 	return __xsp_settings_getval(settings, value, 3, section1, section2, setting);
@@ -641,10 +556,6 @@ inline int xsp_settings_get_bool_3(const xspSettings *settings, const char *sect
 
 inline int xsp_settings_get_list_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, char ***values, int *count) {
 	return __xsp_settings_getval_list(settings, values, count, 3, section1, section2, setting);
-}
-
-inline int xsp_settings_get_range_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, int *min, int *max) {
-	return __xsp_settings_getval_range(settings, min, max, 3, section1, section2, setting);
 }
 
 inline int xsp_settings_get_group_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, xspSettings **value) {
@@ -667,11 +578,6 @@ inline int xsp_settings_set_list_3(xspSettings *settings, const char *section1, 
 	return __xsp_settings_setval_list(settings, values, num_values, 3, section1, section2, setting);
 }
 
-inline int xsp_settings_set_range_3(xspSettings *settings, const char *section1, const char *section2, const char *setting, int min, int max) {
-	return __xsp_settings_setval_range(settings, min, max, 3, section1, section2, setting);
-}
-
-
 // 4 sections deep
 inline int xsp_settings_get_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, char **value) {
 	return __xsp_settings_getval(settings, value, 4, section1, section2, section3, setting);
@@ -687,10 +593,6 @@ inline int xsp_settings_get_bool_4(const xspSettings *settings, const char *sect
 
 inline int xsp_settings_get_list_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, char ***values, int *count) {
 	return __xsp_settings_getval_list(settings, values, count, 4, section1, section2, section3, setting);
-}
-
-inline int xsp_settings_get_range_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int *min, int *max) {
-	return __xsp_settings_getval_range(settings, min, max, 4, section1, section2, section3, setting);
 }
 
 inline int xsp_settings_get_group_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, xspSettings **value) {
@@ -711,8 +613,4 @@ inline int xsp_settings_set_bool_4(xspSettings *settings, const char *section1, 
 
 inline int xsp_settings_set_list_4(xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, char * const *values, int num_values) {
 	return __xsp_settings_setval_list(settings, values, num_values, 4, section1, section2, section3, setting);
-}
-
-inline int xsp_settings_set_range_4(xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int min, int max) {
-	return __xsp_settings_setval_range(settings, min, max, 4, section1, section2, section3, setting);
 }

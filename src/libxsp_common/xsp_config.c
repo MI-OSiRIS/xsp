@@ -11,18 +11,24 @@
 int xsp_config_read(const char *filename, const char *cgroup) {
 	config_t root;
 	const config_setting_t *group, *def, *connections;
-	int i, n, j;
+	int i, n, j, k;
 	xspSettings *settings;
 
 	config_init(&root);
 
-	if (config_load_file(&root, filename) == 0) {
-		fprintf(stderr, "Couldn't load settings file: %s\n", filename);
+	if (config_read_file(&root, filename) == CONFIG_FALSE) {
+		fprintf(stderr, "%s:%d %s\n", config_error_file(&root),
+			config_error_line(&root), config_error_text(&root));
 		goto error_exit;
 	}
 
-	group = config_setting_remove_child(config_root_setting(&root), cgroup);
-	if (group && config_setting_type(group) == CONFIG_TYPE_GROUP) {
+	group = config_setting_get_member(config_root_setting(&root), cgroup);
+	if (!group) {
+		fprintf(stderr, "No config section named %s\n", cgroup);
+		goto error_exit;
+	}
+
+	if (config_setting_type(group) == CONFIG_TYPE_GROUP) {
 		settings = xsp_settings_alloc();
 		if (settings) {
 			settings->root.root = group;
@@ -31,7 +37,7 @@ int xsp_config_read(const char *filename, const char *cgroup) {
 		}
 	}
 
-	connections = config_setting_remove_child(config_root_setting(&root), "connections");
+	connections = config_setting_get_member(config_root_setting(&root), "connections");
 	if (connections && config_setting_type(connections) == CONFIG_TYPE_GROUP) {
 
 		for(j = 0; j < 3; j++) {
@@ -50,7 +56,7 @@ int xsp_config_read(const char *filename, const char *cgroup) {
 			}
 
 			if (section) {
-				group = config_setting_remove_child(connections, section);
+				group = config_setting_get_member(connections, section);
 				if (!group) {
 					continue;
 				}
@@ -59,7 +65,7 @@ int xsp_config_read(const char *filename, const char *cgroup) {
 			}
 
 			// get the default settings if it exists
-			def = config_setting_remove_child(group, "default");
+			def = config_setting_get_member(group, "default");
 			if (def && config_setting_type(def) == CONFIG_TYPE_GROUP) {
 				settings = xsp_settings_alloc();
 				if (settings) {
@@ -71,31 +77,28 @@ int xsp_config_read(const char *filename, const char *cgroup) {
 			}
 
 			// iterate through the rest of the user/route policies
-			while(config_setting_length(group) > 0) {
+			for (k=0; k < config_setting_length(group); k++) {
 				config_setting_t *setting;
 				char *name;
 				char *desc;
 				xspSettings *settings;
 
-				setting = config_setting_remove_index(group, 0);
+				setting = config_setting_get_elem(group, k);
 				name = config_setting_name(setting);
 
 				// skip the default settings since we've already set it
 				if (!strcasecmp(name, "default")) {
-					config_setting_destroy(setting);
 					continue;
 				}
 
 				// skip if it's not a settings group
 				if (config_setting_type(setting) != CONFIG_TYPE_GROUP) {
-					config_setting_destroy(setting);
 					continue;
 				}
 
 				// grab the route/username
 				desc = strchr(name, ':');
 				if (!desc) {
-					config_setting_destroy(setting);
 					continue;
 				}
 
@@ -103,20 +106,16 @@ int xsp_config_read(const char *filename, const char *cgroup) {
 
 				// skip if it's an invalid settings type
 				if (strncmp(name, "route", 5) && strncmp(name, "user", 4)) {
-					config_setting_destroy(setting);
 					continue;
 				}
 
 				settings = xsp_settings_alloc();
 				if (!settings) {
-					config_setting_destroy(setting);
 					continue;
 				}
 
 				config_init(&(settings->root));
 				settings->root.root = setting;
-				
-				config_setting_destroy(setting);
 			}
 		}
 

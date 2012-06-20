@@ -179,37 +179,6 @@ int xsp_main_settings_set_list(const char *section, const char *option, char * c
 	return n;
 }
 
-int xsp_main_settings_set_range(const char *section, const char *option, int min, int max) {
-	int n;
-
-	pthread_mutex_lock(&main_settings_lock);
-	{
-		if (main_settings)
-			n = xsp_settings_set_range_2(main_settings, section, option, min, max);
-		else
-			n = -1;
-	}
-	pthread_mutex_unlock(&main_settings_lock);
-
-	return n;
-}
-
-int xsp_main_settings_get_range(const char *section, const char *option, int *min, int *max) {
-	int n;
-
-	pthread_mutex_lock(&main_settings_lock);
-	{
-		if (main_settings)
-			n = xsp_settings_get_range_2(main_settings, section, option, min, max);
-		else
-			n = -1;
-	}
-	pthread_mutex_unlock(&main_settings_lock);
-
-	return n;
-}
-
-
 int xsp_main_settings_get_3(const char *section1, const char *section2, const char *option, char **value) {
 	int n;
 
@@ -270,22 +239,6 @@ int xsp_main_settings_get_list_3(const char *section1, const char *section2, con
 	return n;
 }
 
-int xsp_main_settings_get_range_3(const char *section1, const char *section2, const char *option, int *min, int *max) {
-	int n;
-
-	pthread_mutex_lock(&main_settings_lock);
-	{
-		if (main_settings)
-			n = xsp_settings_get_range_3(main_settings, section1, section2, option, min, max);
-		else
-			n = -1;
-	}
-	pthread_mutex_unlock(&main_settings_lock);
-
-	return n;
-}
-
-
 int xsp_main_settings_get_4(const char *section1, const char *section2, const char *section3, const char *option, char **value) {
 	int n;
 
@@ -338,21 +291,6 @@ int xsp_main_settings_get_list_4(const char *section1, const char *section2, con
 	{
 		if (main_settings)
 			n = xsp_settings_get_list_4(main_settings, section1, section2, section3, option, value, count);
-		else
-			n = -1;
-	}
-	pthread_mutex_unlock(&main_settings_lock);
-
-	return n;
-}
-
-int xsp_main_settings_get_range_4(const char *section1, const char *section2, const char *section3, const char *option, int *min, int *max) {
-	int n;
-
-	pthread_mutex_lock(&main_settings_lock);
-	{
-		if (main_settings) 
-			n = xsp_settings_get_range_4(main_settings, section1, section2, section3, option, min, max);
 		else
 			n = -1;
 	}
