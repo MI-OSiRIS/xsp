@@ -439,7 +439,7 @@ AC_CHECK_HEADERS(libconfig.h, [
 			CONFIG_LIBS="-lconfig"
 			AC_SUBST(CONFIG_LIBS)
 		],
-		AC_MSG_ERROR(libconfig.h not found, try installing libconfig-dev))
+		AC_MSG_ERROR([libconfig.h not found (try installing libconfig-dev)]))
 
 CONFIG_FILE=$sysconfdir/xspd.conf
 AC_SUBST(CONFIG_FILE)
