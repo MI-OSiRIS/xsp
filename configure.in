@@ -50,13 +50,13 @@ AH_TEMPLATE(SOCKLEN_T, The native socklen_t type used on the platform)
 AC_DEFINE_UNQUOTED(SOCKLEN_T, socklen_t)
 
 AC_ARG_ENABLE(debug,
-		[  --enable-debug          turn on debugging],
-		[CFLAGS="-g -O0 -Wall -DDEBUG ${CFLAGS}"],
-		[CFLAGS="-O2 -Wall ${CFLAGS}"])
+	[  --enable-debug          turn on debugging],
+	[CFLAGS="-g -O0 -Wall -DDEBUG ${CFLAGS}"],
+	[CFLAGS="-O2 -Wall ${CFLAGS}"])
 
 AC_ARG_ENABLE(netlogger,
-		[  --enable-netlogger	  turn on netlogger],
-		[CFLAGS="-g -Wall -DNETLOGGER ${CFLAGS}" NL_LIBS="-lnl -lnlio"])
+	[  --enable-netlogger	  turn on netlogger],
+	[CFLAGS="-g -Wall -DNETLOGGER ${CFLAGS}" NL_LIBS="-lnl -lnlio"])
 		
 AC_ARG_ENABLE(globus,
         [  --enable-globus     turn on globus],
@@ -434,6 +434,13 @@ dnl Check for Globus
 AM_CONDITIONAL(HAVE_GLOBUS, test "${GLOBUS_INCLUDES}" != "")
 dnl End check for Globus
 
+dnl Check for libconfig (required)
+AC_CHECK_HEADERS(libconfig.h, [
+			CONFIG_LIBS="-lconfig"
+			AC_SUBST(CONFIG_LIBS)
+		],
+		AC_MSG_ERROR(libconfig.h not found, try installing libconfig-dev))
+
 CONFIG_FILE=$sysconfdir/xspd.conf
 AC_SUBST(CONFIG_FILE)
 
@@ -443,8 +450,6 @@ AC_SUBST(moduledir)
 AC_SUBST(THREAD_LIBS)
 AC_SUBST(DL_LIBS)
 AC_SUBST(NL_LIBS)
-
-AC_CONFIG_SUBDIRS(libconfig)
 
 AC_OUTPUT(
 	Makefile

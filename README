@@ -1,0 +1,12 @@
+-- BUILD INSTRUCTIONS --
+
+Dependencies:
+	-- libconfig-dev
+	-- libtool
+	-- gcc
+	-- make
+	-- automake
+
+./autogen.sh
+./configure
+make

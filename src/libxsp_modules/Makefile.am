@@ -96,7 +96,7 @@ endif
 modules_LTLIBRARIES += auth_pass_file.la 
 auth_pass_file_la_SOURCES = xsp_auth_pass_file.c
 auth_pass_file_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
-auth_pass_file_la_LDFLAGS += -L@top_srcdir@/src/libxsp_common -lxsp_common -L@top_srcdir@/src/libxsp_modules auth_pass.la
+auth_pass_file_la_LDFLAGS += -L@top_srcdir@/src/libxsp_common -lxsp_common -L@top_srcdir@/src/libxsp_modules 
 
 modules_LTLIBRARIES += auth_trust.la
 auth_trust_la_SOURCES = xsp_auth_trusted.c
