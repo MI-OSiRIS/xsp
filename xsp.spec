@@ -1,17 +1,17 @@
 Name: libxsp
 Version: 1.0
-Release: 6
+Release: 7
 Summary: XSP RPM
 
 Group: Application/Network
 License: GPL
-URL: http://damsl.cis.udel.edu/projects/xsp
+URL: http://damsl.cs.indiana.edu/projects/xsp
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}
-Requires: libxsp-common, libxsp-client
+Requires: libxsp-common, libxsp-client, libconfig
 
-Packager: Ezra Kissel <kissel@cis.udel.edu>
-Vendor: Distributed and Metasystems Lab (DAMSL), University of Delaware
+Packager: Ezra Kissel <ezkissel@indiana.edu>
+Vendor: Distributed and Metasystems Lab (DAMSL), Indiana University
 Provides: xsp
 
 %define __os_install_post /usr/lib/rpm/brp-compress
@@ -24,6 +24,7 @@ The eXtensible Session Protocol RPM packages.
 %package client
 Summary: XSP client library
 Group: Application/Network
+Requires: libconfig
 %description client
 This package contains the client libraries and test applications for
 interacting with XSP services.
@@ -32,6 +33,7 @@ interacting with XSP services.
 %package common
 Summary: XSP common library
 Group: Application/Network
+Requires: libconfig
 %description common
 The eXtensible Session Protocol common library.
 
@@ -39,6 +41,7 @@ The eXtensible Session Protocol common library.
 %package xspd
 Summary: XSP Daemon
 Group: Application/Network
+Requires: libconfig, libxsp-common
 %description xspd
 This package contains a basic daemon for libxsp.
 
