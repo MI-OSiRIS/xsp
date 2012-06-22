@@ -1,8 +1,8 @@
 include $(top_srcdir)/globus_automake_pre
 include $(top_srcdir)/globus_automake_pre_top
 
-#SUBDIRS = \
-#	pkgdata 
+SUBDIRS = \
+	pkgdata 
 
 flavorinclude_HEADERS = \
     globus_xio_xsp_driver.h
