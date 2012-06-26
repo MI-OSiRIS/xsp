@@ -55,6 +55,15 @@ openflow_la_CFLAGS = $(AM_CFLAGS) -DWITH_NONAMESPACES -DWITH_DOM
 INCLUDES += -I$(srcdir)/openflow/include -I$(srcdir)/openflow
 endif
 
+if ENABLE_FLOODLIGHT
+modules_LTLIBRARIES += floodlight.la
+floodlight_la_SOURCES = xsp_floodlight_basic.c xsp_floodlight_basic.h
+floodlight_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+floodlight_la_LIBADD =
+floodlight_la_CFLAGS = $(AM_CFLAGS)
+INCLUDES +=
+endif
+
 if ENABLE_LINUXNET
 modules_LTLIBRARIES += linuxnet.la
 linuxnet_la_SOURCES = xsp_linuxnet.c xsp_linuxnet.h

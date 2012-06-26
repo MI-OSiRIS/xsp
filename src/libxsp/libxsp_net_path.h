@@ -13,6 +13,9 @@ typedef struct xsp_sess_net_path_rule_crit_t {
 	uint64_t src_port;
 	uint64_t dst_port;
 
+	uint64_t l2_src;
+	uint64_t l2_dst;
+
 	uint16_t l4_src_port_min;
 	uint16_t l4_src_port_max;
 	uint16_t l4_dst_port_min;

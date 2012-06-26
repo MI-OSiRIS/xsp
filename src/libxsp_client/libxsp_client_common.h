@@ -7,6 +7,8 @@ typedef struct libxsp_net_path_rule_crit {
 	char *dst;
 	char *src_mask;
 	char *dst_mask;
+	char *l2_src;
+	char *l2_dst;
 	uint16_t vlan;
 	uint16_t src_vlan;
 	uint16_t dst_vlan;
