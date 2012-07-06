@@ -127,11 +127,17 @@ int main(int argc, char *argv[])
 		path = xsp_sess_new_net_path(XSP_NET_PATH_CREATE);
 	
 
+	rule = xsp_sess_new_net_path_rule(path, "FLOODLIGHT");
+
 	crit.src = src;
 	crit.dst = dst;
-	crit.src_port = atoi(inp);
-	crit.dst_port = atoi(outp);
-	crit.vlan = atoi(vlan);
+
+	if (inp)
+	  crit.src_port = atoi(inp);
+	if (outp)
+	  crit.dst_port = atoi(outp);
+	if (vlan)
+	  crit.src_vlan = atoi(vlan);
 
 	if (xsp_sess_set_net_path_rule_crit(rule, &crit) != 0)
 		fprintf(stderr, "could not set rule criteria\n");

@@ -947,11 +947,11 @@ globus_l_xio_xsp_make_path(
 		    printf(" bandwidth=%u", crit.bandwidth);
 	    }
 	    if (handle->svlan > 0) {
-		    crit.src_vlan = handle->svlan;
+		    crit.src_vlan = (uint16_t)handle->svlan;
 		    printf(" src_vlan=%u", crit.src_vlan);
 	    }
 	    if (handle->dvlan > 0) {
-                    crit.dst_vlan = handle->dvlan;
+		    crit.dst_vlan = (uint16_t)handle->dvlan;
                     printf(" dst_vlan=%u", crit.dst_vlan);
             }
 
