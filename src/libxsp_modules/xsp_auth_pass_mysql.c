@@ -10,7 +10,6 @@
 #include "xsp_modules.h"
 #include "xsp_auth_pass.h"
 
-xspModule *module_info();
 static int xsp_mysql_auth_init();
 static void xsp_mysql_auth_read_config();
 static int connect_mysql();
@@ -63,28 +62,28 @@ static void xsp_mysql_auth_read_config() {
 	int val;
 	char *str_val;
 
-	if (xsp_depot_settings_get("mysql_auth", "db_server", &str_val) == 0) {
+	if (xsp_main_settings_get("mysql_auth", "db_server", &str_val) == 0) {
 		xspMySQLAuthConfig.db_server = str_val;
 	}
 
-	if (xsp_depot_settings_get_int("mysql_auth", "db_port", &val) == 0) {
+	if (xsp_main_settings_get_int("mysql_auth", "db_port", &val) == 0) {
 		if (val >= 0)
 			xspMySQLAuthConfig.db_port = val;
 	}
 
-	if (xsp_depot_settings_get("mysql_auth", "db_username", &str_val) == 0) {
+	if (xsp_main_settings_get("mysql_auth", "db_username", &str_val) == 0) {
 		xspMySQLAuthConfig.db_username = str_val;
 	}
 
-	if (xsp_depot_settings_get("mysql_auth", "db_password", &str_val) == 0) {
+	if (xsp_main_settings_get("mysql_auth", "db_password", &str_val) == 0) {
 		xspMySQLAuthConfig.db_password = str_val;
 	}
 
-	if (xsp_depot_settings_get("mysql_auth", "db_name", &str_val) == 0) {
+	if (xsp_main_settings_get("mysql_auth", "db_name", &str_val) == 0) {
 		xspMySQLAuthConfig.db_name = str_val;
 	}
 
-	if (xsp_depot_settings_get("mysql_auth", "db_table", &str_val) == 0) {
+	if (xsp_main_settings_get("mysql_auth", "db_table", &str_val) == 0) {
 		xspMySQLAuthConfig.db_table = str_val;
 	}
 }

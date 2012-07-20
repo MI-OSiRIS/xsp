@@ -7,11 +7,11 @@
 #include "xsp_logger.h"
 #include "xsp_modules.h"
 #include "xsp_auth_pass.h"
+#include "xsp_main_settings.h"
 
 #include "compat.h"
 #include "hashtable.h"
 
-//xspModule *module_info();
 static int xsp_file_auth_init();
 static void xsp_file_auth_read_config();
 static xspPassUserInfo *file_get_user_info(const char *username);
@@ -37,15 +37,16 @@ static xspModule xsp_file_auth_module = {
 
 static struct hashtable *table;
 
-//XXX MS: this is probably not the right thing.
-//xspModule *module_info() {
-//	return &xsp_file_auth_module;
-//}
+xspModule *module_info() {
+	return &xsp_file_auth_module;
+}
 
 static void xsp_file_auth_read_config() {
 	char *str_val;
-
-	if (xsp_depot_settings_get("file_auth", "passwd_file", &str_val) == 0) {
+	const xspSettings *settings;
+	
+	settings = xsp_main_settings();
+	if (xsp_settings_get_2(settings,"file_auth", "passwd_file", &str_val) == 0) {
 		xspFileAuthConfig.file = str_val;
 	}
 }

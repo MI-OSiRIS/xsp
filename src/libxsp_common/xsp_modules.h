@@ -17,5 +17,6 @@ typedef struct xsp_module_t {
 } xspModule;
 
 xspModule *xsp_find_module(char *module_name);
+xspModule *module_info();
 
 #endif

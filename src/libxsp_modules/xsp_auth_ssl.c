@@ -34,10 +34,6 @@ static const char *xsp_ssl_auth_get_email(xspCreds *creds);
 static const char *xsp_ssl_auth_get_institution(xspCreds *creds);
 
 //static void __xsp_rand_fill(unsigned char *buf, int length);
-//xspModule *module_info();
-
-//static xspSSLBackend *ssl_be = NULL;
-//static pthread_mutex_t ssl_be_lock;
 
 static xspAuthenticationHandler xsp_ssl_auth_handler = {
 	.name = "SSL",
@@ -55,26 +51,9 @@ xspModule *module_info() {
 	return &xsp_ssl_auth_module;
 }
 
-//struct xsp_ssl_auth_config_t {
-//	char *backend;
-//};
-
-//static struct xsp_ssl_auth_config_t xspSSLAuthConfig = {
-//	.backend = "file",
-//};
-
-//static void xsp_ssl_auth_read_config() {
-//	char *str_val;
-
-//	if (xsp_depot_settings_get("ssl_auth", "backend", &str_val) == 0) {
-//		xspSSLAuthConfig.backend = str_val;
-//	}
-//}
 
 int xsp_ssl_auth_init() {
 	//char module_name[255];
-
-	//xsp_ssl_auth_read_config();
 
 	//if (pthread_mutex_init(&ssl_be_lock, NULL)) {
 	//	xsp_err(0, "couldn't initialize mutex");
@@ -104,8 +83,6 @@ int xsp_ssl_auth_init() {
 
 	return 0;
 
-//error_exit2:
-//	pthread_mutex_destroy(&ssl_be_lock);
 error_exit:
 	return -1;
 }

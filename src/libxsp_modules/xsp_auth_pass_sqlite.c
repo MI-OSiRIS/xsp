@@ -7,8 +7,8 @@
 #include "xsp_logger.h"
 #include "xsp_modules.h"
 #include "xsp_auth_pass.h"
+#include "xsp_main_settings.h"
 
-//xspModule *module_info();
 static int xsp_sqlite_auth_init();
 static void xsp_sqlite_auth_read_config();
 static xspPassUserInfo *xsp_sqlite_auth_get_user_info(const char *username);
@@ -35,21 +35,20 @@ static xspModule xsp_sqlite_auth_module = {
 	.init = xsp_sqlite_auth_init
 };
 
-// XXX MS: again probably not the right thing
-// I'm not sure how this worked in that it seems to
-// need support from xsp_auth_pass, but then has a dup symbol
-//xspModule *module_info() {
-//	return &xsp_sqlite_auth_module;
-//}
+xspModule *module_info() {
+	return &xsp_sqlite_auth_module;
+}
 
 static void xsp_sqlite_auth_read_config() {
 	char *str_val;
-
-	if (xsp_depot_settings_get("sqlite_auth", "db_file", &str_val) == 0) {
+	const xspSettings *settings;
+	
+	settings = xsp_main_settings();
+	if (xsp_settings_get_2(settings, "sqlite_auth", "db_file", &str_val) == 0) {
 		xspSQLiteAuthConfig.db_file = str_val;
 	}
 
-	if (xsp_depot_settings_get("sqlite_auth", "db_table", &str_val) == 0) {
+	if (xsp_settings_get_2(settings, "sqlite_auth", "db_table", &str_val) == 0) {
 		xspSQLiteAuthConfig.db_table = str_val;
 	}
 }
