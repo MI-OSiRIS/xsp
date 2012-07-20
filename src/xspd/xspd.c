@@ -69,12 +69,6 @@ int main(int argc, char *argv[]) {
 	if (getenv("NL_LOG_SUMMARY") == NULL)
 	  NL_transfer_set_passthrough(prog_summ);
         NL_summ_add_log(prog_summ, nllog);
-	
-        //int_summ = NL_summ();
-        //NL_summ_set_shared_output(int_summ, nllog);
-        //NL_transfer_init(int_summ, 1000000, NL_LVL_DEBUG);
-        //NL_transfer_set_passthrough(int_summ);
-        //NL_summ_add_log(int_summ, nllog);
 #endif
 
 	signal(SIGUSR1, sig_exit);
@@ -195,8 +189,11 @@ int main(int argc, char *argv[]) {
 		goto error_exit;
 	}
 
-	pthread_exit(0);
-
+	// instead of existing and becoming defunct, wait for signal
+	// we could also do something useful here
+	while (1)
+		pause();
+	
  error_exit:
 	sleep(1);
 	exit(EXIT_FAILURE);
