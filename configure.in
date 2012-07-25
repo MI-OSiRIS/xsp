@@ -4,6 +4,9 @@ AM_INIT_AUTOMAKE(xsp,0.1)
 
 AM_CONFIG_HEADER(include/config.h)
 
+# keep track of modules we build, these are the default
+xsp_modules="tcp auth_anon auth_pass auth_pass_file auth_trust logger_file logger_stdout logger_syslog"
+
 # Prevent autoconf from setting CFLAGS="-g -O2" on AC_PROG_CC
 ${CFLAGS=""}
 
@@ -76,13 +79,6 @@ AC_ARG_ENABLE(dragon,
 
 AM_CONDITIONAL(ENABLE_DRAGON, test x$enable_dragon = xyes)
 
-AC_ARG_ENABLE(terapaths,
-        AC_HELP_STRING([--enable-terapaths], [enable terapaths module [default=no]]),
-        [enable_terapaths=$enableval],
-        [enable_terapaths=no])
-
-AM_CONDITIONAL(ENABLE_TERAPATHS, test x$enable_terapaths = xyes)
-
 AC_ARG_ENABLE(nlmi,
         AC_HELP_STRING([--enable-nlmi], [enable NLMI module [default=no]]),
         [enable_nlmi=$enableval],
@@ -111,13 +107,6 @@ AC_ARG_ENABLE(photon,
 
 AM_CONDITIONAL(ENABLE_PHOTON, test x$enable_photon = xyes)
 
-AC_ARG_ENABLE(oscars,
-        AC_HELP_STRING([--enable-oscars], [enable oscars module [default=no]]),
-        [enable_oscars=$enableval],
-        [enable_oscars=no])
-
-AM_CONDITIONAL(ENABLE_OSCARS, test x$enable_oscars = xyes)
-
 AC_ARG_ENABLE(openflow,
         AC_HELP_STRING([--enable-openflow], [enable openflow module [default=no]]),
         [enable_openflow=$enableval],
@@ -138,22 +127,6 @@ AC_ARG_ENABLE(linuxnet,
         [enable_linuxnet=no])
 
 AM_CONDITIONAL(ENABLE_LINUXNET, test x$enable_linuxnet = xyes)
-
-#AC_ARG_ENABLE(udt-embed,
-#	AC_HELP_STRING([--enable-udt-embed], [compile UDT into the daemon instead of as a module [default=no]]),
-#	enable_udt_embed=yes,
-#	enable_udt_embed=no)
-#
-#AC_MSG_CHECKING(for embedded UDT) 
-#if test "$enable_udt_embed" == "no"; then
-#	AC_MSG_RESULT(no)
-#else
-#	AC_MSG_RESULT(yes)
-#fi 
-#
-#
-#AM_CONDITIONAL(EMBED_UDT, test x$enable_udt_embed = xyes)
-
 
 dnl Check for Web100
 AC_ARG_ENABLE(web100, AC_HELP_STRING([--disable-web100], [disable web100 support (default is autodetect)]),,enable_web100=try)
@@ -180,7 +153,6 @@ fi
 
 AM_CONDITIONAL(HAVE_WEB100, test "${WEB100_CFLAGS}" != "")
 
-
 dnl Check for LibXML
 AC_PATH_PROG([xml2_config], [xml2-config], [no]) 
   
@@ -201,11 +173,11 @@ AM_CONDITIONAL(HAVE_LIBXML, test "${LIBXML_CFLAGS}" != "")
 
 dnl End check for Web100
 
-dnl Check for Netfilter
-AH_TEMPLATE(HAVE_NETFILTER, Whether or not netfilter is used on the system)
-
 dnl Check for prctl
 AH_TEMPLATE(HAVE_SYS_PRCTL_H, Whether or not prctl is available)
+
+dnl Check for Netfilter
+AH_TEMPLATE(HAVE_NETFILTER, Whether or not netfilter is used on the system)
 
 AC_ARG_ENABLE(netfilter, [  --enable-netfilter      use netfilter for transparency [default=yes]], enable_netfilter=$enableval, enable_netfilter=try)
 
@@ -213,6 +185,7 @@ if test "$enable_netfilter" = "yes" -o "$enable_netfilter" = "try"; then
 	AC_CHECK_HEADER(linux/netfilter.h, netfilter_header=yes, [], [ #include <netinet/in.h> ])
 	if test "$netfilter_header" == "yes"; then
 		AC_DEFINE(HAVE_NETFILTER)
+		xsp_modules+=" transparent"
 	elif test "$enable_netfilter" = "yes"; then
 		AC_MSG_ERROR(netfilter.h not found)
 	fi
@@ -227,7 +200,10 @@ AH_TEMPLATE(HAVE_MYSQL, Whether or not mysql is used on the system)
 AC_ARG_WITH([mysql], [  --with-mysql[=DIR]          use mysql in DIR], [], [with_mysql=try])
 
 if test "$with_mysql" != "no"
-then
+then	
+	mysql_header="no"
+	AC_CHECK_HEADER(mysql/mysql.h, mysql_header=yes, [], [])
+
 	if test "$with_mysql" = "yes" -o "$with_mysql" = "try"; then
 		AC_PATH_PROG(mysql_path, mysql_config)
 		if test "$mysql_path" != ""; then
@@ -244,16 +220,7 @@ then
 		fi
 	fi
 
-	AC_MSG_CHECKING(for MySQL)
-
-	mysql_header="no"
-	AC_CHECK_HEADER(mysql.h, mysql_header=yes, [], [])
-
-	if test "$MYSQL_CFLAGS" != "" -a "$mysql_header" != "no" ; then
-		AC_MSG_RESULT(yes)
-	else
-		AC_MSG_RESULT(no)
-		MYSQL_CFLAGS=""
+	if test "$MYSQL_CFLAGS" == "" -a "$mysql_header" == "no" ; then
 		if test "$with_mysql" != "try"; then
 		  if test "$mysql_header" == "no"; then
 			  AC_MSG_ERROR(mysql.h not found)
@@ -261,6 +228,8 @@ then
 			  AC_MSG_ERROR(mysql_config not found or not executable)
 			fi
 		fi
+	else
+		xsp_modules+=" auth_pass_mysql"
 	fi
 fi
 
@@ -305,77 +274,12 @@ fi
 if test "$SQLITE_LIBS" != ""
 then
  	AC_MSG_RESULT(yes)
+	xsp_modules+=" auth_pass_sqlite"
 fi
 
 AM_CONDITIONAL(HAVE_SQLITE, test "$SQLITE_LIBS" != "")
 AC_SUBST(SQLITE_CFLAGS)
 AC_SUBST(SQLITE_LIBS)
-
-#dnl Check for Libudt
-#AC_MSG_CHECKING(for udt)
-#AC_ARG_WITH(udt, [  --with-udt[=DIR]          use udt in DIR])
-#
-#if test "$with_udt" == "yes"
-#then
-#	if test -f /usr/include/udt_c_wrapper.h; then
-#		UDT_INCLUDES="-I/usr/include"
-#	elif test -f /usr/local/include/udt_c_wrapper.h; then
-#		UDT_INCLUDES="-I/usr/local/include"
-#	else
-#		AC_MSG_RESULT(no)
-#		AC_ERROR(udt_c_wrapper.h not found)
-#	fi
-#
-#	if test -f /usr/lib/libudt.a; then
-#		UDT_LDFLAGS="-L/usr/lib -ludt"
-#	elif test -f /usr/lib/libudt.so; then
-#		UDT_LDFLAGS="-L/usr/lib -ludt"
-#	elif test -f /usr/local/lib/libudt.a; then
-#		UDT_LDFLAGS="-L/usr/local/lib -ludt"
-#	elif test -f /usr/local/lib/libudt.so; then
-#		UDT_LDFLAGS="-L/usr/local/lib -ludt"
-#	else
-#		AC_MSG_RESULT(no)
-#		AC_ERROR(libudt not found)
-#	fi
-#
-#	AC_MSG_RESULT(yes)
-#elif test "$with_udt" != "no" -a "$with_udt" != ""
-#then
-#	if test -f $with_udt/udt_c_wrapper.h; then
-#		UDT_INCLUDES="-I$with_udt"
-#	elif test -f $with_udt/include/udt_c_wrapper.h; then
-#		UDT_INCLUDES="-I$with_udt/include"
-#	else
-#		AC_MSG_RESULT(no)
-#		AC_ERROR(udt_c_wrapper.h not found)
-#	fi
-#
-#	if test -f $with_udt/libudt.a; then
-#		UDT_LDFLAGS="-L$with_udt -ludt"
-#	elif test -f $with_udt/libudt.so; then
-#		UDT_LDFLAGS="-L$with_udt -ludt"
-#	elif test -f $with_udt/lib/libudt.a; then
-#		UDT_LDFLAGS="-L$with_udt/lib -ludt"
-#	elif test -f $with_udt/lib/libudt.so; then
-#		UDT_LDFLAGS="-L$with_udt/lib -ludt"
-#	else
-#		AC_MSG_RESULT(no)
-#		AC_ERROR(libudt not found)
-#	fi
-#
-#fi
-
-#if test "$with_udt" != "" ; then
-#	AC_MSG_RESULT($with_udt)
-#else
-#	AC_MSG_RESULT(no)
-#fi
-#
-#AC_SUBST(UDT_INCLUDES)
-#AC_SUBST(UDT_LDFLAGS)
-#AM_CONDITIONAL(HAVE_UDT, test "${UDT_INCLUDES}" != "")
-#dnl End check for Libudt
 
 dnl Check for libssh2
 AC_ARG_ENABLE(ssh, AC_HELP_STRING([--disable-ssh], [disable SSH2 connection support (default is autodetect)]),[enable_ssh=$enableval],[enable_ssh=try])
@@ -432,10 +336,26 @@ if test "$enable_openssl" != "no" ; then
 
 	if test "$have_openssl" == "yes"; then
 		AC_DEFINE(HAVE_OPENSSL,, Build with OpenSSL support)
+		xsp_modules+=" auth_ssl"
 	fi
 fi
 
 AM_CONDITIONAL(HAVE_OPENSSL, test x$have_openssl = xyes)
+
+AC_ARG_ENABLE(terapaths,
+        AC_HELP_STRING([--enable-terapaths], [enable terapaths module [default=no]]),
+        [enable_terapaths=$enableval],
+        [enable_terapaths=no])
+
+AM_CONDITIONAL(ENABLE_TERAPATHS, test x$enable_terapaths = xyes -a x$have_openssl = xyes)
+
+AC_ARG_ENABLE(oscars,
+        AC_HELP_STRING([--enable-oscars], [enable oscars module [default=no]]),
+
+        [enable_oscars=$enableval],
+        [enable_oscars=no])
+
+AM_CONDITIONAL(ENABLE_OSCARS, test x$enable_oscars = xyes -a x$have_openssl = xyes)
 
 dnl Check for Globus
 AM_CONDITIONAL(HAVE_GLOBUS, test "${GLOBUS_INCLUDES}" != "")
@@ -477,3 +397,55 @@ AC_OUTPUT(
 	misc/subsys/Makefile
 	test/Makefile
 	)
+
+
+# figure out which modules other are enabled
+if test "$enable_oscars" = "yes" -a "$have_openssl" = "yes"; then
+   xsp_modules+=" oscars"
+fi
+if test "$enable_terapaths" = "yes" -a "$have_openssl" = "yes"; then
+   xsp_modules+=" terapaths"
+fi
+if test "$enable_nlmi" = "yes"; then
+   xsp_modules+=" nlmi"
+fi
+if test "$enable_globus_xio" = "yes"; then
+   xsp_modules+=" globus-xio"
+fi
+if test "$enable_openflow" = "yes"; then
+   xsp_modules+=" openflow"
+fi
+if test "$enable_floodlight" = "yes"; then
+   xsp_modules+=" floodlight"
+fi
+if test "$enable_linuxnet" = "yes"; then
+   xsp_modules+=" linuxnet"
+fi
+if test "$enable_photon" = "yes"; then
+   xsp_modules+=" photon"
+fi
+if test "$enable_dragon" = "yes"; then
+   xsp_modules+=" dragon"
+fi
+
+if test "$have_ssh" = "yes"; then
+   ssh_yn="yes"
+else
+   ssh_yn="no"
+fi
+
+cat << EOF
+
+Config files successfully generated by ./configure $ac_configure_args !
+
+  Install prefix     : $prefix
+  SSH client support : $ssh_yn
+    
+  Building modules:
+`for m in $xsp_modules; do echo -e \\\t$m; done`
+
+  To build and install, run:
+     $ make
+     $ make install
+
+EOF
