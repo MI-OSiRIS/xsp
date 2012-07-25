@@ -6,7 +6,8 @@ Dependencies:
 	-- gcc
 	-- make
 	-- automake
+	-- autoconf
 
-./autogen.sh
-./configure
-make
+> ./autogen.sh
+> ./configure
+> make
