@@ -36,8 +36,9 @@ static void *xsp_handle_transparent_conn(void *arg);
 
 static xspModule xsp_transparent_module = {
 	.desc = "Transparent XSP Handler Module",
-	.dependencies = "tcp",
-	.init = xsp_frontend_transparent_init
+	.dependencies = "tcp auth_anon",
+	.init = xsp_frontend_transparent_init,
+	.opt_handler = NULL
 };
 
 int xsp_transparent_port = 5008;
@@ -172,23 +173,31 @@ void *xsp_handle_transparent_conn(void *arg) {
 	tcp_data = new_conn->conn_private;
 	child_fd = tcp_data->sd;
 
-	if (xsp_authenticate_connection(new_conn, "ANON", &credentials) != 0) {
+	xspMsg msg = {
+		.version = XSP_v0,
+		.type = XSP_MSG_AUTH_TYPE,
+		.msg_body = "ANON"
+	};
+
+	if (xsp_authenticate_connection(new_conn, &msg, &credentials) != 0) {
 		xsp_err(0, "Authentication failed.");
 		goto error_exit;
 	}
-	
+
 	// copy the original address in here:
 	if (getsockopt(child_fd, IPPROTO_IP, SO_ORIGINAL_DST, &sa, &sa_size) != 0) {
 		xsp_err(5, "Couldn't get the original destination"); 
 		perror("getsockopt");
 		goto error_exit3;
 	}
+	
+	// if the above fails, we should do a default route lookup based on the source
 
 	if (xsp_sa2hopid_r((struct sockaddr *) &sa, sizeof(sa), hop->hop_id, sizeof(hop->hop_id), 0) == NULL) {
 		xsp_err(5, "Couldn't convert destination to hop id");
 		goto error_exit3;
 	}
-	
+
 	if (xsp_sess_add_hop(sess, hop) != 0) {
 		xsp_err(5, "Error adding \"%s\" to session", hop->hop_id);
 		goto error_exit3;
@@ -206,22 +215,19 @@ void *xsp_handle_transparent_conn(void *arg) {
 
 	gettimeofday(&sess->start_time, NULL);
 
-	if (xsp_setup_session(sess, &error_msgs) < 0) {
-		xsp_err(5, "Couldn't setup sessions");
-		goto error_exit4;
+	// any XSP-service than uses this module will need to define
+	// the opt_handler function pointer
+	if (xsp_transparent_module.opt_handler == NULL) {
+		xsp_err(0, "handler undefined, closing connection");
 	}
-
-	if (LIST_EMPTY(&sess->child_conns)) {
-		xsp_err(5, "No one to send to");
-		goto error_exit4;
+	else {
+		// handle the connection
+		if (xsp_transparent_module.opt_handler(sess)) {
+			xsp_err(5, "Error in handling the session connection");
+			goto error_exit4;
+		}
 	}
-
-	// XXX: we're going to need something more complex for transparent sessions... sigh
-	if (xsp_session_main_loop(sess)) {
-		xsp_err(5, "Error in session main loop");
-		goto error_exit4;
-	}
-
+	
 	gettimeofday(&sess->end_time, NULL);
 
 	// if we get here, IO has finished for this session

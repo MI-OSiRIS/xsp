@@ -11,7 +11,7 @@ const char *xsp_auth_anon_get_value(xspCreds *credentials);
 void xsp_auth_anon_free_credentials(xspCreds *credentials);
 
 static xspAuthenticationHandler xsp_auth_anon_handler = {
-  .name = "ANON",
+	.name = "ANON",
 	.authenticate = xsp_auth_anon_authenticate,
 	.request_authentication = xsp_auth_anon_request_authentication,
 };
@@ -56,7 +56,6 @@ int xsp_auth_anon_authenticate(xspConn *conn, xspCreds **ret_creds) {
 	creds->get_email = xsp_auth_anon_get_value;
 	creds->get_institution = xsp_auth_anon_get_value;
 	creds->free = xsp_auth_anon_free_credentials;
-
 
 	*ret_creds = creds;
 

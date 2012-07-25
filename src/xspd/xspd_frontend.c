@@ -45,6 +45,9 @@ int xspd_frontend_start() {
 			xsp_info(8, "Found 'disabled' in section '%s': %d", protocols[i], disabled);
 		}
 		
+		if (disabled)
+			continue;
+
 		xsp_info(0, "Setting up listener for %s", protocols[i]);
 		
 		if ((listener = xsp_protocol_setup_listener(protocols[i], protocols[i], settings, 0, xspd_frontend_connection_handler, NULL)) == NULL) {

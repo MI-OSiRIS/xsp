@@ -47,7 +47,7 @@ static xspProtocolHandler xsp_tcp_handler = {
 
 static xspModule xsp_tcp_module = {
 	.desc = "TCP Handler Module",
-	.dependencies = "tcp", 			// XXX: gross hack
+	.dependencies = "",
 	.init = xsp_proto_tcp_init
 };
 
