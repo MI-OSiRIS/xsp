@@ -102,6 +102,7 @@ int xsp_load_module(char *module_name) {
 	xspModule *module;
 	void *handle;
 	char filename[1024];
+	char soname[1024];
 
 #ifdef EMBED_UDT
 	if (strcmp(module_name, "udt") == 0)
@@ -114,15 +115,20 @@ int xsp_load_module(char *module_name) {
 	if (hashtable_search(table, module_name))
 		return 0;
 
+	strlcpy(soname, module_name, sizeof(soname));
+	strlcat(soname, ".so", sizeof(filename));
+
 	strlcpy(filename, xspModulesConfig.module_dir, sizeof(filename));
 	strlcat(filename, "/", sizeof(filename));
-	strlcat(filename, module_name, sizeof(filename));
-	strlcat(filename, ".so", sizeof(filename));
+	strlcat(filename, soname, sizeof(filename));
 
 	handle = dlopen(filename, RTLD_LAZY | RTLD_GLOBAL);
 	if (!handle) {
-		xsp_err(0, "couldn't open module %s: %s", module_name, dlerror());
-		goto error_exit;
+		handle = dlopen(soname, RTLD_LAZY | RTLD_GLOBAL);
+		if (!handle) {
+			xsp_err(0, "error loading %s: %s", module_name, dlerror());
+			goto error_exit;
+		}
 	}
 
 	module_info_function = dlsym(handle, "module_info");
