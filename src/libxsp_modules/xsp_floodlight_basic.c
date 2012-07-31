@@ -28,6 +28,11 @@
 #include "hashtable.h"
 #include "xsp_config.h"
 
+struct curl_http_data {
+	const char *readptr;
+	long leftlen;
+};
+
 static uint64_t entry_id;
 static xspFLConfig fl_config;
 
@@ -42,7 +47,8 @@ static int __xsp_floodlight_create_rule(xspPathRule *rule, char **ret_error_msg)
 static int __xsp_floodlight_delete_rule(xspPathRule *rule, char **ret_error_msg);
 static int __xsp_floodlight_modify_rule(xspPathRule *rule, char **ret_error_msg);
 static json_t *__xsp_floodlight_make_entry(xspPathRule *rule);
-static json_t *__xsp_floodlight_push_entry(json_t *entry);
+static json_t *__xsp_floodlight_push_entry(json_t *entry, int rest_opt);
+static size_t read_callback(void *ptr, size_t size, size_t nmemb, void *userp);
 
 xspModule xsp_floodlight_module = {
 	.desc = "FLOODLIGHT Module",
@@ -62,6 +68,7 @@ xspModule *module_info() {
 
 int xsp_floodlight_init() {
 	const xspSettings *settings;
+	CURLcode res;
 
 	// get and save floodlight host/ip from config here	
 	settings = xsp_main_settings();
@@ -69,6 +76,12 @@ int xsp_floodlight_init() {
 		xsp_info(0, "No Floodlight controller specified!");
                 return -1;
         }
+
+	res = curl_global_init(CURL_GLOBAL_DEFAULT);
+	if(res != CURLE_OK) {
+		xsp_info(0, "curl_global_init() failed: %s", curl_easy_strerror(res));
+		return -1;
+	}
 
 	entry_id = 0;
 
@@ -214,7 +227,7 @@ static int __xsp_floodlight_create_rule(xspPathRule *rule, char **ret_error_msg)
 	
 	printf("FLOODLIGHT ENTRY:\n%s\n", json_dumps(fl_entry, JSON_INDENT(2)));
 
-	__xsp_floodlight_push_entry(fl_entry);
+	__xsp_floodlight_push_entry(fl_entry, CURLOPT_POST);
 
 	// save entry names for delete/modify
 	if (!(fle->n_entries)) {
@@ -293,8 +306,62 @@ static json_t *__xsp_floodlight_make_entry(xspPathRule *rule) {
 	return obj;
 }
 
-static json_t *__xsp_floodlight_push_entry(json_t *entry) {
+static size_t read_callback(void *ptr, size_t size, size_t nmemb, void *userp)
+{
+	struct curl_http_data *data = (struct curl_http_data *)userp;
+ 
+	if(size*nmemb < 1)
+		return 0;
+ 
+	if(data->leftlen) {
+		*(char *)ptr = data->readptr[0];
+		data->readptr++;
+		data->leftlen--;
+		return 1;
+	}
+ 
+	return 0;
+}
+
+static json_t *__xsp_floodlight_push_entry(json_t *entry, int rest_opt) {
+	CURL *curl;
+	CURLcode res;
+	struct curl_slist *headers = NULL;
+		
+	char *endpoint;
+	char *json_str;
+
+	json_str = json_dumps(entry, JSON_COMPACT);
+
+	struct curl_http_data data = {
+		.readptr = json_str,
+		.leftlen = strlen(json_str)
+	};	
 	
+	asprintf(&endpoint, "%s/wm/staticflowentrypusher/json", fl_config.controller_hp);
+
+	/* get a curl handle */ 
+	curl = curl_easy_init();
+	if(curl) {
+		curl_easy_setopt(curl, CURLOPT_URL, endpoint);
+ 		curl_easy_setopt(curl, rest_opt, 1L);
+ 		curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_callback);
+		curl_easy_setopt(curl, CURLOPT_READDATA, &data);
+		//curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+		
+		headers = curl_slist_append(headers, "Transfer-Encoding: chunked");
+		headers = curl_slist_append(headers, "Content-type': 'application/json");
+		headers = curl_slist_append(headers, "Accept': 'application/json");
+		
+		res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+		
+		res = curl_easy_perform(curl);
+		if(res != CURLE_OK)
+			xsp_info(5, "curl_easy_perform() failed: %s",
+				curl_easy_strerror(res));
+		
+		curl_easy_cleanup(curl);
+	}		
 
 	return NULL;
 }
