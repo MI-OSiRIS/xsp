@@ -3,9 +3,13 @@
 
 #include <pthread.h>
 
-struct xsp_fl_config_t {
-	char *server_ip;
-	int server_port;
+typedef struct xsp_fl_config_t {
+	char *controller_hp;
 } xspFLConfig;
+
+typedef struct xsp_fl_entry_list_t {
+	void **entries;
+	int n_entries;
+} xspFLEntries;
 
 #endif

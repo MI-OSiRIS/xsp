@@ -26,7 +26,8 @@ enum xsp_eid_types_t {
 	XSP_EID_URN,
 	XSP_EID_HRN,
 	XSP_EID_HOPID,
-	XSP_EID_DPID
+	XSP_EID_DPID,
+	XSP_EID_DPIDC
 };
 
 enum xsp_sec {

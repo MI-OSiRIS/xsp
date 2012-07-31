@@ -13,7 +13,7 @@
 #include "compat.h"
 #include "libxsp_client.h"
 
-static char usage[] = "usage: xsp_pathtest [-Vr]\n"
+static char usage[] = "usage: xsp_pathtest [-Vr] [-e eid]\n"
 	"\t[-s src] [-d dst] [-a dl_src] [-b dl_dst]\n"
 	"\t[-i in_port] [-o out_port] [-v vlan id] xsp_hops\n";
 
@@ -33,6 +33,7 @@ int main(int argc, char *argv[])
 	char *dst = NULL;
 	char *inp = NULL;
 	char *outp = NULL;
+	char *eid = NULL;
 
 	libxspSess *sess;
 	libxspSecInfo *sec;
@@ -42,7 +43,7 @@ int main(int argc, char *argv[])
 
 	memset(&crit, 0, sizeof(libxspNetPathRuleCrit));
 
-	while((c = getopt(argc, argv, "v:a:b:s:d:i:o:Vr")) != -1) {		switch(c) {
+	while((c = getopt(argc, argv, "v:e:a:b:s:d:i:o:Vr")) != -1) {		switch(c) {
 		case 'V':
 			printf("XSP PATH Tester\n");
 			printf("%s\n", usage);
@@ -53,6 +54,10 @@ int main(int argc, char *argv[])
                         vlan = strdup(optarg);
                         break;
 			
+		case 'e':
+			eid = strdup(optarg);
+			break;
+
 		case 'a':
 			dlsrc = strdup(optarg);
 			break;
@@ -136,13 +141,17 @@ int main(int argc, char *argv[])
 	  crit.src_port = atoi(inp);
 	if (outp)
 	  crit.dst_port = atoi(outp);
-	if (vlan)
+	if (vlan) {
 	  crit.src_vlan = atoi(vlan);
+	  crit.vlan = atoi(vlan);
+	}
+
+	if (eid)
+		xsp_sess_set_net_path_rule_eid(rule, eid, XSP_EID_DPIDC);
 
 	if (xsp_sess_set_net_path_rule_crit(rule, &crit) != 0)
 		fprintf(stderr, "could not set rule criteria\n");
 	
-
         if (xsp_signal_path(sess, path) != 0)
 		fprintf(stderr, "signaling path failed\n");
 	

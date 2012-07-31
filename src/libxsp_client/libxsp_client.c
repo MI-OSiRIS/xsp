@@ -495,9 +495,14 @@ int xsp_sess_set_net_path_rule_eid(xspNetPathRule *rule, void *eid, int type) {
 	case XSP_EID_DPID:
 		rule->eid.x_addrd = *(uint64_t *)eid;
 		break;
+	case XSP_EID_DPIDC:
+		strcpy(rule->eid.x_addrc, eid);
+		break;
 	default:
 		break;
 	}
+
+	rule->eid.type = type;
 
 	return 0;
 }		

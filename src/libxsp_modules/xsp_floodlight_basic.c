@@ -10,6 +10,9 @@
 #endif
 #include <unistd.h>
 
+#include <jansson.h>
+#include <curl/curl.h>
+
 #include "compat.h"
 
 #include "xsp_floodlight_basic.h"
@@ -25,16 +28,21 @@
 #include "hashtable.h"
 #include "xsp_config.h"
 
+static uint64_t entry_id;
+static xspFLConfig fl_config;
+
 int xsp_floodlight_init();
 static int xsp_floodlight_allocate_pathrule_handler(const xspNetPathRule *rule, const xspSettings *settings,
-						  xspPathRule **ret_rule, char **ret_error_msg);
-static char *xsp_floodlight_generate_pathrule_id(const xspNetPathRule *rule, const xspSettings *settings, char **ret_error_msg);
+						    xspPathRule **ret_rule, char **ret_error_msg);
+static char *xsp_floodlight_generate_pathrule_id(const xspNetPathRule *rule, const xspSettings *settings,
+						 char **ret_error_msg);
 static int xsp_floodlight_apply_rule(xspPathRule *rule, int action, char **ret_error_msg);
 static void xsp_floodlight_free_rule(xspPathRule *rule);
-
 static int __xsp_floodlight_create_rule(xspPathRule *rule, char **ret_error_msg);
 static int __xsp_floodlight_delete_rule(xspPathRule *rule, char **ret_error_msg);
 static int __xsp_floodlight_modify_rule(xspPathRule *rule, char **ret_error_msg);
+static json_t *__xsp_floodlight_make_entry(xspPathRule *rule);
+static json_t *__xsp_floodlight_push_entry(json_t *entry);
 
 xspModule xsp_floodlight_module = {
 	.desc = "FLOODLIGHT Module",
@@ -54,15 +62,22 @@ xspModule *module_info() {
 
 int xsp_floodlight_init() {
 	const xspSettings *settings;
-	
-	// get and save floodlight host/ip from config here
+
+	// get and save floodlight host/ip from config here	
+	settings = xsp_main_settings();
+        if (xsp_settings_get_3(settings, "paths", "floodlight", "controller", &fl_config.controller_hp) != 0) {
+		xsp_info(0, "No Floodlight controller specified!");
+                return -1;
+        }
+
+	entry_id = 0;
 
 	return xsp_add_pathrule_handler(&xsp_floodlight_pathrule_handler);
 }
 
 static char *xsp_floodlight_generate_pathrule_id(const xspNetPathRule *rule,
-					       const xspSettings *settings,
-					       char **ret_error_msg) {
+						 const xspSettings *settings,
+						 char **ret_error_msg) {
 	
 	char *rule_id;
 	char *src_eid;
@@ -70,7 +85,6 @@ static char *xsp_floodlight_generate_pathrule_id(const xspNetPathRule *rule,
 	uint32_t sport;
 	uint32_t dport;
 	uint64_t dpid;
-
 
         if (rule->use_crit) {
 		// compose id from just the src/dst addrs for now
@@ -109,18 +123,11 @@ error_exit:
 }
 
 static int xsp_floodlight_allocate_pathrule_handler(const xspNetPathRule *net_rule,
-						  const xspSettings *settings,
-						  xspPathRule **ret_rule,
-						  char **ret_error_msg) {
-	
-	char **src_list;
-	char **dst_list;
-	int src_count;
-	int dst_count;
+						    const xspSettings *settings,
+						    xspPathRule **ret_rule,
+						    char **ret_error_msg) {	
 	char *src_eid;
 	char *dst_eid;
-
-	struct xsp_floodlight_rules_t *prules = NULL;
 
 	xspPathRule *rule;
 	rule = xsp_alloc_pathrule();
@@ -147,7 +154,13 @@ static int xsp_floodlight_allocate_pathrule_handler(const xspNetPathRule *net_ru
 	}
 
 	memcpy(&(rule->eid), &(net_rule->eid), sizeof(struct xsp_addr));
-	rule->private = NULL;
+
+	// keep track of which entries get pushed via FL for this rule
+	xspFLEntries *fle  = (xspFLEntries *)malloc(sizeof(xspFLEntries));
+	fle->entries = NULL;
+	fle->n_entries = 0;
+	
+	rule->private = fle;
 	rule->apply = xsp_floodlight_apply_rule;
 	rule->free = xsp_floodlight_free_rule;
 	
@@ -193,8 +206,33 @@ static int xsp_floodlight_apply_rule(xspPathRule *rule, int action, char **ret_e
 }
 
 static int __xsp_floodlight_create_rule(xspPathRule *rule, char **ret_error_msg) {
-
 	
+	xspFLEntries *fle = (xspFLEntries*)rule->private;
+	json_t *fl_entry;
+	
+	fl_entry = __xsp_floodlight_make_entry(rule);
+	
+	printf("FLOODLIGHT ENTRY:\n%s\n", json_dumps(fl_entry, JSON_INDENT(2)));
+
+	__xsp_floodlight_push_entry(fl_entry);
+
+	// save entry names for delete/modify
+	if (!(fle->n_entries)) {
+		fle->entries = (xspFLEntries**)malloc(sizeof(xspFLEntries*));
+		fle->entries[0] = fl_entry;
+		fle->n_entries = 1;
+	}
+	else {
+		int new_size = fle->n_entries+1;
+		fle->entries = realloc(fle->entries, new_size*sizeof(xspFLEntries*));
+		fle->entries[fle->n_entries] = fl_entry;
+		fle->n_entries++;
+		printf("adding new entry\n");
+	}
+	
+	// incrememnt global id
+	entry_id++;
+
 	return 0;
 	
  error_exit:
@@ -208,9 +246,12 @@ static int __xsp_floodlight_modify_rule(xspPathRule *rule, char **ret_error_msg)
 }
 
 static int __xsp_floodlight_delete_rule(xspPathRule *rule, char **ret_error_msg) {
-	struct xsp_floodlight_rules_t *prules = rule->private;
-        int i;
+	xspFLEntries *fle = (xspFLEntries*)rule->private;
+	int i;
 
+	for (i=0; i<fle->n_entries; i++) {
+		
+	}
 	return 0;
 
  error_exit:
@@ -219,4 +260,41 @@ static int __xsp_floodlight_delete_rule(xspPathRule *rule, char **ret_error_msg)
 
 static void xsp_floodlight_free_rule(xspPathRule *rule) {
 	xsp_free_pathrule(rule);
+}
+
+// build a json object for FL out of the rule
+static json_t *__xsp_floodlight_make_entry(xspPathRule *rule) {
+	json_t *obj = json_object();
+	char *entry_name;
+	char *entry_action;;
+
+	if (!obj) {
+		xsp_err(10, "could not create new json object");
+		return NULL;
+	}
+
+	asprintf(&entry_name, "xsp-fl-%llu", entry_id);
+	// more logic needed to determine the correct action
+	// assume OUTPUT for now
+	asprintf(&entry_action, "output=%d", rule->crit.dst_port);
+
+	if (rule->eid.type == XSP_EID_DPIDC)
+		json_object_set_new(obj, "switch", json_string(rule->eid.x_addrc));
+	
+	json_object_set_new(obj, "name", json_string(entry_name));
+
+	//json_object_set_new(obj, "src-mac", json_string(rule->crit.l2_src));
+	//json_object_set_new(obj, "dst-mac", json_string(rule->crit.l2_dst));
+	json_object_set_new(obj, "ingress-port", json_integer(rule->crit.src_port));
+	json_object_set_new(obj, "vlan-id", json_integer(rule->crit.src_vlan));
+	json_object_set_new(obj, "active", json_string("true"));
+	json_object_set_new(obj, "actions", json_string(entry_action));
+
+	return obj;
+}
+
+static json_t *__xsp_floodlight_push_entry(json_t *entry) {
+	
+
+	return NULL;
 }
