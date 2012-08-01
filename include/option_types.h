@@ -27,4 +27,9 @@
 #define SPEEDOMETER_MIN              SPEEDOMETER_UPDATE
 #define SPEEDOMETER_MAX              SPEEDOMETER_UPDATE
 
+#define PEERING_HELLO                0x50
+#define PEERING_BYE                  0x51
+#define PEERING_MIN                  PEERING_HELLO
+#define PEERING_MAX                  PEERING_BYE
+
 #endif

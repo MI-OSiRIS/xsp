@@ -883,6 +883,11 @@ int xsp_session_app_data(comSess *sess, const void *arg, char ***error_msgs) {
             block->type <= SPEEDOMETER_MAX) {
 		mstring = "speedometer";
         }
+
+	if (block->type >= PEERING_MIN &&
+	    block->type <= PEERING_MAX) {
+		mstring = "peering";
+	}
 	
 	if (!mstring) {
 		asprintf(error_msg, "unrecognized option block type: %d", block->type);

@@ -25,6 +25,10 @@ modules_LTLIBRARIES += logger_syslog.la
 logger_syslog_la_SOURCES = xsp_logger_syslog.c
 logger_syslog_la_LDFLAGS = -module -avoid-version -export-dynamic
 
+modules_LTLIBRARIES += peering.la
+peering_la_SOURCES = xsp_peering.c
+peering_la_LDFLAGS = -module -avoid-version -export-dynamic
+
 if ENABLE_TERAPATHS
 modules_LTLIBRARIES += terapaths.la
 terapaths_la_SOURCES = xsp_terapaths_basic.c libxsp_terapaths_basic.h
