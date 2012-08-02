@@ -27,6 +27,10 @@ if HAVE_SSH
 bindirs += misc/subsys
 endif
 
+if HAVE_CURL
+libdirs += libcurl
+endif
+
 if HAVE_RDMA
 libdirs += src/libxsp_rdma
 endif

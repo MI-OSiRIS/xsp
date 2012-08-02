@@ -29,6 +29,16 @@ modules_LTLIBRARIES += peering.la
 peering_la_SOURCES = xsp_peering.c
 peering_la_LDFLAGS = -module -avoid-version -export-dynamic
 
+if HAVE_CURL
+if HAVE_JSON
+modules_LTLIBRARIES += unis.la
+unis_la_SOURCES = xsp_unis.c
+unis_la_LDFLAGS = -module -avoid-version -export-dynamic
+unis_la_LIBADD =$(top_builddir)/libcurl/libxsp_curl.a
+unis_la_INCLUDES = -I$(top_srcdir)/libcurl
+endif
+endif
+
 if ENABLE_TERAPATHS
 modules_LTLIBRARIES += terapaths.la
 terapaths_la_SOURCES = xsp_terapaths_basic.c libxsp_terapaths_basic.h
@@ -63,9 +73,9 @@ if ENABLE_FLOODLIGHT
 modules_LTLIBRARIES += floodlight.la
 floodlight_la_SOURCES = xsp_floodlight_basic.c xsp_floodlight_basic.h
 floodlight_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic @JSON_LIBS@ @CURL_LIBS@
-floodlight_la_LIBADD =
+floodlight_la_LIBADD =$(top_builddir)/libcurl/libxsp_curl.a
 floodlight_la_CFLAGS = $(AM_CFLAGS)
-INCLUDES +=
+INCLUDES += -I$(top_srcdir)/libcurl
 endif
 
 if ENABLE_LINUXNET

@@ -436,6 +436,7 @@ AC_OUTPUT(
 	libradix/Makefile
 	libbson/Makefile
 	libgsoap/Makefile
+	libcurl/Makefile
 	src/libxsp/Makefile
 	src/xspd/Makefile
 	src/modules/Makefile
@@ -470,6 +471,9 @@ if test "$enable_openflow" = "yes"; then
 fi
 if test "$enable_floodlight" = "yes" -a "$have_curl" = "yes" -a "$have_json" = "yes"; then
    xsp_modules+=" floodlight"
+fi
+if test "$have_curl" = "yes" -a "$have_json" = "yes"; then
+   xsp_modules+=" unis"
 fi
 if test "$enable_linuxnet" = "yes"; then
    xsp_modules+=" linuxnet"

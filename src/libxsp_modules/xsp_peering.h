@@ -16,6 +16,7 @@ typedef struct xsp_peering_config_t {
 	char **static_peer_list;
 	int static_peer_count;
 	int keepalive_timer;
+	int use_unis;
 } xspPeerConfig;
 
 #endif

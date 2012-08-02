@@ -11,11 +11,11 @@
 #include <unistd.h>
 
 #include <jansson.h>
-#include <curl/curl.h>
 
 #include "compat.h"
 
 #include "xsp_floodlight_basic.h"
+#include "xsp_curl_context.h"
 
 #include "xsp_tpool.h"
 #include "xsp_modules.h"
@@ -28,13 +28,12 @@
 #include "hashtable.h"
 #include "xsp_config.h"
 
-struct curl_http_data {
-	const char *readptr;
-	long leftlen;
-};
-
+// GLOBALS
 static uint64_t entry_id;
 static xspFLConfig fl_config;
+
+static xspCURLContext curl_context;
+// END GLOBALS
 
 int xsp_floodlight_init();
 static int xsp_floodlight_allocate_pathrule_handler(const xspNetPathRule *rule, const xspSettings *settings,
@@ -68,7 +67,6 @@ xspModule *module_info() {
 
 int xsp_floodlight_init() {
 	const xspSettings *settings;
-	CURLcode res;
 
 	// get and save floodlight host/ip from config here	
 	settings = xsp_main_settings();
@@ -77,9 +75,12 @@ int xsp_floodlight_init() {
                 return -1;
         }
 
-	res = curl_global_init(CURL_GLOBAL_DEFAULT);
-	if(res != CURLE_OK) {
-		xsp_info(0, "curl_global_init() failed: %s", curl_easy_strerror(res));
+	curl_context.url = fl_config.controller_hp;
+	curl_context.use_ssl = 0;
+	curl_context.curl_persist = 0;
+
+	if (xsp_init_curl(&curl_context, NULL) != 0) {
+		xsp_info(0, "Could not start CURL context");
 		return -1;
 	}
 
@@ -222,12 +223,15 @@ static int __xsp_floodlight_create_rule(xspPathRule *rule, char **ret_error_msg)
 	
 	xspFLEntries *fle = (xspFLEntries*)rule->private;
 	json_t *fl_entry;
-	
+	json_t *j_resp;
+
 	fl_entry = __xsp_floodlight_make_entry(rule);
 	
-	printf("FLOODLIGHT ENTRY:\n%s\n", json_dumps(fl_entry, JSON_INDENT(2)));
+	printf("PUSHING FLOODLIGHT ENTRY:\n%s\n", json_dumps(fl_entry, JSON_INDENT(2)));
 
-	__xsp_floodlight_push_entry(fl_entry, CURLOPT_POST);
+	j_resp = __xsp_floodlight_push_entry(fl_entry, CURLOPT_POST);
+	if (j_resp)
+		printf("RESPONSE: \n%s\n", json_dumps(j_resp, JSON_INDENT(2)));
 
 	// save entry names for delete/modify
 	if (!(fle->n_entries)) {
@@ -240,7 +244,6 @@ static int __xsp_floodlight_create_rule(xspPathRule *rule, char **ret_error_msg)
 		fle->entries = realloc(fle->entries, new_size*sizeof(xspFLEntries*));
 		fle->entries[fle->n_entries] = fl_entry;
 		fle->n_entries++;
-		printf("adding new entry\n");
 	}
 	
 	// incrememnt global id
@@ -306,62 +309,25 @@ static json_t *__xsp_floodlight_make_entry(xspPathRule *rule) {
 	return obj;
 }
 
-static size_t read_callback(void *ptr, size_t size, size_t nmemb, void *userp)
-{
-	struct curl_http_data *data = (struct curl_http_data *)userp;
- 
-	if(size*nmemb < 1)
-		return 0;
- 
-	if(data->leftlen) {
-		*(char *)ptr = data->readptr[0];
-		data->readptr++;
-		data->leftlen--;
-		return 1;
-	}
- 
-	return 0;
-}
-
 static json_t *__xsp_floodlight_push_entry(json_t *entry, int rest_opt) {
-	CURL *curl;
-	CURLcode res;
-	struct curl_slist *headers = NULL;
-		
-	char *endpoint;
+	json_t *json_ret;;
+	json_error_t json_err;
 	char *json_str;
+	char *response;
 
 	json_str = json_dumps(entry, JSON_COMPACT);
 
-	struct curl_http_data data = {
-		.readptr = json_str,
-		.leftlen = strlen(json_str)
-	};	
+	xsp_curl_json_string(&curl_context,
+			     "/wm/staticflowentrypusher/json",
+			     rest_opt,
+			     json_str,
+			     &response);
 	
-	asprintf(&endpoint, "%s/wm/staticflowentrypusher/json", fl_config.controller_hp);
-
-	/* get a curl handle */ 
-	curl = curl_easy_init();
-	if(curl) {
-		curl_easy_setopt(curl, CURLOPT_URL, endpoint);
- 		curl_easy_setopt(curl, rest_opt, 1L);
- 		curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_callback);
-		curl_easy_setopt(curl, CURLOPT_READDATA, &data);
-		//curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-		
-		headers = curl_slist_append(headers, "Transfer-Encoding: chunked");
-		headers = curl_slist_append(headers, "Content-type': 'application/json");
-		headers = curl_slist_append(headers, "Accept': 'application/json");
-		
-		res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-		
-		res = curl_easy_perform(curl);
-		if(res != CURLE_OK)
-			xsp_info(5, "curl_easy_perform() failed: %s",
-				curl_easy_strerror(res));
-		
-		curl_easy_cleanup(curl);
-	}		
-
-	return NULL;
+	json_ret = json_loads(response, 0, &json_err);
+	if (!json_ret) {
+		xsp_info(5, "Could not decode response: %d: %s", json_err.line, json_err.text);
+		return NULL;
+	}
+	
+	return json_ret;
 }
