@@ -11,4 +11,15 @@ typedef struct xsp_unis_config_t {
 	int refresh_timer;
 } xspUNISConfig;
 
+/* public methods */
+
+/* 
+   first param is the service name we're looking for
+   sets a list of service access points for the caller
+*/
+int xsp_unis_get_service_access_points(char *sname, char ***ret_aps, int *num_aps);
+
+/* ... and we need to think about the list of query methods
+   the more general we can make these the better, the above is just a test */
+
 #endif

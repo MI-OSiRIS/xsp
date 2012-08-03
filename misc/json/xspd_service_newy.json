@@ -1,0 +1,23 @@
+{
+	"$schema": "http://unis.incntre.iu.edu/schema/20120709/service#",
+	"status": "ON",
+	"accessPoint": "tcp://newy.nddi.net.internet2.edu:5006",
+	"serviceType": "xspd",
+	"name": "xspd_nddi_newy",
+	"description": "XSPd running on newy",
+	"runningOn": {
+	  "href": "http://dev.incntre.iu.edu/nodes/newy",
+	  "rel": "full"
+	},
+	"properties": {
+	  "configurations": {
+	    "host": "newy.nddi.net.internet2.edu",
+	    "tcp": {
+	      "port": 5006
+	     },
+	    "transparent": {
+	      "port": 5008
+	    }
+	  }
+	}
+}

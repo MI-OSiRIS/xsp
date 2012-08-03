@@ -1,11 +1,13 @@
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "xsp_curl_context.h"
 
 struct curl_http_data {
         char *ptr;
+	char *lptr;
         long len;
 };
 
@@ -24,13 +26,13 @@ int xsp_init_curl(xspCURLContext *cc, int *flags) {
 
 	res = curl_global_init(flags);
 	if(res != CURLE_OK) {
-		fprintf(stderr, "curl_global_init() failed: %s", curl_easy_strerror(res));
+		fprintf(stderr, "curl_global_init() failed: %s\n", curl_easy_strerror(res));
 		return -1;
 	}
 
 	cc->curl = curl_easy_init();
 	if (!cc->curl) {
-		fprintf(stderr, "Could not intialize CURL");
+		fprintf(stderr, "Could not intialize CURL\n");
 		return -1;
 	}
 
@@ -47,16 +49,24 @@ char *xsp_curl_json_string(xspCURLContext *cc, char *target, int curl_opt, char 
 	CURLcode res;
 	struct curl_slist *headers = NULL;
 	char *endpoint;
+	long send_len;
+
+	if (send_str)
+		send_len = strlen(send_str);
+	else
+		send_len = 0;
 
 	asprintf(&endpoint, "%s%s", cc->url, target);
 
 	struct curl_http_data send_data = {
 		.ptr = send_str,
-		.len = strlen(send_str)
+		.lptr = NULL,
+		.len = send_len
 	};		
 	
 	struct curl_http_data recv_data = {
                 .ptr = NULL,
+		.lptr = NULL,
 		.len = 0
         };
 
@@ -65,7 +75,7 @@ char *xsp_curl_json_string(xspCURLContext *cc, char *target, int curl_opt, char 
 	else {
 		curl = curl_easy_init();
 		if (!curl) {
-			fprintf(stderr, "Could not initialize CURL");
+			fprintf(stderr, "Could not initialize CURL\n");
 			goto error_exit;
 		}
 	}
@@ -79,6 +89,10 @@ char *xsp_curl_json_string(xspCURLContext *cc, char *target, int curl_opt, char 
 
 	//curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 	
+	
+	/* we need to define some content-types this little library supports
+	   RESTful UNIS will need application/perfsonar+json for POSTS/PUT
+	   but maybe we should have UNIS accept application/json */
 	headers = curl_slist_append(headers, "Transfer-Encoding: chunked");
 	headers = curl_slist_append(headers, "Content-type': 'application/json");
 	headers = curl_slist_append(headers, "Accept': 'application/json");
@@ -87,7 +101,7 @@ char *xsp_curl_json_string(xspCURLContext *cc, char *target, int curl_opt, char 
 	
 	res = curl_easy_perform(curl);
 	if(res != CURLE_OK) {
-		fprintf(stderr, "curl_easy_perform() failed: %s", curl_easy_strerror(res));
+		fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
 		goto error_exit;
 	}
 
@@ -127,12 +141,21 @@ static size_t write_cb(void *ptr, size_t size, size_t nmemb, void *userp)
 	if (dsize < 1)
 		return 0;
 	
-	data->ptr = malloc(dsize*sizeof(char)+1);
+	if (!(data->ptr)) {
+		data->ptr = malloc(dsize*sizeof(char));
+		data->lptr = data->ptr;
+	}
+	else {
+		realloc(data->ptr, (dsize + data->len) * sizeof(char));
+	}
+
 	if (!(data->ptr))
 		return 0;
 
-	memcpy(data->ptr, ptr, dsize);
-	data->ptr[dsize] = '\0';
+	data->lptr = mempcpy(data->lptr, ptr, dsize);
+	data->len += dsize;
+
+	data->ptr[data->len] = '\0';
 
 	return size*nmemb;
 }

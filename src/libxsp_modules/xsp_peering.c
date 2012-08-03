@@ -7,6 +7,7 @@
 #include "hashtable.h"
 #include "xsp_peering.h"
 
+#include "xsp_unis.h"
 #include "xsp_session.h"
 #include "xsp_tpool.h"
 #include "xsp_listener.h"
@@ -19,7 +20,7 @@
 #include "xsp_auth.h"
 #include "xsp_modules.h"
 
-// GLOBALS
+/* GLOBALS */
 static struct hashtable *peer_table;
 static pthread_cond_t ping_cond;
 static pthread_mutex_t ping_lock;
@@ -27,7 +28,7 @@ static pthread_cond_t cntl_cond;
 static pthread_mutex_t cntl_lock;
 
 static xspPeerConfig config;
-// END GLOBALS
+/* END GLOBALS */
 
 int xsp_peering_init();
 static int xsp_peering_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block);
@@ -35,7 +36,7 @@ static int xsp_peering_opt_handler(comSess *sess, xspBlock *block, xspBlock **re
 void *xsp_peering_peer_conn_thread(void *arg);
 void *xsp_peering_ping_thread(void *arg);
 
-// TODO: need public interface to allow other modules to send messages over peering connections
+/* TODO: need public interface to allow other modules to send messages over peering connections */
 
 xspModule xsp_peering_module = {
 	.desc = "PEERING Module",
@@ -50,6 +51,7 @@ xspModule *module_info() {
 
 int xsp_peering_init() {
 	const xspSettings *settings;
+	xspModule *module;
 
 	settings = xsp_main_settings();
 	if (xsp_settings_get_int_2(settings, "peering", "keepalive", &config.keepalive_timer) != 0) {
@@ -62,7 +64,7 @@ int xsp_peering_init() {
 		xsp_info(0, "No static peers found, remaining passive");
 	}
 	else {
-		// start threads that will connect to each static peer
+		/* start threads that will connect to each static peer */
 		pthread_t ctrl_thread;
 		int i;
 
@@ -71,14 +73,26 @@ int xsp_peering_init() {
 		}
 	}
 
-	// TODO: invoke external lookup module (UNIS) to find other peers
+	/* basic test of UNIS service lookup */
+	char service[] = "xspd";
+	char **unis_peers;
+	int num_peers;
+	int i;
 
+	/* invoke external lookup module (UNIS) to find other peers */
+	if ((module = xsp_find_module("unis")) != NULL) {
+		xsp_unis_get_service_access_points(service, &unis_peers, &num_peers);
+		for (i=0; i<num_peers; i++) {
+			xsp_info(0, "Also connecting to peer: %s", unis_peers[i]);
+		}
+	}
+	
 	return 0;
 }
 
 static int xsp_peering_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block) {
 	
-	// option blocks arrive from peers, handle this
+	/* option blocks arrive from peers, handle this */
 
 	return 0;
 }
@@ -88,10 +102,10 @@ void *xsp_peering_peer_conn_thread(void *arg) {
 	
 	xsp_info(0, "Connecting to peer: %s", peer);
 
-	// resolve peer name (could be IP, URN, hop-id, etc.)
-	// start new session, but check if peer has already connected to us first
-	// save in peer table
-	// start keepalive thread
+	/* resolve peer name (could be IP, URN, hop-id, etc.)
+	   start new session, but check if peer has already connected to us first
+	   save in peer table
+	   start keepalive thread */
 
 	pthread_exit(NULL);
 }
@@ -136,7 +150,7 @@ void *xsp_peering_ping_thread(void *arg) {
 		
 		pthread_mutex_lock(&ping_lock);
 		{
-			// now we wait for the other side to PING us
+			/* now we wait for the other side to PING us */
 			rc = pthread_cond_timedwait(&ping_cond, &ping_lock, &pong_wait_time);
 		}
 		pthread_mutex_unlock(&ping_lock);

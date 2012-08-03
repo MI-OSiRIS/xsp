@@ -1,0 +1,23 @@
+{
+	"$schema": "http://unis.incntre.iu.edu/schema/20120709/service#",
+	"status": "ON",
+	"accessPoint": "tcp://chic.nddi.net.internet2.edu:5006",
+	"serviceType": "xspd",
+	"name": "xspd_nddi_chic",
+	"description": "XSPd running on chic",
+	"runningOn": {
+	  "href": "http://dev.incntre.iu.edu/nodes/chic",
+	  "rel": "full"
+	},
+	"properties": {
+	  "configurations": {
+	    "host": "chic.nddi.net.internet2.edu",
+	    "tcp": {
+	      "port": 5006
+	     },
+	    "transparent": {
+	      "port": 5008
+	    }
+	  }
+	}
+}
