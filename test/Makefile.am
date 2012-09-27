@@ -9,11 +9,11 @@ xsp_pathtest_SOURCES = xsp_pathtest.c
 
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/src/libxsp_client -I$(top_srcdir)/compat
 
-if ENABLE_NLMI
-bin_PROGRAMS += nlmi_test
+if ENABLE_BLIPP
+bin_PROGRAMS += blipp_test
 
-nlmi_test_SOURCES = nlmi_test.c
-nlmi_test_CFLAGS = -DMONGO_HAVE_STDINT
+blipp_test_SOURCES = blipp_test.c
+blipp_test_CFLAGS = -DMONGO_HAVE_STDINT
 LDADD += $(top_builddir)/libbson/libbson.a
 INCLUDES += -I$(top_srcdir)/libbson
 endif

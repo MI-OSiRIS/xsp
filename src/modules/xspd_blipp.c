@@ -28,23 +28,23 @@
 
 #include "bson.h"
 
-int xspd_nlmi_init();
-int xspd_nlmi_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block);
+int xspd_blipp_init();
+int xspd_blipp_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block);
 
 #define BLIPP_VERSION "0.1"
 
-static xspModule xspd_nlmi_module = {
-	.desc = "NLMI Module",
+static xspModule xspd_blipp_module = {
+	.desc = "BLIPP Module",
 	.dependencies = "",
-	.init = xspd_nlmi_init,
-	.opt_handler = xspd_nlmi_opt_handler
+	.init = xspd_blipp_init,
+	.opt_handler = xspd_blipp_opt_handler
 };
 
 xspModule *module_info() {
-	return &xspd_nlmi_module;
+	return &xspd_blipp_module;
 }
 
-typedef struct xspd_nlmi_data_t {
+typedef struct xspd_blipp_data_t {
 	struct hashtable *mds_dict;
 	pthread_mutex_t mds_dict_lock;
 	struct hashtable *data_dict;
@@ -54,42 +54,51 @@ typedef struct xspd_nlmi_data_t {
 	int currdata;
 	bson_buffer *data_out;
 	pthread_mutex_t out_lock;
-} nlmiData;
+} blippData;
 
-static struct hashtable *nlmi_map;
-static pthread_mutex_t nlmi_map_lock;
+static struct hashtable *blipp_map;
+static pthread_mutex_t blipp_map_lock;
 
-nlmiData *xspd_nlmi_ts_aggregation(comSess *sess, bson *msg);
+blippData *xspd_blipp_ts_aggregation(comSess *sess, bson *msg);
 
-int xspd_nlmi_init() {
+int xspd_blipp_init() {
 	
 	// do any initialization code here
-	nlmi_map = create_hashtable(16, xsp_hash_string, xsp_equalkeys_string);
-	pthread_mutex_init(&nlmi_map_lock, NULL);
+	blipp_map = create_hashtable(16, xsp_hash_string, xsp_equalkeys_string);
+	pthread_mutex_init(&blipp_map_lock, NULL);
 	
 	return 0;
 }
 
-int xspd_nlmi_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block) {
+int xspd_blipp_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block) {
 
-	xsp_info(0, "handling nlmi message of type: %d", block->type);
+	xsp_info(0, "handling blipp message of type: %d", block->type);
 	// block->blob has the data of length block->length
 
 	switch(block->type) {
-
-	case NLMI_BSON:
+		
+	case BLIPP_BSON_DATA:
+	case BLIPP_BSON_META:
 		{
 			bson *bpp;
 			char *bpp_data;
-			nlmiData *nd;
-			
+			blippData *nd;
+
 			bpp_data = (char *)malloc(block->length);
 			memcpy(bpp_data, block->data, block->length);
 			
 			bpp = (bson *)malloc(sizeof(bson));
 			bson_init(bpp, bpp_data, 1);
+			
+			bson_print(bpp);
+			
+			bson_destroy(bpp);
+			
+			// aggregation below needs fixing
+			*ret_block = NULL;
+			break;
 
-			nd = xspd_nlmi_ts_aggregation(sess, bpp);
+			nd = xspd_blipp_ts_aggregation(sess, bpp);
 
 			bson_destroy(bpp);
 
@@ -140,10 +149,6 @@ int xspd_nlmi_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block) 
 				}
 			}
 			pthread_mutex_unlock(&nd->out_lock);
-
-			// fill in an option block to return
-			char *ret_str = "holla";
-			*ret_block = xsp_block_new(block->type, 0, strlen(ret_str), ret_str);
 		}
 		break;
 	default:
@@ -226,7 +231,7 @@ void destroy_data_entry(DataEntry *entry) {
 	free(entry);
 }
 
-void add_data_out(nlmiData *sess_data, bson *data) {
+void add_data_out(blippData *sess_data, bson *data) {
 	char index[10];
 
 	pthread_mutex_lock(&sess_data->out_lock);
@@ -244,7 +249,7 @@ void add_data_out(nlmiData *sess_data, bson *data) {
 }
 
 /* XXX: Right now consolidation function is 'mean' */
-void aggregate(nlmiData *sess_data, DataEntry *entry) {
+void aggregate(blippData *sess_data, DataEntry *entry) {
 	int i;
 	double v = 0;
 	bson data;
@@ -282,9 +287,9 @@ void aggregate(nlmiData *sess_data, DataEntry *entry) {
 	entry->raw_values.currv = 0;
 }
 
-static nlmiData *create_nlmi_data() {
-	nlmiData *sess_data = (nlmiData*) malloc(sizeof(nlmiData));
-	memset(sess_data, 0, sizeof(nlmiData));
+static blippData *create_blipp_data() {
+	blippData *sess_data = (blippData*) malloc(sizeof(blippData));
+	memset(sess_data, 0, sizeof(blippData));
 
 	sess_data->mds_dict = create_hashtable(16, xsp_hash_string,
 			xsp_equalkeys_string);
@@ -297,7 +302,7 @@ static nlmiData *create_nlmi_data() {
 	return sess_data;
 }
 
-nlmiData *xspd_nlmi_ts_aggregation(comSess *sess, bson *msg) {
+blippData *xspd_blipp_ts_aggregation(comSess *sess, bson *msg) {
 	int sratio;
 	double v;
 	double vts;
@@ -314,17 +319,17 @@ nlmiData *xspd_nlmi_ts_aggregation(comSess *sess, bson *msg) {
 	MetaEntry *md_entry;
 	MetaEntry *md_tmp;
 	DataEntry *data_entry;
-	nlmiData *sess_data;
+	blippData *sess_data;
 
-	pthread_mutex_lock(&nlmi_map_lock);
+	pthread_mutex_lock(&blipp_map_lock);
 	{
-		if (!(sess_data = hashtable_search(nlmi_map, sess->id))) {
-			sess_data = create_nlmi_data();
-			if (!hashtable_insert(nlmi_map, strdup(sess->id), sess_data))
+		if (!(sess_data = hashtable_search(blipp_map, sess->id))) {
+			sess_data = create_blipp_data();
+			if (!hashtable_insert(blipp_map, strdup(sess->id), sess_data))
 				exit(-1); // TODO: fail properly
 		}
 	}
-	pthread_mutex_unlock(&nlmi_map_lock);
+	pthread_mutex_unlock(&blipp_map_lock);
 
 	// search for any metadatas in msg and register them in session
 	if (bson_find(&msg_it, msg, "meta")) {

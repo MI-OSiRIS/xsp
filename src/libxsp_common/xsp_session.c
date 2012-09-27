@@ -869,16 +869,11 @@ int xsp_session_app_data(comSess *sess, const void *arg, char ***error_msgs) {
 		mstring = "photon";
 	}
 
-	if (block->type >= NLMI_MIN &&
-            block->type <= NLMI_MAX) {
-		mstring = "nlmi";
+	if (block->type >= BLIPP_MIN &&
+            block->type <= BLIPP_MAX) {
+		mstring = "blipp";
 	}
 
-	if (block->type >= GLOBUS_XIO_MIN &&
-            block->type <= GLOBUS_XIO_MAX) {
-		mstring = "globus_xio";
-        }
-	
 	if (block->type >= SPEEDOMETER_MIN &&
             block->type <= SPEEDOMETER_MAX) {
 		mstring = "speedometer";
@@ -890,7 +885,7 @@ int xsp_session_app_data(comSess *sess, const void *arg, char ***error_msgs) {
 	}
 	
 	if (!mstring) {
-		asprintf(error_msg, "unrecognized option block type: %d", block->type);
+		asprintf(&error_msg, "unrecognized option block type: %d", block->type);
 		xsp_err(0, "%s", error_msg);
 		goto error_exit;
 	}

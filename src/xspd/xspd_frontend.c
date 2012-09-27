@@ -104,6 +104,5 @@ void *xspd_default_handle_conn(void *arg) {
 
 void *xspd_handle_proto_cb(comSess *sess, xspMsg *msg) {
 
-	xsp_info(0, "in proto cb");
 	return NULL;
 }

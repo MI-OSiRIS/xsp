@@ -13,15 +13,10 @@
 #define SLAB_MIN                     SLAB_INFO
 #define SLAB_MAX                     SLAB_INFO
 
-#define NLMI_BSON	             0x20
-#define NLMI_MIN	             NLMI_BSON
-#define NLMI_MAX	             NLMI_BSON
-
-#define GLOBUS_XIO_NEW_XFER          0x30
-#define GLOBUS_XIO_END_XFER          0x31
-#define GLOBUS_XIO_UPDATE_XFER       0x32
-#define GLOBUS_XIO_MIN               GLOBUS_XIO_NEW_XFER
-#define GLOBUS_XIO_MAX               GLOBUS_XIO_UPDATE_XFER
+#define BLIPP_BSON_META	             0x20
+#define BLIPP_BSON_DATA              0x21
+#define BLIPP_MIN	             BLIPP_BSON_META
+#define BLIPP_MAX	             BLIPP_BSON_DATA
 
 #define SPEEDOMETER_UPDATE           0x40
 #define SPEEDOMETER_MIN              SPEEDOMETER_UPDATE
