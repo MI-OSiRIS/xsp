@@ -29,12 +29,13 @@
 #include "globus_time.h"
 #include "globus_debug.h"
 
-#define GLOBUS_XIO_XSP_NEW_XFER          0x30
-#define GLOBUS_XIO_XSP_END_XFER          0x31
-#define GLOBUS_XIO_XSP_UPDATE_XFER       0x32
-#define GLOBUS_XIO_XSP_UPDATE_PERFOMETER 0x40
+#define GLOBUS_XIO_XSP_NEW_XFER           0x30
+#define GLOBUS_XIO_XSP_END_XFER           0x31
+#define GLOBUS_XIO_XSP_UPDATE_XFER        0x32
+#define GLOBUS_XIO_XSP_UPDATE_PERFOMETER  0x40
 
 #define GLOBUS_XIO_NL_UPDATE_SIZE        65536
+#define GLOBUS_XIO_NL_HIST_PRE               3
 
 GlobusDebugDefine(GLOBUS_XIO_XSP);
 GlobusXIODeclareDriver(xsp);
@@ -87,6 +88,7 @@ static globus_xio_string_cntl_table_t  xsp_l_string_opts_table[] =
     {"resource", GLOBUS_XIO_XSP_CNTL_SET_RESOURCE, globus_xio_string_cntl_string},
     {"size", GLOBUS_XIO_XSP_CNTL_SET_SIZE, globus_xio_string_cntl_int},
     {"mask", GLOBUS_XIO_XSP_CNTL_SET_MASK, globus_xio_string_cntl_int},
+    {"nl_bins", GLOBUS_XIO_XSP_CNTL_SET_NL_BINS, globus_xio_string_cntl_int},
     {"interval", GLOBUS_XIO_XSP_CNTL_SET_INTERVAL, globus_xio_string_cntl_int},
     {"dpid", GLOBUS_XIO_XSP_CNTL_SET_DPID, globus_xio_string_cntl_string},
     {"duration", GLOBUS_XIO_XSP_CNTL_SET_DURATION, globus_xio_string_cntl_int},
@@ -162,6 +164,7 @@ typedef struct xio_l_xsp_handle_s
     int                                 size;
 
     int                                 log_flag;
+    int                                 nl_bins;
     int                                 interval;
 
     xio_l_xsp_caliper_t *               o_caliper;
@@ -214,6 +217,7 @@ static xio_l_xsp_handle_t               globus_l_xio_xsp_handle_default =
     GLOBUS_NULL,                        /* resource */
     0,                                  /* size */
     0,                                  /* log_flag, default does not NL log anything */
+    0,                                  /* number of bins in NL histogram, default no histogram */
     0,                                  /* interval */
     GLOBUS_NULL,                        /* o_caliper */
     GLOBUS_NULL,                        /* c_caliper */
@@ -1242,7 +1246,8 @@ static
 globus_result_t
 globus_l_xio_xsp_caliper_init(
     void **                             out_caliper,
-    char *                              event)
+    char *                              event,
+    int                                 bins)
 {
     xio_l_xsp_caliper_t *               cal;
     
@@ -1251,6 +1256,11 @@ globus_l_xio_xsp_caliper_init(
     cal->caliper = netlogger_calipers_new(1);
     cal->s_count = 0;
     cal->event = strdup(event);
+
+    if (bins)
+    {
+	netlogger_calipers_hist_auto(cal->caliper, bins, GLOBUS_XIO_NL_HIST_PRE);
+    }
 
     *out_caliper = cal;
 
@@ -1447,6 +1457,7 @@ globus_l_xio_xsp_attr_copy(
     dst_attr->size = src_attr->size;
     dst_attr->stack = src_attr->stack;
     dst_attr->log_flag = src_attr->log_flag;
+    dst_attr->nl_bins = src_attr->nl_bins;
     dst_attr->interval = src_attr->interval;
     dst_attr->xsp_net_path_thresh = src_attr->xsp_net_path_thresh;
     dst_attr->xsp_thresh_interval = src_attr->xsp_thresh_interval;
@@ -1564,6 +1575,9 @@ globus_l_xio_xsp_cntl(
 	  break;
       case GLOBUS_XIO_XSP_CNTL_SET_MASK:
 	  attr->log_flag = va_arg(ap, int);
+	  break;
+      case GLOBUS_XIO_XSP_CNTL_SET_NL_BINS:
+	  attr->nl_bins = va_arg(ap, int);
 	  break;
       case GLOBUS_XIO_XSP_CNTL_SET_INTERVAL:
 	  attr->interval = va_arg(ap, int);
@@ -1853,10 +1867,6 @@ globus_l_xio_xsp_open_cb(
 	    goto error_return;
 	}
 
-	char *tmp;
-	globus_xio_contact_info_to_string(handle->remote_contact, &tmp);
-	printf("CONTACT INFO: %s\n", tmp);
-	
 	if (handle->xfer == NULL)
 	{
 	  if (handle->remote_contact->host)
@@ -1872,7 +1882,6 @@ globus_l_xio_xsp_open_cb(
 
 	  if (xfer_handle == NULL)
 	  {
-	      //printf("NEW XFER 2\n");
 	      globus_l_xio_xsp_xfer_init((void**)&xfer_handle);
 	      xfer_handle->hash_str = strdup(hstring);
 	      globus_hashtable_insert(&xsp_l_xfer_table, xfer_handle->hash_str, xfer_handle);
@@ -1882,12 +1891,12 @@ globus_l_xio_xsp_open_cb(
 	  }
 	  
 	  handle->xfer = xfer_handle;
-	  
-	  globus_l_xio_xsp_caliper_init((void**)&(handle->o_caliper), "nl:tools:calipers:summary:open");
-	  globus_l_xio_xsp_caliper_init((void**)&(handle->c_caliper), "nl:tools:calipers:summary:close");
-	  globus_l_xio_xsp_caliper_init((void**)&(handle->r_caliper), "nl:tools:calipers:summary:read");
-	  globus_l_xio_xsp_caliper_init((void**)&(handle->w_caliper), "nl:tools:calipers:summary:write");
-	  globus_l_xio_xsp_caliper_init((void**)&(handle->a_caliper), "nl:tools:calipers:summary:accept");
+
+	  globus_l_xio_xsp_caliper_init((void**)&(handle->o_caliper), "nl:tools:calipers:summary:open", handle->nl_bins);
+	  globus_l_xio_xsp_caliper_init((void**)&(handle->c_caliper), "nl:tools:calipers:summary:close", handle->nl_bins);
+	  globus_l_xio_xsp_caliper_init((void**)&(handle->r_caliper), "nl:tools:calipers:summary:read", handle->nl_bins);
+	  globus_l_xio_xsp_caliper_init((void**)&(handle->w_caliper), "nl:tools:calipers:summary:write", handle->nl_bins);
+	  globus_l_xio_xsp_caliper_init((void**)&(handle->a_caliper), "nl:tools:calipers:summary:accept", handle->nl_bins);
 	}
     }
     else if (handle->stack == GLOBUS_XIO_XSP_FSSTACK)
@@ -2060,7 +2069,6 @@ globus_l_xio_xsp_open(
 
 	if (xfer_handle == NULL)
 	{
-	    //printf("NEW XFER 1\n");
 	    globus_l_xio_xsp_xfer_init((void**)&xfer_handle);
 	    xfer_handle->hash_str = strdup(hstring);
 	    globus_hashtable_insert(&xsp_l_xfer_table, xfer_handle->hash_str, xfer_handle);
@@ -2075,11 +2083,11 @@ globus_l_xio_xsp_open(
 	handle->xfer = xfer_handle;
 	
 	/* setup the calipers */
-	globus_l_xio_xsp_caliper_init((void**)&(handle->o_caliper), "nl:tools:calipers:summary:open");
-	globus_l_xio_xsp_caliper_init((void**)&(handle->c_caliper), "nl:tools:calipers:summary:close");
-	globus_l_xio_xsp_caliper_init((void**)&(handle->r_caliper), "nl:tools:calipers:summary:read");
-	globus_l_xio_xsp_caliper_init((void**)&(handle->w_caliper), "nl:tools:calipers:summary:write");
-	globus_l_xio_xsp_caliper_init((void**)&(handle->a_caliper), "nl:tools:calipers:summary:accept");
+	globus_l_xio_xsp_caliper_init((void**)&(handle->o_caliper), "nl:tools:calipers:summary:open", handle->nl_bins);
+	globus_l_xio_xsp_caliper_init((void**)&(handle->c_caliper), "nl:tools:calipers:summary:close", handle->nl_bins);
+	globus_l_xio_xsp_caliper_init((void**)&(handle->r_caliper), "nl:tools:calipers:summary:read", handle->nl_bins);
+	globus_l_xio_xsp_caliper_init((void**)&(handle->w_caliper), "nl:tools:calipers:summary:write", handle->nl_bins);
+	globus_l_xio_xsp_caliper_init((void**)&(handle->a_caliper), "nl:tools:calipers:summary:accept", handle->nl_bins);
 
 	/* if there's a path to setup, do it before the underlying connection start */
 	if ((handle->xfer->xsp_connected == GLOBUS_FALSE) &&
