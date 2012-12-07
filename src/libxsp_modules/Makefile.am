@@ -34,7 +34,7 @@ if HAVE_JSON
 modules_LTLIBRARIES += unis.la
 unis_la_SOURCES = xsp_unis.c
 unis_la_LDFLAGS = -module -avoid-version -export-dynamic
-unis_la_LIBADD =$(top_builddir)/libcurl/libxsp_curl.a
+unis_la_LIBADD =$(top_builddir)/libcurl/libxsp_curl.a @JSON_LIBS@ @CURL_LIBS@
 unis_la_INCLUDES = -I$(top_srcdir)/libcurl
 endif
 endif
@@ -72,8 +72,8 @@ endif
 if ENABLE_FLOODLIGHT
 modules_LTLIBRARIES += floodlight.la
 floodlight_la_SOURCES = xsp_floodlight_basic.c xsp_floodlight_basic.h
-floodlight_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic @JSON_LIBS@ @CURL_LIBS@
-floodlight_la_LIBADD =$(top_builddir)/libcurl/libxsp_curl.a
+floodlight_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+floodlight_la_LIBADD =$(top_builddir)/libcurl/libxsp_curl.a @JSON_LIBS@ @CURL_LIBS@
 floodlight_la_CFLAGS = $(AM_CFLAGS)
 INCLUDES += -I$(top_srcdir)/libcurl
 endif
@@ -90,7 +90,8 @@ endif
 if HAVE_WEB100
 modules_LTLIBRARIES += tcp.la
 tcp_la_SOURCES = xsp_conn_tcp.c xsp_conn_tcp.h xsp_proto_tcp.c xsp_web100.c xsp_web100.h
-tcp_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic @WEB100_LIBS@
+tcp_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+tcp_la_LIBADD = @WEB100_LIBS@
 tcp_la_CFLAGS = @WEB100_CFLAGS@ -DHAVE_WEB100 $(AM_CFLAGS)
 else
 modules_LTLIBRARIES += tcp.la
@@ -130,7 +131,8 @@ if HAVE_MYSQL
 modules_LTLIBRARIES += auth_pass_mysql.la
 auth_pass_mysql_la_SOURCES = xsp_auth_pass_mysql.c
 auth_pass_mysql_la_CFLAGS = @MYSQL_CFLAGS@
-auth_pass_mysql_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic @MYSQL_LIBS@
+auth_pass_mysql_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+auth_pass_mysql_la_LIBADD = @MYSQL_LIBS@
 auth_pass_mysql_la_LDFLAGS += -L@top_srcdir@/src/libxsp_common -lxsp_common
 endif
 
@@ -138,7 +140,8 @@ if HAVE_SQLITE
 modules_LTLIBRARIES += auth_pass_sqlite.la
 auth_pass_sqlite_la_SOURCES = xsp_auth_pass_sqlite.c
 auth_pass_sqlite_la_CFLAGS = @SQLITE_CFLAGS@
-auth_pass_sqlite_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic @SQLITE_LIBS@
+auth_pass_sqlite_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
+auth_pass_sqlite_la_LIBADD = @SQLITE_LIBS@
 auth_pass_sqlite_la_LDFLAGS += -L@top_srcdir@/src/libxsp_common -lxsp_common auth_pass.la
 endif
 
