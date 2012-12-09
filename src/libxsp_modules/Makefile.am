@@ -142,7 +142,7 @@ auth_pass_sqlite_la_SOURCES = xsp_auth_pass_sqlite.c
 auth_pass_sqlite_la_CFLAGS = @SQLITE_CFLAGS@
 auth_pass_sqlite_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
 auth_pass_sqlite_la_LIBADD = @SQLITE_LIBS@
-auth_pass_sqlite_la_LDFLAGS += -L@top_srcdir@/src/libxsp_common -lxsp_common auth_pass.la
+auth_pass_sqlite_la_LDFLAGS += -L@top_srcdir@/src/libxsp_common -lxsp_common
 endif
 
 if HAVE_LIBXML

@@ -31,7 +31,7 @@ static xspPassBackend xsp_sqlite_pass_backend = {
 
 static xspModule xsp_sqlite_auth_module = {
 	.desc = "SQLite Password Authentication Module",
-	.dependencies = "",
+	.dependencies = "auth_pass_file",
 	.init = xsp_sqlite_auth_init
 };
 
