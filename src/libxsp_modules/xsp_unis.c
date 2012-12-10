@@ -60,7 +60,7 @@ int xsp_unis_init() {
 	}
 
 	if (xsp_settings_get_int_2(settings, "unis", "registration_interval", &config.registration_interval) != 0) {
-		xsp_info(0, "Refresh time not specified, using default %d", XSP_UNIS_REG_INTERVAL);
+		xsp_info(0, "Registration interval not specified, using default %d", XSP_UNIS_REG_INTERVAL);
 		config.registration_interval = XSP_UNIS_REG_INTERVAL;
 	}
 

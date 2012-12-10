@@ -1082,13 +1082,14 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, xspCBMap *cb_ma
 	// setup child hops
 	if (! (flags & XSP_COMM_CHILD_HOPS_DEFER)) {
 		for (i = 0; i < sess->child_count; i++) {
-			xsp_info(5, "connecting to child hop %s", sess->child[i]->hop_id);
-			
-			next_conn = xsp_connect_hop_control(sess, sess->child[i], error_msgs);
-			if (!next_conn) {
-				xsp_err(0, "could not establish connection to child hop %s",
-					sess->child[i]->hop_id);
-				goto error_exit;
+			if (sess->child[i]->flags & XSP_HOP_NATIVE) {
+				xsp_info(5, "connecting to child hop %s", sess->child[i]->hop_id);
+				next_conn = xsp_connect_hop_control(sess, sess->child[i], error_msgs);
+				if (!next_conn) {
+					xsp_err(0, "could not establish connection to child hop %s",
+						sess->child[i]->hop_id);
+					goto error_exit;
+				}
 			}
 		}
 	}
