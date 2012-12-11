@@ -11,11 +11,10 @@ INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/src/libxsp_client -I$(top_src
 
 if ENABLE_BLIPP
 bin_PROGRAMS += blipp_test
-
 blipp_test_SOURCES = blipp_test.c
 blipp_test_CFLAGS = -DMONGO_HAVE_STDINT
-LDADD += $(top_builddir)/libbson/libbson.a
-INCLUDES += -I$(top_srcdir)/libbson
+LDADD += $(top_builddir)/libmongo_client/libmongo_client.a
+INCLUDES += -I$(top_srcdir)/libmongo_client
 endif
 
 

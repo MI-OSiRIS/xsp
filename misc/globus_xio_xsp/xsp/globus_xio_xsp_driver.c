@@ -371,7 +371,7 @@ globus_l_xio_xsp_append_unis_meta(
     char                                portstr[12];
 
     /* start a meta object at the given index */
-    bson_append_start_object(bb, ind);
+    //bson_append_start_object(bb, ind);
     bson_append_string(bb, "id", handle->id);
     bson_append_string(bb, "eventType", event);
     
@@ -451,7 +451,7 @@ globus_l_xio_xsp_append_unis_meta(
     bson_append_finish_object(bb);
 
     /* finish this meta object */
-    bson_append_finish_object(bb);
+    //bson_append_finish_object(bb);
 
     return GLOBUS_SUCCESS;
 }
@@ -703,6 +703,8 @@ globus_l_xio_xsp_do_nl_metadata(
     bson *                              bp = NULL;
     int                                 bsz;
 
+    GlobusTimeReltimeSet(cb_time, 0, 0);
+
     if (handle->xfer->xsp_connected == GLOBUS_FALSE)
     {
         printf("METADATA: XSP not connected!\n");
@@ -711,9 +713,7 @@ globus_l_xio_xsp_do_nl_metadata(
     bson_buffer_init(&bb);
     bson_ensure_space(&bb, GLOBUS_XIO_NL_UPDATE_SIZE);
 
-    globus_l_xio_xsp_append_unis_meta(&bb, handle, c->event, "0");
-
-    bson_append_finish_object(&bb);
+    globus_l_xio_xsp_append_unis_meta(&bb, handle, c->event, "meta");
 
     /* get ready to send the bson */
     bp = malloc(sizeof(bson));
@@ -766,9 +766,7 @@ globus_l_xio_xsp_do_nl_summary(
     double                              d;
     xio_l_xsp_send_args_t *             args;
     globus_reltime_t                    cb_time;
-    bson_buffer                         bb;
     bson *                              bp = NULL;
-    int                                 bsz;    
 
     GlobusTimeReltimeSet(cb_time, 0, 0);
 
@@ -781,30 +779,19 @@ globus_l_xio_xsp_do_nl_summary(
     /* send metadata about this stream caliper */
     if (c->s_count == 0)
     {	
-	globus_l_xio_xsp_do_nl_metadata(handle, c);
+	    globus_l_xio_xsp_do_nl_metadata(handle, c);
     }
 
     /* get nl caliper data */
     bp = netlogger_calipers_psdata(c->caliper, c->event, handle->id, c->s_count);
-
-    bson_buffer_init(&bb);
-    bson_ensure_space(&bb, GLOBUS_XIO_NL_UPDATE_SIZE);
-    bson_append_start_array(&bb, "data");
-    bson_append_bson(&bb, "0", bp);
-    bson_append_finish_object(&bb);
-
-    bson_append_string(&bb, "mid", handle->id);
-    bson_append_finish_object(&bb);
-
-    /* get ready to send the bson */
-    bp = malloc(sizeof(bson));
-    bson_from_buffer(bp, &bb);
-    bsz = bson_size(bp);    
-    //bson_print(bp);
+    if (!bp)
+    {
+	    goto error;
+    }
 
     result = globus_l_xio_xsp_send_args_init((void**)&args,
 					     bp->data,
-					     bsz,
+					     bson_size(bp),
 					     BLIPP_BSON_DATA,
 					     GLOBUS_XIO_XSP_SEND_XSPD,
 					     handle);
@@ -851,11 +838,7 @@ globus_l_xio_xsp_do_nl_summary(
 	bson_destroy(bp);
 	globus_free(bp);
     }
-    else
-    {
-	bson_buffer_destroy(&bb);
-    }
-    
+
  error:
     return result;
 }

@@ -89,13 +89,12 @@ char *xsp_curl_json_string(xspCURLContext *cc, char *target, int curl_opt, char 
 
 	//curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 	
-	
 	/* we need to define some content-types this little library supports
 	   RESTful UNIS will need application/perfsonar+json for POSTS/PUT
 	   but maybe we should have UNIS accept application/json */
-	headers = curl_slist_append(headers, "Transfer-Encoding: chunked");
-	headers = curl_slist_append(headers, "Content-type': 'application/json");
-	headers = curl_slist_append(headers, "Accept': 'application/json");
+	//headers = curl_slist_append(headers, "Transfer-Encoding: chunked");
+	//headers = curl_slist_append(headers, "Content-type: application/json");
+	headers = curl_slist_append(headers, "Accept: text/html,application/json,application/perfsonar+json");
 	
 	res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 	
