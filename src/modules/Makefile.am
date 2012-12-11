@@ -9,8 +9,8 @@ AM_CFLAGS = @CFLAGS@ -DWITH_OPENSSL -DMODULE_DIR=\"$(moduledir)\" -DCONFIG_FILE=
 if ENABLE_BLIPP
 modules_LTLIBRARIES += blipp.la
 blipp_la_SOURCES = xspd_blipp.c
-blipp_la_LIBADD = $(top_builddir)/libbson/libbson.a
-blipp_la_CFLAGS = -DMONGO_HAVE_STDINT -I$(top_srcdir)/libbson
+blipp_la_LIBADD = $(top_builddir)/libmongo_client/libmongo_client.a
+blipp_la_CFLAGS = -DMONGO_HAVE_STDINT -I$(top_srcdir)/libmongo_client
 blipp_la_LDFLAGS = -module -avoid-version -export-dynamic
 endif
 

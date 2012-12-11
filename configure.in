@@ -427,7 +427,7 @@ AC_SUBST(NL_LIBS)
 AC_OUTPUT(
 	Makefile
 	libradix/Makefile
-	libbson/Makefile
+	libmongo_client/Makefile
 	libgsoap/Makefile
 	libcurl/Makefile
 	src/libxsp/Makefile
