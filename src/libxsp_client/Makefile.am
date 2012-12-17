@@ -15,9 +15,9 @@ libxsp_client_a_LIBADD = $(top_builddir)/src/libxsp/libxsp.o $(top_builddir)/src
 libxsp_wrapper_la_LIBADD = $(top_builddir)/src/libxsp/libxsp.a $(top_builddir)/libradix/libradix.a
 libxsp_simplewrapper_la_LIBADD = $(top_builddir)/src/libxsp/libxsp.a $(top_builddir)/libradix/libradix.a
 
-libxsp_client_la_LDFLAGS = @THREAD_LIBS@ @DL_LIBS@ @SSH_LIBS@
-libxsp_wrapper_la_LDFLAGS = @THREAD_LIBS@ @DL_LIBS@ @SSH_LIBS@
-libxsp_simplewrapper_la_LDFLAGS = @THREAD_LIBS@ @DL_LIBS@ @NL_LIBS@ @SSH_LIBS@
+libxsp_client_la_LIBADD += @THREAD_LIBS@ @DL_LIBS@ @SSH_LIBS@
+libxsp_wrapper_la_LIBADD += @THREAD_LIBS@ @DL_LIBS@ @SSH_LIBS@
+libxsp_simplewrapper_la_LIBADD += @THREAD_LIBS@ @DL_LIBS@ @NL_LIBS@ @SSH_LIBS@
 
 INCLUDES = -I@top_srcdir@/include -I@top_srcdir@/src/libxsp -I@top_srcdir@/libradix -I@top_srcdir@/compat 
 AM_CFLAGS = -DUSE_COMPAT_SHA

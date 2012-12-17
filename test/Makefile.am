@@ -1,7 +1,7 @@
 bin_PROGRAMS = xsp_client xsp_linuxnet xsp_pathtest
 sbin_PROGRAMS = 
-AM_LDFLAGS = @DL_LIBS@ @THREAD_LIBS@ @SSL_LIBS@
-LDADD = $(top_builddir)/src/libxsp_client/libxsp_client.a
+AM_LDFLAGS = 
+LDADD = $(top_builddir)/src/libxsp_client/libxsp_client.a @DL_LIBS@ @THREAD_LIBS@ @SSL_LIBS@
 
 xsp_client_SOURCES = xsp_client.c
 xsp_linuxnet_SOURCES = xsp_linuxnet.c
