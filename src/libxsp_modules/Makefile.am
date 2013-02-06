@@ -35,7 +35,7 @@ modules_LTLIBRARIES += unis.la
 unis_la_SOURCES = xsp_unis.c
 unis_la_LDFLAGS = -module -avoid-version -export-dynamic
 unis_la_LIBADD =$(top_builddir)/libcurl/libxsp_curl.a @JSON_LIBS@ @CURL_LIBS@
-unis_la_INCLUDES = -I$(top_srcdir)/libcurl
+INCLUDES += -I$(top_srcdir)/libcurl
 endif
 endif
 

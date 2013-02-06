@@ -1,6 +1,4 @@
-# include <pthread.h>
-# include <openssl/crypto.h>
-# include "stdsoap2.h"
+#include <th-lock.h>
 
 # define MUTEX_TYPE pthread_mutex_t
 # define MUTEX_SETUP(x) pthread_mutex_init(&(x), NULL)
@@ -9,9 +7,8 @@
 # define MUTEX_UNLOCK(x) pthread_mutex_unlock(&(x))
 # define THREAD_ID pthread_self()
 
-
-struct CRYPTO_dynlock_value { MUTEX_TYPE mutex; };
 static MUTEX_TYPE *mutex_buf;
+
 static struct CRYPTO_dynlock_value *dyn_create_function(const char *file, int line)
 {
    struct CRYPTO_dynlock_value *value;
