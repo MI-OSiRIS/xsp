@@ -101,6 +101,7 @@ fi
 %{_includedir}/libxsp_client_common.h
 %{_includedir}/config.h
 %{_includedir}/xsp-proto.h
+%{_includedir}/option_types.h
 %defattr(775,root,root)
 %{_bindir}/*
 %{_libdir}/libxsp_client*
