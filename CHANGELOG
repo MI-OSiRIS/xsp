@@ -1,0 +1,13 @@
+Release 1.0-8 (August 08, 2013)
+
+	* Protocol bug fix, prevent connecting to all child hops by
+          default
+	
+	* Bug fixes for transparent frontend
+
+	* Prevent XSPd process from going defunct
+
+
+Release 1.0-7 (June 21, 2012)
+
+	* Begin changelog after this release

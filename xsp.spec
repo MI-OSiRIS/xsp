@@ -1,6 +1,6 @@
 Name: libxsp
 Version: 1.0
-Release: 7
+Release: 8
 Summary: XSP RPM
 
 Group: Application/Network
