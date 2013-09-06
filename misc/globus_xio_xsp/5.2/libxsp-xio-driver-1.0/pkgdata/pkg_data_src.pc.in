@@ -1,0 +1,14 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+GLOBUS_FLAVOR_NAME=@GLOBUS_FLAVOR_NAME@
+flavorincludedir=@flavorincludedir@
+
+Name: globus-xio-xsp-driver
+Description: Globus Toolkit - Globus XIO XSP Driver
+Version: 0.8
+Requires.private: @GPT_PKGCONFIG_DEPENDENCIES@ libxsp-client >= 1 globus-xio
+Libs: -L${libdir}
+Libs.private: @GPT_EXTERNAL_LIBS@
+Cflags: @GPT_PKG_CFLAGS@ -I${includedir} -I${flavorincludedir} @GPT_EXTERNAL_INCLUDES@
