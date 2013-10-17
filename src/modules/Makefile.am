@@ -3,7 +3,7 @@
 modulesdir = $(libdir)/libxsp
 modules_LTLIBRARIES =
 
-INCLUDES = -I@top_srcdir@/include -I@top_srcdir@/src/libxsp -I@top_srcdir@/libradix -I@top_srcdir@/compat -I@top_srcdir@/libconfig -I@top_srcdir@/src/libxsp_common 
+INCLUDES = -I@top_srcdir@/include -I@top_srcdir@/src/libxsp -I@top_srcdir@/libradix -I@top_srcdir@/compat -I@top_srcdir@/libconfig -I@top_srcdir@/src/libxsp_common -I@top_srcdir@/src/libxsp_client
 AM_CFLAGS = @CFLAGS@ -DWITH_OPENSSL -DMODULE_DIR=\"$(moduledir)\" -DCONFIG_FILE=\"$(CONFIG_FILE)\"
 
 if ENABLE_BLIPP
@@ -17,9 +17,8 @@ endif
 if ENABLE_PHOTON
 modules_LTLIBRARIES += photon.la
 photon_la_SOURCES = xspd_proto_photon.c xspd_proto_photon.h
-photon_la_LDFLAGS = -no-undefined -module -avoid-version $(PHOTON_LDFLAGS) -L../../photon/libphoton 
-photon_la_LIBADD = $(PHOTON_LIBADD) -lphoton_xsp -ldat2 -lmpi
-photon_la_CFLAGS = $(AM_CFLAGS) $(PHOTON_CFLAGS) -I../../photon/libphoton/include -DWITH_XSP
+photon_la_LDFLAGS = -no-undefined -module -avoid-version $(PHOTON_LIBS)
+photon_la_CFLAGS = $(PHOTON_CFLAGS) -I/home/kissel/mpich-3.0.4/include
 endif
 
 if ENABLE_SPEEDOMETER

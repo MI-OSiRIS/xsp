@@ -1785,6 +1785,10 @@ int xsp_recv_ping(libxspSess *sess) {
 		return -1;
 	}
 }
+
+int xsp_sess_cmp(libxspSess *s1, libxspSess *s2) {
+	return memcmp(s1->sess_id, s2->sess_id, XSP_SESSIONID_LEN * 2 + 1);
+}
 		
 static int xsp_hash_password(const unsigned char *pass, unsigned int pass_len, const unsigned char *nonce, unsigned char *ret_hash) {
 	unsigned char buf[SHA_DIGEST_LENGTH];

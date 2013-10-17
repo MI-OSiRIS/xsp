@@ -178,7 +178,7 @@ void *xsp_handle_transparent_conn(void *arg) {
 		.type = XSP_MSG_AUTH_TYPE,
 		.msg_body = "ANON"
 	};
-
+	
 	if (xsp_authenticate_connection(new_conn, &msg, &credentials) != 0) {
 		xsp_err(0, "Authentication failed.");
 		goto error_exit;
@@ -197,6 +197,8 @@ void *xsp_handle_transparent_conn(void *arg) {
 		xsp_err(5, "Couldn't convert destination to hop id");
 		goto error_exit3;
 	}
+
+	printf("HOP: %s\n", hop->hop_id);
 
 	if (xsp_sess_add_hop(sess, hop) != 0) {
 		xsp_err(5, "Error adding \"%s\" to session", hop->hop_id);
