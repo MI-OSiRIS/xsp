@@ -18,6 +18,7 @@ if ENABLE_PHOTON
 modules_LTLIBRARIES += photon.la
 photon_la_SOURCES = xspd_proto_photon.c xspd_proto_photon.h
 photon_la_LDFLAGS = -no-undefined -module -avoid-version $(PHOTON_LIBS)
+photon_la_LIBADD =
 photon_la_CFLAGS = $(PHOTON_CFLAGS) -I/home/kissel/mpich-3.0.4/include
 endif
 

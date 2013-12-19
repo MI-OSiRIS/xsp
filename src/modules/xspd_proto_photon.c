@@ -27,9 +27,6 @@
 /* XXX: Is there a way to forward declare MPI_Aint and MPI_Datatype? */
 #include <mpi.h>
 
-// FIXME: XSP shouldn't know internals of Photon; right now this is a mess.
-#define MAX_QP 1
-
 int xspd_proto_photon_init();
 int xspd_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block);
 
@@ -59,6 +56,8 @@ int xspd_proto_photon_init() {
 		maxclients = 46; /* default */
 	}
 
+	MPI_Init(NULL, NULL);
+
 	struct photon_config_t cfg = {
 		.meta_exch = PHOTON_EXCH_MPI,
 		.nproc = maxclients,
@@ -86,7 +85,7 @@ error_exit:
 	return -1;
 }
 
-int xsp_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block) {
+int xspd_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block) {
 
 	xsp_info(0, "handling photon message of type: %d", block->type);
 
