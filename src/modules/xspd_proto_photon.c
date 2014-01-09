@@ -21,6 +21,7 @@
 #include "xsp_session.h"
 #include "xsp_conn.h"
 
+#include "photon.h"
 #include "photon_xsp_forwarder.h"
 #include "compat.h"
 
@@ -29,6 +30,7 @@
 
 int xspd_proto_photon_init();
 int xspd_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block);
+xspBlock *__xspd_proto_photon_set_info(xspSess *sess, xspBlock *block, photon_info_t type);
 
 static PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg);
 
@@ -91,17 +93,19 @@ int xspd_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret
 
 	switch(block->type) {
 
-	case PHOTON_CI:
+	case XSP_PHOTON_CI:
 	{
 		xspConn *parent_conn;
 		// XSP doesn't care what the photon connection context actually looks like,
 		// but we need to know the length of the buffer
 		void *ci;
-		void *ret_ci;
+		void *ret_ci = NULL;
+		int ci_len;
 		int ret_len;
 
 		parent_conn = LIST_FIRST(&sess->parent_conns);
 		ci = block->data;
+		ci_len = block->length;
 
 		// does not currently check for duplicate registrations
 		// duplicate messages, etc.
@@ -110,11 +114,11 @@ int xspd_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret
 			goto error_exit;
 		}
 
-		if (photon_xsp_get_local_ci((xspSess*)sess, (void**)&ret_ci, &ret_len) != 0) {
+		if (photon_xsp_set_info((xspSess*)sess, ci, ci_len, &ret_ci, &ret_len, PHOTON_CI) != 0) {
 			xsp_err(0, "could not set photon connect info");
 			goto error_ci;
 		}
-
+		
 		*ret_block = xsp_alloc_block();
 		(*ret_block)->data = ret_ci;
 		(*ret_block)->length = ret_len;
@@ -125,107 +129,54 @@ int xspd_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret
 			.version = sess->version,
 			.type = XSP_MSG_APP_DATA,
 			.flags = 0,
-			.msg_body = ret_block
+			.msg_body = *ret_block
 		};
 
 		// so ugly to do this here
 		xsp_conn_send_msg(parent_conn, &msg, XSP_OPT_APP);
-
+		
 		// but it's better to wait for the ib connection right away
-		if (photon_xsp_server_connect_peer((xspSess*)sess, ret_ci, ci) != 0) {
+		if (photon_xsp_forwarder_connect_peer((xspSess*)sess, ci) != PHOTON_OK) {
 			xsp_err(0, "could not complete photon connections");
-			goto error_qps;
+			goto error_conn;
 		}
-
-		free(ret_ci);
 
 		// we already sent our PHOTON_CI message back
 		*ret_block = NULL;
-
 		break;
 
-error_qps:
+error_conn:
 		free(ret_ci);
 error_ci:
 		photon_xsp_unregister_session((xspSess*)sess);
 		goto error_exit;
     }
 
-	case PHOTON_RI:
+	case XSP_PHOTON_RI:
 	{
-		PhotonLedgerInfo *ri;
-		PhotonLedgerInfo *ret_ri;
-
-		ri = (PhotonLedgerInfo*) block->data;
-
-		if (photon_xsp_set_ri((xspSess*)sess, ri, &ret_ri) != 0) {
-			xsp_err(0, "could not set photon rcv ledgers");
-			goto error_exit;
-		}
-
-		*ret_block = xsp_alloc_block();
-		(*ret_block)->data = ret_ri;
-		(*ret_block)->length = sizeof(PhotonLedgerInfo);
-		(*ret_block)->type = block->type;
-		(*ret_block)->sport = 0;
-
+		*ret_block = __xspd_proto_photon_set_info((xspSess*)sess, block, PHOTON_RI);
 		break;
     }
 
-    case PHOTON_SI:
+    case XSP_PHOTON_SI:
 	{
-		PhotonLedgerInfo *si;
-		PhotonLedgerInfo *ret_si;
-
-		si = (PhotonLedgerInfo*) block->data;
-
-		if (photon_xsp_set_si((xspSess*)sess, si, &ret_si) != 0) {
-			xsp_err(0, "could not set photon snd ledgers");
-			goto error_exit;
-		}
-
-		*ret_block = xsp_alloc_block();
-		(*ret_block)->data = ret_si;
-		(*ret_block)->length = sizeof(PhotonLedgerInfo);
-		(*ret_block)->type = block->type;
-		(*ret_block)->sport = 0;
-
+		*ret_block = __xspd_proto_photon_set_info((xspSess*)sess, block, PHOTON_SI);
 		break;
 	}
 
-	case PHOTON_FI:
+	case XSP_PHOTON_FI:
 	{
-		PhotonLedgerInfo *fi;
-		PhotonLedgerInfo *ret_fi;
-
-		fi = (PhotonLedgerInfo*) block->data;
-
-		if (photon_xsp_set_fi((xspSess*)sess, fi, &ret_fi) != 0) {
-			xsp_err(0, "could not set photon FIN ledgers");
-			goto error_exit;
-		}
-
-		// FIXME: There's a memory leak because blob is not freed
-		*ret_block = xsp_alloc_block();
-		(*ret_block)->data = ret_fi;
-		(*ret_block)->length = sizeof(PhotonLedgerInfo);
-		(*ret_block)->type = block->type;
-		(*ret_block)->sport = 0;
-
+		*ret_block = __xspd_proto_photon_set_info((xspSess*)sess, block, PHOTON_FI);
 		break;
 	}
 
-	case PHOTON_IO:
+	case XSP_PHOTON_IO:
 	{
 		PhotonIOInfo *io = xspd_proto_photon_parse_io_msg(block->data);
 		if(io == NULL)
 			goto error_exit;
 
-		/* XXX: AFAIK the I/O info is session specific, so no need for locks */
-		if (photon_xsp_set_io((xspSess*)sess, io) != 0) {
-			xsp_err(0, "could not set photon I/O info");
-			goto error_exit;
-		}
+		__xspd_proto_photon_set_info((xspSess*)sess, block, PHOTON_IO);
 
 		/*
 		 * TODO: From here the phorwarder needs to start the I/O transfer
@@ -245,6 +196,7 @@ error_ci:
 	}
 
 	default:
+		xsp_err(0, "Uknown Photon message");
 		break;
 	}
 
@@ -253,6 +205,30 @@ error_ci:
 error_exit:
 	*ret_block = NULL;
 	return -1;
+}
+
+xspBlock *__xspd_proto_photon_set_info(xspSess *sess, xspBlock *block, photon_info_t type) {
+	xspBlock *ret_block;
+	void *ri;
+	void *ret_ri;
+	int ri_len;
+	int ret_len;
+	
+	ri = block->data;
+	ret_len = block->length;
+	
+	if (photon_xsp_set_info((xspSess*)sess, ri, ri_len, &ret_ri, &ret_len, PHOTON_RI) != PHOTON_OK) {
+		xsp_err(0, "could not set photon rcv ledgers");
+		return NULL;
+	}
+	
+	ret_block = xsp_alloc_block();
+	ret_block->data = ret_ri;
+	ret_block->length = sizeof(void);
+	ret_block->type = block->type;
+	ret_block->sport = 0;	
+	
+	return ret_block;
 }
 
 PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg) {
@@ -268,7 +244,7 @@ PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg) {
         return NULL;
     }
     msg_ptr = msg + sizeof(int) + fileURI_size;
-
+	
     io->amode = *((int *)msg_ptr);
     io->niter = *((int *)(msg_ptr+sizeof(int)));
     io->view.combiner = *((int *)(msg_ptr+sizeof(int)*2));
@@ -300,7 +276,9 @@ PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg) {
     }
     memcpy(io->view.datatypes, msg_ptr+sizeof(int), io->view.ndatatypes*sizeof(int));
 
-    //print_photon_io_info(io);
+	photon_io_print_info(io);
+
+	return NULL;
 
     return io;
 }

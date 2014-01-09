@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = foreign
 
-include_HEADERS = include/xsp-proto.h include/config.h
+include_HEADERS = include/xsp-proto.h
 
 libdirs = libmongo_client src/libxsp src/libxsp_common
 bindirs = src/xspd
