@@ -460,6 +460,7 @@ AC_SUBST(NL_LIBS)
 
 AC_OUTPUT(
 	Makefile
+	libslabs/Makefile
 	libradix/Makefile
 	libmongo_client/Makefile
 	libgsoap/Makefile

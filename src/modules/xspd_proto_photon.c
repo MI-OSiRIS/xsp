@@ -21,6 +21,8 @@
 #include "xsp_session.h"
 #include "xsp_conn.h"
 
+#include "xspd_proto_photon.h"
+#include "xspd_forwarder.h"
 #include "photon.h"
 #include "photon_xsp_forwarder.h"
 #include "compat.h"
@@ -38,7 +40,7 @@ pthread_mutex_t ci_lock;
 pthread_mutex_t rfi_lock;
 
 static xspModule xspd_photon_module = {
-	.desc = "Photon Forwarder Module",
+	.desc = "Photon Control Module",
 	.dependencies = "",
 	.init = xspd_proto_photon_init,
 	.opt_handler = xspd_proto_photon_opt_handler
@@ -88,6 +90,8 @@ error_exit:
 }
 
 int xspd_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block) {
+	int i;
+	xspModule *module;
 
 	xsp_info(0, "handling photon message of type: %d", block->type);
 
@@ -139,6 +143,22 @@ int xspd_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret
 		if (photon_xsp_forwarder_connect_peer((xspSess*)sess, ci) != PHOTON_OK) {
 			xsp_err(0, "could not complete photon connections");
 			goto error_conn;
+		}
+		
+		/* register any buffer pools created by other modules that may be loaded */
+		if ((module = xsp_find_module("forwarder")) != NULL) {
+			SLAB *pool = xspd_forwarder_get_pool(NULL);
+			if (pool) {
+				xsp_info(5, "Registering forwarder buffer pool...");
+				for (i = 0; i < slabs_buf_get_pcount(pool); i++) {
+					if (xspd_proto_photon_register_buffer(slabs_buf_addr_ind(pool, i),
+														  slabs_buf_get_psize(pool)) != 0) {
+						xsp_err(0, "Could not register buffer pool with photon module");
+						return -1;
+					}
+				}
+				xsp_info(5, "done");
+			}
 		}
 
 		// we already sent our PHOTON_CI message back
@@ -215,9 +235,9 @@ xspBlock *__xspd_proto_photon_set_info(xspSess *sess, xspBlock *block, photon_in
 	int ret_len;
 	
 	ri = block->data;
-	ret_len = block->length;
+	ri_len = block->length;
 	
-	if (photon_xsp_set_info((xspSess*)sess, ri, ri_len, &ret_ri, &ret_len, PHOTON_RI) != PHOTON_OK) {
+	if (photon_xsp_set_info((xspSess*)sess, ri, ri_len, &ret_ri, &ret_len, type) != PHOTON_OK) {
 		xsp_err(0, "could not set photon rcv ledgers");
 		return NULL;
 	}
@@ -229,6 +249,14 @@ xspBlock *__xspd_proto_photon_set_info(xspSess *sess, xspBlock *block, photon_in
 	ret_block->sport = 0;	
 	
 	return ret_block;
+}
+
+int xspd_proto_photon_register_buffer(void *buf, uint64_t size) {
+	if (photon_register_buffer(buf, size) != PHOTON_OK) {
+		return -1;
+	}
+	
+	return 0;
 }
 
 PhotonIOInfo *xspd_proto_photon_parse_io_msg(void *msg) {
