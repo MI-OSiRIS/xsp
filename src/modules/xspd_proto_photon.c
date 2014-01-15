@@ -23,7 +23,6 @@
 
 #include "xspd_proto_photon.h"
 #include "xspd_forwarder.h"
-#include "photon.h"
 #include "photon_xsp_forwarder.h"
 #include "compat.h"
 
@@ -90,8 +89,6 @@ error_exit:
 }
 
 int xspd_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block) {
-	int i;
-	xspModule *module;
 
 	xsp_info(0, "handling photon message of type: %d", block->type);
 
@@ -100,8 +97,8 @@ int xspd_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret
 	case XSP_PHOTON_CI:
 	{
 		xspConn *parent_conn;
-		// XSP doesn't care what the photon connection context actually looks like,
-		// but we need to know the length of the buffer
+		/* XSP doesn't care what the photon connection context actually looks like,
+		   but we need to know the length of the buffer to pass around */
 		void *ci;
 		void *ret_ci = NULL;
 		int ci_len;
@@ -111,8 +108,8 @@ int xspd_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret
 		ci = block->data;
 		ci_len = block->length;
 
-		// does not currently check for duplicate registrations
-		// duplicate messages, etc.
+		/* does not currently check for duplicate registrations
+		   duplicate messages, etc. */
 		if (photon_xsp_register_session((xspSess*)sess) != 0) {
 			xsp_err(0, "could not register session with libphoton");
 			goto error_exit;
@@ -123,46 +120,17 @@ int xspd_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret
 			goto error_ci;
 		}
 		
-		*ret_block = xsp_alloc_block();
-		(*ret_block)->data = ret_ci;
-		(*ret_block)->length = ret_len;
-		(*ret_block)->type = block->type;
-		(*ret_block)->sport = 0;
-
-		xspMsg msg = {
-			.version = sess->version,
-			.type = XSP_MSG_APP_DATA,
-			.flags = 0,
-			.msg_body = *ret_block
-		};
-
-		// so ugly to do this here
-		xsp_conn_send_msg(parent_conn, &msg, XSP_OPT_APP);
-		
-		// but it's better to wait for the ib connection right away
 		if (photon_xsp_forwarder_connect_peer((xspSess*)sess, ci) != PHOTON_OK) {
 			xsp_err(0, "could not complete photon connections");
 			goto error_conn;
 		}
 		
-		/* register any buffer pools created by other modules that may be loaded */
-		if ((module = xsp_find_module("forwarder")) != NULL) {
-			SLAB *pool = xspd_forwarder_get_pool(NULL);
-			if (pool) {
-				xsp_info(5, "Registering forwarder buffer pool...");
-				for (i = 0; i < slabs_buf_get_pcount(pool); i++) {
-					if (xspd_proto_photon_register_buffer(slabs_buf_addr_ind(pool, i),
-														  slabs_buf_get_psize(pool)) != 0) {
-						xsp_err(0, "Could not register buffer pool with photon module");
-						return -1;
-					}
-				}
-				xsp_info(5, "done");
-			}
-		}
-
-		// we already sent our PHOTON_CI message back
-		*ret_block = NULL;
+		*ret_block = xsp_alloc_block();
+		(*ret_block)->data = ret_ci;
+		(*ret_block)->length = ret_len;
+		(*ret_block)->type = block->type;
+		(*ret_block)->sport = 0;
+		
 		break;
 
 error_conn:
@@ -251,8 +219,11 @@ xspBlock *__xspd_proto_photon_set_info(xspSess *sess, xspBlock *block, photon_in
 	return ret_block;
 }
 
-int xspd_proto_photon_register_buffer(void *buf, uint64_t size) {
+int xspd_proto_photon_register_buffer(void *buf, uint64_t size, photonBufferPriv ret_priv) {
 	if (photon_register_buffer(buf, size) != PHOTON_OK) {
+		return -1;
+	}
+	if (ret_priv && (photon_get_buffer_private(buf, size, ret_priv) != PHOTON_OK)) {
 		return -1;
 	}
 	

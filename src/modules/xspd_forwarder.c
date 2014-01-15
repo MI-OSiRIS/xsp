@@ -25,6 +25,7 @@
 #include "xsp_session.h"
 #include "xsp_conn.h"
 
+#include "xspd_proto_photon.h"
 #include "xspd_forwarder.h"
 #include "compat.h"
 #include "mongo.h"
@@ -70,7 +71,7 @@ struct xspd_forwarder_config_t config;
 
 static xspModule xspd_forwarder_module = {
 	.desc = "Forwarder Module",
-	.dependencies = "",
+	.dependencies = "photon",
 	.init = xspd_forwarder_init,
 	.opt_handler = xspd_forwarder_opt_handler
 };
@@ -80,6 +81,8 @@ xspModule *module_info() {
 }
 
 int xspd_forwarder_init() {
+	int i;
+	xspModule *module;
 	xspSettings *settings;
 
 	settings = xsp_main_settings();
@@ -156,6 +159,22 @@ int xspd_forwarder_init() {
 	//slabs_buf_reset(pool);
 	xsp_info(5, "done");
 
+	/* register the buffer pool with the RDMA module, must be initialized first */
+	if ((module = xsp_find_module("photon")) != NULL) {
+		photonBufferPriv priv;
+		xsp_info(5, "Registering forwarder buffer pool...");
+		for (i = 0; i < slabs_buf_get_pcount(pool); i++) {
+			priv = malloc(sizeof(struct photon_buffer_priv_t));
+			if (xspd_proto_photon_register_buffer(slabs_buf_addr_ind(pool, i),
+												  slabs_buf_get_psize(pool), priv) != 0) {
+				xsp_err(0, "Could not register buffer pool with photon module");
+				return -1;
+			}
+			slabs_buf_set_priv_data_ind(pool, priv, i);
+		}
+		xsp_info(5, "done");
+	}
+	
 	/* load a directory of files into memory if given */
 	if (strncasecmp(config.load_dir, "NULL", 4) != 0) {
 		pthread_create(&loaddir_thr, NULL, __xspd_forwarder_loaddir_thread, NULL);
@@ -192,6 +211,7 @@ void *__xspd_forwarder_loaddir_thread(void *arg) {
 
 	while((dent = readdir(dir)) != NULL) {
 		if (strcmp(dent->d_name, ".") && strcmp(dent->d_name, "..")) {
+			photonBufferPriv priv;
 			struct stat filestat;
 			struct passwd *pwdstat;
 			void *sbuf;
@@ -230,6 +250,8 @@ void *__xspd_forwarder_loaddir_thread(void *arg) {
 						return NULL;
 					}
 
+					priv = slabs_buf_get_priv_data_ind(pool, sind);
+
 					if ((file_size - total_read) < ssize)
 						to_read = (file_size - total_read);
 					else
@@ -248,6 +270,12 @@ void *__xspd_forwarder_loaddir_thread(void *arg) {
 					bson_append_int(&fmeta, "offset", (int)total_read);
 					bson_append_int(&fmeta, "length", (int)n);
 					bson_append_string(&fmeta, "address", addr);
+					if (priv) {
+						sprintf(addr, "%lu", priv->key0);
+						bson_append_string(&fmeta, "key0", addr);
+						sprintf(addr, "%lu", priv->key1);
+						bson_append_string(&fmeta, "key1", addr);
+					}
 					bson_append_string(&fmeta, "eid", config.eid);
 					bson_append_int(&fmeta, "local_slab_index", sind);
 					bson_append_finish_object(&fmeta);
