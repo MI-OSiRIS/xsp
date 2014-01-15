@@ -120,8 +120,6 @@ int xspd_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret
 			goto error_conn;
 		}
 
-		sleep(2);
-
 		*ret_block = xsp_alloc_block();
 		(*ret_block)->data = ret_ci;
 		(*ret_block)->length = ret_len;
