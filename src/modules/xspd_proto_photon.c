@@ -115,16 +115,13 @@ int xspd_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret
 			goto error_exit;
 		}
 
-		if (photon_xsp_set_info((xspSess*)sess, ci, ci_len, &ret_ci, &ret_len, PHOTON_CI) != 0) {
-			xsp_err(0, "could not set photon connect info");
-			goto error_ci;
-		}
-		
-		if (photon_xsp_forwarder_connect_peer((xspSess*)sess, ci) != PHOTON_OK) {
+		if (photon_xsp_forwarder_connect_peer((xspSess*)sess, ci, &ret_ci, &ret_len) != PHOTON_OK) {
 			xsp_err(0, "could not complete photon connections");
 			goto error_conn;
 		}
-		
+
+		sleep(2);
+
 		*ret_block = xsp_alloc_block();
 		(*ret_block)->data = ret_ci;
 		(*ret_block)->length = ret_len;
@@ -134,8 +131,6 @@ int xspd_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret
 		break;
 
 error_conn:
-		free(ret_ci);
-error_ci:
 		photon_xsp_unregister_session((xspSess*)sess);
 		goto error_exit;
     }
