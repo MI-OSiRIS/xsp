@@ -54,6 +54,7 @@ typedef struct common_session_t {
 	pthread_mutex_t references_lock;
 	
 	void *(*proto_cb) (struct common_session_t *, xspMsg*);
+	void *(*close_cb) (struct common_session_t *);
 
 	void *private;
 
@@ -73,6 +74,7 @@ int xsp_sessions_init();
 
 comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, xspCBMap *cb_map, int flags);
 int xsp_set_proto_cb(comSess *sess, void *(*fn) (comSess *, xspMsg *));
+int xsp_set_close_cb(comSess *sess, void *(*fn) (comSess *));
 int xsp_proto_loop(comSess *sess);
 
 int xsp_setup_session(comSess *sess, char ***error_msgs);

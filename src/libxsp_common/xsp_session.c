@@ -95,6 +95,10 @@ void xsp_unregister_session(comSess *sess) {
 	pthread_mutex_lock(&sessions_list_lock);
 	{
 		xsp_info(5, "unregistering session %s", sess->id);
+		
+		if (sess->close_cb) {
+			sess->close_cb(sess);
+		}
 
 		if (sess->sess_list.le_prev != NULL) {
 			LIST_REMOVE(sess, sess_list);
@@ -957,6 +961,11 @@ int xsp_session_send_nack(comSess *sess, char **error_msgs) {
 
 int xsp_set_proto_cb(comSess *sess, void *(*fn) (comSess *, xspMsg *)) {
 	sess->proto_cb = fn;
+	return 0;
+}
+
+int xsp_set_close_cb(comSess *sess, void *(*fn) (comSess *)) {
+	sess->close_cb = fn;
 	return 0;
 }
 

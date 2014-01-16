@@ -125,7 +125,9 @@ int xspd_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret
 		(*ret_block)->length = ret_len;
 		(*ret_block)->type = block->type;
 		(*ret_block)->sport = 0;
-		
+
+		xsp_set_close_cb(sess, photon_xsp_unregister_session);
+	   
 		break;
 
 error_conn:
