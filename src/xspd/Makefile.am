@@ -2,7 +2,7 @@ sbin_PROGRAMS = xspd
 
 xspd_SOURCES = xspd.c xspd_frontend.c
 xspd_INCLUDES = 
-xspd_LDADD = $(top_builddir)/src/libxsp_common/libxsp_common.la $(top_builddir)/src/libxsp/libxsp.a
+xspd_LDADD = $(top_builddir)/src/libxsp_common/libxsp_common.la $(top_builddir)/src/libxsp/libxsp.la
 
 xspd_LDFLAGS = -lm @THREAD_LIBS@ @DL_LIBS@ -export-dynamic @SSL_LIBS@ @NL_LIBS@ @CONFIG_LIBS@
 

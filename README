@@ -9,5 +9,6 @@ Dependencies:
 	-- autoconf
 
 > ./autogen.sh
-> ./configure
+> ./configure #to create both shared n static libs
+> ./configure --disable-shared #to create just static libs
 > make
