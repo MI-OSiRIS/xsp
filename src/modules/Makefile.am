@@ -15,7 +15,7 @@ blipp_la_LDFLAGS = -module -avoid-version -export-dynamic
 endif
 
 if ENABLE_PHOTON
-AM_CFLAGS += $(PHOTON_CFLAGS) -I/home/kissel/mpich-3.0.4/include
+AM_CFLAGS += $(PHOTON_CFLAGS) -I/home/extern/openmpi-1.6.3/include
 modules_LTLIBRARIES += photon.la forwarder.la
 photon_la_SOURCES = xspd_proto_photon.c xspd_proto_photon.h
 photon_la_LDFLAGS = -no-undefined -module -avoid-version $(PHOTON_LIBS)
