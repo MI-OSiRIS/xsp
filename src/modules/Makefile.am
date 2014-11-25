@@ -9,8 +9,8 @@ AM_CFLAGS = @CFLAGS@ -DWITH_OPENSSL -DMODULE_DIR=\"$(moduledir)\" -DCONFIG_FILE=
 if ENABLE_BLIPP
 modules_LTLIBRARIES += blipp.la
 blipp_la_SOURCES = xspd_blipp.c
-blipp_la_LIBADD = $(top_builddir)/libmongo_client/libmongo_client.a
-blipp_la_CFLAGS = -DMONGO_HAVE_STDINT -I$(top_srcdir)/libmongo_client
+blipp_la_LIBADD = $(top_builddir)/libmongo_client/libmongo_client.a 
+blipp_la_CFLAGS = -DMONGO_HAVE_STDINT -I$(top_srcdir)/libmongo_client 
 blipp_la_LDFLAGS = -module -avoid-version -export-dynamic
 endif
 
@@ -21,8 +21,8 @@ photon_la_SOURCES = xspd_proto_photon.c xspd_proto_photon.h
 photon_la_LDFLAGS = -no-undefined -module -avoid-version $(PHOTON_LIBS)
 photon_la_LIBADD =
 forwarder_la_SOURCES = xspd_forwarder.c xspd_forwarder.h
-forwarder_la_LIBADD = $(top_builddir)/libmongo_client/libmongo_client.a $(top_builddir)/libslabs/libslabs.a
-forwarder_la_CFLAGS = $(AM_CFLAGS) -DMONGO_HAVE_STDINT -I$(top_srcdir)/libmongo_client
+forwarder_la_LIBADD = $(top_builddir)/libmongo_client/libmongo_client.a $(top_builddir)/libslabs/libslabs.a $(top_builddir)/libcurl/libxsp_curl.a @JSON_LIBS@ @CURL_LIBS@
+forwarder_la_CFLAGS = $(AM_CFLAGS) -DMONGO_HAVE_STDINT -I$(top_srcdir)/libmongo_client -I$(top_srcdir)/libcurl
 forwarder_la_LDFLAGS = -module -avoid-version -export-dynamic
 endif
 

@@ -65,9 +65,9 @@ int xspd_proto_photon_init() {
 	.address = maxclients,
 	.nproc = maxclients,
 	// Infiniband backend
-	.ibv.eth_dev = "eth0",
-	.ibv.ib_dev = "mlx4_0",
-	.ibv.use_cma = 1,
+	.ibv.eth_dev = "vpi1",
+	.ibv.ib_dev = "mlx4_0:2",
+	.ibv.use_cma = 0,
 	// Forwarder details
 	.forwarder.use_forwarder = 1,
 	//.ib_port = 1,
