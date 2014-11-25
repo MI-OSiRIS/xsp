@@ -297,37 +297,6 @@ then
 		fi
 	fi
 fi
-
-dnl Check for Photon
-AC_MSG_CHECKING(for Photon)
-AC_ARG_WITH(photon, [  --with-photon[=DIR]          use Photon in DIR], , with_photon=try)
-if test "$with_photon" != "no"
-then
-	if test "$with_photon" == "yes" -o "$with_photon" == "try"
-	then
-		if test -f /usr/include/photon_xsp_forwarder.h; then
-	 		PHOTON_LIBS="-lphoton"
- 			PHOTON_CFLAGS=""
-		elif test -f /usr/local/include/photon_xsp_forwarder.h; then
-	 		PHOTON_LIBS="-lphoton"
- 			PHOTON_CFLAGS=""
-		else
-			AC_MSG_RESULT(no)
-			if test "$with_photon" == "yes"; then
-				AC_ERROR(photon_xsp_forwarder.h not found)
-			fi
-		fi
-	elif test "$with_photon" != "no"
-	then
-		if test -f $with_photon/include/photon_xsp_forwarder.h; then
-			PHOTON_LIBS="-L$with_photon/lib -lphoton"
-			PHOTON_CFLAGS="-I$with_photon/include"
-		else
-			AC_MSG_RESULT(no)
-			AC_ERROR(photon_xsp_forwarder.h not found)
-		fi
-	fi
-fi
  
 if test "$PHOTON_LIBS" != ""
 then

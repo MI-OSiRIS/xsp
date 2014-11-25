@@ -44,7 +44,7 @@ char *xsp_curl_json_string(xspCURLContext *cc, char *target, int curl_opt, char 
         send_len = 0;
     }
     asprintf(&endpoint, "%s%s", cc->url, target);
-
+    
     struct curl_http_data send_data = {
         .ptr = send_str,
         .lptr = NULL,
@@ -81,8 +81,8 @@ char *xsp_curl_json_string(xspCURLContext *cc, char *target, int curl_opt, char 
        but maybe we should have UNIS accept application/json }
      */
 
-    //headers = curl_slist_append(headers, "Transfer-Encoding: chunked");
-    //headers = curl_slist_append(headers, "Content-type: application/json");
+    headers = curl_slist_append(headers, "Transfer-Encoding: chunked");
+    headers = curl_slist_append(headers, "Content-type: application/perfsonar+json");
     headers = curl_slist_append(headers, "Accept: text/html,application/json,application/perfsonar+json");
     res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
     res = curl_easy_perform(curl);

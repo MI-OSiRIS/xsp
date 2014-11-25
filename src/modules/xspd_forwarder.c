@@ -83,9 +83,10 @@ struct xspd_file_entry_t {
 
 int xspd_forwarder_init();
 int xspd_forwarder_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block);
-void __xspd_select_data_inserter(struct xspd_file_entry_t *list);
+void __xspd_forwarder_insert(struct xspd_file_entry_t *list);
 
-void __xspd_unis_converter_and_insert(struct xspd_file_entry_t *file_list);
+int __xspd_forwarder_periscope_insert(json_t *root);
+void __xspd_forwarder_periscope_converter(struct xspd_file_entry_t *file_list);
 int __xspd_forwarder_mongo_insert(bson *bpp, char *collection);
 void *__xspd_forwarder_loaddir_thread(void *arg);
 
@@ -367,7 +368,7 @@ void *__xspd_forwarder_loaddir_thread(void *arg) {
     closedir(dir);
 	
     xsp_info(5, "Staging data in %s",config.store);
-    __xspd_select_data_inserter(head_file);
+    __xspd_forwarder_insert(head_file);
     xsp_info(5, "Freeing memory");
 
     // Free memory
@@ -384,10 +385,10 @@ void *__xspd_forwarder_loaddir_thread(void *arg) {
     return NULL;
 }
 
-void __xspd_select_data_inserter(struct xspd_file_entry_t *list){
+void __xspd_forwarder_insert(struct xspd_file_entry_t *list){
 
     if (!strcmp(config.store, "periscope")) {
-	__xspd_unis_converter_and_insert(list);
+	__xspd_forwarder_periscope_converter(list);
     }else if (!strcmp(config.store, "mongo")) {
 	//__xspd_mongo_converter_and_insert(list);
     }else {
@@ -396,7 +397,7 @@ void __xspd_select_data_inserter(struct xspd_file_entry_t *list){
     }
 }
 
-void __xspd_unis_converter_and_insert(struct xspd_file_entry_t *file_list){
+void __xspd_forwarder_periscope_converter(struct xspd_file_entry_t *file_list){
     
     struct xspd_file_entry_t *temp = file_list;
 
@@ -449,19 +450,15 @@ void __xspd_unis_converter_and_insert(struct xspd_file_entry_t *file_list){
 
 	json_object_set(root, "extents", extents);
 	
-	// debug 
-	json_str = json_dumps(root, JSON_INDENT(2));
-	if(json_str != NULL){
-	    xsp_info(0," %s dump :\n %s", temp->filename, json_str);
-	}else{
-	    xsp_err(0," failed to create json dump");
+	// push exnodes to UNIS
+	if(__xspd_forwarder_periscope_insert(root) != 0){
+	    xsp_err(5, "Failed to push exnode to UNIS");
 	    return;
 	}
-	free(json_str);
 	temp = temp->next_file;
     }
-
 }
+
 
 /*void *__xspd_forwarder_loaddir_thread(void *arg) {
   DIR *dir;
@@ -560,6 +557,43 @@ void __xspd_unis_converter_and_insert(struct xspd_file_entry_t *file_list){
 	
   return NULL;
   }*/
+
+int __xspd_forwarder_periscope_insert(json_t *root){
+    json_t *json_ret;;
+    json_error_t json_err;
+    char *query;
+    char *response;
+    char *send_str;
+	
+    asprintf(&query, "/files");
+
+    send_str = json_dumps(root, JSON_INDENT(2));
+    if(send_str != NULL){
+	xsp_info(0,"Json dump :\n %s", send_str);
+    }else{
+	xsp_err(0,"Failed to create json dump");
+	return -1;
+    }
+
+    xsp_curl_json_string(&curl_context,
+			 query,
+			 CURLOPT_POST,
+			 send_str,
+			 &response);
+
+    json_ret = json_loads(response, 0, &json_err);
+    if (!json_ret) {
+	xsp_info(5, "Could not decode response: %d: %s", json_err.line, json_err.text);
+	xsp_err(5,"Error response : %s", response);
+	return -1;
+    }
+
+    free(query);
+    free(send_str);
+    free(response);
+	
+    return 0;
+}
 
 int __xspd_forwarder_mongo_insert(bson *bpp, char *collection) {
     mongo conn[1];
