@@ -127,4 +127,16 @@ static size_t read_cb(void *ptr, size_t size, size_t nmemb, void *userp);
  * @details [detailed description]
  */
 static size_t write_cb(void *ptr, size_t size, size_t nmemb, void *userp);
+
+/* HTTP GET 
+ * Response : String
+**/
+char *xsp_curl_get_string(xspCURLContext *cc, char *target, char *send_str, char **ret_str);
+
+/* HTTP GET 
+ * Response : 200
+**/
+char *xsp_curl_del(xspCURLContext *cc, char *target, char *send_str, char **ret_str);
+
+char *xsp_curl_post_json(xspCURLContext *cc, char *target, char *send_str, char **ret_str);
 #endif // XSP_CURL_CONTEXT_H

@@ -85,6 +85,7 @@ int xspd_forwarder_init();
 int xspd_forwarder_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block);
 void __xspd_forwarder_insert(struct xspd_file_entry_t *list);
 
+void __xspd_forwarder_periscope_del_dup(char *filename);
 int __xspd_forwarder_periscope_insert(json_t *root);
 void __xspd_forwarder_periscope_converter(struct xspd_file_entry_t *file_list);
 int __xspd_forwarder_mongo_insert(bson *bpp, char *collection);
@@ -407,8 +408,7 @@ void __xspd_forwarder_periscope_converter(struct xspd_file_entry_t *file_list){
 	json_error_t json_err;
 	struct allocation_t *alloc = temp->allocations;
 	int index = 0;
-	char *json_str;
-
+	
 	
 	root = json_loads(json_file_template, 0, &json_err);
 	if (!root) {
@@ -450,6 +450,9 @@ void __xspd_forwarder_periscope_converter(struct xspd_file_entry_t *file_list){
 
 	json_object_set(root, "extents", extents);
 	
+	// Delete any instace of extents with same file name
+	//__xspd_forwarder_periscope_del_dup(temp->filename);
+	
 	// push exnodes to UNIS
 	if(__xspd_forwarder_periscope_insert(root) != 0){
 	    xsp_err(5, "Failed to push exnode to UNIS");
@@ -459,6 +462,104 @@ void __xspd_forwarder_periscope_converter(struct xspd_file_entry_t *file_list){
     }
 }
 
+void __xspd_forwarder_periscope_del_dup(char *filename){
+    json_t *json_ret;;
+    json_error_t json_err;
+    char *query;
+    char *response;
+    int num_obj;
+
+    
+    if(filename == NULL){
+	xsp_err(5,"Empty filename");
+	return;
+    }
+    
+    xsp_info(5,"Finding duplicate for file : %s", filename);
+
+    asprintf(&query, "/files?name=%s",filename);
+    
+    xsp_curl_get_string(&curl_context,
+			 query,
+			 NULL,
+			 &response);
+    
+    xsp_info(5,"Response from curl : %s", response);
+
+    json_ret = json_loads(response, 0, &json_err);
+    if (!json_ret) {
+	xsp_info(5, "Could not decode response: %d: %s", json_err.line, json_err.text);
+	xsp_err(5,"Error response : %s", response);
+	return;
+    }
+
+    if((num_obj = json_array_size(json_ret)) == 0){
+	xsp_info(5,"NO duplicate file found");
+	return;
+    }
+    
+    int i;
+    json_t *obj;
+    json_t *key;
+    char *id;
+    
+    for(i=0; i<num_obj; i++){
+	obj = json_array_get(json_ret, i);
+	key = json_object_get(obj, "id");
+	
+	if (key){
+	    id = (char *) json_string_value(key);
+	    xsp_info(5, "Deleting previous file ID => %s", id);
+
+	    asprintf(&query, "/files/%s",id);
+
+	    xsp_curl_del(&curl_context,
+				query,
+				NULL,
+				&response);
+	}
+    }
+
+    free(query);
+    free(response);
+}
+
+
+int __xspd_forwarder_periscope_insert(json_t *root){
+    json_t *json_ret;;
+    json_error_t json_err;
+    char *query;
+    char *response;
+    char *send_str;
+	
+    asprintf(&query, "/files");
+
+    send_str = json_dumps(root, JSON_INDENT(2));
+    if(send_str != NULL){
+	xsp_info(0,"Json dump :\n %s", send_str);
+    }else{
+	xsp_err(0,"Failed to create json dump");
+	return -1;
+    }
+
+    xsp_curl_post_json(&curl_context,
+			 query,
+			 send_str,
+			 &response);
+
+    json_ret = json_loads(response, 0, &json_err);
+    if (!json_ret) {
+	xsp_info(5, "Could not decode response: %d: %s", json_err.line, json_err.text);
+	xsp_err(5,"Error response : %s", response);
+	return -1;
+    }
+
+    free(query);
+    free(send_str);
+    free(response);
+	
+    return 0;
+}
 
 /*void *__xspd_forwarder_loaddir_thread(void *arg) {
   DIR *dir;
@@ -558,42 +659,6 @@ void __xspd_forwarder_periscope_converter(struct xspd_file_entry_t *file_list){
   return NULL;
   }*/
 
-int __xspd_forwarder_periscope_insert(json_t *root){
-    json_t *json_ret;;
-    json_error_t json_err;
-    char *query;
-    char *response;
-    char *send_str;
-	
-    asprintf(&query, "/files");
-
-    send_str = json_dumps(root, JSON_INDENT(2));
-    if(send_str != NULL){
-	xsp_info(0,"Json dump :\n %s", send_str);
-    }else{
-	xsp_err(0,"Failed to create json dump");
-	return -1;
-    }
-
-    xsp_curl_json_string(&curl_context,
-			 query,
-			 CURLOPT_POST,
-			 send_str,
-			 &response);
-
-    json_ret = json_loads(response, 0, &json_err);
-    if (!json_ret) {
-	xsp_info(5, "Could not decode response: %d: %s", json_err.line, json_err.text);
-	xsp_err(5,"Error response : %s", response);
-	return -1;
-    }
-
-    free(query);
-    free(send_str);
-    free(response);
-	
-    return 0;
-}
 
 int __xspd_forwarder_mongo_insert(bson *bpp, char *collection) {
     mongo conn[1];

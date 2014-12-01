@@ -101,6 +101,190 @@ char *xsp_curl_json_string(xspCURLContext *cc, char *target, int curl_opt, char 
     return NULL;
 }
 
+char *xsp_curl_get_string(xspCURLContext *cc, char *target, char *send_str, char **ret_str) {
+    CURL *curl;
+    CURLcode res;
+    struct curl_slist *headers = NULL;
+    char *endpoint;
+    long send_len;
+
+    if (send_str) {
+        send_len = strlen(send_str);
+    } else {
+        send_len = 0;
+    }
+    asprintf(&endpoint, "%s%s", cc->url, target);
+    
+    struct curl_http_data send_data = {
+        .ptr = send_str,
+        .lptr = NULL,
+        .len = send_len
+    };
+
+    struct curl_http_data recv_data = {
+        .ptr = NULL,
+        .lptr = NULL,
+        .len = 0
+    };
+
+    if (cc->curl_persist) {
+        curl = cc->curl;
+    } else {
+        curl = curl_easy_init();
+        if (!curl) {
+            fprintf(stderr, "Could not initialize CURL\n");
+            goto error_exit;
+        }
+    }
+
+    curl_easy_setopt(curl, CURLOPT_URL, endpoint);
+    curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
+    curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_cb);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_cb);
+    curl_easy_setopt(curl, CURLOPT_READDATA, &send_data);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &recv_data);
+
+    res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    res = curl_easy_perform(curl);
+    if (res != CURLE_OK) {
+        fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+        goto error_exit;
+    }
+
+    if (!(cc->curl_persist)) {
+        curl_easy_cleanup(curl);
+    }
+    *ret_str = recv_data.ptr;
+    return recv_data.ptr;
+    error_exit:
+    *ret_str = NULL;
+    return NULL;
+}
+
+char *xsp_curl_del(xspCURLContext *cc, char *target, char *send_str, char **ret_str) {
+    CURL *curl;
+    CURLcode res;
+    struct curl_slist *headers = NULL;
+    char *endpoint;
+    long send_len;
+
+    if (send_str) {
+        send_len = strlen(send_str);
+    } else {
+        send_len = 0;
+    }
+    asprintf(&endpoint, "%s%s", cc->url, target);
+    
+    struct curl_http_data send_data = {
+        .ptr = send_str,
+        .lptr = NULL,
+        .len = send_len
+    };
+
+    struct curl_http_data recv_data = {
+        .ptr = NULL,
+        .lptr = NULL,
+        .len = 0
+    };
+
+    if (cc->curl_persist) {
+        curl = cc->curl;
+    } else {
+        curl = curl_easy_init();
+        if (!curl) {
+            fprintf(stderr, "Could not initialize CURL\n");
+            goto error_exit;
+        }
+    }
+
+    curl_easy_setopt(curl, CURLOPT_URL, endpoint);
+    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST,"DELETE");
+    curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_cb);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_cb);
+    curl_easy_setopt(curl, CURLOPT_READDATA, &send_data);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &recv_data);
+
+    res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    res = curl_easy_perform(curl);
+    if (res != CURLE_OK) {
+        fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+        goto error_exit;
+    }
+
+    if (!(cc->curl_persist)) {
+        curl_easy_cleanup(curl);
+    }
+    *ret_str = recv_data.ptr;
+    return recv_data.ptr;
+    error_exit:
+    *ret_str = NULL;
+    return NULL;
+}
+
+
+char *xsp_curl_post_json(xspCURLContext *cc, char *target, char *send_str, char **ret_str) {
+    CURL *curl;
+    CURLcode res;
+    struct curl_slist *headers = NULL;
+    char *endpoint;
+    long send_len;
+
+    if (send_str) {
+        send_len = strlen(send_str);
+    } else {
+        send_len = 0;
+    }
+    asprintf(&endpoint, "%s%s", cc->url, target);
+    
+    struct curl_http_data send_data = {
+        .ptr = send_str,
+        .lptr = NULL,
+        .len = send_len
+    };
+
+    struct curl_http_data recv_data = {
+        .ptr = NULL,
+        .lptr = NULL,
+        .len = 0
+    };
+
+    if (cc->curl_persist) {
+        curl = cc->curl;
+    } else {
+        curl = curl_easy_init();
+        if (!curl) {
+            fprintf(stderr, "Could not initialize CURL\n");
+            goto error_exit;
+        }
+    }
+
+    curl_easy_setopt(curl, CURLOPT_URL, endpoint);
+    curl_easy_setopt(curl, CURLOPT_POST, 1L);
+    curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_cb);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_cb);
+    curl_easy_setopt(curl, CURLOPT_READDATA, &send_data);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &recv_data);
+
+    headers = curl_slist_append(headers, "Transfer-Encoding: chunked");
+    headers = curl_slist_append(headers, "Content-type: application/perfsonar+json");
+    headers = curl_slist_append(headers, "Accept: text/html,application/json,application/perfsonar+json");
+    res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    res = curl_easy_perform(curl);
+    if (res != CURLE_OK) {
+        fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+        goto error_exit;
+    }
+
+    if (!(cc->curl_persist)) {
+        curl_easy_cleanup(curl);
+    }
+    *ret_str = recv_data.ptr;
+    return recv_data.ptr;
+    error_exit:
+    *ret_str = NULL;
+    return NULL;
+}
+
 static size_t read_cb(void *ptr, size_t size, size_t nmemb, void *userp) {
     struct curl_http_data *data = (struct curl_http_data *) userp;
 
