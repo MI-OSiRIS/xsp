@@ -67,7 +67,7 @@ int xspd_proto_photon_init() {
 	// Infiniband backend
 	.ibv.eth_dev = "vpi1",
 	.ibv.ib_dev = "mlx4_0:2",
-	.ibv.use_cma = 0,
+	.ibv.use_cma = 1,
 	// Forwarder details
 	.forwarder.use_forwarder = 1,
 	//.ib_port = 1,
@@ -116,10 +116,19 @@ int xspd_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret
 		xsp_err(0, "could not register session with libphoton");
 		goto error_exit;
 	    }
+	    
+	    xsp_info(5, "Registered session ");
 
 	    if (photon_xsp_forwarder_connect_peer((xspSess*)sess, ci, &ret_ci, &ret_len) != PHOTON_OK) {
 		xsp_err(0, "could not complete photon connections");
 		goto error_conn;
+	    }
+
+	    xsp_info(5, "Peer connected ");
+	    if(ret_ci == NULL){
+		xsp_err(0, "Return value : NULL || len : %d ",ret_len);
+	    }else{
+		xsp_info(0,"Return value : NOT NULL || len : %d ",ret_len);
 	    }
 
 	    *ret_block = xsp_alloc_block();
@@ -130,6 +139,8 @@ int xspd_proto_photon_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret
 
 	    xsp_set_close_cb(sess, photon_xsp_unregister_session);
 	   
+	    xsp_info(5, "handled XSP_PHOTON_CI sucessfully");
+
 	    break;
 
 	error_conn:
