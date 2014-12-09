@@ -327,7 +327,7 @@ void *__xspd_forwarder_loaddir_thread(void *arg) {
 			return NULL;
 		    }
 					
-		    sprintf(addr, "%016" PRIxPTR, (uintptr_t)sbuf);
+		    sprintf(addr, "%016" PRIxPTR"\n", (uintptr_t)sbuf);
 		    addr[16] = '\0';
 		    
 		    curr_alloc = malloc(sizeof(struct allocation_t));
@@ -391,7 +391,7 @@ void __xspd_forwarder_insert(struct xspd_file_entry_t *list){
     if (!strcmp(config.store, "periscope")) {
 	__xspd_forwarder_periscope_converter(list);
     }else if (!strcmp(config.store, "mongo")) {
-	//__xspd_mongo_converter_and_insert(list);
+	__xspd_mongo_converter_and_insert(list);
     }else {
 	xsp_err(0, "No store specified");
 	return;
@@ -433,8 +433,8 @@ void __xspd_forwarder_periscope_converter(struct xspd_file_entry_t *file_list){
 	    json_object_set(rdma,"read", json_string(config.eid));
 	    json_object_set(rdma,"write", json_string(config.eid));
 	    json_object_set(extent, "location", rdma);
-	    json_object_set(extent, "size", json_integer((int)alloc->length));
-	    json_object_set(extent, "offset", json_integer((int)alloc->offset));
+	    json_object_set(extent, "size", json_integer(alloc->length));
+	    json_object_set(extent, "offset", json_integer(alloc->offset));
 	    json_object_set(extent, "index", json_integer(index));
 	    json_object_set(extent, "address", json_string(alloc->address));
 	    
@@ -462,6 +462,7 @@ void __xspd_forwarder_periscope_converter(struct xspd_file_entry_t *file_list){
     }
 }
 
+
 void __xspd_forwarder_periscope_del_dup(char *filename){
     json_t *json_ret;;
     json_error_t json_err;
@@ -480,9 +481,9 @@ void __xspd_forwarder_periscope_del_dup(char *filename){
     asprintf(&query, "/files?name=%s",filename);
     
     xsp_curl_get_string(&curl_context,
-			 query,
-			 NULL,
-			 &response);
+			query,
+			NULL,
+			&response);
     
     xsp_info(5,"Response from curl : %s", response);
 
@@ -514,9 +515,9 @@ void __xspd_forwarder_periscope_del_dup(char *filename){
 	    asprintf(&query, "/files/%s",id);
 
 	    xsp_curl_del(&curl_context,
-				query,
-				NULL,
-				&response);
+			 query,
+			 NULL,
+			 &response);
 	}
     }
 
@@ -543,9 +544,9 @@ int __xspd_forwarder_periscope_insert(json_t *root){
     }
 
     xsp_curl_post_json(&curl_context,
-			 query,
-			 send_str,
-			 &response);
+		       query,
+		       send_str,
+		       &response);
 
     json_ret = json_loads(response, 0, &json_err);
     if (!json_ret) {
@@ -562,103 +563,152 @@ int __xspd_forwarder_periscope_insert(json_t *root){
 }
 
 /*void *__xspd_forwarder_loaddir_thread(void *arg) {
-  DIR *dir;
-  struct dirent *dent;
+    DIR *dir;
+    struct dirent *dent;
 	
-  chdir(config.load_dir);
-  dir = opendir(config.load_dir);
-  if (!dir) {
-  xsp_err(0, "Could not open directory \"%s\": %s", config.load_dir, strerror(errno));
-  return NULL;
-  }
+    chdir(config.load_dir);
+    dir = opendir(config.load_dir);
+    if (!dir) {
+	xsp_err(0, "Could not open directory \"%s\": %s", config.load_dir, strerror(errno));
+	return NULL;
+    }
 
-  while((dent = readdir(dir)) != NULL) {
-  if (strcmp(dent->d_name, ".") && strcmp(dent->d_name, "..")) {
-  photonBufferPriv priv;
-  struct stat filestat;
-  struct passwd *pwdstat;
-  void *sbuf;
-  uint64_t ssize, file_size, total_read, to_read;
-  int sind;
-  int fd;
-  ssize_t n;
-  char addr[17];
-  bson fmeta;
+    while((dent = readdir(dir)) != NULL) {
+	if (strcmp(dent->d_name, ".") && strcmp(dent->d_name, "..")) {
+	    photonBufferPriv priv;
+	    struct stat filestat;
+	    struct passwd *pwdstat;
+	    void *sbuf;
+	    uint64_t ssize, file_size, total_read, to_read;
+	    int sind;
+	    int fd;
+	    ssize_t n;
+	    char addr[17];
+	    bson fmeta;
 			
-  xsp_info(5, "Staging file \"%s/%s", config.load_dir, dent->d_name);
-  fd = open(dent->d_name, O_RDONLY);
-  if (fd < 0 ) {
-  xsp_err(5, "Could not open file \"%s/%s\": %s", config.load_dir,
-  dent->d_name, strerror(errno));
-  }
-  else {
-  total_read = 0;
-  fstat(fd, &filestat);
-  file_size = (uint64_t)filestat.st_size;
-  pwdstat = getpwuid(filestat.st_uid);
+	    xsp_info(5, "Staging file \"%s/%s", config.load_dir, dent->d_name);
+	    fd = open(dent->d_name, O_RDONLY);
+	    if (fd < 0 ) {
+		xsp_err(5, "Could not open file \"%s/%s\": %s", config.load_dir,
+			dent->d_name, strerror(errno));
+	    } 
+	    else {
+		total_read = 0;
+		fstat(fd, &filestat);
+		file_size = (uint64_t)filestat.st_size;
+		pwdstat = getpwuid(filestat.st_uid);
 				
-  bson_init(&fmeta);
-  bson_append_int(&fmeta, "ts", (int)time(NULL));
-  bson_append_string(&fmeta, "type", "file");
-  bson_append_string(&fmeta, "path", config.load_dir);
-  bson_append_string(&fmeta, "filename", dent->d_name);
-  bson_append_int(&fmeta, "size", (int)file_size);
-  bson_append_string(&fmeta, "owner", pwdstat->pw_name);
-  bson_append_start_array(&fmeta, "allocations");
+		bson_init(&fmeta);
+		bson_append_int(&fmeta, "ts", (int)time(NULL));
+		bson_append_string(&fmeta, "type", "file");
+		bson_append_string(&fmeta, "path", config.load_dir);
+		bson_append_string(&fmeta, "filename", dent->d_name);
+		bson_append_int(&fmeta, "size", (int)file_size);
+		bson_append_string(&fmeta, "owner", pwdstat->pw_name);
+		bson_append_start_array(&fmeta, "allocations");
 
-  do {
-  sbuf = slabs_buf_get_free(pool, &ssize, &sind);
-  if (!sbuf) {
-  xsp_err(0, "No more free buffers in SLABS pool!");
-  return NULL;
-  }
+		do {
+		    sbuf = slabs_buf_get_free(pool, &ssize, &sind);
+		    if (!sbuf) {
+			xsp_err(0, "No more free buffers in SLABS pool!");
+			return NULL;
+		    }
 
-  priv = slabs_buf_get_priv_data_ind(pool, sind);
+		    priv = slabs_buf_get_priv_data_ind(pool, sind);
 
-  if ((file_size - total_read) < ssize)
-  to_read = (file_size - total_read);
-  else
-  to_read = ssize;
+		    if ((file_size - total_read) < ssize)
+			to_read = (file_size - total_read);
+		    else
+			to_read = ssize;
 					
-  n = read(fd, sbuf, to_read);
-  if (n < 0) {
-  xsp_err(5, "Error reading from file: %s", strerror(errno));
-  return NULL;
-  }
+		    n = read(fd, sbuf, to_read);
+		    if (n < 0) {
+			xsp_err(5, "Error reading from file: %s", strerror(errno));
+			return NULL;
+		    }
+		    
+		    sprintf(addr, "%016" PRIxPTR, (uintptr_t)sbuf);
+		    addr[16] = '\0';
 					
-  sprintf(addr, "%016" PRIxPTR, (uintptr_t)sbuf);
-  addr[16] = '\0';
-					
-  bson_append_start_object(&fmeta, "");
-  bson_append_int(&fmeta, "offset", (int)total_read);
-  bson_append_int(&fmeta, "length", (int)n);
-  bson_append_string(&fmeta, "address", addr);
-  if (priv) {
-  sprintf(addr, "%lu", priv->key0);
-  bson_append_string(&fmeta, "key0", addr);
-  sprintf(addr, "%lu", priv->key1);
-  bson_append_string(&fmeta, "key1", addr);
-  }
-  bson_append_string(&fmeta, "eid", config.eid);
-  bson_append_int(&fmeta, "local_slab_index", sind);
-  bson_append_finish_object(&fmeta);
+		    bson_append_start_object(&fmeta, "");
+		    bson_append_int(&fmeta, "offset", (int)total_read);
+		    bson_append_int(&fmeta, "length", (int)n);
+		    bson_append_string(&fmeta, "address", addr);
+		    if (priv) {
+			sprintf(addr, "%lu", priv->key0);
+			bson_append_string(&fmeta, "key0", addr);
+			sprintf(addr, "%lu", priv->key1);
+			bson_append_string(&fmeta, "key1", addr);
+		    }
+		    bson_append_string(&fmeta, "eid", config.eid);
+		    bson_append_int(&fmeta, "local_slab_index", sind);
+		    bson_append_finish_object(&fmeta);
 
-  total_read += n;
-  } while (total_read < file_size);
-
-  bson_append_finish_array(&fmeta);
-  bson_finish(&fmeta);
-  bson_print(&fmeta);
-  __xspd_forwarder_mongo_insert(&fmeta, "rdma_files");
-  }
-  }
-  }
+		    total_read += n;
+		} while (total_read < file_size);
+		
+		bson_append_finish_array(&fmeta);
+		bson_finish(&fmeta);
+		bson_print(&fmeta);
+		__xspd_forwarder_mongo_insert(&fmeta, "rdma_files");
+	    }
+	}
+    }
 	
-  closedir(dir);
+    closedir(dir);
 	
-  return NULL;
-  }*/
+    return NULL;
+    }*/
 
+void __xspd_forwarder_mongodb_converter(struct xspd_file_entry_t *file_list){
+    
+    struct xspd_file_entry_t *temp = file_list;
+    
+    while( temp != NULL){
+	
+	struct allocation_t *alloc = temp->allocations;
+	int index = 0;
+	bson fmeta;
+	
+	
+	bson_init(&fmeta);
+	bson_append_int(&fmeta, "ts", (int)time(NULL));
+	bson_append_string(&fmeta, "type", "file");
+	bson_append_string(&fmeta, "path", config.load_dir);
+	bson_append_string(&fmeta, "filename", temp->filename);
+	bson_append_int(&fmeta, "size", (int)temp->size);
+	bson_append_string(&fmeta, "owner", temp->owner);
+	bson_append_start_array(&fmeta, "allocations");
+
+	while(alloc != NULL){
+	    	    
+	    bson_append_start_object(&fmeta, "");
+	    bson_append_int(&fmeta, "offset", (int)alloc->offset);
+	    bson_append_int(&fmeta, "length", (int)alloc->length);
+	    bson_append_string(&fmeta, "address", alloc->address);
+	    bson_append_string(&fmeta, "key0", alloc->l_key);
+	    bson_append_string(&fmeta, "key1", alloc->r_key);
+	    bson_append_string(&fmeta, "eid", config.eid);
+	    bson_append_int(&fmeta, "local_slab_index", index);
+	    bson_append_finish_object(&fmeta);
+	    
+	    alloc = alloc->next;
+	    index++;
+	}
+	
+	bson_append_finish_array(&fmeta);
+	bson_finish(&fmeta);
+	bson_print(&fmeta);
+
+	// push exnodes to mongoDB
+	
+	if(__xspd_forwarder_mongo_insert(&fmeta, "rdma_files") != 0){
+	    xsp_err(5, "Failed to push exnode to mongoDB");
+	    return;
+	}
+	temp = temp->next_file;
+    }
+}
 
 int __xspd_forwarder_mongo_insert(bson *bpp, char *collection) {
     mongo conn[1];
