@@ -62,32 +62,32 @@ struct xspd_forwarder_config_t {
     char *unis_instance;
 };
 		
-struct allocation_t {
+struct extent_t {
     uint64_t offset;
     uint64_t length;
     char address[DEFAULT_CHAR_BUFF_SIZE];
     char l_key[DEFAULT_CHAR_BUFF_SIZE];
     char r_key[DEFAULT_CHAR_BUFF_SIZE];
-    struct allocation_t *next;
+    struct extent_t *next;
 };
 
-struct xspd_file_entry_t {
+struct exnode_t {
     uint64_t ts;
     uint64_t size;
     char type[DEFAULT_CHAR_BUFF_SIZE];
     char filename[DEFAULT_CHAR_BUFF_SIZE];
     char owner[DEFAULT_CHAR_BUFF_SIZE];
-    struct allocation_t *allocations;
-    struct xspd_file_entry_t *next_file;
+    struct extent_t *extents;
+    struct exnode_t *next_file;
 };
 
 int xspd_forwarder_init();
 int xspd_forwarder_opt_handler(comSess *sess, xspBlock *block, xspBlock **ret_block);
-void __xspd_forwarder_insert(struct xspd_file_entry_t *list);
+void __xspd_forwarder_insert(struct exnode_t *list);
 
 void __xspd_forwarder_periscope_del_dup(char *filename);
 int __xspd_forwarder_periscope_insert(json_t *root);
-void __xspd_forwarder_periscope_converter(struct xspd_file_entry_t *file_list);
+void __xspd_forwarder_periscope_converter(struct exnode_t *file_list);
 int __xspd_forwarder_mongo_insert(bson *bpp, char *collection);
 void *__xspd_forwarder_loaddir_thread(void *arg);
 
@@ -255,11 +255,11 @@ SLAB *xspd_forwarder_get_pool(SLAB **ret_slab) {
 void *__xspd_forwarder_loaddir_thread(void *arg) {
     DIR *dir;
     struct dirent *dent;
-    struct xspd_file_entry_t *curr_file = NULL; 
-    struct xspd_file_entry_t *head_file = NULL; 
-    struct xspd_file_entry_t *prev_file = NULL;
-    struct allocation_t *prev_alloc = NULL;
-    struct allocation_t *curr_alloc = NULL;
+    struct exnode_t *curr_file = NULL; 
+    struct exnode_t *head_file = NULL; 
+    struct exnode_t *prev_file = NULL;
+    struct extent_t *prev_alloc = NULL;
+    struct extent_t *curr_alloc = NULL;
 
 
     chdir(config.load_dir);
@@ -281,8 +281,8 @@ void *__xspd_forwarder_loaddir_thread(void *arg) {
 	    ssize_t n;
 	    char addr[17];
     
-	    curr_file = malloc(sizeof(struct xspd_file_entry_t));
-	    curr_file->allocations = NULL;
+	    curr_file = malloc(sizeof(struct exnode_t));
+	    curr_file->extents = NULL;
 	    curr_file->next_file = NULL;
 			
 	    if(head_file == NULL){
@@ -330,7 +330,7 @@ void *__xspd_forwarder_loaddir_thread(void *arg) {
 		    sprintf(addr, "%016" PRIxPTR"\n", (uintptr_t)sbuf);
 		    addr[16] = '\0';
 		    
-		    curr_alloc = malloc(sizeof(struct allocation_t));
+		    curr_alloc = malloc(sizeof(struct extent_t));
 		    curr_alloc->next = NULL;
 		    curr_alloc->offset = total_read;
 		    curr_alloc->length = n;
@@ -346,7 +346,7 @@ void *__xspd_forwarder_loaddir_thread(void *arg) {
 		    total_read += n;
 
 		    if(prev_alloc == NULL){
-			curr_file->allocations = curr_alloc;
+			curr_file->extents = curr_alloc;
 			prev_alloc = curr_alloc;
 		    }else{
 			prev_alloc->next = curr_alloc;
@@ -374,10 +374,10 @@ void *__xspd_forwarder_loaddir_thread(void *arg) {
 
     // Free memory
     while(head_file != NULL){
-	while(head_file->allocations != NULL){
-	    curr_alloc = head_file->allocations->next;
-	    free(head_file->allocations);
-	    head_file->allocations = curr_alloc;
+	while(head_file->extents != NULL){
+	    curr_alloc = head_file->extents->next;
+	    free(head_file->extents);
+	    head_file->extents = curr_alloc;
 	}
 	curr_file = head_file->next_file;
 	free(head_file);
@@ -386,7 +386,7 @@ void *__xspd_forwarder_loaddir_thread(void *arg) {
     return NULL;
 }
 
-void __xspd_forwarder_insert(struct xspd_file_entry_t *list){
+void __xspd_forwarder_insert(struct exnode_t *list){
 
     if (!strcmp(config.store, "periscope")) {
 	__xspd_forwarder_periscope_converter(list);
@@ -398,15 +398,15 @@ void __xspd_forwarder_insert(struct xspd_file_entry_t *list){
     }
 }
 
-void __xspd_forwarder_periscope_converter(struct xspd_file_entry_t *file_list){
+void __xspd_forwarder_periscope_converter(struct exnode_t *file_list){
     
-    struct xspd_file_entry_t *temp = file_list;
+    struct exnode_t *temp = file_list;
 
     while( temp != NULL){
 	json_t *root;
 	json_t *extents;
 	json_error_t json_err;
-	struct allocation_t *alloc = temp->allocations;
+	struct extent_t *alloc = temp->extents;
 	int index = 0;
 	
 	
@@ -660,13 +660,13 @@ int __xspd_forwarder_periscope_insert(json_t *root){
     return NULL;
     }*/
 
-void __xspd_forwarder_mongodb_converter(struct xspd_file_entry_t *file_list){
+void __xspd_forwarder_mongodb_converter(struct exnode_t *file_list){
     
-    struct xspd_file_entry_t *temp = file_list;
+    struct exnode_t *temp = file_list;
     
     while( temp != NULL){
 	
-	struct allocation_t *alloc = temp->allocations;
+	struct extent_t *alloc = temp->extents;
 	int index = 0;
 	bson fmeta;
 	
