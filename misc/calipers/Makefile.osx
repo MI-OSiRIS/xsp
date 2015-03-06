@@ -1,0 +1,32 @@
+EXAMP := netlogger_calipers_example
+EXAMP_SOURCES := examples/netlogger_calipers_example.c
+BENCH := ps_calipers_bench
+BENCH_SOURCES := examples/ps_calipers_bench.c
+DBENCH := disk_bench
+DBENCH_SOURCES := examples/disk_bench.c
+TEST := test_calipers
+TEST_SOURCES := tests/test_calipers.c
+PROGS := $(EXAMP) $(BENCH) $(DBENCH) $(TEST)
+SHAREDLIB := libnetlogger_calipers.so
+OBJS := netlogger_calipers.o bson.o numbers.o
+GCC := gcc -g -O2 -DMONGO_HAVE_STDINT=1 -DHAVE_SYS_TIME_H=1
+
+default: $(PROGS)
+
+.c.o:
+	$(GCC) -fPIC -c $<
+
+$(SHAREDLIB): $(OBJS)
+	$(GCC) -shared -o $@ $(OBJS)
+
+$(EXAMP): $(EXAMP_SOURCES) $(SHAREDLIB)
+	$(GCC) -o $(EXAMP) -L. -lnetlogger_calipers -lm -I. $(EXAMP_SOURCES)
+$(BENCH): $(BENCH_SOURCES) $(SHAREDLIB)
+	$(GCC) -o $(BENCH) -L. -lnetlogger_calipers -lm -I. $(BENCH_SOURCES)
+$(DBENCH): $(DBENCH_SOURCES) $(SHAREDLIB)
+	$(GCC) -o $(DBENCH) -L. -lnetlogger_calipers -lm -I. $(DBENCH_SOURCES)
+$(TEST): $(TEST_SOURCES) $(SHAREDLIB)
+	$(GCC) -o $(TEST) -L. -lnetlogger_calipers -lm -I. $(TEST_SOURCES)
+
+clean:
+	rm -f *.o $(SHAREDLIB) $(PROGS)
