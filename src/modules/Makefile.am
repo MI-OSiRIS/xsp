@@ -3,7 +3,7 @@
 modulesdir = $(libdir)/libxsp
 modules_LTLIBRARIES =
 
-INCLUDES = -I@top_srcdir@/include -I@top_srcdir@/src/libxsp -I@top_srcdir@/libradix -I@top_srcdir@/compat -I@top_srcdir@/libconfig -I@top_srcdir@/src/libxsp_common -I@top_srcdir@/src/libxsp_client -I@top_srcdir@/libslabs
+AM_CPPFLAGS = -I@top_srcdir@/include -I@top_srcdir@/src/libxsp -I@top_srcdir@/libradix -I@top_srcdir@/compat -I@top_srcdir@/libconfig -I@top_srcdir@/src/libxsp_common -I@top_srcdir@/src/libxsp_client -I@top_srcdir@/libslabs
 AM_CFLAGS = @CFLAGS@ -DWITH_OPENSSL -DMODULE_DIR=\"$(moduledir)\" -DCONFIG_FILE=\"$(CONFIG_FILE)\"
 
 if ENABLE_BLIPP

@@ -14,7 +14,7 @@ libxsp_client_la_LIBADD += @THREAD_LIBS@ @DL_LIBS@ @SSH_LIBS@ @CONFIG_LIBS@
 libxsp_wrapper_la_LIBADD += @THREAD_LIBS@ @DL_LIBS@ @SSH_LIBS@ @CONFIG_LIBS@
 libxsp_simplewrapper_la_LIBADD += @THREAD_LIBS@ @DL_LIBS@ @NL_LIBS@ @SSH_LIBS@ @CONFIG_LIBS@
 
-INCLUDES = -I@top_srcdir@/include -I@top_srcdir@/src/libxsp -I@top_srcdir@/libradix -I@top_srcdir@/compat 
+AM_CPPFLAGS = -I@top_srcdir@/include -I@top_srcdir@/src/libxsp -I@top_srcdir@/libradix -I@top_srcdir@/compat 
 AM_CFLAGS = -DUSE_COMPAT_SHA
 
 if HAVE_SSH

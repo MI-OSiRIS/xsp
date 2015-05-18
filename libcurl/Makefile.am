@@ -4,4 +4,4 @@ libxsp_curl_a_SOURCES = xsp_curl_context.c
 libxsp_curl_a_LIBADD =
 
 AM_CFLAGS = -fPIC
-INCLUDES =
+AM_CPPFLAGS =

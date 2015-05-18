@@ -4,4 +4,4 @@ libslabs_a_SOURCES = slabs_buffer.c
 libslabs_a_LIBADD =
 
 AM_CFLAGS = -fPIC
-INCLUDES =
+AM_CPPFLAGS =

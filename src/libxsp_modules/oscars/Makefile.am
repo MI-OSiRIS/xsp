@@ -29,4 +29,4 @@ liboscars6_a_CFLAGS = -DOSCARS6 $(AM_CFLAGS)
 liboscars_la_CFLAGS = -DOSCARS5 $(AM_CFLAGS)
 liboscars6_la_CFLAGS = -DOSCARS6 $(AM_CFLAGS)
 
-INCLUDES = -I@top_srcdir@/libgsoap
+AM_CPPFLAGS = -I@top_srcdir@/libgsoap

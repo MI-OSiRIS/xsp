@@ -3,7 +3,7 @@
 modulesdir = $(libdir)/libxsp
 modules_LTLIBRARIES = 
 
-INCLUDES = -I@top_srcdir@/include -I@top_srcdir@/src/libxsp -I@top_srcdir@/libradix -I@top_srcdir@/compat -I@top_srcdir@/libconfig -I@top_srcdir@/src/libxsp_common
+AM_CPPFLAGS = -I@top_srcdir@/include -I@top_srcdir@/src/libxsp -I@top_srcdir@/libradix -I@top_srcdir@/compat -I@top_srcdir@/libconfig -I@top_srcdir@/src/libxsp_common
 AM_CFLAGS = @CFLAGS@ -DWITH_OPENSSL -DMODULE_DIR=\"$(moduledir)\" -DCONFIG_FILE=\"$(CONFIG_FILE)\"
 #AM_LDFLAGS = -L@top_srcdir@/src/libxsp_common -lxsp_common
 
@@ -35,7 +35,7 @@ modules_LTLIBRARIES += unis.la
 unis_la_SOURCES = xsp_unis.c
 unis_la_LDFLAGS = -module -avoid-version -export-dynamic
 unis_la_LIBADD =$(top_builddir)/libcurl/libxsp_curl.a @JSON_LIBS@ @CURL_LIBS@
-INCLUDES += -I$(top_srcdir)/libcurl
+AM_CPPFLAGS += -I$(top_srcdir)/libcurl
 endif
 endif
 
@@ -44,7 +44,7 @@ modules_LTLIBRARIES += terapaths.la
 terapaths_la_SOURCES = xsp_terapaths_basic.c libxsp_terapaths_basic.h
 terapaths_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
 terapaths_la_LIBADD = terapaths/libterapaths.a monitoring/libmntr.a $(top_builddir)/libgsoap/libgsoap.a
-INCLUDES += -I$(srcdir)/terapaths -I$(srcdir)/monitoring -I$(top_srcdir)/libgsoap
+AM_CPPFLAGS += -I$(srcdir)/terapaths -I$(srcdir)/monitoring -I$(top_srcdir)/libgsoap
 endif
 
 if ENABLE_OSCARS
@@ -57,7 +57,7 @@ oscars6_la_SOURCES = xsp_oscars_basic.c xsp_oscars_basic.h
 oscars6_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
 oscars6_la_LIBADD = oscars/liboscars6.a $(top_builddir)/libgsoap/libgsoap.a
 oscars6_la_CFLAGS = $(AM_CFLAGS) -DOSCARS6 -DWITH_NONAMESPACES -DWITH_DOM
-INCLUDES += -I$(srcdir)/oscars -I$(top_srcdir)/libgsoap
+AM_CPPFLAGS += -I$(srcdir)/oscars -I$(top_srcdir)/libgsoap
 endif
 
 if ENABLE_OPENFLOW
@@ -66,7 +66,7 @@ openflow_la_SOURCES = xsp_openflow_basic.c xsp_openflow_basic.h
 openflow_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
 openflow_la_LIBADD = openflow/libofcontrol.a openflow/lib/libopenflow.a
 openflow_la_CFLAGS = $(AM_CFLAGS) -DWITH_NONAMESPACES -DWITH_DOM
-INCLUDES += -I$(srcdir)/openflow/include -I$(srcdir)/openflow
+AM_CPPFLAGS += -I$(srcdir)/openflow/include -I$(srcdir)/openflow
 endif
 
 if ENABLE_FLOODLIGHT
@@ -75,7 +75,7 @@ floodlight_la_SOURCES = xsp_floodlight_basic.c xsp_floodlight_basic.h
 floodlight_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
 floodlight_la_LIBADD =$(top_builddir)/libcurl/libxsp_curl.a @JSON_LIBS@ @CURL_LIBS@
 floodlight_la_CFLAGS = $(AM_CFLAGS)
-INCLUDES += -I$(top_srcdir)/libcurl
+AM_CPPFLAGS += -I$(top_srcdir)/libcurl
 endif
 
 if ENABLE_LINUXNET
@@ -84,7 +84,7 @@ linuxnet_la_SOURCES = xsp_linuxnet.c xsp_linuxnet.h
 linuxnet_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
 linuxnet_la_LIBADD = 
 linuxnet_la_CFLAGS = $(AM_CFLAGS)
-INCLUDES +=
+AM_CPPFLAGS +=
 endif
 
 if HAVE_WEB100

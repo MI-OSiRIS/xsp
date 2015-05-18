@@ -1,7 +1,7 @@
 lib_LIBRARIES = libxsp_rdma.a
 lib_LTLIBRARIES = libxsp_rdma.la
 
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/src/libxsp_client -I$(top_srcdir)/compat
+AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/src/libxsp_client -I$(top_srcdir)/compat
 
 libxsp_rdma_a_SOURCES = xsp_rdma.c xsp_rdma.h
 libxsp_rdma_la_SOURCES = xsp_rdma.c xsp_rdma.h

@@ -10,7 +10,7 @@ if HAVE_LIBRT
 xspd_LDFLAGS += -lrt
 endif
 
-INCLUDES = -I@top_srcdir@/include -I@top_srcdir@/src/libxsp -I@top_srcdir@/src/libxsp_common -I@top_srcdir@/libradix -I@top_srcdir@/compat
+AM_CPPFLAGS = -I@top_srcdir@/include -I@top_srcdir@/src/libxsp -I@top_srcdir@/src/libxsp_common -I@top_srcdir@/libradix -I@top_srcdir@/compat
 
 AM_CFLAGS = @CFLAGS@ -DCONFIG_FILE=\"$(CONFIG_FILE)\"
 
