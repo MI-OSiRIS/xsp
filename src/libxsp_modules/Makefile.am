@@ -41,7 +41,7 @@ endif
 
 if ENABLE_TERAPATHS
 modules_LTLIBRARIES += terapaths.la
-terapaths_la_SOURCES = xsp_terapaths_basic.c libxsp_terapaths_basic.h
+terapaths_la_SOURCES = xsp_terapaths_basic.c xsp_terapaths_basic.h
 terapaths_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
 terapaths_la_LIBADD = terapaths/libterapaths.a monitoring/libmntr.a $(top_builddir)/libgsoap/libgsoap.a
 AM_CPPFLAGS += -I$(srcdir)/terapaths -I$(srcdir)/monitoring -I$(top_srcdir)/libgsoap

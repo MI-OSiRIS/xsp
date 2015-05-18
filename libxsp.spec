@@ -1,18 +1,18 @@
 Name: libxsp
-Version: 1.0
+Version: 0.1
 Release: 9
 Summary: XSP RPM
 
 Group: Application/Network
 License: GPL
-URL: http://damsl.cs.indiana.edu/projects/xsp
+URL: https://gitlab.crest.iu.edu/damsl/xsp
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}
 Requires: libxsp-common, libxsp-client, libconfig
 
 Packager: Ezra Kissel <ezkissel@indiana.edu>
-Vendor: Distributed and Metasystems Lab (DAMSL), Indiana University
-Provides: xsp
+Vendor: Center for Research in Extreme Scale Technologies (CREST), Indiana University
+Provides: libxsp
 
 %define __os_install_post /usr/lib/rpm/brp-compress
 

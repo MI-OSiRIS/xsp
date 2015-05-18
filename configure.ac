@@ -1,4 +1,4 @@
-AC_INIT([xsp], [0.1])
+AC_INIT([libxsp], [0.1])
 AC_CONFIG_SRCDIR([src/xspd/xspd.c])
 AM_INIT_AUTOMAKE
 
