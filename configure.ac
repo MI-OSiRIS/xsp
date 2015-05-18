@@ -1,6 +1,10 @@
-AC_INIT(src/xspd/xspd.c)
+AC_INIT([xsp], [0.1])
+AC_CONFIG_SRCDIR([src/xspd/xspd.c])
+AM_INIT_AUTOMAKE
 
-AM_INIT_AUTOMAKE(xsp,0.1)
+#AC_INIT(src/xspd/xspd.c)
+
+#AM_INIT_AUTOMAKE([xsp], [0.1])
 
 AM_CONFIG_HEADER(include/config.h)
 
