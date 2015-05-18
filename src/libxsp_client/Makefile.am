@@ -18,9 +18,9 @@ AM_CPPFLAGS = -I@top_srcdir@/include -I@top_srcdir@/src/libxsp -I@top_srcdir@/li
 AM_CFLAGS = -DUSE_COMPAT_SHA
 
 if HAVE_SSH
-libxsp_client_la_SOURCES += libxsp_ssh.c
-libxsp_wrapper_la_SOURCES += libxsp_ssh.c
-libxsp_simplewrapper_la_SOURCES += libxsp_ssh.c
+libxsp_client_la_SOURCES += libxsp_ssh.c libxsp_ssh.h
+libxsp_wrapper_la_SOURCES += libxsp_ssh.c libxsp_ssh.h
+libxsp_simplewrapper_la_SOURCES += libxsp_ssh.c libxsp_ssh.h
 endif
 
 if HAVE_GLOBUS

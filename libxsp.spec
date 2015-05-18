@@ -58,10 +58,10 @@ rm -rf $RPM_BUILD_ROOT
 #--sysconfdir=%{_sysconfdir} \
 #--datadir=%{_datadir} \
 #make %{?_smp_mflags}
-%configure --without-mysql --without-sqlite --enable-oscars
+%configure --without-mysql --without-sqlite --enable-oscars --enable-client
 make
 
-%install xspd
+%install
 #make AM_INSTALL_PROGRAM_FLAGS="" DESTDIR=${RPM_BUILD_ROOT} install
 %makeinstall
 install -d ${RPM_BUILD_ROOT}/etc/xspd
@@ -107,6 +107,7 @@ fi
 %{_libdir}/libxsp_client*
 %{_libdir}/libxsp_wrapper*
 %{_libdir}/libxsp_simplewrapper*
+%{_bindir}/xsp_*
 
 %files xspd
 %defattr(-,root,root)
@@ -114,3 +115,4 @@ fi
 %defattr(775,root,root)
 /etc/init.d/xspd
 %{_sbindir}/xspd
+

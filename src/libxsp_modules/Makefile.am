@@ -26,13 +26,13 @@ logger_syslog_la_SOURCES = xsp_logger_syslog.c
 logger_syslog_la_LDFLAGS = -module -avoid-version -export-dynamic
 
 modules_LTLIBRARIES += peering.la
-peering_la_SOURCES = xsp_peering.c
+peering_la_SOURCES = xsp_peering.c xsp_peering.h
 peering_la_LDFLAGS = -module -avoid-version -export-dynamic
 
 if HAVE_CURL
 if HAVE_JSON
 modules_LTLIBRARIES += unis.la
-unis_la_SOURCES = xsp_unis.c
+unis_la_SOURCES = xsp_unis.c xsp_unis.h
 unis_la_LDFLAGS = -module -avoid-version -export-dynamic
 unis_la_LIBADD =$(top_builddir)/libcurl/libxsp_curl.a @JSON_LIBS@ @CURL_LIBS@
 AM_CPPFLAGS += -I$(top_srcdir)/libcurl

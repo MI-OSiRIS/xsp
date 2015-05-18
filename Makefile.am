@@ -37,4 +37,5 @@ endif
 
 bindirs += src/libxsp_modules src/modules
 
-SUBDIRS = $(libdirs) $(bindirs)
+SUBDIRS = $(libdirs) $(bindirs) scripts test
+

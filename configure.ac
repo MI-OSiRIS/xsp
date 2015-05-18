@@ -481,6 +481,7 @@ AC_OUTPUT(
 	src/libxsp_client/Makefile
 	src/libxsp_rdma/Makefile
 	misc/subsys/Makefile
+        scripts/Makefile
 	test/Makefile
 	)
 
