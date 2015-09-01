@@ -1,29 +1,32 @@
-AC_INIT([libxsp], [0.1])
-AC_CONFIG_SRCDIR([src/xspd/xspd.c])
-AM_INIT_AUTOMAKE
+AC_PREREQ([2.63])
+AC_INIT([libxsp], [0.1], [xsp@crest.iu.edu])
+AC_CONFIG_SRCDIR([include/config.h.in])
+AM_CONFIG_HEADER([include/config.h])
+AC_CONFIG_AUX_DIR([config])
+AC_CONFIG_MACRO_DIR([config])
+AC_USE_SYSTEM_EXTENSIONS
+AC_CANONICAL_HOST
+AC_CANONICAL_TARGET
 
-#AC_INIT(src/xspd/xspd.c)
-
-#AM_INIT_AUTOMAKE([xsp], [0.1])
-
-AM_CONFIG_HEADER(include/config.h)
+AM_INIT_AUTOMAKE([1.9 dist-bzip2 subdir-objects foreign tar-ustar -Wall -Werror])
+m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+LT_PREREQ([2.2.6])
+LT_INIT
 
 # keep track of modules we build, these are the default
 xsp_modules="tcp auth_anon auth_pass auth_pass_file auth_trust logger_file logger_stdout logger_syslog"
 
-# Prevent autoconf from setting CFLAGS="-g -O2" on AC_PROG_CC
-${CFLAGS=""}
-
 AC_GNU_SOURCE
-AC_PROG_CC
+AC_PROG_CC_C99
 AC_PROG_CPP
 AC_PROG_CXX
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_LIBTOOL
 AC_PROG_INSTALL
-AC_PROG_RANLIB
 AM_PROG_CC_C_O
+AM_PROG_AS
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -464,6 +467,7 @@ AC_SUBST(NL_LIBS)
 
 AC_OUTPUT(
 	Makefile
+	compat/Makefile
 	libslabs/Makefile
 	libradix/Makefile
 	libmongo_client/Makefile

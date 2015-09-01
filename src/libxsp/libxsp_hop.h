@@ -13,6 +13,7 @@
 #endif
 #endif
 
+#include "compat.h"
 #include "xsp-proto.h"
 
 typedef struct xsp_hop {
@@ -31,12 +32,24 @@ typedef struct xsp_hop {
 xspHop *xsp_alloc_hop();
 void xsp_free_hop(xspHop *hop, int free_children);
 int xsp_hop_merge_children(xspHop *dst, xspHop *src);
-inline char *xsp_hop_getid(xspHop *hop);
-inline void xsp_hop_setid(xspHop *hop, const char *hop_id);
 int xsp_hop_add_child(xspHop *parent, xspHop *child);
 int xsp_hop_copy(xspHop **dest, xspHop *src);
 int xsp_hop_total_child_count(xspHop *hop);
-inline void xsp_hop_set_flag(xspHop *hop, uint16_t flag);
-inline int xsp_hop_check_flag(xspHop *hop, uint16_t flag);
+
+inline char *xsp_hop_getid(xspHop *hop) {
+	return hop->hop_id;
+}
+
+inline void xsp_hop_setid(xspHop *hop, const char *hop_id) {
+	strlcpy(hop->hop_id, hop_id, XSP_HOPID_LEN + 1);
+}
+
+inline void xsp_hop_set_flag(xspHop *hop, uint16_t flag) {
+	hop->flags |= flag;
+}
+
+inline int xsp_hop_check_flag(xspHop *hop, uint16_t flag) {
+	return (hop->flags & flag);
+}
 
 #endif

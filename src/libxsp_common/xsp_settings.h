@@ -14,57 +14,57 @@ typedef struct xsp_setting_desc_t {
 	enum xsp_setting_types type;
 } xspSettingDesc;
 
-inline int xsp_settings_get(const xspSettings *settings, const char *setting, char **value);
-inline int xsp_settings_get_int(const xspSettings *settings, const char *setting, int *value);
-inline int xsp_settings_get_bool(const xspSettings *settings, const char *setting, int *value);
-inline int xsp_settings_get_list(const xspSettings *settings, const char *setting, char ***value, int *count);
-inline int xsp_settings_get_range(const xspSettings *settings, const char *setting, int *min, int *max);
-inline int xsp_settings_get_group(const xspSettings *settings, const char *setting, xspSettings **value);
+int xsp_settings_get(const xspSettings *settings, const char *setting, char **value);
+int xsp_settings_get_int(const xspSettings *settings, const char *setting, int *value);
+int xsp_settings_get_bool(const xspSettings *settings, const char *setting, int *value);
+int xsp_settings_get_list(const xspSettings *settings, const char *setting, char ***value, int *count);
+int xsp_settings_get_range(const xspSettings *settings, const char *setting, int *min, int *max);
+int xsp_settings_get_group(const xspSettings *settings, const char *setting, xspSettings **value);
 
-inline int xsp_settings_set(xspSettings *settings, const char *setting, const char *value);
-inline int xsp_settings_set_int(xspSettings *settings, const char *setting, int value);
-inline int xsp_settings_set_bool(xspSettings *settings, const char *setting, int value);
-inline int xsp_settings_set_list(xspSettings *settings, const char *setting, char * const *values, int num_values);
-inline int xsp_settings_set_range(xspSettings *settings, const char *setting, int min, int max);
+int xsp_settings_set(xspSettings *settings, const char *setting, const char *value);
+int xsp_settings_set_int(xspSettings *settings, const char *setting, int value);
+int xsp_settings_set_bool(xspSettings *settings, const char *setting, int value);
+int xsp_settings_set_list(xspSettings *settings, const char *setting, char * const *values, int num_values);
+int xsp_settings_set_range(xspSettings *settings, const char *setting, int min, int max);
 
-inline int xsp_settings_get_2(const xspSettings *settings, const char *section, const char *setting, char **value);
-inline int xsp_settings_get_int_2(const xspSettings *settings, const char *section, const char *setting, int *value);
-inline int xsp_settings_get_bool_2(const xspSettings *settings, const char *section, const char *setting, int *value);
-inline int xsp_settings_get_list_2(const xspSettings *settings, const char *section, const char *setting, char ***value, int *count);
-inline int xsp_settings_get_range_2(const xspSettings *settings, const char *section, const char *setting, int *min, int *max);
-inline int xsp_settings_get_group_2(const xspSettings *settings, const char *section, const char *setting, xspSettings **value);
+int xsp_settings_get_2(const xspSettings *settings, const char *section, const char *setting, char **value);
+int xsp_settings_get_int_2(const xspSettings *settings, const char *section, const char *setting, int *value);
+int xsp_settings_get_bool_2(const xspSettings *settings, const char *section, const char *setting, int *value);
+int xsp_settings_get_list_2(const xspSettings *settings, const char *section, const char *setting, char ***value, int *count);
+int xsp_settings_get_range_2(const xspSettings *settings, const char *section, const char *setting, int *min, int *max);
+int xsp_settings_get_group_2(const xspSettings *settings, const char *section, const char *setting, xspSettings **value);
 
-inline int xsp_settings_set_2(xspSettings *settings, const char *section, const char *setting, const char *value);
-inline int xsp_settings_set_int_2(xspSettings *settings, const char *section, const char *setting, int value);
-inline int xsp_settings_set_bool_2(xspSettings *settings, const char *section, const char *setting, int value);
-inline int xsp_settings_set_list_2(xspSettings *settings, const char *section, const char *setting, char * const *values, int num_values);
-inline int xsp_settings_set_range_2(xspSettings *settings, const char *section, const char *setting, int min, int max);
+int xsp_settings_set_2(xspSettings *settings, const char *section, const char *setting, const char *value);
+int xsp_settings_set_int_2(xspSettings *settings, const char *section, const char *setting, int value);
+int xsp_settings_set_bool_2(xspSettings *settings, const char *section, const char *setting, int value);
+int xsp_settings_set_list_2(xspSettings *settings, const char *section, const char *setting, char * const *values, int num_values);
+int xsp_settings_set_range_2(xspSettings *settings, const char *section, const char *setting, int min, int max);
 
-inline int xsp_settings_get_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, char **value);
-inline int xsp_settings_get_int_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, int *value);
-inline int xsp_settings_get_bool_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, int *value);
-inline int xsp_settings_get_list_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, char ***value, int *count);
-inline int xsp_settings_get_range_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, int *min, int *max);
-inline int xsp_settings_get_group_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, xspSettings **value);
+int xsp_settings_get_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, char **value);
+int xsp_settings_get_int_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, int *value);
+int xsp_settings_get_bool_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, int *value);
+int xsp_settings_get_list_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, char ***value, int *count);
+int xsp_settings_get_range_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, int *min, int *max);
+int xsp_settings_get_group_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, xspSettings **value);
 
-inline int xsp_settings_set_3(xspSettings *settings, const char *section1, const char *section2, const char *setting, const char *value);
-inline int xsp_settings_set_int_3(xspSettings *settings, const char *section1, const char *section2, const char *setting, int value);
-inline int xsp_settings_set_bool_3(xspSettings *settings, const char *section1, const char *section2, const char *setting, int value);
-inline int xsp_settings_set_list_3(xspSettings *settings, const char *section1, const char *section2, const char *setting, char * const *values, int num_values);
-inline int xsp_settings_set_range_3(xspSettings *settings, const char *section1, const char *section2, const char *setting, int min, int max);
+int xsp_settings_set_3(xspSettings *settings, const char *section1, const char *section2, const char *setting, const char *value);
+int xsp_settings_set_int_3(xspSettings *settings, const char *section1, const char *section2, const char *setting, int value);
+int xsp_settings_set_bool_3(xspSettings *settings, const char *section1, const char *section2, const char *setting, int value);
+int xsp_settings_set_list_3(xspSettings *settings, const char *section1, const char *section2, const char *setting, char * const *values, int num_values);
+int xsp_settings_set_range_3(xspSettings *settings, const char *section1, const char *section2, const char *setting, int min, int max);
 
-inline int xsp_settings_get_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, char **value);
-inline int xsp_settings_get_int_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int *value);
-inline int xsp_settings_get_bool_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int *value);
-inline int xsp_settings_get_list_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, char ***value, int *count);
-inline int xsp_settings_get_range_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int *min, int *max);
-inline int xsp_settings_get_group_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, xspSettings **value);
+int xsp_settings_get_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, char **value);
+int xsp_settings_get_int_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int *value);
+int xsp_settings_get_bool_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int *value);
+int xsp_settings_get_list_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, char ***value, int *count);
+int xsp_settings_get_range_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int *min, int *max);
+int xsp_settings_get_group_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, xspSettings **value);
 
-inline int xsp_settings_set_4(xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, const char *value);
-inline int xsp_settings_set_int_4(xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int value);
-inline int xsp_settings_set_bool_4(xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int value);
-inline int xsp_settings_set_list_4(xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, char * const *values, int num_values);
-inline int xsp_settings_set_range_4(xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int min, int max);
+int xsp_settings_set_4(xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, const char *value);
+int xsp_settings_set_int_4(xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int value);
+int xsp_settings_set_bool_4(xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int value);
+int xsp_settings_set_list_4(xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, char * const *values, int num_values);
+int xsp_settings_set_range_4(xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int min, int max);
 
 xspSettings *xsp_settings_alloc();
 void xsp_settings_free(xspSettings *settings);

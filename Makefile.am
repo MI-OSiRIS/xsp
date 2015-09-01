@@ -1,8 +1,9 @@
 AUTOMAKE_OPTIONS = foreign
+ACLOCAL_AMFLAGS = -I config
 
 include_HEADERS = include/xsp-proto.h
 
-libdirs = libslabs libmongo_client src/libxsp src/libxsp_common
+libdirs = compat libslabs libmongo_client src/libxsp src/libxsp_common
 bindirs = src/xspd
 
 if ENABLE_TERAPATHS

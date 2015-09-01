@@ -55,19 +55,42 @@ void xsp_block_list_push(xspBlockList *bl, xspBlock *new_block);
 xspBlock *xsp_block_list_pop(xspBlockList *bl);
 void xsp_free_block_list(xspBlockList *bl, int free_data);
 int xsp_block_list_find(xspBlockList *bl, int type, xspBlock ***ret_ary, int *count);
-
-inline int xsp_block_list_get_count(xspBlockList *bl);
-
 xspBlock *xsp_block_new(int opt_type, int sport, uint64_t len, const void *data);
 
-inline void xsp_block_set_data(xspBlock *block, void *data);
-inline void xsp_block_set_type(xspBlock *block, int type);
-inline void xsp_block_set_sport(xspBlock *block, int sport);
-inline void xsp_block_set_length(xspBlock *block, uint64_t len);
+inline int xsp_block_list_get_count(xspBlockList *bl) {
+	return bl->count;
+}
 
-inline void *xsp_block_get_data(xspBlock *block);
-inline int xsp_block_get_type(xspBlock *block);
-inline int xsp_block_get_sport(xspBlock *block);
-inline uint64_t xsp_block_get_length(xspBlock *block);
+inline void xsp_block_set_data(xspBlock *block, void *data) {
+	block->data = (void*)data;
+}
+
+inline void xsp_block_set_type(xspBlock *block, int type) {
+	block->type = type;
+}
+
+inline void xsp_block_set_sport(xspBlock *block, int sport) {
+	block->sport = sport;
+}
+
+inline void xsp_block_set_length(xspBlock *block, uint64_t len) {
+	block->length = len;
+}
+
+inline void *xsp_block_get_data(xspBlock *block) {
+	return block->data;
+}
+
+inline int xsp_block_get_type(xspBlock *block) {
+	return block->type;
+}
+
+inline int xsp_block_get_sport(xspBlock *block) {
+	return block->sport;
+}
+
+inline uint64_t xsp_block_get_length(xspBlock *block) {
+	return block->length;
+}
 
 #endif

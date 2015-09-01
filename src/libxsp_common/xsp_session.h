@@ -85,11 +85,19 @@ comSess *xsp_alloc_com_sess();
 comSess **xsp_get_sessions(int *count);
 int xsp_session_get_blocks(const xspMsg *msg, int opt_type, xspBlock ***ret_blocks, int *count);
 
-inline char *xsp_session_get_id(comSess *sess);
-inline char *xsp_session_get_user(comSess *sess);
-inline void xsp_session_set_user(comSess *sess, char *user);
-inline void xsp_session_close_connections(comSess *sess);
+inline char *xsp_session_get_user(comSess *sess) {
+        return sess->user;
+}
 
+inline void xsp_session_set_user(comSess *sess, char *user) {
+	sess->user = user;
+}
+
+inline char *xsp_session_get_id(comSess *sess) {
+	return sess->id;
+}
+
+void xsp_session_close_connections(comSess *sess);
 void xsp_free_session(comSess *sess);
 comSess *xsp_session_get_ref(comSess *sess);
 comSess *__xsp_session_get_ref(comSess *sess);

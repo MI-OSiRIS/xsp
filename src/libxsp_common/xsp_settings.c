@@ -469,148 +469,148 @@ void xsp_settings_write(const xspSettings *settings, const char *filename) {
 	config_write_file(&(settings->root), filename);
 }
 
-inline int xsp_settings_get(const xspSettings *settings, const char *setting, char **value) {
+int xsp_settings_get(const xspSettings *settings, const char *setting, char **value) {
 	return __xsp_settings_getval(settings, value, 1, setting);
 }
 
-inline int xsp_settings_get_int(const xspSettings *settings, const char *setting, int *value) {
+int xsp_settings_get_int(const xspSettings *settings, const char *setting, int *value) {
 	return __xsp_settings_getval_int(settings, value, 1, setting);
 }
 
-inline int xsp_settings_get_bool(const xspSettings *settings, const char *setting, int *value) {
+int xsp_settings_get_bool(const xspSettings *settings, const char *setting, int *value) {
 	return __xsp_settings_getval_bool(settings, value, 1, setting);
 }
 
-inline int xsp_settings_get_list(const xspSettings *settings, const char *setting, char ***value, int *count) {
+int xsp_settings_get_list(const xspSettings *settings, const char *setting, char ***value, int *count) {
 	return __xsp_settings_getval_list(settings, value, count, 1, setting);
 }
 
-inline int xsp_settings_get_group(const xspSettings *settings, const char *setting, xspSettings **value) {
+int xsp_settings_get_group(const xspSettings *settings, const char *setting, xspSettings **value) {
 	return __xsp_settings_getval_group(settings, value, 1, setting);
 }
 
-inline int xsp_settings_set(xspSettings *settings, const char *setting, const char *value) {
+int xsp_settings_set(xspSettings *settings, const char *setting, const char *value) {
 	return __xsp_settings_setval(settings, value, 1, setting);
 }
 
-inline int xsp_settings_set_int(xspSettings *settings, const char *setting, int value) {
+int xsp_settings_set_int(xspSettings *settings, const char *setting, int value) {
 	return __xsp_settings_setval_int(settings, value, 1, setting);
 }
 
-inline int xsp_settings_set_bool(xspSettings *settings, const char *setting, int value) {
+int xsp_settings_set_bool(xspSettings *settings, const char *setting, int value) {
 	return __xsp_settings_setval_bool(settings, value, 1, setting);
 }
 
-inline int xsp_settings_set_list(xspSettings *settings, const char *setting, char * const *values, int num_values) {
+int xsp_settings_set_list(xspSettings *settings, const char *setting, char * const *values, int num_values) {
 	return __xsp_settings_setval_list(settings, values, num_values, 1, setting);
 }
 
-inline int xsp_settings_get_2(const xspSettings *settings, const char *section, const char *setting, char **value) {
+int xsp_settings_get_2(const xspSettings *settings, const char *section, const char *setting, char **value) {
 	return __xsp_settings_getval(settings, value, 2, section, setting);
 }
 
-inline int xsp_settings_get_int_2(const xspSettings *settings, const char *section, const char *setting, int *value) {
+int xsp_settings_get_int_2(const xspSettings *settings, const char *section, const char *setting, int *value) {
 	return __xsp_settings_getval_int(settings, value, 2, section, setting);
 }
 
-inline int xsp_settings_get_bool_2(const xspSettings *settings, const char *section, const char *setting, int *value) {
+int xsp_settings_get_bool_2(const xspSettings *settings, const char *section, const char *setting, int *value) {
 	return __xsp_settings_getval_bool(settings, value, 2, section, setting);
 }
 
-inline int xsp_settings_get_list_2(const xspSettings *settings, const char *section, const char *setting, char ***values, int *count) {
+int xsp_settings_get_list_2(const xspSettings *settings, const char *section, const char *setting, char ***values, int *count) {
 	return __xsp_settings_getval_list(settings, values, count, 2, section, setting);
 }
 
-inline int xsp_settings_get_group_2(const xspSettings *settings, const char *section, const char *setting, xspSettings **value) {
+int xsp_settings_get_group_2(const xspSettings *settings, const char *section, const char *setting, xspSettings **value) {
 	return __xsp_settings_getval_group(settings, value, 2, section, setting);
 }
 
-inline int xsp_settings_set_2(xspSettings *settings, const char *section, const char *setting, const char *value) {
+int xsp_settings_set_2(xspSettings *settings, const char *section, const char *setting, const char *value) {
 	return __xsp_settings_setval(settings, value, 2, section, setting);
 }
 
-inline int xsp_settings_set_int_2(xspSettings *settings, const char *section, const char *setting, int value) {
+int xsp_settings_set_int_2(xspSettings *settings, const char *section, const char *setting, int value) {
 	return __xsp_settings_setval_int(settings, value, 2, section, setting);
 }
 
-inline int xsp_settings_set_bool_2(xspSettings *settings, const char *section, const char *setting, int value) {
+int xsp_settings_set_bool_2(xspSettings *settings, const char *section, const char *setting, int value) {
 	return __xsp_settings_setval_bool(settings, value, 2, section, setting);
 }
 
-inline int xsp_settings_set_list_2(xspSettings *settings, const char *section, const char *setting, char * const *values, int num_values) {
+int xsp_settings_set_list_2(xspSettings *settings, const char *section, const char *setting, char * const *values, int num_values) {
 	return __xsp_settings_setval_list(settings, values, num_values, 2, section, setting);
 }
 
 // 3 sections deep
-inline int xsp_settings_get_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, char **value) {
+int xsp_settings_get_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, char **value) {
 	return __xsp_settings_getval(settings, value, 3, section1, section2, setting);
 }
 
-inline int xsp_settings_get_int_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, int *value) {
+int xsp_settings_get_int_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, int *value) {
 	return __xsp_settings_getval_int(settings, value, 3, section1, section2, setting);
 }
 
-inline int xsp_settings_get_bool_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, int *value) {
+int xsp_settings_get_bool_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, int *value) {
 	return __xsp_settings_getval_bool(settings, value, 3, section1, section2, setting);
 }
 
-inline int xsp_settings_get_list_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, char ***values, int *count) {
+int xsp_settings_get_list_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, char ***values, int *count) {
 	return __xsp_settings_getval_list(settings, values, count, 3, section1, section2, setting);
 }
 
-inline int xsp_settings_get_group_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, xspSettings **value) {
+int xsp_settings_get_group_3(const xspSettings *settings, const char *section1, const char *section2, const char *setting, xspSettings **value) {
 	return __xsp_settings_getval_group(settings, value, 3, section1, section2, setting);
 }
 
-inline int xsp_settings_set_3(xspSettings *settings, const char *section1, const char *section2, const char *setting, const char *value) {
+int xsp_settings_set_3(xspSettings *settings, const char *section1, const char *section2, const char *setting, const char *value) {
 	return __xsp_settings_setval(settings, value, 3, section1, section2, setting);
 }
 
-inline int xsp_settings_set_int_3(xspSettings *settings, const char *section1, const char *section2, const char *setting, int value) {
+int xsp_settings_set_int_3(xspSettings *settings, const char *section1, const char *section2, const char *setting, int value) {
 	return __xsp_settings_setval_int(settings, value, 3, section1, section2, setting);
 }
 
-inline int xsp_settings_set_bool_3(xspSettings *settings, const char *section1, const char *section2, const char *setting, int value) {
+int xsp_settings_set_bool_3(xspSettings *settings, const char *section1, const char *section2, const char *setting, int value) {
 	return __xsp_settings_setval_bool(settings, value, 3, section1, section2, setting);
 }
 
-inline int xsp_settings_set_list_3(xspSettings *settings, const char *section1, const char *section2, const char *setting, char * const *values, int num_values) {
+int xsp_settings_set_list_3(xspSettings *settings, const char *section1, const char *section2, const char *setting, char * const *values, int num_values) {
 	return __xsp_settings_setval_list(settings, values, num_values, 3, section1, section2, setting);
 }
 
 // 4 sections deep
-inline int xsp_settings_get_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, char **value) {
+int xsp_settings_get_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, char **value) {
 	return __xsp_settings_getval(settings, value, 4, section1, section2, section3, setting);
 }
 
-inline int xsp_settings_get_int_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int *value) {
+int xsp_settings_get_int_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int *value) {
 	return __xsp_settings_getval_int(settings, value, 4, section1, section2, section3, setting);
 }
 
-inline int xsp_settings_get_bool_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int *value) {
+int xsp_settings_get_bool_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int *value) {
 	return __xsp_settings_getval_bool(settings, value, 4, section1, section2, section3, setting);
 }
 
-inline int xsp_settings_get_list_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, char ***values, int *count) {
+int xsp_settings_get_list_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, char ***values, int *count) {
 	return __xsp_settings_getval_list(settings, values, count, 4, section1, section2, section3, setting);
 }
 
-inline int xsp_settings_get_group_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, xspSettings **value) {
+int xsp_settings_get_group_4(const xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, xspSettings **value) {
 	return __xsp_settings_getval_group(settings, value, 4, section1, section2, section3, setting);
 }
 
-inline int xsp_settings_set_4(xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, const char *value) {
+int xsp_settings_set_4(xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, const char *value) {
 	return __xsp_settings_setval(settings, value, 4, section1, section2, section3, setting);
 }
 
-inline int xsp_settings_set_int_4(xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int value) {
+int xsp_settings_set_int_4(xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int value) {
 	return __xsp_settings_setval_int(settings, value, 4, section1, section2, section3, setting);
 }
 
-inline int xsp_settings_set_bool_4(xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int value) {
+int xsp_settings_set_bool_4(xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, int value) {
 	return __xsp_settings_setval_bool(settings, value, 4, section1, section2, section3, setting);
 }
 
-inline int xsp_settings_set_list_4(xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, char * const *values, int num_values) {
+int xsp_settings_set_list_4(xspSettings *settings, const char *section1, const char *section2, const char *section3, const char *setting, char * const *values, int num_values) {
 	return __xsp_settings_setval_list(settings, values, num_values, 4, section1, section2, section3, setting);
 }

@@ -2,7 +2,6 @@
 #include <string.h>
 #include <strings.h>
 
-#include "compat.h"
 #include "libxsp_hop.h"
 
 xspHop *xsp_alloc_hop() {
@@ -58,14 +57,6 @@ int xsp_hop_merge_children(xspHop *dst, xspHop *src) {
 	dst->child_count = src->child_count;
 
 	return 0;
-}
-
-inline char *xsp_hop_getid(xspHop *hop) {
-	return hop->hop_id;
-}
-
-inline void xsp_hop_setid(xspHop *hop, const char *hop_id) {
-	strlcpy(hop->hop_id, hop_id, XSP_HOPID_LEN + 1);
 }
 
 int xsp_hop_add_child(xspHop *parent, xspHop *child) {
@@ -126,10 +117,3 @@ int xsp_hop_total_child_count(xspHop *hop) {
 	return hop->child_count + count;
 }
 
-inline void xsp_hop_set_flag(xspHop *hop, uint16_t flag) {
-	hop->flags |= flag;
-}
-
-inline int xsp_hop_check_flag(xspHop *hop, uint16_t flag) {
-	return (hop->flags & flag);
-}

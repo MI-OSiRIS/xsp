@@ -303,19 +303,7 @@ error_exit:
 	return NULL;
 }
 
-inline char *xsp_session_get_user(comSess *sess) {
-        return sess->user;
-}
-
-inline void xsp_session_set_user(comSess *sess, char *user) {
-	sess->user = user;
-}
-
-inline char *xsp_session_get_id(comSess *sess) {
-	return sess->id;
-}
-
-inline void xsp_session_close_connections(comSess *sess) {
+void xsp_session_close_connections(comSess *sess) {
 	xspConn *curr_conn;
 
 	xsp_info(5, "%s: closing connections", sess->id);
