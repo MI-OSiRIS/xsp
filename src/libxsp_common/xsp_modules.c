@@ -126,7 +126,7 @@ int xsp_load_module(char *module_name) {
 	if (!handle) {
 		handle = dlopen(soname, RTLD_LAZY | RTLD_GLOBAL);
 		if (!handle) {
-			xsp_err(0, "error loading %s: %s", module_name, dlerror());
+			xsp_err(0, "error loading %s: %s", filename, dlerror());
 			goto error_exit;
 		}
 	}

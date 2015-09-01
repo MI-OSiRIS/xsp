@@ -1,6 +1,11 @@
-noinst_LIBRARIES = libgsoap.a
+noinst_LTLIBRARIES = libgsoap.la
 
-libgsoap_a_SOURCES = stdsoap2.c stdsoap2.h th-lock.c xsp_soap_context.c xsp_soap_context.h
+noinst_HEADERS      = stdsoap2.h         \
+		      xsp_soap_context.h
 
-AM_CFLAGS = -DWITH_NONAMESPACES -DWITH_OPENSSL -DWITH_DOM -fPIC
+libgsoap_la_SOURCES = stdsoap2.c         \
+		      th-lock.c          \
+		      xsp_soap_context.c
+
+AM_CFLAGS = -DWITH_NONAMESPACES -DWITH_OPENSSL -DWITH_DOM
 AM_CPPFLAGS =

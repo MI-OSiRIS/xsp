@@ -51,11 +51,11 @@ if ENABLE_OSCARS
 modules_LTLIBRARIES += oscars5.la oscars6.la
 oscars5_la_SOURCES = xsp_oscars_basic.c xsp_oscars_basic.h
 oscars5_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
-oscars5_la_LIBADD = oscars/liboscars.a $(top_builddir)/libgsoap/libgsoap.a
+oscars5_la_LIBADD = oscars/liboscars.la
 oscars5_la_CFLAGS = $(AM_CFLAGS) -DOSCARS5 -DWITH_NONAMESPACES -DWITH_DOM
 oscars6_la_SOURCES = xsp_oscars_basic.c xsp_oscars_basic.h
 oscars6_la_LDFLAGS = -no-undefined -module -avoid-version -export-dynamic
-oscars6_la_LIBADD = oscars/liboscars6.a $(top_builddir)/libgsoap/libgsoap.a
+oscars6_la_LIBADD = oscars/liboscars6.la
 oscars6_la_CFLAGS = $(AM_CFLAGS) -DOSCARS6 -DWITH_NONAMESPACES -DWITH_DOM
 AM_CPPFLAGS += -I$(srcdir)/oscars -I$(top_srcdir)/libgsoap
 endif
