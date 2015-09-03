@@ -99,7 +99,3 @@ checking that generated files are newer than configure... done
 configure: creating ./config.status
 config.status: creating Makefile
 config.status: creating src/Makefile
-config.status: creating include/Makefile
-config.status: creating libunis-c.pc
-config.status: executing depfiles commands
-config.status: executing libtool commands
