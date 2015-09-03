@@ -46,6 +46,11 @@ include/stamp-h1
 # /contrib
 contrib/libunis-c/config.output
 contrib/libunis-c/libtool
+contrib/libunis-c/aclocal.m4
+contrib/libunis-c/config.output
+contrib/libunis-c/configure
+contrib/libunis-c/include/Makefile.in
+contrib/libunis-c/src/Makefile.in
 
 # Makefiles
 compat/Makefile

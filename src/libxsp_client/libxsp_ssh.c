@@ -7,11 +7,6 @@
 #include "libssh2.h"
 
 enum {
-	FALSE = 0,
-	TRUE = 1
-};
-
-enum {
 	AUTH_NONE = 0,
 	AUTH_PASSWORD,
 	AUTH_PUBLICKEY
