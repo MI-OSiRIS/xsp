@@ -23,3 +23,48 @@
 /hpx.pc
 /scripts/hpx-config
 
+# /config
+config/ar-lib
+config/compile
+config/config.guess
+config/config.sub
+config/depcomp
+config/install-sh
+config/libtool.m4
+config/ltmain.sh
+config/ltoptions.m4
+config/ltsugar.m4
+config/ltversion.m4
+config/lt~obsolete.m4
+config/missing
+
+# /include
+include/config.h.in
+include/config.h
+include/stamp-h1
+
+# /contrib
+contrib/libunis-c/config.output
+contrib/libunis-c/libtool
+
+# Makefiles
+compat/Makefile
+contrib/Makefile
+libgsoap/Makefile
+libmongo_client/Makefile
+libradix/Makefile
+libslabs/Makefile
+misc/subsys/Makefile
+scripts/Makefile
+src/libxsp/Makefile
+src/libxsp_client/Makefile
+src/libxsp_common/Makefile
+src/libxsp_modules/Makefile
+src/libxsp_modules/monitoring/Makefile
+src/libxsp_modules/openflow/Makefile
+src/libxsp_modules/oscars/Makefile
+src/libxsp_modules/terapaths/Makefile
+src/libxsp_rdma/Makefile
+src/modules/Makefile
+src/xspd/Makefile
+test/Makefile
