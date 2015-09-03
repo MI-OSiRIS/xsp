@@ -15,6 +15,8 @@ static int default_authentication_count = 1;
 static xspAuthenticationHandler *auth_handlers[255];
 static char auth_list[255 * (XSP_AUTH_NAME_LEN + 1) + 1];
 
+int __xsp_get_authentication_handler_index(const char *name);
+
 int xsp_add_authentication_handler(xspAuthenticationHandler *handler) {
 	uint8_t i;
 
@@ -45,7 +47,15 @@ int xsp_authentication_init() {
 	return 0;
 }
 
-int xsp_get_authentication_handler(const char *name) {
+xspAuthenticationHandler *xsp_get_authentication_handler(const char *name) {
+	int i = __xsp_get_authentication_handler_index(name);
+	if (i >= 0)
+		return auth_handlers[i];
+	else
+		return NULL;
+}
+
+int __xsp_get_authentication_handler_index(const char *name) {
 	int i;
 
 	for(i = 0;  i < 255; i++) {
@@ -87,7 +97,7 @@ int xsp_authenticate_connection(xspConn *conn, xspMsg *msg, xspCreds **ret_creds
         }
 
 
-	num = xsp_get_authentication_handler(auth_type);
+	num = __xsp_get_authentication_handler_index(auth_type);
 	if (num < 0) {
 		xsp_err(1, "bad authentication handler: \"%s\"", auth_type);
 		goto error_exit;
@@ -103,7 +113,7 @@ int xsp_request_authentication(comSess *sess, xspConn *new_conn, const char *aut
 	int num;
 	xspAuthType auth_type;
 
-	num = xsp_get_authentication_handler(auth_name);
+	num = __xsp_get_authentication_handler_index(auth_name);
 	if (num < 0) {
 		xsp_err(1, "bad authentication handler: \"%s\"", auth_name);
 		return -1; // XXX: fixme

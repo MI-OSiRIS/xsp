@@ -41,6 +41,12 @@ peering_la_SOURCES = xsp_peering.c xsp_peering.h
 if HAVE_LIBUNIS
 modules_LTLIBRARIES += unis.la
 unis_la_SOURCES = xsp_unis.c xsp_unis.h
+if ENABLE_OESS
+modules_LTLIBRARIES += auth_cosign.la
+auth_cosign_la_SOURCES = xsp_auth_cosign.c
+modules_LTLIBRARIES += oess.la
+oess_la_SOURCES = xsp_oess_basic.c
+endif
 endif
 
 if ENABLE_TERAPATHS

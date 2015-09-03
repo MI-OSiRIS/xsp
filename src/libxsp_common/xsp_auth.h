@@ -48,6 +48,8 @@ typedef struct xsp_authentication_handler_t {
 	char name[XSP_AUTH_NAME_LEN + 1];
 	int (*authenticate) (xspConn *conn, xspCreds **ret_creds);
 	int (*request_authentication) (comSess *sess, xspConn *conn);
+	int (*authenticate_interactive) (xspCreds *creds, const char *input, char **output);
+	void *(*get_auth_context) (void);
 } xspAuthenticationHandler;
 
 /*
@@ -55,8 +57,8 @@ typedef struct xsp_authentication_handler_t {
  *      This function adds the given authentication handler to the list of authentication handlers. It returns 0 if successful.
  */
 int xsp_add_authentication_handler(xspAuthenticationHandler *handler);
-
 int xsp_authenticate_connection(xspConn *conn, xspMsg *msg, xspCreds **ret_creds);
 int xsp_request_authentication(comSess *sess, xspConn *new_conn, const char *auth_name);
+xspAuthenticationHandler *xsp_get_authentication_handler(const char *name);
 
 #endif

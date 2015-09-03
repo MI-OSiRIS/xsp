@@ -116,6 +116,13 @@ AC_ARG_ENABLE(floodlight,
 
 AM_CONDITIONAL(ENABLE_FLOODLIGHT, test x$enable_floodlight = xyes)
 
+AC_ARG_ENABLE(oess,
+        AC_HELP_STRING([--enable-oess], [enable oess (AL2S) module [default=no]]),
+        [enable_oess=$enableval],
+        [enable_oess=no])
+
+AM_CONDITIONAL(ENABLE_OESS, test x$enable_oess = xyes)
+
 AC_ARG_ENABLE(linuxnet,
         AC_HELP_STRING([--enable-linuxnet], [enable linuxnet module [default=no]]),
         [enable_linuxnet=$enableval],
@@ -499,7 +506,7 @@ AC_OUTPUT(
 	test/Makefile
 	)
 
-# figure out which modules other are enabled
+# figure out what additional modules will be built
 if test "$enable_oscars" = "yes" -a "$have_openssl" = "yes"; then
    xsp_modules+=" oscars"
 fi
@@ -517,6 +524,9 @@ if test "$enable_floodlight" = "yes" -a "$have_curl" = "yes" -a "$have_json" = "
 fi
 if test "$have_libunis" = "yes"; then
    xsp_modules+=" unis"
+fi
+if test "$have_libunis" = "yes" -a "$enable_oess" = "yes"; then
+   xsp_modules+=" auth_cosign oess"
 fi
 if test "$enable_linuxnet" = "yes"; then
    xsp_modules+=" linuxnet"
