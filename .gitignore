@@ -1,0 +1,25 @@
+*.o
+*.lo
+*.libs
+*.deps
+*.dirstamp
+*.la
+*~
+*.swp
+*.log
+*.trs
+*.btr
+*Makefile.in
+
+# /
+/aclocal.m4
+/configure
+/config.status
+/libtool
+/autom4te.cache
+/.deps
+/Makefile
+/Makefile.in
+/hpx.pc
+/scripts/hpx-config
+

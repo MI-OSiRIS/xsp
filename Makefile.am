@@ -3,7 +3,7 @@ ACLOCAL_AMFLAGS = -I config
 
 include_HEADERS = include/xsp-proto.h
 
-libdirs = compat libslabs libmongo_client src/libxsp src/libxsp_common
+libdirs = compat contrib libslabs libmongo_client src/libxsp src/libxsp_common
 bindirs = src/xspd
 
 if ENABLE_TERAPATHS
@@ -26,10 +26,6 @@ endif
 
 if HAVE_SSH
 bindirs += misc/subsys
-endif
-
-if HAVE_CURL
-libdirs += libcurl
 endif
 
 if HAVE_RDMA

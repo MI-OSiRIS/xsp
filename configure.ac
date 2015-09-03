@@ -59,6 +59,8 @@ AC_CHECK_FUNCS([atoll atoq bzero gethostbyaddr gethostbyname gethostname gettime
 AH_TEMPLATE(SOCKLEN_T, The native socklen_t type used on the platform)
 AC_DEFINE_UNQUOTED(SOCKLEN_T, socklen_t)
 
+XSP_CONFIG_LIBUNIS([contrib/libunis-c], [libunis])
+
 AC_ARG_ENABLE(debug,
 	[  --enable-debug          turn on debugging],
 	[CFLAGS="-g -O0 -Wall -DDEBUG ${CFLAGS}"],
@@ -455,12 +457,20 @@ AC_CHECK_HEADERS(libconfig.h, [
 		],
 		AC_MSG_ERROR([libconfig.h not found (try installing libconfig-dev)]))
 
+XSP_DO_AM_CONDITIONALS
+
+# Substitute the variables required for libtool linking of libhpx internally.
+AC_SUBST(LIBXSP_CPPFLAGS)
+AC_SUBST(LIBXSP_CFLAGS)
+AC_SUBST(LIBXSP_CXXFLAGS)
+AC_SUBST(LIBXSP_LDFLAGS)
+AC_SUBST(LIBXSP_LIBADD)
+AC_SUBST(LIBXSP_LIBS)
+
 CONFIG_FILE=$sysconfdir/xspd.conf
 AC_SUBST(CONFIG_FILE)
-
 moduledir=$libdir/libxsp
 AC_SUBST(moduledir)
-
 AC_SUBST(THREAD_LIBS)
 AC_SUBST(DL_LIBS)
 AC_SUBST(NL_LIBS)
@@ -468,11 +478,11 @@ AC_SUBST(NL_LIBS)
 AC_OUTPUT(
 	Makefile
 	compat/Makefile
+	contrib/Makefile
 	libslabs/Makefile
 	libradix/Makefile
 	libmongo_client/Makefile
 	libgsoap/Makefile
-	libcurl/Makefile
 	src/libxsp/Makefile
 	src/xspd/Makefile
 	src/modules/Makefile
@@ -488,7 +498,6 @@ AC_OUTPUT(
         scripts/Makefile
 	test/Makefile
 	)
-
 
 # figure out which modules other are enabled
 if test "$enable_oscars" = "yes" -a "$have_openssl" = "yes"; then
@@ -506,7 +515,7 @@ fi
 if test "$enable_floodlight" = "yes" -a "$have_curl" = "yes" -a "$have_json" = "yes"; then
    xsp_modules+=" floodlight"
 fi
-if test "$have_curl" = "yes" -a "$have_json" = "yes"; then
+if test "$have_libunis" = "yes"; then
    xsp_modules+=" unis"
 fi
 if test "$enable_linuxnet" = "yes"; then
