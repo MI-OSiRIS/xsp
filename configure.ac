@@ -88,6 +88,13 @@ AC_ARG_ENABLE(dragon,
 
 AM_CONDITIONAL(ENABLE_DRAGON, test x$enable_dragon = xyes)
 
+AC_ARG_ENABLE(libunis,
+        AC_HELP_STRING([--enable-libunis], [enable libunis support [default=no]]),
+        [enable_libunis=$enableval],
+        [enable_libunis=no])
+
+AM_CONDITIONAL(HAVE_LIBUNIS, test x$enable_libunis = xyes)
+
 AC_ARG_ENABLE(blipp,
         AC_HELP_STRING([--enable-blipp], [enable BLIPP module [default=no]]),
         [enable_blipp=$enableval],

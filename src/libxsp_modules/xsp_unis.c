@@ -7,8 +7,8 @@
 #include "queue.h"
 #include "hashtable.h"
 #include "xsp_unis.h"
-#include "curl_context.h"
 #include "unis_registration.h"
+#include "libunis_c_log.h"
 
 #include "xsp_session.h"
 #include "xsp_tpool.h"
@@ -24,7 +24,6 @@
 
 /* GLOBALS */
 static unis_config config;
-static curl_context cc;
 /* END GLOBALS */
 
 int xsp_unis_init();
@@ -40,49 +39,98 @@ xspModule xsp_unis_module = {
 xspModule *module_info() {
 	return &xsp_unis_module;
 }
+int xsp_parse_unis_config(const xspSettings *settings)
+{
+    if (xsp_settings_get_2(settings, "unis",
+			   "name", &config.name) != 0) {
+	xsp_info(0, "No UNIS name specified!");
+	return -1;
+    }
+    if (xsp_settings_get_2(settings, "unis",
+			   "type", &config.type) != 0) {
+	xsp_info(0, "No UNIS type specified!");
+	return -1;
+    }
+    if (xsp_settings_get_2(settings, "unis",
+			   "endpoint", 
+			   &config.endpoint) != 0) {
+	xsp_info(0, "No UNIS endpoint specified!");
+	return -1;
+    }
+    if (xsp_settings_get_2(settings, "unis",
+			   "protocol_name",
+			   &config.protocol_name) != 0) {
+	xsp_info(0, "No UNIS type specified!");
+	return -1;
+    }
+    if (xsp_settings_get_2(settings, "unis",
+			   "publicip", &config.iface) != 0) {
+	xsp_info(0, "No UNIS publicip specified!");
+	return -1;
+    }
+    if (xsp_settings_get_int_2(settings, "unis",
+			       "port", &config.port) != 0) {
+	xsp_info(0, "No UNIS publicport specfied");
+        return -1;
+    }
+    if (xsp_settings_get_bool_2(settings, "unis",
+				"register", 
+				&config.do_register) != 0) {
+	xsp_info(0, "Unis do_register flag missing");
+	return -1;
+    }
+    if (xsp_settings_get_int_2(settings, "unis",
+			       "registration_interval", 
+			       &config.registration_interval) != 0) {
+	xsp_info(0, 
+		 "Registration interval not specified, using default %d",
+		 UNIS_REG_INTERVAL);
+	config.registration_interval = UNIS_REG_INTERVAL;
+    }
+    if (xsp_settings_get_int_2(settings, "unis", "refresh",
+			       &config.refresh_timer) != 0) {
+	xsp_info(0, 
+		 "Refresh time not specified, using default %d",
+		 UNIS_REFRESH_TO);
+	config.refresh_timer = UNIS_REFRESH_TO;
+    }
+    return 0;
+}
+
 
 int xsp_unis_init() {
 	const xspSettings *settings;
 
 	settings = xsp_main_settings();
-
-	if (xsp_settings_get_2(settings, "unis", "endpoint", &config.endpoint) != 0) {
-		xsp_info(0, "No UNIS endpoint specified!");
-		return -1;
+	if (xsp_parse_unis_config(settings) == -1) {
+	    return -1;
+	}
+	//register_log_callback_libunis_c(&xsp_info);
+	if(unis_init(&config) == 0) {
+	    xsp_info(0, "register_unis: unis registration is successful.");
+	} else {
+	    xsp_info(0, "register_unis: error in unis registration.");
 	}
 	
-	if (xsp_settings_get_int_2(settings, "unis", "refresh", &config.refresh_timer) != 0) {
-		xsp_info(0, "Refresh time not specified, using default %d", UNIS_REFRESH_TO);
-		config.refresh_timer = UNIS_REFRESH_TO;
-	}
-
-	if (xsp_settings_get_bool_2(settings, "unis", "register", &config.do_register) != 0) {
-		config.do_register = 0;
-	}
-
-	if (xsp_settings_get_int_2(settings, "unis", "registration_interval", &config.registration_interval) != 0) {
-		xsp_info(0, "Registration interval not specified, using default %d", UNIS_REG_INTERVAL);
-		config.registration_interval = UNIS_REG_INTERVAL;
-	}
-
-	if (config.do_register) {
-		/* start registration thread
-		   gets extra config items to build service description 
-		   there are some rough examples in misc/json */
-	}
+	/* if (config.do_register) { */
+	/* 	/\* start registration thread */
+	/* 	   gets extra config items to build service description  */
+	/* 	   there are some rough examples in misc/json *\/ */
+	/* } */
 	
-	/* we could also start a thread that retrieves and caches everything from UNIS
-	   for now, every call to the UNIS module will do an active query against the service */
+	/* /\* we could also start a thread that retrieves and caches everything from UNIS */
+	/*    for now, every call to the UNIS module will do an active query against the service *\/ */
 	
-	cc.url = config.endpoint;
-        cc.use_ssl = 0;
-        cc.curl_persist = 0;
+	/* cc.url = config.endpoint; */
+        /* cc.use_ssl = 0; */
+        /* cc.curl_persist = 0; */
 
-        if (init_curl(&cc, NULL) != 0) {
-                xsp_info(0, "Could not start CURL context");
-                return -1;
-        }
+        /* if (init_curl(&cc, NULL) != 0) { */
+        /*         xsp_info(0, "Could not start CURL context"); */
+        /*         return -1; */
+        /* } */
 
+	
 	return 0;
 }
 
