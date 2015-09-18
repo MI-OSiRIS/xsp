@@ -19,8 +19,6 @@ AM_CFLAGS   = $(LIBHPX_CFLAGS)                 \
 
 AM_LDFLAGS  = -no-undefined -module -avoid-version -export-dynamic
 
-LIBADD      = $(LIBXSP_LIBS) $(LIBXSP_LIBADD)
-
 if HAVE_NETFILTER
 modules_LTLIBRARIES += transparent.la
 transparent_la_SOURCES = xsp_frontend_transparent.c
@@ -41,9 +39,11 @@ peering_la_SOURCES = xsp_peering.c xsp_peering.h
 if HAVE_LIBUNIS
 modules_LTLIBRARIES += unis.la
 unis_la_SOURCES = xsp_unis.c xsp_unis.h
+unis_la_LIBADD  = $(LIBXSP_LIBS) $(LIBXSP_LIBADD)
 if ENABLE_OESS
 modules_LTLIBRARIES += auth_cosign.la
 auth_cosign_la_SOURCES = xsp_auth_cosign.c
+auth_cosign_la_LIBADD  = $(LIBXSP_LIBS) $(LIBXSP_LIBADD)
 modules_LTLIBRARIES += oess.la
 oess_la_SOURCES = xsp_oess_basic.c
 endif
