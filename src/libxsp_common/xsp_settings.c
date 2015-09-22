@@ -12,7 +12,48 @@
 static config_setting_t *xsp_settings_get_option(const xspSettings *settings, int num_fields, va_list ap, int type, int replace);
 static int libconfig_merge_groups(config_setting_t *dst, const config_setting_t *src);
 static int libconfig_duplicate_group(config_setting_t *dst, config_setting_t *group);
+/*
+ *This returns a malloced array of strings whose length can be determined
+ * by xsp_settings_get_no_section api Please free it accordingly
+ */
+int xsp_settings_get_section_names(xspSettings *settings, const char *group,
+				  char **list) {
+    config_setting_t *group_setting;
+    config_setting_t *elements;
+    unsigned int     length;
+    int              i = 0;
 
+    group_setting =
+	config_setting_get_member(config_root_setting(&settings->root), 
+				  group);
+    if(!group_setting) {
+	fprintf(stderr,"%s group label not found in config", group);
+	return -1;
+    }
+    length = config_setting_length(group_setting);
+    list = (char **)malloc(length * sizeof(char *));
+    for (i = 0; i < length ; i++) 
+    {
+	elements = config_setting_get_elem(group_setting, i);
+	printf("Rishi : %s\n", elements->name);
+	list[i] = elements->name;
+	printf("Sirshak : %s\n", list[i]);
+    }
+    return 0;
+}
+int xsp_settings_get_no_section(xspSettings *settings, const char *group,
+				int *value) {
+    config_setting_t *group_setting;
+    group_setting =
+	config_setting_get_member(config_root_setting(&settings->root), 
+				  group);
+    if(!group_setting) {
+	fprintf(stderr,"%s group label not found in config", group);
+	return -1;
+    }
+    *value = config_setting_length(group_setting);
+    return 0;
+}
 int __xsp_settings_getval(const xspSettings *settings, char **value, int num_fields, ...) {
 	const config_setting_t *setting;
 	char data[1024];
@@ -192,12 +233,12 @@ int __xsp_settings_getval_group(const xspSettings *settings, xspSettings **ret_s
 
 	if (config_setting_type(setting) != CONFIG_TYPE_GROUP)
 		goto error_exit;
-
+	
 	*ret_settings = xsp_settings_alloc();
 	if (!*ret_settings) {
 		goto error_exit;
 	}
-
+	
 	libconfig_duplicate_group(config_root_setting(&((*ret_settings)->root)), setting);
 
 	return 0;

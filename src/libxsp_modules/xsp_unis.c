@@ -21,6 +21,7 @@
 #include "xsp_config.h"
 #include "xsp_auth.h"
 #include "xsp_modules.h"
+#include "libconfig.h"
 
 /* GLOBALS */
 static unis_config config;
@@ -39,8 +40,30 @@ xspModule xsp_unis_module = {
 xspModule *module_info() {
 	return &xsp_unis_module;
 }
-int xsp_parse_unis_config(const xspSettings *settings)
+int xsp_unis_parse_listener_config(char **listener_names, int listener_count)
 {
+    /* int          i = 0; */
+    /* int          port; */
+    /* unsigned int is_disabled; */
+    /* service_listener *listener; */
+    /* config.listeners = malloc(listener_count*sizeof(service_listener)); */
+    /* listener = config.listeners; */
+    /* for (i = 0; i < listener_count ; i++) */
+    /* { */
+    /* 	if (xsp_settings_get_int_3(settings, "listeners",listener_names[i],  */
+    /* 				   "port", &port) != 0) { */
+    /* 	    continue; */
+    /* 	} */
+    /* 	listener->protocol_name = listener_names[i]; */
+    /* 	sprintf(listener->port, "%d", port); */
+    /* } */
+    return 0;
+}
+int xsp_unis_parse_config(const xspSettings *settings)
+{
+    char **listener_names;
+    int listener_count;
+
     if (xsp_settings_get_2(settings, "unis",
 			   "name", &config.name) != 0) {
 	xsp_info(0, "No UNIS name specified!");
@@ -95,6 +118,14 @@ int xsp_parse_unis_config(const xspSettings *settings)
 		 UNIS_REFRESH_TO);
 	config.refresh_timer = UNIS_REFRESH_TO;
     }
+    if(xsp_settings_get_section_names(settings,
+				      "listeners", listener_names)!=0) {
+	printf("Listeners group not found \n");
+	return -1;
+    }
+    xsp_settings_get_no_section(settings, "listeners", &listener_count);
+    config.listener_count = 0;
+    xsp_unis_parse_listener_config(listener_names, listener_count);
     return 0;
 }
 
@@ -103,7 +134,7 @@ int xsp_unis_init() {
 	const xspSettings *settings;
 
 	settings = xsp_main_settings();
-	if (xsp_parse_unis_config(settings) == -1) {
+	if (xsp_unis_parse_config(settings) == -1) {
 	    fprintf(stderr, "Parsing unis registartion config failed\n");
 	    return -1;
 	}
