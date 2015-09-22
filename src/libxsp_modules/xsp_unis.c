@@ -40,23 +40,25 @@ xspModule xsp_unis_module = {
 xspModule *module_info() {
 	return &xsp_unis_module;
 }
-int xsp_unis_parse_listener_config(char **listener_names, int listener_count)
+int xsp_unis_parse_listener_config(const xspSettings *settings, 
+				   char **listener_names, int listener_count)
 {
-    /* int          i = 0; */
-    /* int          port; */
-    /* unsigned int is_disabled; */
-    /* service_listener *listener; */
-    /* config.listeners = malloc(listener_count*sizeof(service_listener)); */
-    /* listener = config.listeners; */
-    /* for (i = 0; i < listener_count ; i++) */
-    /* { */
-    /* 	if (xsp_settings_get_int_3(settings, "listeners",listener_names[i],  */
-    /* 				   "port", &port) != 0) { */
-    /* 	    continue; */
-    /* 	} */
-    /* 	listener->protocol_name = listener_names[i]; */
-    /* 	sprintf(listener->port, "%d", port); */
-    /* } */
+    int          i = 0;
+    int          port;
+    unsigned int is_disabled;
+    service_listener *listener;
+    config.listeners = malloc(listener_count*sizeof(service_listener));
+    listener = config.listeners;
+    config.listener_count = listener_count;
+    for (i = 0; i < listener_count ; i++)
+    {
+	if (xsp_settings_get_int_3(settings, "listeners", listener_names[i],
+				   "port", &listener->port) != 0) {
+	    listener->is_disabled=0;
+	}
+	listener->protocol_name = listener_names[i];
+	listener++;
+    }
     return 0;
 }
 int xsp_unis_parse_config(const xspSettings *settings)
@@ -119,13 +121,13 @@ int xsp_unis_parse_config(const xspSettings *settings)
 	config.refresh_timer = UNIS_REFRESH_TO;
     }
     if(xsp_settings_get_section_names(settings,
-				      "listeners", listener_names)!=0) {
+				      "listeners", &listener_names)!=0) {
 	printf("Listeners group not found \n");
 	return -1;
     }
     xsp_settings_get_no_section(settings, "listeners", &listener_count);
     config.listener_count = 0;
-    xsp_unis_parse_listener_config(listener_names, listener_count);
+    xsp_unis_parse_listener_config(settings, listener_names, listener_count);
     return 0;
 }
 

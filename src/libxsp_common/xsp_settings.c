@@ -17,7 +17,7 @@ static int libconfig_duplicate_group(config_setting_t *dst, config_setting_t *gr
  * by xsp_settings_get_no_section api Please free it accordingly
  */
 int xsp_settings_get_section_names(xspSettings *settings, const char *group,
-				  char **list) {
+				  char ***list) {
     config_setting_t *group_setting;
     config_setting_t *elements;
     unsigned int     length;
@@ -31,13 +31,13 @@ int xsp_settings_get_section_names(xspSettings *settings, const char *group,
 	return -1;
     }
     length = config_setting_length(group_setting);
-    list = (char **)malloc(length * sizeof(char *));
+    *list = (char **)malloc(length * sizeof(char *));
     for (i = 0; i < length ; i++) 
     {
 	elements = config_setting_get_elem(group_setting, i);
 	printf("Rishi : %s\n", elements->name);
-	list[i] = elements->name;
-	printf("Sirshak : %s\n", list[i]);
+	(*list)[i] = elements->name;
+	printf("Sirshak : %s\n", (*list)[i]);
     }
     return 0;
 }
