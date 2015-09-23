@@ -54,8 +54,14 @@ int xsp_unis_parse_listener_config(const xspSettings *settings,
     {
 	if (xsp_settings_get_int_3(settings, "listeners", listener_names[i],
 				   "port", &listener->port) != 0) {
+	    listener->is_disabled=1;
+	} 
+	if(xsp_settings_get_bool_3(settings, "listeners", 
+				   listener_names[i], "disabled",
+				   &listener->is_disabled)!=0) {
 	    listener->is_disabled=0;
-	}
+	} 
+
 	listener->protocol_name = listener_names[i];
 	listener++;
     }
