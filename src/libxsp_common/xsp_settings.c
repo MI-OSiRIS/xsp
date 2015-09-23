@@ -35,9 +35,7 @@ int xsp_settings_get_section_names(xspSettings *settings, const char *group,
     for (i = 0; i < length ; i++) 
     {
 	elements = config_setting_get_elem(group_setting, i);
-	printf("Rishi : %s\n", elements->name);
 	(*list)[i] = elements->name;
-	printf("Sirshak : %s\n", (*list)[i]);
     }
     return 0;
 }
