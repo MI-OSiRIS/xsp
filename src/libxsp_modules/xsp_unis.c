@@ -43,14 +43,30 @@ xspModule *module_info() {
 int xsp_unis_parse_listener_config(const xspSettings *settings, 
 				   char **listener_names, int listener_count)
 {
-    int          i = 0;
-    int          port;
-    unsigned int is_disabled;
+    int              i = 0;
+    int              transparent_port;
+    char             *transparent_prot_name;
+    unsigned int     is_disabled;
     service_listener *listener;
+    int              is_transparent_port = 0;
+
+    if (xsp_settings_get_int_2(settings, "transparent",
+			       "port", &transparent_port) != 0) {
+	xsp_info(0, "No XSP transparent specfied");
+
+    } else {
+	listener_count = listener_count + 1;
+	is_transparent_port = 1;
+	transparent_prot_name = (char *)malloc((strlen("tcp")+1)*sizeof(char));
+	strcpy(transparent_prot_name, "tcp");
+	/*
+	 * Hard-coding the transparent protocol name as tcp
+	 */
+    }
     config.listeners = malloc(listener_count*sizeof(service_listener));
     listener = config.listeners;
     config.listener_count = listener_count;
-    for (i = 0; i < listener_count ; i++)
+    for (i = 0; i < listener_count-1 ; i++)
     {
 	if (xsp_settings_get_int_3(settings, "listeners", listener_names[i],
 				   "port", &listener->port) != 0) {
@@ -63,8 +79,16 @@ int xsp_unis_parse_listener_config(const xspSettings *settings,
 	} 
 
 	listener->protocol_name = listener_names[i];
+	realloc(listener->protocol_name, (strlen(listener->protocol_name)+5));
+	strncat(listener->protocol_name, "_xsp", 4);
 	listener++;
     }
+    if (is_transparent_port == 1) {
+	listener->protocol_name = transparent_prot_name;
+	listener->port          = transparent_port;
+	listener->is_disabled   = 0;
+    }
+
     return 0;
 }
 int xsp_unis_parse_config(const xspSettings *settings)
