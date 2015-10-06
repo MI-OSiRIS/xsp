@@ -1,5 +1,5 @@
 lib_LTLIBRARIES = libxsp_wrapper.la libxsp_simplewrapper.la libxsp_client.la
-include_HEADERS = libxsp_client.h libxsp_client_common.h $(top_srcdir)/include/xsp-proto.h $(top_srcdir)/include/option_types.h
+include_HEADERS = libxsp_client.h libxsp_client_common.h $(top_srcdir)/include/xsp-proto.h $(top_srcdir)/include/option_types.h $(top_srcdir)/include/xsp.h
 noinst_HEADERS = libxsp_client_private.h
 
 libxsp_client_la_SOURCES = libxsp_client.c

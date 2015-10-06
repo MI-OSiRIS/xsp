@@ -4,7 +4,7 @@ AM_CPPFLAGS = -I@top_srcdir@/include    \
 
 lib_LTLIBRARIES  = libxsp_common.la
 
-noinst_HEADERERS = xsp_settings.h                 \
+noinst_HEADERS = xsp_settings.h                 \
 			   xsp_default_settings.h \
 			   xsp_logger.h           \
 			   xsp_conn.h             \

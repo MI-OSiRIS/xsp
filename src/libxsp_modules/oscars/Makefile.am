@@ -4,7 +4,7 @@ modules_LTLIBRARIES =
 bin_PROGRAMS = oscars_client oscars6_client
 
 noinst_LTLIBRARIES = liboscars.la liboscars6.la
-noinst_HEADERS = oscars.h
+noinst_HEADERS = oscars.h env.h oscars6API.h oscars6Stub.h oscarsStub.h threads.h wsseapi.h mecevp.h oscars6H.h oscarsAPI.h oscarsH.h smdevp.h wsaapi.h oscars.nsmap oscars6.nsmap
 
 oscars_client_SOURCES = oscars_client.c
 oscars_client_LDADD = $(top_builddir)/libgsoap/libgsoap.a liboscars.la

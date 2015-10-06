@@ -102,12 +102,14 @@ fi
 #%{_includedir}/config.h
 %{_includedir}/xsp-proto.h
 %{_includedir}/option_types.h
+%{_includedir}/xsp.h
 %defattr(775,root,root)
 #%{_bindir}/*
 %{_libdir}/libxsp_client*
 %{_libdir}/libxsp_wrapper*
 %{_libdir}/libxsp_simplewrapper*
 %{_bindir}/xsp_*
+%{_bindir}/oscars*
 
 %files xspd
 %defattr(-,root,root)
