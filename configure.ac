@@ -1,5 +1,5 @@
 AC_PREREQ([2.63])
-AC_INIT([libxsp], [0.1], [xsp@crest.iu.edu])
+AC_INIT([libxsp], [1.0], [xsp@crest.iu.edu])
 AC_CONFIG_SRCDIR([include/config.h.in])
 AM_CONFIG_HEADER([include/config.h])
 AC_CONFIG_AUX_DIR([config])
