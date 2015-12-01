@@ -1,5 +1,5 @@
 AC_PREREQ([2.63])
-AC_INIT([libxsp], [0.1], [xsp@crest.iu.edu])
+AC_INIT([libxsp], [1.0], [xsp@crest.iu.edu])
 AC_CONFIG_SRCDIR([include/config.h.in])
 AM_CONFIG_HEADER([include/config.h])
 AC_CONFIG_AUX_DIR([config])
@@ -87,6 +87,13 @@ AC_ARG_ENABLE(dragon,
         [enable_dragon=no])
 
 AM_CONDITIONAL(ENABLE_DRAGON, test x$enable_dragon = xyes)
+
+AC_ARG_ENABLE(libunis,
+        AC_HELP_STRING([--enable-libunis], [enable libunis support [default=no]]),
+        [enable_libunis=$enableval],
+        [enable_libunis=no])
+
+AM_CONDITIONAL(HAVE_LIBUNIS, test x$enable_libunis = xyes)
 
 AC_ARG_ENABLE(blipp,
         AC_HELP_STRING([--enable-blipp], [enable BLIPP module [default=no]]),

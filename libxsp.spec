@@ -1,6 +1,6 @@
 Name: libxsp
-Version: 0.1
-Release: 9
+Version: 1.0
+Release: 10
 Summary: XSP RPM
 
 Group: Application/Network
@@ -58,7 +58,8 @@ rm -rf $RPM_BUILD_ROOT
 #--sysconfdir=%{_sysconfdir} \
 #--datadir=%{_datadir} \
 #make %{?_smp_mflags}
-%configure --without-mysql --without-sqlite --enable-oscars --enable-client
+%configure --without-mysql --without-sqlite --enable-oscars --enable-client --enable-libunis
+./configure --enable-libunis --enable-oscars
 make
 
 %install
@@ -94,6 +95,9 @@ fi
 %defattr(-,root,root)
 %{_libdir}/libxsp_common*
 %{_libdir}/libxsp/*
+%{_includedir}/*
+%{_libdir}/libunis-c*
+%{_libdir}/pkgconfig/*
 
 %files client
 %defattr(-,root,root)
