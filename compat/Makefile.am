@@ -5,7 +5,6 @@ noinst_HEADERS = compat.h           \
 	         hashtable_private.h
 
 noinst_LTLIBRARIES = libcompat.la
-
 libcompat_la_SOURCES = compat.c               \
 	       	       hashtable.c            \
 		       hashtable_hashfn.c     \
