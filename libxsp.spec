@@ -58,8 +58,10 @@ rm -rf $RPM_BUILD_ROOT
 #--sysconfdir=%{_sysconfdir} \
 #--datadir=%{_datadir} \
 #make %{?_smp_mflags}
-%configure --without-mysql --without-sqlite --enable-oscars --enable-client --enable-libunis
-./configure --enable-libunis --enable-oscars
+%configure --without-mysql --without-sqlite --enable-oscars --enable-client --enable-libunis --with-libunis=libunis-c
+
+./configure --enable-libunis --enable-oscars --with-libunis=libunis-c
+
 make
 
 %install
@@ -96,8 +98,6 @@ fi
 %{_libdir}/libxsp_common*
 %{_libdir}/libxsp/*
 %{_includedir}/*
-%{_libdir}/libunis-c*
-%{_libdir}/pkgconfig/*
 
 %files client
 %defattr(-,root,root)
