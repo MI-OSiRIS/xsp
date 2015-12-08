@@ -1794,13 +1794,13 @@ static int xsp_hash_password(const unsigned char *pass, unsigned int pass_len, c
 	unsigned char buf[SHA_DIGEST_LENGTH];
 	int i;
 
-	SHA1(pass, pass_len, buf);
+	SHA1_wrapper(pass, pass_len, buf);
 
 	for(i = 0; i < SHA_DIGEST_LENGTH; i++) {
 		buf[i] ^= nonce[i];
 	}
 
-	SHA1(buf, SHA_DIGEST_LENGTH, ret_hash);
+	SHA1_wrapper(buf, SHA_DIGEST_LENGTH, ret_hash);
 
 	return 0;
 }

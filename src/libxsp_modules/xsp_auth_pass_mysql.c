@@ -1,7 +1,5 @@
 #include <string.h>
 #include <mysql.h>
-#include <openssl/sha.h>
-#include <openssl/rand.h>
 #include <stdlib.h>
 
 #include "xsp_auth.h"

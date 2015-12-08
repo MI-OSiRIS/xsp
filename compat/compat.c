@@ -750,15 +750,22 @@ void sha1_final(SHA1_CTX *ctx, uchar hash[])
    }  
 }  
 
-void SHA1(const uchar *buf, unsigned long length, uchar *hash) {
-   SHA1_CTX ctx; 
+#endif
 
+void SHA1_wrapper(const uchar *buf, unsigned long length, uchar *hash) 
+{
+#if !defined(HAVE_OPENSSL) || defined(USE_COMPAT_SHA)
+   SHA1_CTX ctx; 
+    
    sha1_init(&ctx); 
    sha1_update(&ctx, buf, length); 
    sha1_final(&ctx, hash); 
+#else
+   SHA1(buf, length, hash);
+#endif
 }
 
-#endif
+
 
 #ifndef JUNOS
 int get_addrs(char ***addrs, int *addr_count) {
