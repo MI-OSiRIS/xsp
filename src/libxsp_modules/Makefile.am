@@ -3,13 +3,13 @@
 modulesdir = $(libdir)/libxsp
 modules_LTLIBRARIES = 
 
-AM_CPPFLAGS = $(LIBXSP_CPPFLAGS)        \
+AM_CPPFLAGS = -I@top_srcdir@/compat     \
 	      -I@top_srcdir@/include    \
 	      -I@top_srcdir@/src/libxsp \
 	      -I@top_srcdir@/libradix   \
-	      -I@top_srcdir@/compat     \
 	      -I@top_srcdir@/libconfig  \
-	      -I@top_srcdir@/src/libxsp_common
+	      -I@top_srcdir@/src/libxsp_common \
+              $(LIBXSP_CPPFLAGS)
 
 AM_CFLAGS   = $(LIBHPX_CFLAGS)                 \
 	      @CFLAGS@                         \
