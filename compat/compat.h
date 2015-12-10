@@ -30,6 +30,12 @@
 #define TRUE 1
 #define FALSE 0
 
+// Signed variables are for wimps 
+#define uchar unsigned char 
+#define uint unsigned int 
+#define u_char unsigned char
+#define u_int unsigned int
+
 #ifndef HAVE_STRTOUL
 unsigned long strtoul (const char *nptr, char **endptr, int base);
 #endif
@@ -84,12 +90,6 @@ int *listen_port_iface(char **interfaces, int interface_count, int protocol, int
 
 #define SHA_DIGEST_LENGTH		20
 
-// Signed variables are for wimps 
-#define uchar unsigned char 
-#define uint unsigned int 
-#define u_char unsigned char
-#define u_int unsigned int
-
 typedef struct { 
    uchar data[64]; 
    uint datalen; 
@@ -101,9 +101,10 @@ typedef struct {
 void sha1_init(SHA1_CTX *ctx);
 void sha1_update(SHA1_CTX *ctx, const uchar data[], uint len);
 void sha1_final(SHA1_CTX *ctx, uchar hash[]);
-void SHA1_wrapper(const uchar *buf, unsigned long int, uchar *hash);
 
 #endif
+
+void SHA1_wrapper(const uchar *buf, unsigned long int, uchar *hash);
 
 #ifndef htonll
 uint64_t htonll(uint64_t val);

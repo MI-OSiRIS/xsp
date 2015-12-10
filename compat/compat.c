@@ -765,8 +765,6 @@ void SHA1_wrapper(const uchar *buf, unsigned long length, uchar *hash)
 #endif
 }
 
-
-
 #ifndef JUNOS
 int get_addrs(char ***addrs, int *addr_count) {
         struct ifaddrs *if_info;

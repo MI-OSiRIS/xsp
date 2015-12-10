@@ -9,4 +9,3 @@ libcompat_la_SOURCES = compat.c               \
 	       	       hashtable.c            \
 		       hashtable_hashfn.c     \
 		       hashtable_util.c
-
