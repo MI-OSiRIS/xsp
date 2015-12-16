@@ -89,9 +89,9 @@ AC_ARG_ENABLE(dragon,
 AM_CONDITIONAL(ENABLE_DRAGON, test x$enable_dragon = xyes)
 
 AC_ARG_ENABLE(libunis,
-        AC_HELP_STRING([--enable-libunis], [enable libunis support [default=no]]),
+        AC_HELP_STRING([--enable-libunis], [enable libunis support [default=yes]]),
         [enable_libunis=$enableval],
-        [enable_libunis=no])
+        [enable_libunis=yes])
 
 AM_CONDITIONAL(HAVE_LIBUNIS, test x$enable_libunis = xyes)
 
