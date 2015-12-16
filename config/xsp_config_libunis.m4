@@ -85,13 +85,14 @@ AC_DEFUN([XSP_CONFIG_LIBUNIS], [
  # Allow the user to override the way we try and find libunis.
  AC_ARG_ENABLE([libunis],
    [AS_HELP_STRING([--enable-libunis],
-                   [Enable the libunis network @<:@default=no@:>@])],
-   [], [enable_libunis=no])
+                   [Enable the libunis network @<:@default=yes@:>@])],
+   [], [enable_libunis=yes])
 
  AC_ARG_WITH(libunis,
    [AS_HELP_STRING([--with-libunis{=contrib,system,PKG}],
                    [How we find libunis @<:@default=contrib@:>@])],
-   [], [with_libunis=contrib])
+   [], [with_libunis=contrib
+        build_libunis=yes])
 
  AS_IF([test "x$enable_libunis" != xno], [_XSP_WITH_LIBUNIS($pkg)])
  AS_IF([test "x$build_libunis" == xyes], [_XSP_CONFIG_LIBUNIS($contrib)])
