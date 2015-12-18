@@ -1,6 +1,8 @@
+%define default_release 10
+
 Name: libxsp
 Version: 1.0
-Release: 10
+Release: %{?release}%{!?release:%{default_release}}
 Summary: XSP RPM
 
 Group: Application/Network
