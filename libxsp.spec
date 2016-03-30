@@ -1,7 +1,7 @@
-%define default_release 10
+%define default_release 1
 
 Name: libxsp
-Version: 1.0
+Version: 2.0
 Release: %{?release}%{!?release:%{default_release}}
 Summary: XSP RPM
 
