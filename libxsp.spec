@@ -2,7 +2,7 @@
 
 Name: libxsp
 Version: 2.0
-Release: %{?release}%{!?release:%{default_release}}
+Release: %{?release}%{!?release:%{default_release}}%{?dist}
 Summary: XSP RPM
 
 Group: Application/Network
