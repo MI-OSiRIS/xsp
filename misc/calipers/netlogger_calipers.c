@@ -1,9 +1,22 @@
- /* 
+// =============================================================================
+//  DAMSL (xsp)
+//
+//  Copyright (c) 2010-2016, Trustees of Indiana University,
+//  All rights reserved.
+//
+//  This software may be modified and distributed under the terms of the BSD
+//  license.  See the COPYING file for details.
+//
+//  This software was created at the Indiana University Center for Research in
+//  Extreme Scale Technologies (CREST).
+// ============================================================================= 
+  /* 
     Copyright (c) 2009-2010, 
     The Regents of the University of California, through 
     Lawrence Berkeley National Laboratory (subject to receipt of any required 
     approvals from the U.S. Dept. of Energy).  All rights reserved.
   */
+
 static const volatile char rcsid[] ="$Id: netlogger_calipers.c 33086 2012-11-12 18:23:45Z dang $";
 
 #include <assert.h>

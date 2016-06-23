@@ -34,6 +34,19 @@
  * $FreeBSD: src/sys/sys/queue.h,v 1.24.2.4 2000/05/05 01:41:41 archie Exp $
  */
 
+// =============================================================================
+//  DAMSL (xsp)
+//
+//  Copyright (c) 2010-2016, Trustees of Indiana University,
+//  All rights reserved.
+//
+//  This software may be modified and distributed under the terms of the BSD
+//  license.  See the COPYING file for details.
+//
+//  This software was created at the Indiana University Center for Research in
+//  Extreme Scale Technologies (CREST).
+// =============================================================================
+
 #ifndef _SYS_QUEUE_H_
 #define _SYS_QUEUE_H_
 
