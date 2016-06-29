@@ -47,6 +47,7 @@ void __xsp_cb_and_free(comSess *sess, xspMsg *msg);
 static LIST_HEAD(listhead, common_session_t) sessions_list;
 static pthread_mutex_t sessions_list_lock;
 static int session_count;
+static xspCBMap sess_gbl_cb;
 
 #ifdef NETLOGGER
 int get_next_stream_id() {
@@ -887,9 +888,15 @@ int xsp_session_app_data(comSess *sess, const void *arg, char ***error_msgs) {
 	    block->type <= PEERING_MAX) {
 		mstring = "peering";
 	}
+
+	if (block->type >= STATS_MIN &&
+	    block->type <= STATS_MAX) {
+		mstring = "stats";
+	}
 	
 	if (!mstring) {
-		asprintf(&error_msg, "unrecognized option block type: %d", block->type);
+		asprintf(&error_msg,
+			 "unrecognized option block type: %d", block->type);
 		xsp_err(0, "%s", error_msg);
 		goto error_exit;
 	}
@@ -965,8 +972,16 @@ int xsp_set_proto_cb(comSess *sess, void *(*fn) (comSess *, xspMsg *)) {
 }
 
 int xsp_set_close_cb(comSess *sess, void *(*fn) (comSess *)) {
-	sess->close_cb = fn;
+        if (fn == NULL)
+	    sess->close_cb = sess_gbl_cb.close_cb;
+	else
+	    sess->close_cb = fn;
 	return 0;
+}
+
+int xsp_set_gbl_close_cb(void *(*fn) (comSess *)) {
+    sess_gbl_cb.close_cb = fn;
+    return 0;
 }
 
 comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, xspCBMap *cb_map, int flags) {

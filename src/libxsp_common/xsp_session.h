@@ -80,6 +80,7 @@ typedef struct common_session_t {
 typedef struct xsp_cb_map_t {
 	int (*pre_child_cb) (struct common_session_t *);
 	int (*post_child_cb) (struct common_session_t *);
+        void *(*close_cb) (struct common_session_t *);
 } xspCBMap;
 
 int xsp_sessions_init();
@@ -87,6 +88,7 @@ int xsp_sessions_init();
 comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, xspCBMap *cb_map, int flags);
 int xsp_set_proto_cb(comSess *sess, void *(*fn) (comSess *, xspMsg *));
 int xsp_set_close_cb(comSess *sess, void *(*fn) (comSess *));
+int xsp_set_gbl_close_cb(void *(*fn) (comSess *));
 int xsp_proto_loop(comSess *sess);
 
 int xsp_setup_session(comSess *sess, char ***error_msgs);

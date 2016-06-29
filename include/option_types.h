@@ -39,4 +39,9 @@
 #define PEERING_MIN                  PEERING_HELLO
 #define PEERING_MAX                  PEERING_BYE
 
+#define STATS_REQ                    0x60
+#define STATS_REPLY                  0x61
+#define STATS_MIN                    STATS_REQ
+#define STATS_MAX                    STATS_REPLY
+
 #endif
