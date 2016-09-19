@@ -24,11 +24,11 @@
 
 
 #include <jansson.h>
+#include "curl_context.h"
 
 #include "compat.h"
 
 #include "xsp_floodlight_basic.h"
-#include "xsp_curl_context.h"
 
 #include "xsp_tpool.h"
 #include "xsp_modules.h"
@@ -45,7 +45,7 @@
 static uint64_t entry_id;
 static xspFLConfig fl_config;
 
-static xspCURLContext curl_context;
+static struct curl_context_t cc;
 // END GLOBALS
 
 int xsp_floodlight_init();
@@ -88,12 +88,12 @@ int xsp_floodlight_init() {
                 return -1;
         }
 
-	curl_context.url = fl_config.controller_hp;
-	curl_context.use_ssl = 0;
-	curl_context.curl_persist = 0;
+	cc.url = fl_config.controller_hp;
+	cc.use_ssl = 0;
+	cc.curl_persist = 0;
 
-	if (xsp_init_curl(&curl_context, NULL) != 0) {
-		xsp_info(0, "Could not start CURL context");
+	if (init_curl(&cc, NULL) != 0) {
+	        xsp_info(0, "Could not start CURL context");
 		return -1;
 	}
 
@@ -330,11 +330,10 @@ static json_t *__xsp_floodlight_push_entry(json_t *entry, int rest_opt) {
 
 	json_str = json_dumps(entry, JSON_COMPACT);
 
-	xsp_curl_json_string(&curl_context,
-			     "/wm/staticflowentrypusher/json",
-			     rest_opt,
-			     json_str,
-			     &response);
+	curl_post_json_string(&cc,
+			      "/wm/staticflowentrypusher/json",
+			      json_str,
+			      &response);
 	
 	json_ret = json_loads(response, 0, &json_err);
 	if (!json_ret) {
