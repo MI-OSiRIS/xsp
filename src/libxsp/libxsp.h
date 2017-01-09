@@ -44,75 +44,75 @@
 #define XSP_DEFAULT_SPORT               0x01
 
 enum xsp_message_types_t {
-	XSP_MSG_INVALID = 0, 
-	XSP_MSG_SESS_OPEN,              /* 1 */
-	XSP_MSG_SESS_ACK,               /* 2 */
-	XSP_MSG_SESS_CLOSE,             /* 3 */
-	XSP_MSG_BLOCK_HEADER,           /* 4 */
-	XSP_MSG_AUTH_TYPE,              /* 5 */
-	XSP_MSG_AUTH_TOKEN,             /* 6 */
-	XSP_MSG_SESS_NACK,              /* 7 */
-	XSP_MSG_PING,                   /* 8 */
-	XSP_MSG_PONG,                   /* 9 */
-	XSP_MSG_DATA_CHAN,              /* 10 */
-	XSP_MSG_NET_PATH,               /* 11 */
-	XSP_MSG_APP_DATA,               /* 12 */
-	XSP_MSG_SLAB_INFO,              /* 13 */
-	XSP_MSG_INF_DATA                /* 14 */
+  XSP_MSG_INVALID = 0,
+  XSP_MSG_SESS_OPEN,              /* 1 */
+  XSP_MSG_SESS_ACK,               /* 2 */
+  XSP_MSG_SESS_CLOSE,             /* 3 */
+  XSP_MSG_BLOCK_HEADER,           /* 4 */
+  XSP_MSG_AUTH_TYPE,              /* 5 */
+  XSP_MSG_AUTH_TOKEN,             /* 6 */
+  XSP_MSG_SESS_NACK,              /* 7 */
+  XSP_MSG_PING,                   /* 8 */
+  XSP_MSG_PONG,                   /* 9 */
+  XSP_MSG_DATA_CHAN,              /* 10 */
+  XSP_MSG_NET_PATH,               /* 11 */
+  XSP_MSG_APP_DATA,               /* 12 */
+  XSP_MSG_SLAB_INFO,              /* 13 */
+  XSP_MSG_INF_DATA                /* 14 */
 };
 
 /* XSP Objects */
 
 typedef struct xsp_message_t {
-        uint8_t version;
-        uint8_t flags;
-        uint16_t type;
-	uint16_t opt_cnt;
+  uint8_t version;
+  uint8_t flags;
+  uint16_t type;
+  uint16_t opt_cnt;
 
-        struct xsp_addr src_eid;
-        struct xsp_addr dst_eid;
+  struct xsp_addr src_eid;
+  struct xsp_addr dst_eid;
 
-	char sess_id[2*XSP_SESSIONID_LEN + 1];
-	void *msg_body;
+  char sess_id[2*XSP_SESSIONID_LEN + 1];
+  void *msg_body;
 } xspMsg;
 
 typedef struct xsp_authorization_type_t {
-	char name[XSP_AUTH_NAME_LEN];
+  char name[XSP_AUTH_NAME_LEN];
 } xspAuthType;
 
 typedef struct xsp_auth_token_t {
-	size_t token_length;
-	void *token;
+  size_t token_length;
+  void *token;
 } xspAuthToken;
 
 typedef struct xsp_data_open_header_t {
-	uint16_t flags;
-	char hop_id[XSP_HOPID_LEN];
-	char proto[XSP_PROTO_NAME_LEN];
+  uint16_t flags;
+  char hop_id[XSP_HOPID_LEN];
+  char proto[XSP_PROTO_NAME_LEN];
 } xspDataOpen;
 
 typedef struct xsp_rdma_mr_t {
-	uintptr_t addr;
-	uint64_t size;
-	uint32_t rkey;
+  uintptr_t addr;
+  uint64_t size;
+  uint32_t rkey;
 } xspRDMA_MR;
 
 typedef struct slab_record_t {
-	char sess_id[2*XSP_SESSIONID_LEN + 1];
-        uint16_t flags;
-        uint32_t offset;
-        uint32_t length;
-        uint32_t crc;
-	union {
-                struct xsp_rdma_mr_t mr;
-        } rdma;
+  char sess_id[2*XSP_SESSIONID_LEN + 1];
+  uint16_t flags;
+  uint32_t offset;
+  uint32_t length;
+  uint32_t crc;
+  union {
+    struct xsp_rdma_mr_t mr;
+  } rdma;
 } xspSlabRec;
 
 typedef struct slabs_info_t {
-	uint32_t seq;
-        uint32_t length;
-        uint32_t rec_count;
-        xspSlabRec **entries;
+  uint32_t seq;
+  uint32_t length;
+  uint32_t rec_count;
+  xspSlabRec **entries;
 } xspSlabInfo;
 
 /* XSP Functions */

@@ -31,32 +31,32 @@
 #define XSP_BLOCK_FREE_DATA 0x01
 
 enum xsp_block_types_t {
-	XSP_OPT_NULL = 0,
-	XSP_OPT_HOP,
-	XSP_OPT_AUTH_TYP,
-	XSP_OPT_AUTH_TOK,
-	XSP_OPT_NACK,
-	XSP_OPT_DATA,
-	XSP_OPT_PATH,
-	XSP_OPT_SLAB,
-	XSP_OPT_APP,
-	XSP_OPT_APP_LIST,
+  XSP_OPT_NULL = 0,
+  XSP_OPT_HOP,
+  XSP_OPT_AUTH_TYP,
+  XSP_OPT_AUTH_TOK,
+  XSP_OPT_NACK,
+  XSP_OPT_DATA,
+  XSP_OPT_PATH,
+  XSP_OPT_SLAB,
+  XSP_OPT_APP,
+  XSP_OPT_APP_LIST,
 };
 
 typedef struct xsp_block_t {
-	int type;
-	int sport;
-	uint64_t length;
-	void *data;
-	
-	struct xsp_block_t *next;
-	struct xsp_block_t *prev;
+  int type;
+  int sport;
+  uint64_t length;
+  void *data;
+
+  struct xsp_block_t *next;
+  struct xsp_block_t *prev;
 } xspBlock;
 
 typedef struct xsp_block_list_t {
-	struct xsp_block_t *first;
-	struct xsp_block_t *last;
-	int count;
+  struct xsp_block_t *first;
+  struct xsp_block_t *last;
+  int count;
 } xspBlockList;
 
 xspBlock *xsp_alloc_block();
@@ -70,39 +70,39 @@ int xsp_block_list_find(xspBlockList *bl, int type, xspBlock ***ret_ary, int *co
 xspBlock *xsp_block_new(int opt_type, int sport, uint64_t len, const void *data);
 
 inline int xsp_block_list_get_count(xspBlockList *bl) {
-	return bl->count;
+  return bl->count;
 }
 
 inline void xsp_block_set_data(xspBlock *block, void *data) {
-	block->data = (void*)data;
+  block->data = (void*)data;
 }
 
 inline void xsp_block_set_type(xspBlock *block, int type) {
-	block->type = type;
+  block->type = type;
 }
 
 inline void xsp_block_set_sport(xspBlock *block, int sport) {
-	block->sport = sport;
+  block->sport = sport;
 }
 
 inline void xsp_block_set_length(xspBlock *block, uint64_t len) {
-	block->length = len;
+  block->length = len;
 }
 
 inline void *xsp_block_get_data(xspBlock *block) {
-	return block->data;
+  return block->data;
 }
 
 inline int xsp_block_get_type(xspBlock *block) {
-	return block->type;
+  return block->type;
 }
 
 inline int xsp_block_get_sport(xspBlock *block) {
-	return block->sport;
+  return block->sport;
 }
 
 inline uint64_t xsp_block_get_length(xspBlock *block) {
-	return block->length;
+  return block->length;
 }
 
 #endif

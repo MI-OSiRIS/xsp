@@ -49,8 +49,8 @@
 
 #define SPLICE_F_MOVE	(0x01)	/* move pages instead of copying */
 #define SPLICE_F_NONBLOCK (0x02) /* don't block on the pipe splicing (but */
-				 /* we may still block on the fd we splice */
-				 /* from/to, of course */
+/* we may still block on the fd we splice */
+/* from/to, of course */
 #define SPLICE_F_MORE	(0x04)	/* expect more data */
 #define SPLICE_F_GIFT   (0x08)  /* pages passed in are a gift */
 
@@ -64,21 +64,18 @@
 #endif
 
 static inline int ssplice(int fdin, loff_t *off_in, int fdout, loff_t *off_out,
-			  size_t len, unsigned int flags)
-{
-	
-	return syscall(__NR_sys_splice, fdin, off_in, fdout, off_out, len, flags);
+                          size_t len, unsigned int flags) {
+
+  return syscall(__NR_sys_splice, fdin, off_in, fdout, off_out, len, flags);
 }
 
-static inline int stee(int fdin, int fdout, size_t len, unsigned int flags)
-{
-	return syscall(__NR_sys_tee, fdin, fdout, len, flags);
+static inline int stee(int fdin, int fdout, size_t len, unsigned int flags) {
+  return syscall(__NR_sys_tee, fdin, fdout, len, flags);
 }
 
 static inline int svmsplice(int fd, const struct iovec *iov,
-			    unsigned long nr_segs, unsigned int flags)
-{
-	return syscall(__NR_sys_vmsplice, fd, iov, nr_segs, flags);
+                            unsigned long nr_segs, unsigned int flags) {
+  return syscall(__NR_sys_vmsplice, fd, iov, nr_segs, flags);
 }
 
 #define SPLICE_SIZE	(64*1024)
@@ -97,40 +94,36 @@ static inline int svmsplice(int fd, const struct iovec *iov,
         (void) (&_x == &_y);            \
         _x > _y ? _x : _y; })
 
-static inline int error(const char *n)
-{
-	perror(n);
-	return -1;
+static inline int error(const char *n) {
+  perror(n);
+  return -1;
 }
 
-static int __check_pipe(int pfd)
-{
-	struct stat sb;
+static int __check_pipe(int pfd) {
+  struct stat sb;
 
-	if (fstat(pfd, &sb) < 0)
-		return error("stat");
-	if (!S_ISFIFO(sb.st_mode))
-		return 1;
+  if (fstat(pfd, &sb) < 0)
+    return error("stat");
+  if (!S_ISFIFO(sb.st_mode))
+    return 1;
 
-	return 0;
+  return 0;
 }
 
-static inline int check_input_pipe(void)
-{
-	if (!__check_pipe(STDIN_FILENO))
-		return 0;
+static inline int check_input_pipe(void) {
+  if (!__check_pipe(STDIN_FILENO))
+    return 0;
 
-	fprintf(stderr, "stdin must be a pipe\n");
-	return 1;
+  fprintf(stderr, "stdin must be a pipe\n");
+  return 1;
 }
 
-static inline int check_output_pipe(void)
-{
-	if (!__check_pipe(STDOUT_FILENO))
-		return 0;
+static inline int check_output_pipe(void) {
+  if (!__check_pipe(STDOUT_FILENO))
+    return 0;
 
-	fprintf(stderr, "stdout must be a pipe\n");
-	return 1;
+  fprintf(stderr, "stdout must be a pipe\n");
+  return 1;
 }
 
 #endif

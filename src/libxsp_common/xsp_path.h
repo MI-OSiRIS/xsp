@@ -17,18 +17,18 @@
 #include "xsp_pathrule.h"
 
 enum xsp_path_status_t {
-        XSP_PATH_ALLOCATED = 0,
-        XSP_PATH_APPLIED,
-        XSP_PATH_MIXED
+  XSP_PATH_ALLOCATED = 0,
+  XSP_PATH_APPLIED,
+  XSP_PATH_MIXED
 };
 
 typedef struct xsp_path_t {
-	char *gri;
-	char *description;
-	int status;
+  char *gri;
+  char *description;
+  int status;
 
-	struct xsp_pathrule_t **rules;
-	int rule_count;
+  struct xsp_pathrule_t **rules;
+  int rule_count;
 } xspPath;
 
 int xsp_path_init();

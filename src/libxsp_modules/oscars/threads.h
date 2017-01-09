@@ -113,7 +113,7 @@ The threads.h and threads.c code define the following portable API:
 # define THREAD_TYPE		HANDLE
 # define THREAD_ID		GetCurrentThreadId()
 # define THREAD_CREATE(x,y,z)	*(x) = (HANDLE)_beginthread((y), 8*4096, (z))
-# define THREAD_DETACH(x)	
+# define THREAD_DETACH(x)
 # define THREAD_JOIN(x)		WaitForSingleObject((x), INFINITE)
 # define THREAD_EXIT		_endthread()
 # define MUTEX_TYPE		HANDLE
@@ -126,8 +126,8 @@ The threads.h and threads.c code define the following portable API:
 # define COND_CLEANUP(x)	emulate_pthread_cond_destroy(&(x))
 # define COND_SIGNAL(x)		emulate_pthread_cond_signal(&(x))
 # define COND_WAIT(x,y)		emulate_pthread_cond_wait(&(x), &(y))
-typedef struct
-{ u_int waiters_count_;
+typedef struct {
+  u_int waiters_count_;
   CRITICAL_SECTION waiters_count_lock_;
   HANDLE signal_event_;
 } COND_TYPE;

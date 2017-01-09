@@ -17,7 +17,7 @@
  * @author Ezra Kissel ezkissel@indiana.edu
  * @date
  * @version
- * @details To learn more about SOAP, visit the FAQ at: 
+ * @details To learn more about SOAP, visit the FAQ at:
  *          <URL:http://www.w3.org/TR/soap12-part0/>
  *
  */
@@ -36,23 +36,23 @@
  * @details [detailed description]
  */
 typedef struct xsp_soap_context_t {
-	void *soap;                   /**<  pointer */
-	char *soap_endpoint;          /**<  pointer */
-	char *soap_action;            /**<  pointer */
-	
-	char *keyfile;                /**<  pointer */
-	char *keypass;                /**<  pointer */
-	char *cacerts;                /**<  pointer */
-	
-	char *wsse_key;               /**<  pointer */
-	char *wsse_pass;              /**<  pointer */
-	char *wsse_cert;              /**<  pointer */
+  void *soap;                   /**<  pointer */
+  char *soap_endpoint;          /**<  pointer */
+  char *soap_action;            /**<  pointer */
 
-	struct Namespace *namespaces; /**<  pointer */
+  char *keyfile;                /**<  pointer */
+  char *keypass;                /**<  pointer */
+  char *cacerts;                /**<  pointer */
+
+  char *wsse_key;               /**<  pointer */
+  char *wsse_pass;              /**<  pointer */
+  char *wsse_cert;              /**<  pointer */
+
+  struct Namespace *namespaces; /**<  pointer */
 } xspSoapContext;
 
 /*!
- * @brief 
+ * @brief
  * @fn xsp_copy_soap_context(xspSoapContext *src, xspSoapContext *dst)
  * @param
  * @param
@@ -66,7 +66,7 @@ typedef struct xsp_soap_context_t {
 int xsp_copy_soap_context(xspSoapContext *src, xspSoapContext *dst);
 
 /*!
- * @brief 
+ * @brief
  * @fn xsp_start_soap_ssl(xspSoapContext *sc, int soap_init_flags, int soap_ssl_flags)
  * @param
  * @param
@@ -81,7 +81,7 @@ int xsp_copy_soap_context(xspSoapContext *src, xspSoapContext *dst);
 int xsp_start_soap_ssl(xspSoapContext *sc, int soap_init_flags, int soap_ssl_flags);
 
 /*!
- * @brief 
+ * @brief
  * @fn xsp_stop_soap_ssl(xspSoapContext *sc)
  * @param
  * @return Returns an integer.
@@ -94,7 +94,7 @@ int xsp_start_soap_ssl(xspSoapContext *sc, int soap_init_flags, int soap_ssl_fla
 int xsp_stop_soap_ssl(xspSoapContext *sc);
 
 /*!
- * @brief 
+ * @brief
  * @fn xsp_start_soap(xspSoapContext *sc, int soap_init_flags)
  * @param
  * @param
@@ -108,7 +108,7 @@ int xsp_stop_soap_ssl(xspSoapContext *sc);
 int xsp_start_soap(xspSoapContext *sc, int soap_init_flags);
 
 /*!
- * @brief 
+ * @brief
  * @fn xsp_stop_soap(xspSoapContext *sc)
  * @param
  * @param

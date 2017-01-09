@@ -29,84 +29,83 @@
 
 struct sockaddr_in *nameport2sa(const char *name_port);
 
-int main(int argc, char *argv[])
-{
-	int i;
-	int path_count;
-	char **xsp_path = NULL;
-	libxspSess *sess;
-	libxspSecInfo *sec;
+int main(int argc, char *argv[]) {
+  int i;
+  int path_count;
+  char **xsp_path = NULL;
+  libxspSess *sess;
+  libxspSecInfo *sec;
 
-	if (libxsp_init() < 0) {
-		perror("libxsp_init(): failed");
-		exit(errno);
-	}
+  if (libxsp_init() < 0) {
+    perror("libxsp_init(): failed");
+    exit(errno);
+  }
 
-	sess = xsp_session();
-	if (!sess) {
-		perror("xsp_session() failed");
-		exit(errno);
-	}
+  sess = xsp_session();
+  if (!sess) {
+    perror("xsp_session() failed");
+    exit(errno);
+  }
 
-	xsp_path = split(argv[argc - 1], ",", &path_count);
-	
-	for (i = 0 ; i < path_count; i++) {
-		printf("appending child hop: %s\n", xsp_path[i]);
-		xsp_sess_appendchild(sess, xsp_path[i], XSP_HOP_NATIVE);
-	}
-	
-	sec = xsp_sess_new_security("ezra", NULL, "/home/ezra/.ssh/id_rsa_pl.pub",
-				    "/home/ezra/.ssh/id_rsa_pl", NULL);
-	
-	if (xsp_sess_set_security(sess, sec, XSP_SEC_NONE)) {
-		fprintf(stderr, "could not set requested xsp security method\n");
-		exit(-1);
-	}
+  xsp_path = split(argv[argc - 1], ",", &path_count);
 
-	/* argc - 1 is the ultimate dest */
-	if (xsp_connect(sess)) {
-		perror("xsp_client: connect failed");
-		exit(errno);
-	}
+  for (i = 0 ; i < path_count; i++) {
+    printf("appending child hop: %s\n", xsp_path[i]);
+    xsp_sess_appendchild(sess, xsp_path[i], XSP_HOP_NATIVE);
+  }
 
-	/*
-	char buf[20] = "This is a test";
-	char *ret_buf = NULL;
-	uint64_t ret_len;
-	int ret_type;
+  sec = xsp_sess_new_security("ezra", NULL, "/home/ezra/.ssh/id_rsa_pl.pub",
+                              "/home/ezra/.ssh/id_rsa_pl", NULL);
 
-	xsp_send_msg(sess, buf, strlen(buf)+1, 0x32);
-	xsp_recv_msg(sess, (void**)&ret_buf, &ret_len, &ret_type);
+  if (xsp_sess_set_security(sess, sec, XSP_SEC_NONE)) {
+    fprintf(stderr, "could not set requested xsp security method\n");
+    exit(-1);
+  }
 
-	if (ret_buf) {
-	  ret_buf[ret_len] = '\0';
-	  printf("got message[%d]: %s\n", ret_type, ret_buf);
-	  free(ret_buf);
-	}
-	*/
+  /* argc - 1 is the ultimate dest */
+  if (xsp_connect(sess)) {
+    perror("xsp_client: connect failed");
+    exit(errno);
+  }
 
-	libxspNetPath *path;
-	libxspNetPathRule *rule;
-	libxspNetPathRuleCrit crit;
+  /*
+  char buf[20] = "This is a test";
+  char *ret_buf = NULL;
+  uint64_t ret_len;
+  int ret_type;
 
-	memset(&crit, 0, sizeof(crit));
+  xsp_send_msg(sess, buf, strlen(buf)+1, 0x32);
+  xsp_recv_msg(sess, (void**)&ret_buf, &ret_len, &ret_type);
 
-	// creates a path with a single rule
-	path = xsp_sess_new_net_path(XSP_NET_PATH_CREATE);
-	rule = xsp_sess_new_net_path_rule(path, "OSCARS");
-	
-	crit.src="dynes-udel";
-	crit.dst="dynes-udel-port-14";
-	crit.bandwidth=300000;
-	crit.duration=600;
-	crit.vlan=605;
+  if (ret_buf) {
+    ret_buf[ret_len] = '\0';
+    printf("got message[%d]: %s\n", ret_type, ret_buf);
+    free(ret_buf);
+  }
+  */
 
-	if (xsp_sess_set_net_path_rule_crit(rule, &crit) != 0)
-		fprintf(stderr, "could not set rule criteria\n");
-	
-	xsp_signal_path(sess, path);
+  libxspNetPath *path;
+  libxspNetPathRule *rule;
+  libxspNetPathRuleCrit crit;
 
-	xsp_close2(sess);
+  memset(&crit, 0, sizeof(crit));
 
-	return 0;
+  // creates a path with a single rule
+  path = xsp_sess_new_net_path(XSP_NET_PATH_CREATE);
+  rule = xsp_sess_new_net_path_rule(path, "OSCARS");
+
+  crit.src="dynes-udel";
+  crit.dst="dynes-udel-port-14";
+  crit.bandwidth=300000;
+  crit.duration=600;
+  crit.vlan=605;
+
+  if (xsp_sess_set_net_path_rule_crit(rule, &crit) != 0)
+    fprintf(stderr, "could not set rule criteria\n");
+
+  xsp_signal_path(sess, path);
+
+  xsp_close2(sess);
+
+  return 0;
 }

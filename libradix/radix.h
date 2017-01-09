@@ -70,10 +70,10 @@ typedef unsigned long bitx_mask_t;
 #endif
 
 #if defined(_XOPEN_SOURCE) && (_XOPEN_SOURCE_EXTENDED - 1 == 0)
-	typedef unsigned char   u_char;
-	typedef unsigned int    u_int;
-	typedef unsigned short  u_short;
-	typedef unsigned long   u_long;
+typedef unsigned char   u_char;
+typedef unsigned int    u_int;
+typedef unsigned short  u_short;
+typedef unsigned long   u_long;
 #endif /* defined(_XOPEN_SOURCE) && (_XOPEN_SOURCE_EXTENDED - 1 == 0) */
 /*end bit manipulation */
 
@@ -95,56 +95,56 @@ typedef void (*void_fn_t)(void *arg1);
 typedef void (*void_fn2_t)(void *arg1, void *arg2);
 
 typedef struct _prefix_t {
-    u_short family;             /* AF_INET | AF_INET6 */
-    u_short bitlen;             /* same as mask? */
-    int ref_count;              /* reference count */
-    pthread_mutex_t mutex_lock; /* lock down structure */
-    union {
-        struct in_addr sin;
+  u_short family;             /* AF_INET | AF_INET6 */
+  u_short bitlen;             /* same as mask? */
+  int ref_count;              /* reference count */
+  pthread_mutex_t mutex_lock; /* lock down structure */
+  union {
+    struct in_addr sin;
 #ifdef HAVE_IPV6
-        struct in6_addr sin6;
+    struct in6_addr sin6;
 #endif /* IPV6 */
-    } add;
+  } add;
 } prefix_t;
 
 typedef struct _prefix4_t {
-    u_short family;             /* AF_INET | AF_INET6 */
-    u_short bitlen;             /* same as mask? */
-    int ref_count;              /* reference count */
-    pthread_mutex_t mutex_lock; /* lock down structure */
-    struct in_addr sin;
+  u_short family;             /* AF_INET | AF_INET6 */
+  u_short bitlen;             /* same as mask? */
+  int ref_count;              /* reference count */
+  pthread_mutex_t mutex_lock; /* lock down structure */
+  struct in_addr sin;
 } prefix4_t;
 
 #ifdef HAVE_IPV6
 typedef struct _prefix6_t {
-    u_short family;             /* AF_INET | AF_INET6 */
-    u_short bitlen;             /* same as mask? */
-    int ref_count;              /* reference count */
-    pthread_mutex_t mutex_lock; /* lock down structure */
-    struct in6_addr sin6;
+  u_short family;             /* AF_INET | AF_INET6 */
+  u_short bitlen;             /* same as mask? */
+  int ref_count;              /* reference count */
+  pthread_mutex_t mutex_lock; /* lock down structure */
+  struct in6_addr sin6;
 } prefix6_t;
 #endif /* IPV6 */
 
 typedef struct _radix_node_t {
-   u_int bit;			/* flag if this node used */
-   prefix_t *prefix;		/* who we are in radix tree */
-   struct _radix_node_t *l, *r;	/* left and right children */
-   struct _radix_node_t *parent;/* may be used */
-   void *data;			/* pointer to data */
-   void	*user1;			/* pointer to usr data (ex. route flap info) */
+  u_int bit;			/* flag if this node used */
+  prefix_t *prefix;		/* who we are in radix tree */
+  struct _radix_node_t *l, *r;	/* left and right children */
+  struct _radix_node_t *parent;/* may be used */
+  void *data;			/* pointer to data */
+  void	*user1;			/* pointer to usr data (ex. route flap info) */
 } radix_node_t;
 
 typedef struct _radix_tree_t {
-   radix_node_t 	*head;
-   u_int		maxbits;	/* for IP, 32 bit addresses */
-   int num_active_node;		/* for debug purpose */
+  radix_node_t 	*head;
+  u_int		maxbits;	/* for IP, 32 bit addresses */
+  int num_active_node;		/* for debug purpose */
 } radix_tree_t;
 
 
 radix_node_t *radix_search_exact (radix_tree_t *radix, prefix_t *prefix);
 radix_node_t *radix_search_best (radix_tree_t *radix, prefix_t *prefix);
-radix_node_t * radix_search_best2 (radix_tree_t *radix, prefix_t *prefix, 
-				   int inclusive);
+radix_node_t * radix_search_best2 (radix_tree_t *radix, prefix_t *prefix,
+                                   int inclusive);
 radix_node_t *radix_lookup (radix_tree_t *radix, prefix_t *prefix);
 void radix_remove (radix_tree_t *radix, radix_node_t *node);
 radix_tree_t *New_Radix (int maxbits);

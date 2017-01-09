@@ -23,37 +23,37 @@
 #define PATH_SHARED         0x01
 
 typedef struct xsp_terapaths_path_t {
-	xspSoapContext tsc;
-	xspSoapContext msc;
+  xspSoapContext tsc;
+  xspSoapContext msc;
 
-	char *src;
-	char *dst;
+  char *src;
+  char *dst;
 
-	char *src_ports;
-	char *dst_ports;
+  char *src_ports;
+  char *dst_ports;
 
-	char *direction;
-	char *bw_class;
+  char *direction;
+  char *bw_class;
 
-	uint64_t bw;
-	uint64_t bw_used;
-	uint64_t start_time;
-	uint64_t duration;
+  uint64_t bw;
+  uint64_t bw_used;
+  uint64_t start_time;
+  uint64_t duration;
 
-	char *reservation_id;
-	char *related_res_ids;
-	char *vlan_tag;
+  char *reservation_id;
+  char *related_res_ids;
+  char *vlan_tag;
 
-	int sleep_time;
+  int sleep_time;
 
-	int teardown_timeout;
+  int teardown_timeout;
 
-	int start_offset;
-	
-	int monitor;
-	int type;
-	int status;
-	pthread_cond_t setup_cond;
+  int start_offset;
+
+  int monitor;
+  int type;
+  int status;
+  pthread_cond_t setup_cond;
 } xspTERAPATHSPath;
 
 #endif

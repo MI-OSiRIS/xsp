@@ -25,14 +25,14 @@ static int xsp_logger_syslog_init();
 static int xsp_logger_syslog_log_event(xspEvent *event);
 
 static xspLoggerBackend xsp_logger_syslog_backend = {
-	.name = "Syslog",
-	.log_event = xsp_logger_syslog_log_event,
+  .name = "Syslog",
+  .log_event = xsp_logger_syslog_log_event,
 };
 
 static xspModule xsp_logger_syslog_module = {
-	.desc = "Syslog Logger Module",
-	.dependencies = "",
-	.init = xsp_logger_syslog_init,
+  .desc = "Syslog Logger Module",
+  .dependencies = "",
+  .init = xsp_logger_syslog_init,
 };
 
 
@@ -43,28 +43,28 @@ xspModule *module_info() {
 
 int xsp_logger_syslog_init() {
 
-	if (xsp_set_logger_backend(&xsp_logger_syslog_backend)) {
-		fprintf(stderr, "xsp_logger_syslog_init(): couldn't register logger backend");
-		goto error_exit;
-	}
+  if (xsp_set_logger_backend(&xsp_logger_syslog_backend)) {
+    fprintf(stderr, "xsp_logger_syslog_init(): couldn't register logger backend");
+    goto error_exit;
+  }
 
-	return 0;
+  return 0;
 
 error_exit:
-	return -1;
+  return -1;
 }
 
 int xsp_logger_syslog_log_event(xspEvent *event) {
-	time_t tv;
-	struct tm nice_tv;
+  time_t tv;
+  struct tm nice_tv;
 
-	time(&tv);
-	localtime_r(&tv, &nice_tv);
+  time(&tv);
+  localtime_r(&tv, &nice_tv);
 
-	syslog(LOG_INFO, "%4d/%02d/%02d %02d:%02d:%02d %s(%u): %s\n",
-			nice_tv.tm_year + 1900, nice_tv.tm_mon + 1, nice_tv.tm_mday,
-			nice_tv.tm_hour, nice_tv.tm_min, nice_tv.tm_sec,
-			xsp_logger_event_type_to_str(event->type), event->level, event->value);
+  syslog(LOG_INFO, "%4d/%02d/%02d %02d:%02d:%02d %s(%u): %s\n",
+         nice_tv.tm_year + 1900, nice_tv.tm_mon + 1, nice_tv.tm_mday,
+         nice_tv.tm_hour, nice_tv.tm_min, nice_tv.tm_sec,
+         xsp_logger_event_type_to_str(event->type), event->level, event->value);
 
-	return 0;
+  return 0;
 }

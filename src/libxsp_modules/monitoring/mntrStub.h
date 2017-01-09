@@ -57,101 +57,91 @@ extern "C" {
 #ifndef SOAP_TYPE_ns1__remove_USCOREpathResponse
 #define SOAP_TYPE_ns1__remove_USCOREpathResponse (7)
 /* ns1:remove_pathResponse */
-struct ns1__remove_USCOREpathResponse
-{
-	char *remove_USCOREpathResult;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* required element of type xsd:string */
+struct ns1__remove_USCOREpathResponse {
+  char *remove_USCOREpathResult;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* required element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__new_USCOREpath
 #define SOAP_TYPE_ns1__new_USCOREpath (8)
 /* ns1:new_path */
-struct ns1__new_USCOREpath
-{
-	struct ns1__PathData *newpath;	/* required element of type ns1:PathData */
+struct ns1__new_USCOREpath {
+  struct ns1__PathData *newpath;	/* required element of type ns1:PathData */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__status_USCOREpathResponse
 #define SOAP_TYPE_ns1__status_USCOREpathResponse (11)
 /* ns1:status_pathResponse */
-struct ns1__status_USCOREpathResponse
-{
-	char *status_USCOREpathResult;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* required element of type xsd:string */
+struct ns1__status_USCOREpathResponse {
+  char *status_USCOREpathResult;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* required element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__status_USCOREpath
 #define SOAP_TYPE_ns1__status_USCOREpath (12)
 /* ns1:status_path */
-struct ns1__status_USCOREpath
-{
-	struct ns1__PathData *path;	/* required element of type ns1:PathData */
+struct ns1__status_USCOREpath {
+  struct ns1__PathData *path;	/* required element of type ns1:PathData */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__PathData
 #define SOAP_TYPE_ns1__PathData (9)
 /* ns1:PathData */
-struct ns1__PathData
-{
-	char *status;	/* optional element of type xsd:string */
-	char *src;	/* optional element of type xsd:string */
-	char *direction;	/* optional element of type xsd:string */
-	char *src_USCOREport_USCORErange;	/* optional element of type xsd:string */
-	int *start_USCOREtime;	/* optional element of type xsd:int */
-	char *path_USCOREid;	/* optional element of type xsd:string */
-	char *dst_USCOREport_USCORErange;	/* optional element of type xsd:string */
-	int *bandwidth;	/* optional element of type xsd:int */
-	int *duration;	/* optional element of type xsd:int */
-	char *bw_USCOREclass;	/* optional element of type xsd:string */
-	char *dst;	/* optional element of type xsd:string */
-	char *vlan_USCOREid;	/* optional element of type xsd:string */
+struct ns1__PathData {
+  char *status;	/* optional element of type xsd:string */
+  char *src;	/* optional element of type xsd:string */
+  char *direction;	/* optional element of type xsd:string */
+  char *src_USCOREport_USCORErange;	/* optional element of type xsd:string */
+  int *start_USCOREtime;	/* optional element of type xsd:int */
+  char *path_USCOREid;	/* optional element of type xsd:string */
+  char *dst_USCOREport_USCORErange;	/* optional element of type xsd:string */
+  int *bandwidth;	/* optional element of type xsd:int */
+  int *duration;	/* optional element of type xsd:int */
+  char *bw_USCOREclass;	/* optional element of type xsd:string */
+  char *dst;	/* optional element of type xsd:string */
+  char *vlan_USCOREid;	/* optional element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__new_USCOREpathResponse
 #define SOAP_TYPE_ns1__new_USCOREpathResponse (14)
 /* ns1:new_pathResponse */
-struct ns1__new_USCOREpathResponse
-{
-	char *new_USCOREpathResult;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* required element of type xsd:string */
+struct ns1__new_USCOREpathResponse {
+  char *new_USCOREpathResult;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* required element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__remove_USCOREpath
 #define SOAP_TYPE_ns1__remove_USCOREpath (15)
 /* ns1:remove_path */
-struct ns1__remove_USCOREpath
-{
-	char *pathid;	/* required element of type xsd:string */
+struct ns1__remove_USCOREpath {
+  char *pathid;	/* required element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE___ns1__new_USCOREpath
 #define SOAP_TYPE___ns1__new_USCOREpath (19)
 /* Operation wrapper: */
-struct __ns1__new_USCOREpath
-{
-	struct ns1__new_USCOREpath *ns1__new_USCOREpath;	/* optional element of type ns1:new_path */
+struct __ns1__new_USCOREpath {
+  struct ns1__new_USCOREpath *ns1__new_USCOREpath;	/* optional element of type ns1:new_path */
 };
 #endif
 
 #ifndef SOAP_TYPE___ns1__remove_USCOREpath
 #define SOAP_TYPE___ns1__remove_USCOREpath (23)
 /* Operation wrapper: */
-struct __ns1__remove_USCOREpath
-{
-	struct ns1__remove_USCOREpath *ns1__remove_USCOREpath;	/* optional element of type ns1:remove_path */
+struct __ns1__remove_USCOREpath {
+  struct ns1__remove_USCOREpath *ns1__remove_USCOREpath;	/* optional element of type ns1:remove_path */
 };
 #endif
 
 #ifndef SOAP_TYPE___ns1__status_USCOREpath
 #define SOAP_TYPE___ns1__status_USCOREpath (27)
 /* Operation wrapper: */
-struct __ns1__status_USCOREpath
-{
-	struct ns1__status_USCOREpath *ns1__status_USCOREpath;	/* optional element of type ns1:status_path */
+struct __ns1__status_USCOREpath {
+  struct ns1__status_USCOREpath *ns1__status_USCOREpath;	/* optional element of type ns1:status_path */
 };
 #endif
 
@@ -160,10 +150,9 @@ struct __ns1__status_USCOREpath
 #ifndef SOAP_TYPE_SOAP_ENV__Header
 #define SOAP_TYPE_SOAP_ENV__Header (28)
 /* SOAP Header: */
-struct SOAP_ENV__Header
-{
+struct SOAP_ENV__Header {
 #ifdef WITH_NOEMPTYSTRUCT
-	char dummy;	/* dummy member to enable compilation */
+  char dummy;	/* dummy member to enable compilation */
 #endif
 };
 #endif
@@ -175,10 +164,9 @@ struct SOAP_ENV__Header
 #ifndef SOAP_TYPE_SOAP_ENV__Code
 #define SOAP_TYPE_SOAP_ENV__Code (29)
 /* SOAP Fault Code: */
-struct SOAP_ENV__Code
-{
-	char *SOAP_ENV__Value;	/* optional element of type xsd:QName */
-	struct SOAP_ENV__Code *SOAP_ENV__Subcode;	/* optional element of type SOAP-ENV:Code */
+struct SOAP_ENV__Code {
+  char *SOAP_ENV__Value;	/* optional element of type xsd:QName */
+  struct SOAP_ENV__Code *SOAP_ENV__Subcode;	/* optional element of type SOAP-ENV:Code */
 };
 #endif
 
@@ -189,11 +177,10 @@ struct SOAP_ENV__Code
 #ifndef SOAP_TYPE_SOAP_ENV__Detail
 #define SOAP_TYPE_SOAP_ENV__Detail (31)
 /* SOAP-ENV:Detail */
-struct SOAP_ENV__Detail
-{
-	char *__any;
-	int __type;	/* any type of element <fault> (defined below) */
-	void *fault;	/* transient */
+struct SOAP_ENV__Detail {
+  char *__any;
+  int __type;	/* any type of element <fault> (defined below) */
+  void *fault;	/* transient */
 };
 #endif
 
@@ -204,9 +191,8 @@ struct SOAP_ENV__Detail
 #ifndef SOAP_TYPE_SOAP_ENV__Reason
 #define SOAP_TYPE_SOAP_ENV__Reason (34)
 /* SOAP-ENV:Reason */
-struct SOAP_ENV__Reason
-{
-	char *SOAP_ENV__Text;	/* optional element of type xsd:string */
+struct SOAP_ENV__Reason {
+  char *SOAP_ENV__Text;	/* optional element of type xsd:string */
 };
 #endif
 
@@ -217,17 +203,16 @@ struct SOAP_ENV__Reason
 #ifndef SOAP_TYPE_SOAP_ENV__Fault
 #define SOAP_TYPE_SOAP_ENV__Fault (35)
 /* SOAP Fault: */
-struct SOAP_ENV__Fault
-{
-	char *faultcode;	/* optional element of type xsd:QName */
-	char *faultstring;	/* optional element of type xsd:string */
-	char *faultactor;	/* optional element of type xsd:string */
-	struct SOAP_ENV__Detail *detail;	/* optional element of type SOAP-ENV:Detail */
-	struct SOAP_ENV__Code *SOAP_ENV__Code;	/* optional element of type SOAP-ENV:Code */
-	struct SOAP_ENV__Reason *SOAP_ENV__Reason;	/* optional element of type SOAP-ENV:Reason */
-	char *SOAP_ENV__Node;	/* optional element of type xsd:string */
-	char *SOAP_ENV__Role;	/* optional element of type xsd:string */
-	struct SOAP_ENV__Detail *SOAP_ENV__Detail;	/* optional element of type SOAP-ENV:Detail */
+struct SOAP_ENV__Fault {
+  char *faultcode;	/* optional element of type xsd:QName */
+  char *faultstring;	/* optional element of type xsd:string */
+  char *faultactor;	/* optional element of type xsd:string */
+  struct SOAP_ENV__Detail *detail;	/* optional element of type SOAP-ENV:Detail */
+  struct SOAP_ENV__Code *SOAP_ENV__Code;	/* optional element of type SOAP-ENV:Code */
+  struct SOAP_ENV__Reason *SOAP_ENV__Reason;	/* optional element of type SOAP-ENV:Reason */
+  char *SOAP_ENV__Node;	/* optional element of type xsd:string */
+  char *SOAP_ENV__Role;	/* optional element of type xsd:string */
+  struct SOAP_ENV__Detail *SOAP_ENV__Detail;	/* optional element of type SOAP-ENV:Detail */
 };
 #endif
 

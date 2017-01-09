@@ -19,10 +19,10 @@
 #define OF_CTRL_UP		    0x01
 
 struct xsp_openflow_rules_t {
-	char **src_list;
-	char **dst_list;
-	int src_count;
-	int dst_count;
+  char **src_list;
+  char **dst_list;
+  int src_count;
+  int dst_count;
 };
 
 #endif

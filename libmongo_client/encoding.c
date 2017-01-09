@@ -58,14 +58,14 @@
  * get the number of trailing bytes that are supposed to follow it.
  */
 static const char trailingBytesForUTF8[256] = {
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-    2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,4,4,4,4,5,5,5,5
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+  2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,4,4,4,4,5,5,5,5
 };
 
 /* --------------------------------------------------------------------- */
@@ -81,100 +81,100 @@ static const char trailingBytesForUTF8[256] = {
  * definition of UTF-8 goes up to 4-byte sequences.
  */
 static int isLegalUTF8( const unsigned char *source, int length ) {
-    unsigned char a;
-    const unsigned char *srcptr = source + length;
-    switch ( length ) {
+  unsigned char a;
+  const unsigned char *srcptr = source + length;
+  switch ( length ) {
+  default:
+    return 0;
+  /* Everything else falls through when "true"... */
+  case 4:
+    if ( ( a = ( *--srcptr ) ) < 0x80 || a > 0xBF ) return 0;
+  case 3:
+    if ( ( a = ( *--srcptr ) ) < 0x80 || a > 0xBF ) return 0;
+  case 2:
+    if ( ( a = ( *--srcptr ) ) > 0xBF ) return 0;
+    switch ( *source ) {
+    /* no fall-through in this inner switch */
+    case 0xE0:
+      if ( a < 0xA0 ) return 0;
+      break;
+    case 0xF0:
+      if ( a < 0x90 ) return 0;
+      break;
+    case 0xF4:
+      if ( a > 0x8F ) return 0;
+      break;
     default:
-        return 0;
-        /* Everything else falls through when "true"... */
-    case 4:
-        if ( ( a = ( *--srcptr ) ) < 0x80 || a > 0xBF ) return 0;
-    case 3:
-        if ( ( a = ( *--srcptr ) ) < 0x80 || a > 0xBF ) return 0;
-    case 2:
-        if ( ( a = ( *--srcptr ) ) > 0xBF ) return 0;
-        switch ( *source ) {
-            /* no fall-through in this inner switch */
-        case 0xE0:
-            if ( a < 0xA0 ) return 0;
-            break;
-        case 0xF0:
-            if ( a < 0x90 ) return 0;
-            break;
-        case 0xF4:
-            if ( a > 0x8F ) return 0;
-            break;
-        default:
-            if ( a < 0x80 ) return 0;
-        }
-    case 1:
-        if ( *source >= 0x80 && *source < 0xC2 ) return 0;
-        if ( *source > 0xF4 ) return 0;
+      if ( a < 0x80 ) return 0;
     }
-    return 1;
+  case 1:
+    if ( *source >= 0x80 && *source < 0xC2 ) return 0;
+    if ( *source > 0xF4 ) return 0;
+  }
+  return 1;
 }
 
 /* If the name is part of a db ref ($ref, $db, or $id), then return true. */
 static int bson_string_is_db_ref( const unsigned char *string, const int length ) {
-    int result = 0;
+  int result = 0;
 
-    if( length >= 4 ) {
-      if( string[1] == 'r' && string[2] == 'e' && string[3] == 'f' )
-        result = 1;
-    }
-    else if( length >= 3 ) {
-      if( string[1] == 'i' && string[2] == 'd' )
-        result = 1;
-      else if( string[1] == 'd' && string[2] == 'b' )
-        result = 1;
-    }
+  if( length >= 4 ) {
+    if( string[1] == 'r' && string[2] == 'e' && string[3] == 'f' )
+      result = 1;
+  }
+  else if( length >= 3 ) {
+    if( string[1] == 'i' && string[2] == 'd' )
+      result = 1;
+    else if( string[1] == 'd' && string[2] == 'b' )
+      result = 1;
+  }
 
-   return result;
+  return result;
 }
 
 static int bson_validate_string( bson *b, const unsigned char *string,
                                  const int length, const char check_utf8, const char check_dot,
                                  const char check_dollar ) {
 
-    int position = 0;
-    int sequence_length = 1;
+  int position = 0;
+  int sequence_length = 1;
 
-    if( check_dollar && string[0] == '$' ) {
-        if( !bson_string_is_db_ref( string, length ) )
-            b->err |= BSON_FIELD_INIT_DOLLAR;
+  if( check_dollar && string[0] == '$' ) {
+    if( !bson_string_is_db_ref( string, length ) )
+      b->err |= BSON_FIELD_INIT_DOLLAR;
+  }
+
+  while ( position < length ) {
+    if ( check_dot && *( string + position ) == '.' ) {
+      b->err |= BSON_FIELD_HAS_DOT;
     }
 
-    while ( position < length ) {
-        if ( check_dot && *( string + position ) == '.' ) {
-            b->err |= BSON_FIELD_HAS_DOT;
-        }
-
-        if ( check_utf8 ) {
-            sequence_length = trailingBytesForUTF8[*( string + position )] + 1;
-            if ( ( position + sequence_length ) > length ) {
-                b->err |= BSON_NOT_UTF8;
-                return BSON_ERROR;
-            }
-            if ( !isLegalUTF8( string + position, sequence_length ) ) {
-                b->err |= BSON_NOT_UTF8;
-                return BSON_ERROR;
-            }
-        }
-        position += sequence_length;
+    if ( check_utf8 ) {
+      sequence_length = trailingBytesForUTF8[*( string + position )] + 1;
+      if ( ( position + sequence_length ) > length ) {
+        b->err |= BSON_NOT_UTF8;
+        return BSON_ERROR;
+      }
+      if ( !isLegalUTF8( string + position, sequence_length ) ) {
+        b->err |= BSON_NOT_UTF8;
+        return BSON_ERROR;
+      }
     }
+    position += sequence_length;
+  }
 
-    return BSON_OK;
+  return BSON_OK;
 }
 
 
 int bson_check_string( bson *b, const char *string,
                        const int length ) {
 
-    return bson_validate_string( b, ( const unsigned char * )string, length, 1, 0, 0 );
+  return bson_validate_string( b, ( const unsigned char * )string, length, 1, 0, 0 );
 }
 
 int bson_check_field_name( bson *b, const char *string,
                            const int length ) {
 
-    return bson_validate_string( b, ( const unsigned char * )string, length, 1, 1, 1 );
+  return bson_validate_string( b, ( const unsigned char * )string, length, 1, 1, 1 );
 }

@@ -26,1028 +26,1030 @@
 static xspProtoHandler bin_handler_v1;
 
 int libxsp_proto_binary_v1_init() {
-	bin_handler_v1.write_hdr = xsp_writeout_hdr;
+  bin_handler_v1.write_hdr = xsp_writeout_hdr;
 
-	bin_handler_v1.parse = (int (**)(const void*, int, void**)) malloc(sizeof(void *) * (LIBXSP_PROTO_BINARY_V1_MAX + 1));
-	if (!bin_handler_v1.parse)
-		return -1;
+  bin_handler_v1.parse = (int (**)(const void*, int, void**)) malloc(sizeof(void *) * (LIBXSP_PROTO_BINARY_V1_MAX + 1));
+  if (!bin_handler_v1.parse)
+    return -1;
 
-	bin_handler_v1.writeout = (int (**)(void*, char*, int)) malloc(sizeof(void *) * (LIBXSP_PROTO_BINARY_V1_MAX + 1));
-	if (!bin_handler_v1.writeout)
-		return -1;
+  bin_handler_v1.writeout = (int (**)(void*, char*, int)) malloc(sizeof(void *) * (LIBXSP_PROTO_BINARY_V1_MAX + 1));
+  if (!bin_handler_v1.writeout)
+    return -1;
 
-	bin_handler_v1.parse[XSP_MSG_INVALID] = NULL;
-	bin_handler_v1.parse[XSP_MSG_SESS_OPEN] = xsp_parse_default_block_list;
-	bin_handler_v1.parse[XSP_MSG_SESS_ACK] = xsp_parse_app_data_block_list;
-	bin_handler_v1.parse[XSP_MSG_SESS_CLOSE] = xsp_parse_app_data_block_list;
-	bin_handler_v1.parse[XSP_MSG_AUTH_TYPE] = xsp_parse_default_block_list;
-	bin_handler_v1.parse[XSP_MSG_AUTH_TOKEN] = xsp_parse_default_block_list;
-	bin_handler_v1.parse[XSP_MSG_BLOCK_HEADER] = xsp_parse_default_block_list;
-	bin_handler_v1.parse[XSP_MSG_SESS_NACK] = xsp_parse_default_block_list;
-	bin_handler_v1.parse[XSP_MSG_PING] = NULL;
-	bin_handler_v1.parse[XSP_MSG_PONG] = NULL;
-	bin_handler_v1.parse[XSP_MSG_DATA_CHAN] = xsp_parse_default_block_list;
-	bin_handler_v1.parse[XSP_MSG_NET_PATH] = xsp_parse_default_block_list;
-	bin_handler_v1.parse[XSP_MSG_APP_DATA] = xsp_parse_app_data_block_list;
-	bin_handler_v1.parse[XSP_MSG_SLAB_INFO] = xsp_parse_default_block_list;
-	bin_handler_v1.parse[XSP_MSG_INF_DATA] = NULL;
+  bin_handler_v1.parse[XSP_MSG_INVALID] = NULL;
+  bin_handler_v1.parse[XSP_MSG_SESS_OPEN] = xsp_parse_default_block_list;
+  bin_handler_v1.parse[XSP_MSG_SESS_ACK] = xsp_parse_app_data_block_list;
+  bin_handler_v1.parse[XSP_MSG_SESS_CLOSE] = xsp_parse_app_data_block_list;
+  bin_handler_v1.parse[XSP_MSG_AUTH_TYPE] = xsp_parse_default_block_list;
+  bin_handler_v1.parse[XSP_MSG_AUTH_TOKEN] = xsp_parse_default_block_list;
+  bin_handler_v1.parse[XSP_MSG_BLOCK_HEADER] = xsp_parse_default_block_list;
+  bin_handler_v1.parse[XSP_MSG_SESS_NACK] = xsp_parse_default_block_list;
+  bin_handler_v1.parse[XSP_MSG_PING] = NULL;
+  bin_handler_v1.parse[XSP_MSG_PONG] = NULL;
+  bin_handler_v1.parse[XSP_MSG_DATA_CHAN] = xsp_parse_default_block_list;
+  bin_handler_v1.parse[XSP_MSG_NET_PATH] = xsp_parse_default_block_list;
+  bin_handler_v1.parse[XSP_MSG_APP_DATA] = xsp_parse_app_data_block_list;
+  bin_handler_v1.parse[XSP_MSG_SLAB_INFO] = xsp_parse_default_block_list;
+  bin_handler_v1.parse[XSP_MSG_INF_DATA] = NULL;
 
-	bin_handler_v1.writeout[XSP_MSG_INVALID] = NULL;
-	bin_handler_v1.writeout[XSP_MSG_SESS_OPEN] = xsp_writeout_default_block_list;
-	bin_handler_v1.writeout[XSP_MSG_SESS_ACK] = xsp_writeout_app_data_block_list;
-	bin_handler_v1.writeout[XSP_MSG_SESS_CLOSE] = xsp_writeout_app_data_block_list;
-	bin_handler_v1.writeout[XSP_MSG_AUTH_TYPE] = xsp_writeout_default_block_list;
-	bin_handler_v1.writeout[XSP_MSG_AUTH_TOKEN] = xsp_writeout_default_block_list;
-	bin_handler_v1.writeout[XSP_MSG_BLOCK_HEADER] = xsp_writeout_default_block_list;
-	bin_handler_v1.writeout[XSP_MSG_SESS_NACK] = xsp_writeout_default_block_list;
-	bin_handler_v1.writeout[XSP_MSG_PING] = NULL;
-	bin_handler_v1.writeout[XSP_MSG_PONG] = NULL;
-	bin_handler_v1.writeout[XSP_MSG_DATA_CHAN] = xsp_writeout_default_block_list;
-	bin_handler_v1.writeout[XSP_MSG_NET_PATH] = xsp_writeout_default_block_list;
-	bin_handler_v1.writeout[XSP_MSG_APP_DATA] = xsp_writeout_app_data_block_list;
-	bin_handler_v1.writeout[XSP_MSG_SLAB_INFO] = xsp_writeout_default_block_list;
-	bin_handler_v1.writeout[XSP_MSG_INF_DATA] = NULL;
+  bin_handler_v1.writeout[XSP_MSG_INVALID] = NULL;
+  bin_handler_v1.writeout[XSP_MSG_SESS_OPEN] = xsp_writeout_default_block_list;
+  bin_handler_v1.writeout[XSP_MSG_SESS_ACK] = xsp_writeout_app_data_block_list;
+  bin_handler_v1.writeout[XSP_MSG_SESS_CLOSE] = xsp_writeout_app_data_block_list;
+  bin_handler_v1.writeout[XSP_MSG_AUTH_TYPE] = xsp_writeout_default_block_list;
+  bin_handler_v1.writeout[XSP_MSG_AUTH_TOKEN] = xsp_writeout_default_block_list;
+  bin_handler_v1.writeout[XSP_MSG_BLOCK_HEADER] = xsp_writeout_default_block_list;
+  bin_handler_v1.writeout[XSP_MSG_SESS_NACK] = xsp_writeout_default_block_list;
+  bin_handler_v1.writeout[XSP_MSG_PING] = NULL;
+  bin_handler_v1.writeout[XSP_MSG_PONG] = NULL;
+  bin_handler_v1.writeout[XSP_MSG_DATA_CHAN] = xsp_writeout_default_block_list;
+  bin_handler_v1.writeout[XSP_MSG_NET_PATH] = xsp_writeout_default_block_list;
+  bin_handler_v1.writeout[XSP_MSG_APP_DATA] = xsp_writeout_app_data_block_list;
+  bin_handler_v1.writeout[XSP_MSG_SLAB_INFO] = xsp_writeout_default_block_list;
+  bin_handler_v1.writeout[XSP_MSG_INF_DATA] = NULL;
 
-	bin_handler_v1.max_msg_type = LIBXSP_PROTO_BINARY_V1_MAX;
+  bin_handler_v1.max_msg_type = LIBXSP_PROTO_BINARY_V1_MAX;
 
-	return xsp_add_proto_handler(LIBXSP_PROTO_BINARY_V1_ID, &bin_handler_v1);
+  return xsp_add_proto_handler(LIBXSP_PROTO_BINARY_V1_ID, &bin_handler_v1);
 }
 
 static int xsp_writeout_hdr(void *arg, char *buf) {
-	d_printf("in v1 writeout hdr\n");
+  d_printf("in v1 writeout hdr\n");
 
-        xspMsg *msg = (xspMsg*)arg;
-        xspv1MsgHdr *hdr;
+  xspMsg *msg = (xspMsg*)arg;
+  xspv1MsgHdr *hdr;
 
-        hdr = (xspv1MsgHdr *) buf;
+  hdr = (xspv1MsgHdr *) buf;
 
-        d_printf("xsp_writeout_hdr: ver   : %d\n", msg->version);
-        d_printf("xsp_writeout_hdr: flags : %d\n", msg->flags);
-        d_printf("xsp_writeout_hdr: type  : %d\n", msg->type);
-	d_printf("xsp_writeout_hdr: opt_c : %d\n", msg->opt_cnt);
+  d_printf("xsp_writeout_hdr: ver   : %d\n", msg->version);
+  d_printf("xsp_writeout_hdr: flags : %d\n", msg->flags);
+  d_printf("xsp_writeout_hdr: type  : %d\n", msg->type);
+  d_printf("xsp_writeout_hdr: opt_c : %d\n", msg->opt_cnt);
 
-        hdr->version = msg->version;
-        hdr->flags = msg->flags;
-        hdr->type = htons(msg->type);
-	hdr->opt_cnt = htons(msg->opt_cnt);
-	hdr->reserved = 0x0000;
+  hdr->version = msg->version;
+  hdr->flags = msg->flags;
+  hdr->type = htons(msg->type);
+  hdr->opt_cnt = htons(msg->opt_cnt);
+  hdr->reserved = 0x0000;
 
-        memcpy(&(hdr->src_eid), &(msg->src_eid), sizeof(struct xsp_addr));
-        memcpy(&(hdr->dst_eid), &(msg->dst_eid), sizeof(struct xsp_addr));
+  memcpy(&(hdr->src_eid), &(msg->src_eid), sizeof(struct xsp_addr));
+  memcpy(&(hdr->dst_eid), &(msg->dst_eid), sizeof(struct xsp_addr));
 
-        if (msg->sess_id != NULL) {
-                d_printf("xsp_writeout_hdr: sid : %s\n", msg->sess_id);
-                hex2bin(msg->sess_id, hdr->sess_id, XSP_SESSIONID_LEN * 2);
-        } else {
-                bzero(hdr->sess_id, XSP_SESSIONID_LEN);
-        }
+  if (msg->sess_id != NULL) {
+    d_printf("xsp_writeout_hdr: sid : %s\n", msg->sess_id);
+    hex2bin(msg->sess_id, hdr->sess_id, XSP_SESSIONID_LEN * 2);
+  }
+  else {
+    bzero(hdr->sess_id, XSP_SESSIONID_LEN);
+  }
 
-        return sizeof(xspv1MsgHdr);
+  return sizeof(xspv1MsgHdr);
 }
 
 static int xsp_writeout_block_hdr(void *arg, char *buf, int remainder) {
-	xspBlock *block = arg;
-        xspv1BlockHdr *hdr;
-        int len_offset = 0;
+  xspBlock *block = arg;
+  xspv1BlockHdr *hdr;
+  int len_offset = 0;
 
-        // if there isn't enough room to write the structure, don't do it
-        if (remainder < sizeof(xspv1BlockHdr)) {
-                return -1;
-        }
+  // if there isn't enough room to write the structure, don't do it
+  if (remainder < sizeof(xspv1BlockHdr)) {
+    return -1;
+  }
 
-        hdr = (xspv1BlockHdr *) buf;
+  hdr = (xspv1BlockHdr *) buf;
 
-        hdr->type = htons(block->type);
-        hdr->sport = htons(block->sport);
+  hdr->type = htons(block->type);
+  hdr->sport = htons(block->sport);
 
-        if (block->length >= XSP_MAX_LENGTH) {
-                uint64_t *len = (uint64_t*)(buf+sizeof(uint64_t));
-		uint64_t nbo = htonll(block->length);
-                memcpy(len, &nbo, sizeof(uint64_t));
-                hdr->length = htons(0xFFFF);
-                len_offset = sizeof(uint64_t);
-        }
-        else
-                hdr->length = htons(block->length);
+  if (block->length >= XSP_MAX_LENGTH) {
+    uint64_t *len = (uint64_t*)(buf+sizeof(uint64_t));
+    uint64_t nbo = htonll(block->length);
+    memcpy(len, &nbo, sizeof(uint64_t));
+    hdr->length = htons(0xFFFF);
+    len_offset = sizeof(uint64_t);
+  }
+  else
+    hdr->length = htons(block->length);
 
-	hdr->reserved = 0;
+  hdr->reserved = 0;
 
-        return sizeof(xspv1BlockHdr) + len_offset;
+  return sizeof(xspv1BlockHdr) + len_offset;
 }
 
 static int xsp_parse_default_block_list(const void *arg, int length, void **msg_body) {
-	xspBlockList *bl = (xspBlockList*) arg;
-	xspBlock *ret_block;
-        xspBlock *block;
-        int n;
+  xspBlockList *bl = (xspBlockList*) arg;
+  xspBlock *ret_block;
+  xspBlock *block;
+  int n;
 
-        bl = (xspBlockList *) arg;
-	if (!bl)
-		goto exit;
-	
-        for (block = bl->first; block != NULL; block = block->next) {
-                switch (block->type) {
-                case XSP_OPT_HOP:
-                        n = xsp_parse_hops(block, block->length, (void**)&ret_block);
-                        break;
-                case XSP_OPT_AUTH_TYP:
-                        n = xsp_parse_auth_type_msg(block, block->length, (void**)&ret_block);
-                        break;
-                case XSP_OPT_AUTH_TOK:
-                        n = xsp_parse_auth_token_msg(block, block->length, (void**)&ret_block);
-                        break;
-                case XSP_OPT_NACK:
-                        n = xsp_parse_nack_msg(block, block->length, (void**)&ret_block);
-                        break;
-                case XSP_OPT_DATA:
-                        n = xsp_parse_data_chan_msg(block, block->length, (void**)&ret_block);
-                        break;
-                case XSP_OPT_PATH:
-                        n = xsp_parse_net_path_msg(block, block->length, (void**)&ret_block);
-                        break;
-                case XSP_OPT_SLAB:
-                        n = xsp_parse_slab_info(block, block->length, (void**)&ret_block);
-                        break;
-                default:
-                        n = xsp_parse_block_msg(block, block->length, (void**)&ret_block);
-                        break;
-                }
+  bl = (xspBlockList *) arg;
+  if (!bl)
+    goto exit;
 
-		if (n != 0) {
-			d_printf("error parsing block type %d\n", block->type);
-			return -1;
-		}
-	}
+  for (block = bl->first; block != NULL; block = block->next) {
+    switch (block->type) {
+    case XSP_OPT_HOP:
+      n = xsp_parse_hops(block, block->length, (void**)&ret_block);
+      break;
+    case XSP_OPT_AUTH_TYP:
+      n = xsp_parse_auth_type_msg(block, block->length, (void**)&ret_block);
+      break;
+    case XSP_OPT_AUTH_TOK:
+      n = xsp_parse_auth_token_msg(block, block->length, (void**)&ret_block);
+      break;
+    case XSP_OPT_NACK:
+      n = xsp_parse_nack_msg(block, block->length, (void**)&ret_block);
+      break;
+    case XSP_OPT_DATA:
+      n = xsp_parse_data_chan_msg(block, block->length, (void**)&ret_block);
+      break;
+    case XSP_OPT_PATH:
+      n = xsp_parse_net_path_msg(block, block->length, (void**)&ret_block);
+      break;
+    case XSP_OPT_SLAB:
+      n = xsp_parse_slab_info(block, block->length, (void**)&ret_block);
+      break;
+    default:
+      n = xsp_parse_block_msg(block, block->length, (void**)&ret_block);
+      break;
+    }
 
- exit:
-	*msg_body = bl;
-        return 0;
+    if (n != 0) {
+      d_printf("error parsing block type %d\n", block->type);
+      return -1;
+    }
+  }
+
+exit:
+  *msg_body = bl;
+  return 0;
 }
 
 static int xsp_parse_app_data_block_list(const void *arg, int remainder, void **msg_body) {
-	xspBlockList *bl = (xspBlockList*) arg;
-        xspBlock *ret_block;
-        xspBlock *block;
-        int n;
+  xspBlockList *bl = (xspBlockList*) arg;
+  xspBlock *ret_block;
+  xspBlock *block;
+  int n;
 
-        bl = (xspBlockList *) arg;
-	if (!bl)
-		goto exit;
+  bl = (xspBlockList *) arg;
+  if (!bl)
+    goto exit;
 
-        for (block = bl->first; block != NULL; block = block->next) {
-		n = xsp_parse_block_msg(block, block->length, (void**)&ret_block);
-	}
+  for (block = bl->first; block != NULL; block = block->next) {
+    n = xsp_parse_block_msg(block, block->length, (void**)&ret_block);
+  }
 
- exit:
-	*msg_body = bl;
-	return 0;
+exit:
+  *msg_body = bl;
+  return 0;
 }
 
 static int xsp_writeout_default_block_list(void *arg, char *buf, int remainder) {
-	xspBlockList *bl;
-	xspBlock *block;
-	int orig_remainder = 0;
-	int n;
+  xspBlockList *bl;
+  xspBlock *block;
+  int orig_remainder = 0;
+  int n;
 
-	orig_remainder = remainder;
-	
-	bl = (xspBlockList *) arg;
-	if (!bl) {
-		printf("no blocks\n");
-		return 0;
-	}
+  orig_remainder = remainder;
 
-	for (block = bl->first; block != NULL; block = block->next) {
-		switch (block->type) {
-		case XSP_OPT_HOP:
-			n = xsp_writeout_hops(block, buf, remainder);
-			break;
-		case XSP_OPT_AUTH_TYP:
-			n = xsp_writeout_auth_type_msg(block, buf, remainder);
-			break;
-		case XSP_OPT_AUTH_TOK:
-			n = xsp_writeout_auth_token_msg(block, buf, remainder);
-			break;
-		case XSP_OPT_NACK:
-			n = xsp_writeout_nack_msg(block, buf, remainder);
-			break;
-		case XSP_OPT_DATA:
-			n = xsp_writeout_data_chan_msg(block, buf, remainder);
-			break;
-		case XSP_OPT_PATH:
-			n = xsp_writeout_net_path_msg(block, buf, remainder);
-			break;
-		case XSP_OPT_SLAB:
-			n = xsp_writeout_slab_info(block, buf, remainder);
-			break;
-		default:
-			n = xsp_writeout_block_msg(block, buf, remainder);
-			break;
-		}
-		remainder -= n;
-	}
+  bl = (xspBlockList *) arg;
+  if (!bl) {
+    printf("no blocks\n");
+    return 0;
+  }
 
-	return orig_remainder - remainder;
+  for (block = bl->first; block != NULL; block = block->next) {
+    switch (block->type) {
+    case XSP_OPT_HOP:
+      n = xsp_writeout_hops(block, buf, remainder);
+      break;
+    case XSP_OPT_AUTH_TYP:
+      n = xsp_writeout_auth_type_msg(block, buf, remainder);
+      break;
+    case XSP_OPT_AUTH_TOK:
+      n = xsp_writeout_auth_token_msg(block, buf, remainder);
+      break;
+    case XSP_OPT_NACK:
+      n = xsp_writeout_nack_msg(block, buf, remainder);
+      break;
+    case XSP_OPT_DATA:
+      n = xsp_writeout_data_chan_msg(block, buf, remainder);
+      break;
+    case XSP_OPT_PATH:
+      n = xsp_writeout_net_path_msg(block, buf, remainder);
+      break;
+    case XSP_OPT_SLAB:
+      n = xsp_writeout_slab_info(block, buf, remainder);
+      break;
+    default:
+      n = xsp_writeout_block_msg(block, buf, remainder);
+      break;
+    }
+    remainder -= n;
+  }
+
+  return orig_remainder - remainder;
 }
 
 static int xsp_writeout_app_data_block_list(void *arg, char *buf, int remainder) {
-        xspBlockList *bl;
-        xspBlock *block;
-        int orig_remainder = 0;
-        int n;
+  xspBlockList *bl;
+  xspBlock *block;
+  int orig_remainder = 0;
+  int n;
 
-        orig_remainder = remainder;
+  orig_remainder = remainder;
 
-        bl = (xspBlockList *) arg;
-	if (!bl)
-		return 0;
+  bl = (xspBlockList *) arg;
+  if (!bl)
+    return 0;
 
-        for (block = bl->first; block != NULL; block = block->next) {
-		n = xsp_writeout_block_msg(block, buf, remainder);
-		remainder -= n;
-	}
-	
-	return orig_remainder - remainder;
+  for (block = bl->first; block != NULL; block = block->next) {
+    n = xsp_writeout_block_msg(block, buf, remainder);
+    remainder -= n;
+  }
+
+  return orig_remainder - remainder;
 }
 
 static int xsp_parse_hops(const void *arg, int length, void **msg_body) {
-	xspBlock *block = (xspBlock*)arg;
-	char *buf = block->data;
-	xspHop *hop;
-	xspSess *ret_sess = NULL;
-        xspSessOpen_HDR *hdr;
-        int remainder;
-        xspHop *next_hop;
-	int size = 0;
+  xspBlock *block = (xspBlock*)arg;
+  char *buf = block->data;
+  xspHop *hop;
+  xspSess *ret_sess = NULL;
+  xspSessOpen_HDR *hdr;
+  int remainder;
+  xspHop *next_hop;
+  int size = 0;
 
-        ret_sess = xsp_alloc_sess();
-        if (!ret_sess)
-                goto parse_error;
+  ret_sess = xsp_alloc_sess();
+  if (!ret_sess)
+    goto parse_error;
 
-        hdr = (xspSessOpen_HDR *) buf;
+  hdr = (xspSessOpen_HDR *) buf;
 
-        remainder = length;
+  remainder = length;
 
-        if (remainder < sizeof(xspSessOpen_HDR))
-                goto parse_error;
+  if (remainder < sizeof(xspSessOpen_HDR))
+    goto parse_error;
 
-        bin2hex(hdr->sess_id, ret_sess->sess_id, XSP_SESSIONID_LEN);
-	ret_sess->hop_flags = ntohl(hdr->hop_flags);
+  bin2hex(hdr->sess_id, ret_sess->sess_id, XSP_SESSIONID_LEN);
+  ret_sess->hop_flags = ntohl(hdr->hop_flags);
 
-	ret_sess->child = NULL;
-	ret_sess->child_count = 0;
-	
-	buf += sizeof(xspSessOpen_HDR);
-        remainder -= sizeof(xspSessOpen_HDR);
+  ret_sess->child = NULL;
+  ret_sess->child_count = 0;
 
-        while (remainder > 0) {
-                int hop_size;
+  buf += sizeof(xspSessOpen_HDR);
+  remainder -= sizeof(xspSessOpen_HDR);
 
-                d_printf("Grabbing next hop info\n");
-		
-                next_hop = xsp_parsehop(ret_sess, buf, remainder, &hop_size);
-                if (!next_hop)
-                        goto parse_error;
+  while (remainder > 0) {
+    int hop_size;
 
-                if (xsp_sess_addhop(ret_sess, next_hop))
-                        goto parse_error;
-		
-                buf += hop_size;
-                remainder -= hop_size;
-        }
-	
-	block->data = ret_sess;
-	block->length = 0;
+    d_printf("Grabbing next hop info\n");
 
-	*msg_body = block;
+    next_hop = xsp_parsehop(ret_sess, buf, remainder, &hop_size);
+    if (!next_hop)
+      goto parse_error;
 
-	return 0;
+    if (xsp_sess_addhop(ret_sess, next_hop))
+      goto parse_error;
 
- parse_error:
-        if (ret_sess)
-                xsp_free_sess(ret_sess);
+    buf += hop_size;
+    remainder -= hop_size;
+  }
 
-        return -1;
+  block->data = ret_sess;
+  block->length = 0;
+
+  *msg_body = block;
+
+  return 0;
+
+parse_error:
+  if (ret_sess)
+    xsp_free_sess(ret_sess);
+
+  return -1;
 }
 
 static xspHop *xsp_parsehop(xspSess *sess, void *arg, int remainder, int *size) {
-	char *buf = (char*) arg;
-	xspHop *new_hop = NULL;
-	xspHop_HDR *hdr = NULL;
-	int orig_remainder = 0;
-	uint16_t child_count = 0;
-	int child_size = 0;
-	int i = 0;
+  char *buf = (char*) arg;
+  xspHop *new_hop = NULL;
+  xspHop_HDR *hdr = NULL;
+  int orig_remainder = 0;
+  uint16_t child_count = 0;
+  int child_size = 0;
+  int i = 0;
 
-	// verify that we have enough remaining to have a hop
-	if (remainder < sizeof(xspHop_HDR)) {
-		goto parse_error;
-	}
+  // verify that we have enough remaining to have a hop
+  if (remainder < sizeof(xspHop_HDR)) {
+    goto parse_error;
+  }
 
-	orig_remainder = remainder;
+  orig_remainder = remainder;
 
-	// allocate a new hop
-	new_hop = xsp_alloc_hop();
-	if (!new_hop)
-		return NULL;
+  // allocate a new hop
+  new_hop = xsp_alloc_hop();
+  if (!new_hop)
+    return NULL;
 
-	new_hop->session = sess;
+  new_hop->session = sess;
 
-	hdr = (xspHop_HDR *) buf;
+  hdr = (xspHop_HDR *) buf;
 
-	// grab the hop id and NULL terminate it
-	memcpy(new_hop->hop_id, hdr->id, XSP_HOPID_LEN);
-	new_hop->hop_id[XSP_HOPID_LEN] = '\0';
+  // grab the hop id and NULL terminate it
+  memcpy(new_hop->hop_id, hdr->id, XSP_HOPID_LEN);
+  new_hop->hop_id[XSP_HOPID_LEN] = '\0';
 
-	d_printf("Parsing: %s\n", new_hop->hop_id);
+  d_printf("Parsing: %s\n", new_hop->hop_id);
 
-	memcpy(new_hop->protocol, hdr->protocol, XSP_PROTO_NAME_LEN); 
-	new_hop->protocol[XSP_PROTO_NAME_LEN] = '\0';
+  memcpy(new_hop->protocol, hdr->protocol, XSP_PROTO_NAME_LEN);
+  new_hop->protocol[XSP_PROTO_NAME_LEN] = '\0';
 
-	// grab the flags for the given hop
-	new_hop->flags = ntohs(hdr->flags);
+  // grab the flags for the given hop
+  new_hop->flags = ntohs(hdr->flags);
 
-	// grab the number of children to be read in
-	child_count = ntohs(hdr->child_count);
+  // grab the number of children to be read in
+  child_count = ntohs(hdr->child_count);
 
-	buf += sizeof(xspHop_HDR);
-	remainder -= sizeof(xspHop_HDR);
+  buf += sizeof(xspHop_HDR);
+  remainder -= sizeof(xspHop_HDR);
 
-	if (child_count == 0) {
-		new_hop->child = NULL;
-		new_hop->child_count = 0;
-	} else {
+  if (child_count == 0) {
+    new_hop->child = NULL;
+    new_hop->child_count = 0;
+  }
+  else {
 
-		// allocate space for the children
-		new_hop->child = (xspHop **) malloc(sizeof(xspHop *) * child_count);
-		if (!new_hop->child)
-			goto parse_error;
+    // allocate space for the children
+    new_hop->child = (xspHop **) malloc(sizeof(xspHop *) * child_count);
+    if (!new_hop->child)
+      goto parse_error;
 
-		// initialize the child count so that freeing works properly
-		new_hop->child_count = 0;
+    // initialize the child count so that freeing works properly
+    new_hop->child_count = 0;
 
-		// try to parse each child
-		for(i = 0; i < child_count; i++) {
-			new_hop->child[i] = xsp_parsehop(sess, buf, remainder, &child_size);
-			if (!new_hop->child[i])
-				goto parse_error;
+    // try to parse each child
+    for(i = 0; i < child_count; i++) {
+      new_hop->child[i] = xsp_parsehop(sess, buf, remainder, &child_size);
+      if (!new_hop->child[i])
+        goto parse_error;
 
-			buf += child_size;
-			remainder -= child_size;
+      buf += child_size;
+      remainder -= child_size;
 
-			new_hop->child_count++;
-		}
-	}
+      new_hop->child_count++;
+    }
+  }
 
-	*size = orig_remainder - remainder;
+  *size = orig_remainder - remainder;
 
-	return new_hop;
+  return new_hop;
 
 parse_error:
-	if (new_hop)
-		free(new_hop);
-	return NULL;
+  if (new_hop)
+    free(new_hop);
+  return NULL;
 }
 
 static int xsp_parse_auth_token_msg(const void *arg, int remainder, void **msg_body) {
-	xspBlock *block = (xspBlock*) arg;
-	char *buf = (char*) block->data;
-	xspAuthToken_HDR *hdr;
-	xspAuthToken *new_token;
+  xspBlock *block = (xspBlock*) arg;
+  char *buf = (char*) block->data;
+  xspAuthToken_HDR *hdr;
+  xspAuthToken *new_token;
 
-	*msg_body = NULL;
+  *msg_body = NULL;
 
-	if (remainder < sizeof(xspAuthToken_HDR))
-		return -1;
+  if (remainder < sizeof(xspAuthToken_HDR))
+    return -1;
 
-	// allocate a new auth_token token structure
-	new_token = malloc(sizeof(xspAuthToken));
-	if (!new_token)
-		return -1;
+  // allocate a new auth_token token structure
+  new_token = malloc(sizeof(xspAuthToken));
+  if (!new_token)
+    return -1;
 
-	hdr = (xspAuthToken_HDR *) buf;
+  hdr = (xspAuthToken_HDR *) buf;
 
-	new_token->token_length = ntohs(hdr->token_length);
+  new_token->token_length = ntohs(hdr->token_length);
 
-	remainder -= sizeof(xspAuthToken_HDR);
+  remainder -= sizeof(xspAuthToken_HDR);
 
-	// validate the token
-	if (new_token->token_length > 1<<24 || new_token->token_length > remainder) {
-		free(new_token);
-		return -1;
-	}
-	// allocate space for the token
-	new_token->token = malloc(sizeof(char) * new_token->token_length);
-	if (!new_token->token) {
-		free(new_token);
-		return -1;
-	}
+  // validate the token
+  if (new_token->token_length > 1<<24 || new_token->token_length > remainder) {
+    free(new_token);
+    return -1;
+  }
+  // allocate space for the token
+  new_token->token = malloc(sizeof(char) * new_token->token_length);
+  if (!new_token->token) {
+    free(new_token);
+    return -1;
+  }
 
-	// copy the token from the message
-	memcpy(new_token->token, buf + sizeof(xspAuthToken_HDR), new_token->token_length);
+  // copy the token from the message
+  memcpy(new_token->token, buf + sizeof(xspAuthToken_HDR), new_token->token_length);
 
-	block->data = new_token;
-	block->length = 0;
+  block->data = new_token;
+  block->length = 0;
 
-	// set the return value
-	*msg_body = block;
+  // set the return value
+  *msg_body = block;
 
-	// return success
-	return 0;
+  // return success
+  return 0;
 }
 
 static int xsp_parse_nack_msg(const void *arg, int remainder, void **msg_body) {
-        xspBlock *block = (xspBlock*) arg;
-	char *buf = (char*) block->data;
-        xspSessNack_HDR *hdr;
-	uint16_t len;
-	char *error_msg;
+  xspBlock *block = (xspBlock*) arg;
+  char *buf = (char*) block->data;
+  xspSessNack_HDR *hdr;
+  uint16_t len;
+  char *error_msg;
 
-	*msg_body = NULL;
+  *msg_body = NULL;
 
-	if (remainder < sizeof(xspSessNack_HDR))
-                return -1;
+  if (remainder < sizeof(xspSessNack_HDR))
+    return -1;
 
-        hdr = (xspSessNack_HDR *) buf;
+  hdr = (xspSessNack_HDR *) buf;
 
-	len = ntohs(hdr->length);
+  len = ntohs(hdr->length);
 
-	remainder -= sizeof(xspSessNack_HDR);
-	buf += sizeof(xspSessNack_HDR);
+  remainder -= sizeof(xspSessNack_HDR);
+  buf += sizeof(xspSessNack_HDR);
 
-	// validate the token
-	if (len > remainder) {
-		return -1;
-	}
+  // validate the token
+  if (len > remainder) {
+    return -1;
+  }
 
-	// allocate space for the token
-	error_msg = malloc(sizeof(char) * (len + 1));
-	if (!error_msg) {
-		return -1;
-	}
+  // allocate space for the token
+  error_msg = malloc(sizeof(char) * (len + 1));
+  if (!error_msg) {
+    return -1;
+  }
 
-	// copy the token from the message
-	memcpy(error_msg, buf, len);
+  // copy the token from the message
+  memcpy(error_msg, buf, len);
 
-	block->data = error_msg;
-	block->length = 0;
+  block->data = error_msg;
+  block->length = 0;
 
-	// set the return value
-	*msg_body = block;
+  // set the return value
+  *msg_body = block;
 
-	// return success
-	return 0;
+  // return success
+  return 0;
 }
 
 static int xsp_parse_block_msg(const void *arg, int remainder, void **msg_body) {
-	xspBlock *block = (xspBlock*) arg;
+  xspBlock *block = (xspBlock*) arg;
 
-	// this is a block with data transparent to libxsp
-	*msg_body = block;
+  // this is a block with data transparent to libxsp
+  *msg_body = block;
 
-	return 0;
+  return 0;
 }
 
 static int xsp_parse_auth_type_msg(const void *arg, int remainder, void **msg_body) {
-	xspBlock *block = (xspBlock*) arg;
-	xspAuthType_HDR *hdr = (xspAuthType_HDR*) block->data;
-	xspAuthType *new_auth_type;
+  xspBlock *block = (xspBlock*) arg;
+  xspAuthType_HDR *hdr = (xspAuthType_HDR*) block->data;
+  xspAuthType *new_auth_type;
 
-	*msg_body = NULL;
+  *msg_body = NULL;
 
-	// allocate a new auth_type token structure
-	new_auth_type = malloc(sizeof(xspAuthType));
-	if (!new_auth_type)
-		return -1;
+  // allocate a new auth_type token structure
+  new_auth_type = malloc(sizeof(xspAuthType));
+  if (!new_auth_type)
+    return -1;
 
-	// read in the only entry so far in the header
-	memcpy(new_auth_type->name, hdr->name, XSP_AUTH_NAME_LEN);
-	
-	free(block->data);
-	block->data = new_auth_type;
-	block->length = 0;
+  // read in the only entry so far in the header
+  memcpy(new_auth_type->name, hdr->name, XSP_AUTH_NAME_LEN);
 
-	// set the return value
-	*msg_body = block;
+  free(block->data);
+  block->data = new_auth_type;
+  block->length = 0;
 
-	// return success
-	return 0;
+  // set the return value
+  *msg_body = block;
+
+  // return success
+  return 0;
 }
 
 static int xsp_parse_data_chan_msg(const void *arg, int remainder, void **msg_body) {
-	xspBlock *block = (xspBlock*) arg;
-	xspDataOpen_HDR *hdr = (xspDataOpen_HDR*) block->data;
-	xspDataOpen *new;
+  xspBlock *block = (xspBlock*) arg;
+  xspDataOpen_HDR *hdr = (xspDataOpen_HDR*) block->data;
+  xspDataOpen *new;
 
-	*msg_body = NULL;
+  *msg_body = NULL;
 
-	new = malloc(sizeof(xspDataOpen));
-	if (!new)
-		return -1;
-	
-	memcpy(new->hop_id, hdr->hop_id, XSP_HOPID_LEN);
-	new->hop_id[XSP_HOPID_LEN] = '\0';
+  new = malloc(sizeof(xspDataOpen));
+  if (!new)
+    return -1;
 
-	new->flags = ntohs(hdr->flags);
+  memcpy(new->hop_id, hdr->hop_id, XSP_HOPID_LEN);
+  new->hop_id[XSP_HOPID_LEN] = '\0';
 
-	block->data = new;
-	block->length = 0;
+  new->flags = ntohs(hdr->flags);
 
-	*msg_body = block;
+  block->data = new;
+  block->length = 0;
 
-	return 0;
+  *msg_body = block;
+
+  return 0;
 }
 
 static int xsp_parse_net_path_msg(const void *arg, int remainder, void **msg_body) {
-	xspBlock *block = (xspBlock*) arg;
-	char *buf = (char*) block->data;
-	xspNetPath_HDR *hdr;
-	xspNetPath *new;
-	int i;
+  xspBlock *block = (xspBlock*) arg;
+  char *buf = (char*) block->data;
+  xspNetPath_HDR *hdr;
+  xspNetPath *new;
+  int i;
 
-	*msg_body = NULL;
+  *msg_body = NULL;
 
-	new = xsp_alloc_net_path();
-	if (!new)
-		return -1;
-	
-	hdr = (xspNetPath_HDR *) buf;
-        new->action = ntohs(hdr->action);
-        new->rule_count = ntohs(hdr->rule_count);
+  new = xsp_alloc_net_path();
+  if (!new)
+    return -1;
 
-	new->rules = (xspNetPathRule **)malloc(new->rule_count * sizeof(xspNetPathRule*));
-	if (!new->rules)
-		return -1;
+  hdr = (xspNetPath_HDR *) buf;
+  new->action = ntohs(hdr->action);
+  new->rule_count = ntohs(hdr->rule_count);
 
-	buf += sizeof(xspNetPath_HDR);
+  new->rules = (xspNetPathRule **)malloc(new->rule_count * sizeof(xspNetPathRule*));
+  if (!new->rules)
+    return -1;
 
-        for (i = 0; i < new->rule_count; i++) {
-		xspNetPathRule *rule = malloc(sizeof(xspNetPathRule));
-                xspNetPathRule *rhdr;
+  buf += sizeof(xspNetPath_HDR);
 
-		rhdr = (xspNetPathRule *) buf;
-		
-		memcpy(rule->type, rhdr->type, XSP_NET_PATH_LEN);
-		rule->type[XSP_NET_PATH_LEN] = '\0';
-                rule->op = htons(rhdr->op);
-                memcpy(&(rule->eid), &(rhdr->eid), sizeof(struct xsp_addr));
-                memcpy(&(rule->crit), &(rhdr->crit), sizeof(struct xsp_sess_net_path_rule_crit_t));
-                rule->use_crit = rhdr->use_crit;
+  for (i = 0; i < new->rule_count; i++) {
+    xspNetPathRule *rule = malloc(sizeof(xspNetPathRule));
+    xspNetPathRule *rhdr;
 
-		new->rules[i] = rule;
-                buf += sizeof(xspNetPathRule);
-        }
+    rhdr = (xspNetPathRule *) buf;
 
-	block->data = new;
-	block->length = 0;
+    memcpy(rule->type, rhdr->type, XSP_NET_PATH_LEN);
+    rule->type[XSP_NET_PATH_LEN] = '\0';
+    rule->op = htons(rhdr->op);
+    memcpy(&(rule->eid), &(rhdr->eid), sizeof(struct xsp_addr));
+    memcpy(&(rule->crit), &(rhdr->crit), sizeof(struct xsp_sess_net_path_rule_crit_t));
+    rule->use_crit = rhdr->use_crit;
 
-	*msg_body = block;
-	
-	return 0;
+    new->rules[i] = rule;
+    buf += sizeof(xspNetPathRule);
+  }
+
+  block->data = new;
+  block->length = 0;
+
+  *msg_body = block;
+
+  return 0;
 }
 
 static int xsp_writeout_hops(void *arg, char *buf, int remainder) {
-	xspBlock *block = arg;
-        xspHop *hop = block->data;
-	xspSessOpen_HDR *sess_hdr;
-	int bhdr_size;
-	int child_size;
-	int i;
+  xspBlock *block = arg;
+  xspHop *hop = block->data;
+  xspSessOpen_HDR *sess_hdr;
+  int bhdr_size;
+  int child_size;
+  int i;
 
-        block->length = sizeof(xspSessOpen_HDR) + xsp_hop_total_child_count(hop) * sizeof(xspHop_HDR);
+  block->length = sizeof(xspSessOpen_HDR) + xsp_hop_total_child_count(hop) * sizeof(xspHop_HDR);
 
-        bhdr_size = xsp_writeout_block_hdr(block, buf, remainder);
-        if (bhdr_size < 0)
-		goto write_error;
+  bhdr_size = xsp_writeout_block_hdr(block, buf, remainder);
+  if (bhdr_size < 0)
+    goto write_error;
 
-        remainder -= bhdr_size;
-	buf += bhdr_size;
+  remainder -= bhdr_size;
+  buf += bhdr_size;
 
-	sess_hdr = (xspSessOpen_HDR *) buf;
+  sess_hdr = (xspSessOpen_HDR *) buf;
 
-        hex2bin(hop->session->sess_id, sess_hdr->sess_id, 2*XSP_SESSIONID_LEN);
-	sess_hdr->hop_flags = htonl(hop->flags);
+  hex2bin(hop->session->sess_id, sess_hdr->sess_id, 2*XSP_SESSIONID_LEN);
+  sess_hdr->hop_flags = htonl(hop->flags);
 
-        remainder -= sizeof(xspSessOpen_HDR);
-        buf += sizeof(xspSessOpen_HDR);
+  remainder -= sizeof(xspSessOpen_HDR);
+  buf += sizeof(xspSessOpen_HDR);
 
-        // if there isn't enough room to write the structure, don't do it
-        if (remainder < sizeof(xspHop_HDR)) {
-                goto write_error;
-        }
+  // if there isn't enough room to write the structure, don't do it
+  if (remainder < sizeof(xspHop_HDR)) {
+    goto write_error;
+  }
 
-	for(i = 0; i < hop->child_count; i++) {
+  for(i = 0; i < hop->child_count; i++) {
 
-                child_size = xsp_writeouthop(hop->child[i], buf, remainder);
-                if (child_size < 0)
-			goto write_error;
+    child_size = xsp_writeouthop(hop->child[i], buf, remainder);
+    if (child_size < 0)
+      goto write_error;
 
-                buf += child_size;
-                remainder -= child_size;
-        }
+    buf += child_size;
+    remainder -= child_size;
+  }
 
-	return bhdr_size + block->length;
-	
- write_error:
-	return -1;
+  return bhdr_size + block->length;
+
+write_error:
+  return -1;
 }
 
 static int xsp_writeouthop(xspHop *hop, char *buf, int remainder) {
-	int i;
-	int orig_remainder;
-	xspHop_HDR *hdr;
-	int child_size;
+  int i;
+  int orig_remainder;
+  xspHop_HDR *hdr;
+  int child_size;
 
-	if (remainder < sizeof(xspHop_HDR))
-		goto write_error;
+  if (remainder < sizeof(xspHop_HDR))
+    goto write_error;
 
-	if (!hop) {
-		d_printf("Error: specified writeout of NULL hop");
-		goto write_error;
-	}
+  if (!hop) {
+    d_printf("Error: specified writeout of NULL hop");
+    goto write_error;
+  }
 
-	orig_remainder = remainder;
+  orig_remainder = remainder;
 
-	d_printf("Writing %s hop information\n", hop->hop_id);
+  d_printf("Writing %s hop information\n", hop->hop_id);
 
-	hdr = (xspHop_HDR *) buf;
-	
-	memcpy(hdr->id, hop->hop_id, XSP_HOPID_LEN);
-	memcpy(hdr->protocol, hop->protocol, XSP_PROTO_NAME_LEN); 
+  hdr = (xspHop_HDR *) buf;
 
-	hdr->flags = htons(hop->flags);
-	hdr->child_count = htons(hop->child_count);
+  memcpy(hdr->id, hop->hop_id, XSP_HOPID_LEN);
+  memcpy(hdr->protocol, hop->protocol, XSP_PROTO_NAME_LEN);
 
-	buf += sizeof(xspHop_HDR);
-	remainder -= sizeof(xspHop_HDR);
+  hdr->flags = htons(hop->flags);
+  hdr->child_count = htons(hop->child_count);
 
-	for(i = 0; i < hop->child_count; i++) {
-		child_size = xsp_writeouthop(hop->child[i], buf, remainder);
-		if (child_size < 0)
-			goto write_error;
+  buf += sizeof(xspHop_HDR);
+  remainder -= sizeof(xspHop_HDR);
 
-		buf += child_size;
-		remainder -= child_size;
-	}
+  for(i = 0; i < hop->child_count; i++) {
+    child_size = xsp_writeouthop(hop->child[i], buf, remainder);
+    if (child_size < 0)
+      goto write_error;
 
-	return orig_remainder - remainder;
+    buf += child_size;
+    remainder -= child_size;
+  }
+
+  return orig_remainder - remainder;
 
 write_error:
-	return -1;
+  return -1;
 }
 
 static int xsp_writeout_auth_token_msg(void *arg, char *buf, int remainder) {
-	xspBlock *block = arg;
-	xspAuthToken *xsp_token = block->data;
-	xspAuthToken_HDR *hdr;
-	int bhdr_size;
-	
-	block->length = sizeof(xspAuthToken_HDR) + xsp_token->token_length;
+  xspBlock *block = arg;
+  xspAuthToken *xsp_token = block->data;
+  xspAuthToken_HDR *hdr;
+  int bhdr_size;
 
-	bhdr_size = xsp_writeout_block_hdr(block, buf, remainder);
-        if (bhdr_size < 0)
-                return -1;
+  block->length = sizeof(xspAuthToken_HDR) + xsp_token->token_length;
 
-	remainder -= bhdr_size;
-	// if there isn't enough room to write the structure, don't do it
-	if (remainder < sizeof(xspAuthToken_HDR)) {
-		return -1;
-	}
+  bhdr_size = xsp_writeout_block_hdr(block, buf, remainder);
+  if (bhdr_size < 0)
+    return -1;
 
-	buf += bhdr_size;
-	hdr = (xspAuthToken_HDR *) buf;
+  remainder -= bhdr_size;
+  // if there isn't enough room to write the structure, don't do it
+  if (remainder < sizeof(xspAuthToken_HDR)) {
+    return -1;
+  }
 
-	// writeout the auth_token token structure in network byte order
-	hdr->token_length = htons(xsp_token->token_length);
+  buf += bhdr_size;
+  hdr = (xspAuthToken_HDR *) buf;
 
-	remainder -= sizeof(xspAuthToken_HDR);
+  // writeout the auth_token token structure in network byte order
+  hdr->token_length = htons(xsp_token->token_length);
 
-	if (remainder < xsp_token->token_length)
-		return -1;
+  remainder -= sizeof(xspAuthToken_HDR);
 
-	memcpy(buf + sizeof(xspAuthToken_HDR), xsp_token->token, xsp_token->token_length);
+  if (remainder < xsp_token->token_length)
+    return -1;
 
-	return bhdr_size + block->length;
+  memcpy(buf + sizeof(xspAuthToken_HDR), xsp_token->token, xsp_token->token_length);
+
+  return bhdr_size + block->length;
 }
 
 static int xsp_writeout_auth_type_msg(void *arg, char *buf, int remainder) {
-	xspBlock *block = arg;
-	xspAuthType *auth_type = block->data;
-	xspAuthType_HDR *hdr;
-	int bhdr_size;
+  xspBlock *block = arg;
+  xspAuthType *auth_type = block->data;
+  xspAuthType_HDR *hdr;
+  int bhdr_size;
 
-	block->length = XSP_AUTH_NAME_LEN;
+  block->length = XSP_AUTH_NAME_LEN;
 
-	bhdr_size = xsp_writeout_block_hdr(block, buf, remainder);
-	if (bhdr_size < 0)
-		return -1;
+  bhdr_size = xsp_writeout_block_hdr(block, buf, remainder);
+  if (bhdr_size < 0)
+    return -1;
 
-	remainder -= bhdr_size;
-	if (remainder < sizeof(xspAuthType_HDR)) {
-		return -1;
-	}
+  remainder -= bhdr_size;
+  if (remainder < sizeof(xspAuthType_HDR)) {
+    return -1;
+  }
 
-	buf += bhdr_size;	
-	hdr = (xspAuthType_HDR*) buf;
-	memcpy(hdr->name, auth_type->name, block->length);
+  buf += bhdr_size;
+  hdr = (xspAuthType_HDR*) buf;
+  memcpy(hdr->name, auth_type->name, block->length);
 
-	return bhdr_size + block->length;
+  return bhdr_size + block->length;
 }
 
 static int xsp_writeout_block_msg(void *arg, char *buf, int remainder) {
-	xspBlock *block = arg;
-	int bhdr_size;
+  xspBlock *block = arg;
+  int bhdr_size;
 
-        bhdr_size = xsp_writeout_block_hdr(block, buf, remainder);
-        if (bhdr_size < 0)
-                return -1;
+  bhdr_size = xsp_writeout_block_hdr(block, buf, remainder);
+  if (bhdr_size < 0)
+    return -1;
 
-        remainder -= bhdr_size;
-	if (remainder < block->length)
-		return -1;
-	
-	buf += bhdr_size;
+  remainder -= bhdr_size;
+  if (remainder < block->length)
+    return -1;
 
-	memcpy(buf, block->data, block->length);
+  buf += bhdr_size;
 
-	return bhdr_size + block->length;
+  memcpy(buf, block->data, block->length);
+
+  return bhdr_size + block->length;
 }
 
 static int xsp_writeout_nack_msg(void *arg, char *buf, int remainder) {
-	xspBlock *block = arg;
-	const char *error_msg = block->data;
-	xspSessNack_HDR *hdr;
-	int bhdr_size;
+  xspBlock *block = arg;
+  const char *error_msg = block->data;
+  xspSessNack_HDR *hdr;
+  int bhdr_size;
 
-	block->length = sizeof(xspSessNack_HDR) + strlen(error_msg);
+  block->length = sizeof(xspSessNack_HDR) + strlen(error_msg);
 
-        bhdr_size = xsp_writeout_block_hdr(block, buf, remainder);
-        if (bhdr_size < 0)
-		goto write_error;
+  bhdr_size = xsp_writeout_block_hdr(block, buf, remainder);
+  if (bhdr_size < 0)
+    goto write_error;
 
-        remainder -= bhdr_size;
-	if (remainder < sizeof(xspSessNack_HDR))
-		goto write_error;
+  remainder -= bhdr_size;
+  if (remainder < sizeof(xspSessNack_HDR))
+    goto write_error;
 
-	buf += bhdr_size;
-	hdr = (xspSessNack_HDR *) buf;
+  buf += bhdr_size;
+  hdr = (xspSessNack_HDR *) buf;
 
-	hdr->length = htons(strlen(error_msg));
+  hdr->length = htons(strlen(error_msg));
 
-	remainder -= sizeof(xspSessNack_HDR);
-	buf += sizeof(xspSessNack_HDR);
+  remainder -= sizeof(xspSessNack_HDR);
+  buf += sizeof(xspSessNack_HDR);
 
-	if (remainder < strlen(error_msg))
-		return -1;
+  if (remainder < strlen(error_msg))
+    return -1;
 
-	memcpy(buf, error_msg, strlen(error_msg));
+  memcpy(buf, error_msg, strlen(error_msg));
 
-	return bhdr_size + block->length;
+  return bhdr_size + block->length;
 
- write_error:
-	return -1;
+write_error:
+  return -1;
 }
 
 static int xsp_writeout_data_chan_msg(void *arg, char *buf, int remainder) {
-	xspBlock *block = arg;
-	xspDataOpen *dopen = block->data;
-	xspDataOpen_HDR *hdr;
-        int bhdr_size;
+  xspBlock *block = arg;
+  xspDataOpen *dopen = block->data;
+  xspDataOpen_HDR *hdr;
+  int bhdr_size;
 
-	block->length = sizeof(xspDataOpen_HDR);
+  block->length = sizeof(xspDataOpen_HDR);
 
-        bhdr_size = xsp_writeout_block_hdr(block, buf, remainder);
-        if (bhdr_size < 0)
-                goto write_error;
+  bhdr_size = xsp_writeout_block_hdr(block, buf, remainder);
+  if (bhdr_size < 0)
+    goto write_error;
 
-        remainder -= bhdr_size;
-	if (remainder < sizeof(xspDataOpen_HDR))
-                goto write_error;
-	
-        buf += bhdr_size;
-	hdr = (xspDataOpen_HDR *) buf;
-	
-	hdr->flags = htons(dopen->flags);
-	strlcpy(hdr->hop_id, dopen->hop_id, XSP_HOPID_LEN);
-	strlcpy(hdr->proto, dopen->proto, XSP_PROTO_NAME_LEN);
-	
-	return bhdr_size + block->length;
+  remainder -= bhdr_size;
+  if (remainder < sizeof(xspDataOpen_HDR))
+    goto write_error;
 
- write_error:
-	return -1;
+  buf += bhdr_size;
+  hdr = (xspDataOpen_HDR *) buf;
+
+  hdr->flags = htons(dopen->flags);
+  strlcpy(hdr->hop_id, dopen->hop_id, XSP_HOPID_LEN);
+  strlcpy(hdr->proto, dopen->proto, XSP_PROTO_NAME_LEN);
+
+  return bhdr_size + block->length;
+
+write_error:
+  return -1;
 }
 static int xsp_writeout_net_path_msg(void *arg, char *buf, int remainder) {
-	xspBlock *block = arg;
-	xspNetPath *net_path = block->data;
-	xspNetPath_HDR *hdr;
-	int bhdr_size;
-	int i;
+  xspBlock *block = arg;
+  xspNetPath *net_path = block->data;
+  xspNetPath_HDR *hdr;
+  int bhdr_size;
+  int i;
 
-	block->length = net_path->rule_count * sizeof(xspNetPathRule) + sizeof(xspNetPath_HDR);
-	
-	bhdr_size = xsp_writeout_block_hdr(block, buf, remainder);
-        if (bhdr_size < 0)
-                goto write_error;
+  block->length = net_path->rule_count * sizeof(xspNetPathRule) + sizeof(xspNetPath_HDR);
 
-        remainder -= bhdr_size;
-        if (remainder < sizeof(xspNetPath_HDR))
-                goto write_error;
+  bhdr_size = xsp_writeout_block_hdr(block, buf, remainder);
+  if (bhdr_size < 0)
+    goto write_error;
 
-	buf += bhdr_size;
-	hdr = (xspNetPath_HDR *) buf;
-	
-	hdr->action = htons(net_path->action);
-	hdr->rule_count = htons(net_path->rule_count);
+  remainder -= bhdr_size;
+  if (remainder < sizeof(xspNetPath_HDR))
+    goto write_error;
 
-	buf += sizeof(xspNetPath_HDR);
-	
-	for (i = 0; i < net_path->rule_count; i++) {
-		xspNetPathRule *rule;
-		xspNetPathRule *rhdr;
-		
-		rule = net_path->rules[i];
-		rhdr = (xspNetPathRule *) buf;
-		
-		memcpy(rhdr->type, rule->type, XSP_NET_PATH_LEN);
-		rhdr->op = htons(rule->op);
-		memcpy(&(rhdr->eid), &(rule->eid), sizeof(struct xsp_addr));
-		memcpy(&(rhdr->crit), &(rule->crit), sizeof(struct xsp_sess_net_path_rule_crit_t));
-		rhdr->use_crit = rule->use_crit;
-		
-		buf += sizeof(xspNetPathRule);
-	}
-	
-	return bhdr_size + block->length;
-	
- write_error:
-	return -1;
+  buf += bhdr_size;
+  hdr = (xspNetPath_HDR *) buf;
+
+  hdr->action = htons(net_path->action);
+  hdr->rule_count = htons(net_path->rule_count);
+
+  buf += sizeof(xspNetPath_HDR);
+
+  for (i = 0; i < net_path->rule_count; i++) {
+    xspNetPathRule *rule;
+    xspNetPathRule *rhdr;
+
+    rule = net_path->rules[i];
+    rhdr = (xspNetPathRule *) buf;
+
+    memcpy(rhdr->type, rule->type, XSP_NET_PATH_LEN);
+    rhdr->op = htons(rule->op);
+    memcpy(&(rhdr->eid), &(rule->eid), sizeof(struct xsp_addr));
+    memcpy(&(rhdr->crit), &(rule->crit), sizeof(struct xsp_sess_net_path_rule_crit_t));
+    rhdr->use_crit = rule->use_crit;
+
+    buf += sizeof(xspNetPathRule);
+  }
+
+  return bhdr_size + block->length;
+
+write_error:
+  return -1;
 }
 
 static int xsp_writeout_path_open_msg(void *arg, char *buf, int remainder) {
-	
-	
-	return 0;
+
+
+  return 0;
 }
 
 // some slabs additions
 static int xsp_parse_slab_info(const void *arg, int remainder, void **msg_body) {
-        xspBlock *block = (xspBlock*) arg;
-        char *buf = (char*) block->data;
-        xspSlabInfo *new_info;
-        xspSlabInfo_HDR *in;
-        int i;
-        int rec_size = 0;
+  xspBlock *block = (xspBlock*) arg;
+  char *buf = (char*) block->data;
+  xspSlabInfo *new_info;
+  xspSlabInfo_HDR *in;
+  int i;
+  int rec_size = 0;
 
-	*msg_body = NULL;
+  *msg_body = NULL;
 
-        if (remainder < sizeof(xspSlabInfo_HDR)) {
-                return -1;
-        }
+  if (remainder < sizeof(xspSlabInfo_HDR)) {
+    return -1;
+  }
 
-        new_info = malloc(sizeof(xspSlabInfo));
-        if (!new_info)
-                return -1;
-        bzero(new_info, sizeof(xspSlabInfo));
+  new_info = malloc(sizeof(xspSlabInfo));
+  if (!new_info)
+    return -1;
+  bzero(new_info, sizeof(xspSlabInfo));
 
-        in = (xspSlabInfo_HDR *) buf;
+  in = (xspSlabInfo_HDR *) buf;
 
-	new_info->seq = ntohl(in->seq);
-        new_info->length = ntohl(in->length);
-        new_info->rec_count = ntohl(in->rec_count);
+  new_info->seq = ntohl(in->seq);
+  new_info->length = ntohl(in->length);
+  new_info->rec_count = ntohl(in->rec_count);
 
-        buf += sizeof(xspSlabInfo_HDR);
+  buf += sizeof(xspSlabInfo_HDR);
 
-        if (!new_info->rec_count) {
-                new_info->entries = NULL;
-        }
-        else {
-                new_info->entries = (xspSlabRec **) malloc(new_info->rec_count * sizeof(xspSlabRec*));
-                if (!new_info->entries)
-                        return -1;
+  if (!new_info->rec_count) {
+    new_info->entries = NULL;
+  }
+  else {
+    new_info->entries = (xspSlabRec **) malloc(new_info->rec_count * sizeof(xspSlabRec*));
+    if (!new_info->entries)
+      return -1;
 
-                for (i=0; i<new_info->rec_count; i++) {
-                        new_info->entries[i] = xsp_parse_slab_record(buf, remainder, &rec_size);
-                        if (!new_info->entries[i])
-                                return -1;
+    for (i=0; i<new_info->rec_count; i++) {
+      new_info->entries[i] = xsp_parse_slab_record(buf, remainder, &rec_size);
+      if (!new_info->entries[i])
+        return -1;
 
-                        buf += rec_size;
-                        remainder -= rec_size;
-                }
-        }
+      buf += rec_size;
+      remainder -= rec_size;
+    }
+  }
 
-        block->data = new_info;
-        block->length = 0;
+  block->data = new_info;
+  block->length = 0;
 
-        *msg_body = block;
+  *msg_body = block;
 
-        return 0;
+  return 0;
 }
 
 static xspSlabRec *xsp_parse_slab_record(const void *arg, int remainder, int *size) {
-	char *buf = (char*) arg;
-        xspSlabRec *new_rec;
-        xspSlabRec_HDR *in;
-        int orig_remainder;
+  char *buf = (char*) arg;
+  xspSlabRec *new_rec;
+  xspSlabRec_HDR *in;
+  int orig_remainder;
 
-        orig_remainder = remainder;
+  orig_remainder = remainder;
 
-        new_rec = malloc(sizeof(xspSlabRec));
-        if (!new_rec)
-                return NULL;
-        bzero(new_rec, sizeof(xspSlabRec));
+  new_rec = malloc(sizeof(xspSlabRec));
+  if (!new_rec)
+    return NULL;
+  bzero(new_rec, sizeof(xspSlabRec));
 
-        in = (xspSlabRec_HDR *) buf;
+  in = (xspSlabRec_HDR *) buf;
 
-        bin2hex(in->sess_id, new_rec->sess_id, XSP_SESSIONID_LEN);
+  bin2hex(in->sess_id, new_rec->sess_id, XSP_SESSIONID_LEN);
 
-	new_rec->flags = ntohs(in->flags);
-        new_rec->offset = ntohl(in->offset);
-        new_rec->length = ntohl(in->length);
-        new_rec->crc = ntohl(in->crc);
+  new_rec->flags = ntohs(in->flags);
+  new_rec->offset = ntohl(in->offset);
+  new_rec->length = ntohl(in->length);
+  new_rec->crc = ntohl(in->crc);
 
-	memcpy(&new_rec->rdma.mr, &in->rdma.mr, sizeof(struct xsp_rdma_mr_t));
+  memcpy(&new_rec->rdma.mr, &in->rdma.mr, sizeof(struct xsp_rdma_mr_t));
 
-        buf += sizeof(xspSlabRec_HDR);
-        remainder -= sizeof(xspSlabRec_HDR);
+  buf += sizeof(xspSlabRec_HDR);
+  remainder -= sizeof(xspSlabRec_HDR);
 
-        *size = orig_remainder - remainder;
+  *size = orig_remainder - remainder;
 
-        return new_rec;
+  return new_rec;
 }
 
 static int xsp_writeout_slab_info(void *arg, char *buf, int remainder) {
-	xspBlock *block = arg;
-        xspSlabInfo *info = block->data;
-        xspSlabInfo_HDR *out;
-        int i;
-	int bhdr_size;
-        int rec_size;
-        int orig_remainder;
+  xspBlock *block = arg;
+  xspSlabInfo *info = block->data;
+  xspSlabInfo_HDR *out;
+  int i;
+  int bhdr_size;
+  int rec_size;
+  int orig_remainder;
 
-	block->length = info->rec_count * sizeof(xspSlabRec_HDR) + sizeof(xspSlabInfo_HDR);
+  block->length = info->rec_count * sizeof(xspSlabRec_HDR) + sizeof(xspSlabInfo_HDR);
 
-        bhdr_size = xsp_writeout_block_hdr(block, buf, remainder);
-        if (bhdr_size < 0)
-                goto write_error;
+  bhdr_size = xsp_writeout_block_hdr(block, buf, remainder);
+  if (bhdr_size < 0)
+    goto write_error;
 
-        remainder -= bhdr_size;
-        if (remainder < sizeof(xspSlabInfo_HDR))
-                goto write_error;
+  remainder -= bhdr_size;
+  if (remainder < sizeof(xspSlabInfo_HDR))
+    goto write_error;
 
-        buf += bhdr_size;
+  buf += bhdr_size;
 
-        if (remainder < sizeof(xspSlabInfo_HDR)) {
-		goto write_error;
-        }
+  if (remainder < sizeof(xspSlabInfo_HDR)) {
+    goto write_error;
+  }
 
-        out = (xspSlabInfo_HDR *) buf;
-	
-	out->seq = htonl(info->seq);
-        out->length = htonl(info->length);
-        out->rec_count = htonl(info->rec_count);
+  out = (xspSlabInfo_HDR *) buf;
 
-        remainder -= sizeof(xspSlabInfo_HDR);
-        buf += sizeof(xspSlabInfo_HDR);
+  out->seq = htonl(info->seq);
+  out->length = htonl(info->length);
+  out->rec_count = htonl(info->rec_count);
 
-        for (i=0; i<info->rec_count; i++) {
+  remainder -= sizeof(xspSlabInfo_HDR);
+  buf += sizeof(xspSlabInfo_HDR);
 
-                rec_size = xsp_writeout_slab_record(info->entries[i], buf, remainder);
-                if (rec_size < 0)
-			goto write_error;
+  for (i=0; i<info->rec_count; i++) {
 
-                buf += rec_size;
-                remainder -= rec_size;
-        }
+    rec_size = xsp_writeout_slab_record(info->entries[i], buf, remainder);
+    if (rec_size < 0)
+      goto write_error;
 
-	return bhdr_size + block->length;
-	
- write_error:
-	return -1;
+    buf += rec_size;
+    remainder -= rec_size;
+  }
+
+  return bhdr_size + block->length;
+
+write_error:
+  return -1;
 }
 
 static int xsp_writeout_slab_record(xspSlabRec *rec, char *buf, int remainder) {
-        int orig_remainder;
-        xspSlabRec_HDR *out;
+  int orig_remainder;
+  xspSlabRec_HDR *out;
 
-        if (remainder < sizeof(xspSlabRec_HDR)) {
-                return -1;
-        }
+  if (remainder < sizeof(xspSlabRec_HDR)) {
+    return -1;
+  }
 
-        orig_remainder = remainder;
+  orig_remainder = remainder;
 
-        out = (xspSlabRec_HDR *) buf;
+  out = (xspSlabRec_HDR *) buf;
 
-        hex2bin(rec->sess_id, out->sess_id, 2*XSP_SESSIONID_LEN);
+  hex2bin(rec->sess_id, out->sess_id, 2*XSP_SESSIONID_LEN);
 
-	out->flags = htons(rec->flags);
-        out->offset = htonl(rec->offset);
-        out->length = htonl(rec->length);
-        out->crc = htonl(rec->crc);
+  out->flags = htons(rec->flags);
+  out->offset = htonl(rec->offset);
+  out->length = htonl(rec->length);
+  out->crc = htonl(rec->crc);
 
-	memcpy(&out->rdma.mr, &rec->rdma.mr, sizeof(struct xsp_rdma_mr_t));
+  memcpy(&out->rdma.mr, &rec->rdma.mr, sizeof(struct xsp_rdma_mr_t));
 
-        buf += sizeof(xspSlabRec_HDR);
-        remainder -= sizeof(xspSlabRec_HDR);
+  buf += sizeof(xspSlabRec_HDR);
+  remainder -= sizeof(xspSlabRec_HDR);
 
-        return orig_remainder - remainder;
+  return orig_remainder - remainder;
 }

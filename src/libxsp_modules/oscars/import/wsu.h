@@ -74,9 +74,8 @@ Modified by Robert van Engelen:
 /// "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd":tTimestampFault is a simpleType restriction of xs:QName.
 /// @brief This type defines the fault code value for Timestamp message expiration.
 /// Note: enum values are prefixed with 'wsu__tTimestampFault' to avoid name clashes, please use wsdl2h option -e to omit this prefix
-enum wsu__tTimestampFault
-{
-	wsu__MessageExpired,	///< xs:QName value=""http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd":MessageExpired"
+enum wsu__tTimestampFault {
+  wsu__MessageExpired,	///< xs:QName value=""http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd":MessageExpired"
 };
 /// Typedef synonym for enum wsu__tTimestampFault.
 typedef enum wsu__tTimestampFault wsu__tTimestampFault;
@@ -84,10 +83,10 @@ typedef enum wsu__tTimestampFault wsu__tTimestampFault;
 /// Element "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd":Timestamp of complexType "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd":TimestampType.
 /// @brief This element allows Timestamps to be applied anywhere element wildcards are present, including as a SOAP header.
 /// Imported element _wsu__Timestamp from typemap WS/WS-typemap.dat.
-typedef struct _wsu__Timestamp
-{	@char*	wsu__Id;	// use qualified form to enable signature
-	char*	Created;
-	char*	Expires;
+typedef struct _wsu__Timestamp {
+  @char*	wsu__Id;	// use qualified form to enable signature
+  char*	Created;
+  char*	Expires;
 } _wsu__Timestamp;
 
 /// Element "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd":Expires of complexType "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd":AttributedDateTime.

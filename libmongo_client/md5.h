@@ -78,9 +78,9 @@ typedef unsigned int mongo_md5_word_t; /* 32-bit word */
 
 /* Define the state of the MD5 Algorithm. */
 typedef struct mongo_md5_state_s {
-    mongo_md5_word_t count[2];	/* message length in bits, lsw first */
-    mongo_md5_word_t abcd[4];		/* digest buffer */
-    mongo_md5_byte_t buf[64];		/* accumulate block */
+  mongo_md5_word_t count[2];	/* message length in bits, lsw first */
+  mongo_md5_word_t abcd[4];		/* digest buffer */
+  mongo_md5_byte_t buf[64];		/* accumulate block */
 } mongo_md5_state_t;
 
 #ifdef __cplusplus

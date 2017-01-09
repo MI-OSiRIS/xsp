@@ -41,17 +41,17 @@
 #include <stdarg.h>
 
 #ifdef __GNUC__
-    #define MONGO_INLINE static __inline__
-    #define MONGO_EXPORT
+#define MONGO_INLINE static __inline__
+#define MONGO_EXPORT
 #else
-    #define MONGO_INLINE static
-    #ifdef MONGO_STATIC_BUILD
-        #define MONGO_EXPORT
-    #elif defined(MONGO_DLL_BUILD)
-        #define MONGO_EXPORT __declspec(dllexport)
-    #else
-        #define MONGO_EXPORT __declspec(dllimport)
-    #endif
+#define MONGO_INLINE static
+#ifdef MONGO_STATIC_BUILD
+#define MONGO_EXPORT
+#elif defined(MONGO_DLL_BUILD)
+#define MONGO_EXPORT __declspec(dllexport)
+#else
+#define MONGO_EXPORT __declspec(dllimport)
+#endif
 #endif
 
 #ifdef __cplusplus
@@ -94,78 +94,78 @@ MONGO_EXTERN_C_START
 #define BSON_ERROR -1
 
 enum bson_error_t {
-    BSON_SIZE_OVERFLOW = 1 /**< Trying to create a BSON object larger than INT_MAX. */
+  BSON_SIZE_OVERFLOW = 1 /**< Trying to create a BSON object larger than INT_MAX. */
 };
 
 enum bson_validity_t {
-    BSON_VALID = 0,                 /**< BSON is valid and UTF-8 compliant. */
-    BSON_NOT_UTF8 = ( 1<<1 ),       /**< A key or a string is not valid UTF-8. */
-    BSON_FIELD_HAS_DOT = ( 1<<2 ),  /**< Warning: key contains '.' character. */
-    BSON_FIELD_INIT_DOLLAR = ( 1<<3 ), /**< Warning: key starts with '$' character. */
-    BSON_ALREADY_FINISHED = ( 1<<4 )  /**< Trying to modify a finished BSON object. */
+  BSON_VALID = 0,                 /**< BSON is valid and UTF-8 compliant. */
+  BSON_NOT_UTF8 = ( 1<<1 ),       /**< A key or a string is not valid UTF-8. */
+  BSON_FIELD_HAS_DOT = ( 1<<2 ),  /**< Warning: key contains '.' character. */
+  BSON_FIELD_INIT_DOLLAR = ( 1<<3 ), /**< Warning: key starts with '$' character. */
+  BSON_ALREADY_FINISHED = ( 1<<4 )  /**< Trying to modify a finished BSON object. */
 };
 
 enum bson_binary_subtype_t {
-    BSON_BIN_BINARY = 0,
-    BSON_BIN_FUNC = 1,
-    BSON_BIN_BINARY_OLD = 2,
-    BSON_BIN_UUID = 3,
-    BSON_BIN_MD5 = 5,
-    BSON_BIN_USER = 128
+  BSON_BIN_BINARY = 0,
+  BSON_BIN_FUNC = 1,
+  BSON_BIN_BINARY_OLD = 2,
+  BSON_BIN_UUID = 3,
+  BSON_BIN_MD5 = 5,
+  BSON_BIN_USER = 128
 };
 
 typedef enum {
-    BSON_EOO = 0,
-    BSON_DOUBLE = 1,
-    BSON_STRING = 2,
-    BSON_OBJECT = 3,
-    BSON_ARRAY = 4,
-    BSON_BINDATA = 5,
-    BSON_UNDEFINED = 6,
-    BSON_OID = 7,
-    BSON_BOOL = 8,
-    BSON_DATE = 9,
-    BSON_NULL = 10,
-    BSON_REGEX = 11,
-    BSON_DBREF = 12, /**< Deprecated. */
-    BSON_CODE = 13,
-    BSON_SYMBOL = 14,
-    BSON_CODEWSCOPE = 15,
-    BSON_INT = 16,
-    BSON_TIMESTAMP = 17,
-    BSON_LONG = 18
+  BSON_EOO = 0,
+  BSON_DOUBLE = 1,
+  BSON_STRING = 2,
+  BSON_OBJECT = 3,
+  BSON_ARRAY = 4,
+  BSON_BINDATA = 5,
+  BSON_UNDEFINED = 6,
+  BSON_OID = 7,
+  BSON_BOOL = 8,
+  BSON_DATE = 9,
+  BSON_NULL = 10,
+  BSON_REGEX = 11,
+  BSON_DBREF = 12, /**< Deprecated. */
+  BSON_CODE = 13,
+  BSON_SYMBOL = 14,
+  BSON_CODEWSCOPE = 15,
+  BSON_INT = 16,
+  BSON_TIMESTAMP = 17,
+  BSON_LONG = 18
 } bson_type;
 
 typedef int bson_bool_t;
 
 typedef struct {
-    const char *cur;
-    bson_bool_t first;
+  const char *cur;
+  bson_bool_t first;
 } bson_iterator;
 
 typedef struct {
-    char *data;    /**< Pointer to a block of data in this BSON object. */
-    char *cur;     /**< Pointer to the current position. */
-    int dataSize;  /**< The number of bytes allocated to char *data. */
-    bson_bool_t finished; /**< When finished, the BSON object can no longer be modified. */
-    int stack[32];        /**< A stack used to keep track of nested BSON elements. */
-    int stackPos;         /**< Index of current stack position. */
-    int err; /**< Bitfield representing errors or warnings on this buffer */
-    char *errstr; /**< A string representation of the most recent error or warning. */
+  char *data;    /**< Pointer to a block of data in this BSON object. */
+  char *cur;     /**< Pointer to the current position. */
+  int dataSize;  /**< The number of bytes allocated to char *data. */
+  bson_bool_t finished; /**< When finished, the BSON object can no longer be modified. */
+  int stack[32];        /**< A stack used to keep track of nested BSON elements. */
+  int stackPos;         /**< Index of current stack position. */
+  int err; /**< Bitfield representing errors or warnings on this buffer */
+  char *errstr; /**< A string representation of the most recent error or warning. */
 } bson;
 
 #pragma pack(1)
 typedef union {
-    char bytes[12];
-    int ints[3];
+  char bytes[12];
+  int ints[3];
 } bson_oid_t;
 #pragma pack()
 
 typedef int64_t bson_date_t; /* milliseconds since epoch UTC */
 
 typedef struct {
-    int i; /* increment */
-    int t; /* time in seconds */
+  int i; /* increment */
+  int t; /* time in seconds */
 } bson_timestamp_t;
 
 /* ----------------------------

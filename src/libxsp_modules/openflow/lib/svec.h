@@ -51,9 +51,9 @@
 #include <stddef.h>
 
 struct svec {
-    char **names;
-    size_t n;
-    size_t allocated;
+  char **names;
+  size_t n;
+  size_t allocated;
 };
 
 #define SVEC_EMPTY_INITIALIZER { NULL, 0, 0 }

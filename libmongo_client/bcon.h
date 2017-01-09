@@ -43,50 +43,50 @@ MONGO_EXTERN_C_START
 #endif /* DOXYGEN_SHOULD_SKIP_THIS */
 
 typedef union bcon {
-    char *s;         /**< 02  e_name  string              Macro BS(v)  - UTF-8 string */ /* must be first to be default */
-    char *Rs;        /**< 02  e_name  string              Macro BRS(v) - UTF-8 string reference interpolation */
-    char **Ps;       /**< 02  e_name  string              Macro BPS(v) - UTF-8 string pointer interpolation */
-    double f;        /**< 01  e_name  double              Macro BF(v)  - Floating point */
-    double *Rf;      /**< 01  e_name  double              Macro BRF(v) - Floating point reference interpolation */
-    double **Pf;     /**< 01  e_name  double              Macro BPF(v) - Floating point pointer interpolation */
-    union bcon *D;   /**< 03  e_name  document            Macro BD(v)  - Embedded document interpolation */
-    union bcon *RD;  /**< 03  e_name  document            Macro BRD(v) - Embedded document reference interpolation */
-    union bcon **PD; /**< 03  e_name  document            Macro BPD(v) - Embedded document pointer interpolation */
-    union bcon *A;   /**< 04  e_name  document            Macro BA(v)  - Array interpolation */
-    union bcon *RA;  /**< 04  e_name  document            Macro BRA(v) - Array reference interpolation */
-    union bcon **PA; /**< 04  e_name  document            Macro BPA(v) - Array pointer interpolation */
-    char *o;         /**< 07  e_name  (byte*12)           Macro BO(v)  - ObjectId */
-    char *Ro;        /**< 07  e_name  (byte*12)           Macro BRO(v) - ObjectId reference interpolation */
-    char **Po;       /**< 07  e_name  (byte*12)           Macro BPO(v) - ObjectId pointer interpolation */
-    bson_bool_t b;   /**< 08  e_name  00                  Macro BB(v)  - Boolean "false"
+  char *s;         /**< 02  e_name  string              Macro BS(v)  - UTF-8 string */ /* must be first to be default */
+  char *Rs;        /**< 02  e_name  string              Macro BRS(v) - UTF-8 string reference interpolation */
+  char **Ps;       /**< 02  e_name  string              Macro BPS(v) - UTF-8 string pointer interpolation */
+  double f;        /**< 01  e_name  double              Macro BF(v)  - Floating point */
+  double *Rf;      /**< 01  e_name  double              Macro BRF(v) - Floating point reference interpolation */
+  double **Pf;     /**< 01  e_name  double              Macro BPF(v) - Floating point pointer interpolation */
+  union bcon *D;   /**< 03  e_name  document            Macro BD(v)  - Embedded document interpolation */
+  union bcon *RD;  /**< 03  e_name  document            Macro BRD(v) - Embedded document reference interpolation */
+  union bcon **PD; /**< 03  e_name  document            Macro BPD(v) - Embedded document pointer interpolation */
+  union bcon *A;   /**< 04  e_name  document            Macro BA(v)  - Array interpolation */
+  union bcon *RA;  /**< 04  e_name  document            Macro BRA(v) - Array reference interpolation */
+  union bcon **PA; /**< 04  e_name  document            Macro BPA(v) - Array pointer interpolation */
+  char *o;         /**< 07  e_name  (byte*12)           Macro BO(v)  - ObjectId */
+  char *Ro;        /**< 07  e_name  (byte*12)           Macro BRO(v) - ObjectId reference interpolation */
+  char **Po;       /**< 07  e_name  (byte*12)           Macro BPO(v) - ObjectId pointer interpolation */
+  bson_bool_t b;   /**< 08  e_name  00                  Macro BB(v)  - Boolean "false"
                           08  e_name  01                  Macro BB(v) - Boolean "true" */
-    bson_bool_t *Rb; /**< 08  e_name  01                  Macro BRB(v) - Boolean reference interpolation */
-    bson_bool_t **Pb;/**< 08  e_name  01                  Macro BPB(v) - Boolean pointer interpolation */
-    time_t t;        /**< 09  e_name  int64               Macro BT(v)  - UTC datetime */
-    time_t *Rt;      /**< 09  e_name  int64               Macro BRT(v) - UTC datetime reference interpolation */
-    time_t **Pt;     /**< 09  e_name  int64               Macro BPT(v) - UTC datetime pointer interpolation */
-    char *v;         /**< 0A  e_name                      Macro BNULL  - Null value */
-    char *x;         /**< 0E  e_name  string              Macro BX(v)  - Symbol */
-    char *Rx;        /**< 0E  e_name  string              Macro BRX(v) - Symbol reference interpolation */
-    char **Px;       /**< 0E  e_name  string              Macro BPX(v) - Symbol pointer interpolation */
-    int i;           /**< 10  e_name  int32               Macro BI(v)  - 32-bit Integer */
-    int *Ri;         /**< 10  e_name  int32               Macro BRI(v) - 32-bit Integer reference interpolation */
-    int **Pi;        /**< 10  e_name  int32               Macro BPI(v) - 32-bit Integer pointer interpolation */
-    long l;          /**< 12  e_name  int64               Macro BL(v)  - 64-bit Integer */
-    long *Rl;        /**< 12  e_name  int64               Macro BRL(v) - 64-bit Integer reference interpolation */
-    long **Pl;       /**< 12  e_name  int64               Macro BPL(v) - 64-bit Integer pointer interpolation */
-    void **Pv;       /*                                   generic pointer internal */
-    /* "{" "}" */    /*   03  e_name  document            Embedded document */
-    /* "[" "]" */    /*   04  e_name  document            Array */
-                     /*   05  e_name  binary              Binary data */
-                     /*   06  e_name                      undefined - deprecated */
-                     /*   0B  e_name  cstring cstring     Regular expression */
-                     /*   0C  e_name  string (byte*12)    DBPointer - Deprecated */
-                     /*   0D  e_name  string              JavaScript code */
-                     /*   0F  e_name  code_w_s            JavaScript code w/ scope  */
-                     /*   11  e_name  int64               Timestamp */
-                     /*   FF  e_name                      Min key */
-                     /*   7F  e_name                      Max key */
+  bson_bool_t *Rb; /**< 08  e_name  01                  Macro BRB(v) - Boolean reference interpolation */
+  bson_bool_t **Pb;/**< 08  e_name  01                  Macro BPB(v) - Boolean pointer interpolation */
+  time_t t;        /**< 09  e_name  int64               Macro BT(v)  - UTC datetime */
+  time_t *Rt;      /**< 09  e_name  int64               Macro BRT(v) - UTC datetime reference interpolation */
+  time_t **Pt;     /**< 09  e_name  int64               Macro BPT(v) - UTC datetime pointer interpolation */
+  char *v;         /**< 0A  e_name                      Macro BNULL  - Null value */
+  char *x;         /**< 0E  e_name  string              Macro BX(v)  - Symbol */
+  char *Rx;        /**< 0E  e_name  string              Macro BRX(v) - Symbol reference interpolation */
+  char **Px;       /**< 0E  e_name  string              Macro BPX(v) - Symbol pointer interpolation */
+  int i;           /**< 10  e_name  int32               Macro BI(v)  - 32-bit Integer */
+  int *Ri;         /**< 10  e_name  int32               Macro BRI(v) - 32-bit Integer reference interpolation */
+  int **Pi;        /**< 10  e_name  int32               Macro BPI(v) - 32-bit Integer pointer interpolation */
+  long l;          /**< 12  e_name  int64               Macro BL(v)  - 64-bit Integer */
+  long *Rl;        /**< 12  e_name  int64               Macro BRL(v) - 64-bit Integer reference interpolation */
+  long **Pl;       /**< 12  e_name  int64               Macro BPL(v) - 64-bit Integer pointer interpolation */
+  void **Pv;       /*                                   generic pointer internal */
+  /* "{" "}" */    /*   03  e_name  document            Embedded document */
+  /* "[" "]" */    /*   04  e_name  document            Array */
+  /*   05  e_name  binary              Binary data */
+  /*   06  e_name                      undefined - deprecated */
+  /*   0B  e_name  cstring cstring     Regular expression */
+  /*   0C  e_name  string (byte*12)    DBPointer - Deprecated */
+  /*   0D  e_name  string              JavaScript code */
+  /*   0F  e_name  code_w_s            JavaScript code w/ scope  */
+  /*   11  e_name  int64               Timestamp */
+  /*   FF  e_name                      Min key */
+  /*   7F  e_name                      Max key */
 } bcon;
 
 /** BCON document terminator */
@@ -229,10 +229,10 @@ typedef union bcon {
  */
 
 typedef enum bcon_error_t {
-    BCON_OK = 0, /**< OK return code */
-    BCON_ERROR,  /**< ERROR return code */
-    BCON_DOCUMENT_INCOMPLETE, /**< bcon document or nesting incomplete */
-    BCON_BSON_ERROR /**< bson finish error */
+  BCON_OK = 0, /**< OK return code */
+  BCON_ERROR,  /**< ERROR return code */
+  BCON_DOCUMENT_INCOMPLETE, /**< bcon document or nesting incomplete */
+  BCON_BSON_ERROR /**< bson finish error */
 } bcon_error_t;
 
 extern char *bcon_errstr[]; /**< bcon_error_t text messages */
@@ -265,9 +265,9 @@ MONGO_EXPORT void bcon_print( const bcon *bc );
 MONGO_EXTERN_C_END
 
 typedef enum bcon_token_t {
-    Token_Default, Token_End, Token_Typespec,
-    Token_OpenBrace, Token_CloseBrace, Token_OpenBracket, Token_CloseBracket,
-    Token_EOD
+  Token_Default, Token_End, Token_Typespec,
+  Token_OpenBrace, Token_CloseBrace, Token_OpenBracket, Token_CloseBracket,
+  Token_EOD
 } bcon_token_t;
 
 #endif /* DOXYGEN_SHOULD_SKIP_THIS */

@@ -54,55 +54,48 @@
 #define BITMAP_ULONG_BITS (sizeof(unsigned long) * CHAR_BIT)
 
 static inline unsigned long *
-bitmap_unit__(const unsigned long *bitmap, size_t offset)
-{
-    return (unsigned long *) &bitmap[offset / BITMAP_ULONG_BITS];
+bitmap_unit__(const unsigned long *bitmap, size_t offset) {
+  return (unsigned long *) &bitmap[offset / BITMAP_ULONG_BITS];
 }
 
 static inline unsigned long
-bitmap_bit__(size_t offset)
-{
-    return 1UL << (offset % BITMAP_ULONG_BITS);
+bitmap_bit__(size_t offset) {
+  return 1UL << (offset % BITMAP_ULONG_BITS);
 }
 
 static inline unsigned long *
-bitmap_allocate(size_t n_bits)
-{
-    return xcalloc(1, ROUND_UP(n_bits, BITMAP_ULONG_BITS));
+bitmap_allocate(size_t n_bits) {
+  return xcalloc(1, ROUND_UP(n_bits, BITMAP_ULONG_BITS));
 }
 
 static inline void
-bitmap_free(unsigned long *bitmap)
-{
-    free(bitmap);
+bitmap_free(unsigned long *bitmap) {
+  free(bitmap);
 }
 
 static inline bool
-bitmap_is_set(const unsigned long *bitmap, size_t offset)
-{
-    return (*bitmap_unit__(bitmap, offset) & bitmap_bit__(offset)) != 0;
+bitmap_is_set(const unsigned long *bitmap, size_t offset) {
+  return (*bitmap_unit__(bitmap, offset) & bitmap_bit__(offset)) != 0;
 }
 
 static inline void
-bitmap_set1(unsigned long *bitmap, size_t offset)
-{
-    *bitmap_unit__(bitmap, offset) |= bitmap_bit__(offset);
+bitmap_set1(unsigned long *bitmap, size_t offset) {
+  *bitmap_unit__(bitmap, offset) |= bitmap_bit__(offset);
 }
 
 static inline void
-bitmap_set0(unsigned long *bitmap, size_t offset)
-{
-    *bitmap_unit__(bitmap, offset) &= ~bitmap_bit__(offset);
+bitmap_set0(unsigned long *bitmap, size_t offset) {
+  *bitmap_unit__(bitmap, offset) &= ~bitmap_bit__(offset);
 }
 
 static inline void
-bitmap_set(unsigned long *bitmap, size_t offset, bool value)
-{
-    if (value) {
-        bitmap_set1(bitmap, offset);
-    } else {
-        bitmap_set0(bitmap, offset);
-    }
+bitmap_set(unsigned long *bitmap, size_t offset, bool value) {
+  if (value) {
+    bitmap_set1(bitmap, offset);
+  }
+  else {
+    bitmap_set0(bitmap, offset);
+  }
 }
 
 void bitmap_set_multiple(unsigned long *, size_t start, size_t count,

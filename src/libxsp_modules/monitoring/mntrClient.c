@@ -30,157 +30,157 @@ extern "C" {
 SOAP_SOURCE_STAMP("@(#) mntrClient.c ver 2.8.1 2011-02-15 02:43:08 GMT")
 
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__new_USCOREpath(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns1__new_USCOREpath *ns1__new_USCOREpath, struct ns1__new_USCOREpathResponse *ns1__new_USCOREpathResponse)
-{	struct __ns1__new_USCOREpath soap_tmp___ns1__new_USCOREpath;
-	if (!soap_endpoint)
-		soap_endpoint = "http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/?wsdl";
-	if (!soap_action)
-		soap_action = "new_path";
-	soap->encodingStyle = NULL;
-	soap_tmp___ns1__new_USCOREpath.ns1__new_USCOREpath = ns1__new_USCOREpath;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___ns1__new_USCOREpath(soap, &soap_tmp___ns1__new_USCOREpath);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___ns1__new_USCOREpath(soap, &soap_tmp___ns1__new_USCOREpath, "-ns1:new_path", NULL)
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___ns1__new_USCOREpath(soap, &soap_tmp___ns1__new_USCOREpath, "-ns1:new_path", NULL)
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!ns1__new_USCOREpathResponse)
-		return soap_closesock(soap);
-	soap_default_ns1__new_USCOREpathResponse(soap, ns1__new_USCOREpathResponse);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_get_ns1__new_USCOREpathResponse(soap, ns1__new_USCOREpathResponse, "ns1:new_pathResponse", "ns1:new_pathResponse");
-	if (soap->error)
-		return soap_recv_fault(soap, 0);
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__new_USCOREpath(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns1__new_USCOREpath *ns1__new_USCOREpath, struct ns1__new_USCOREpathResponse *ns1__new_USCOREpathResponse) {
+  struct __ns1__new_USCOREpath soap_tmp___ns1__new_USCOREpath;
+  if (!soap_endpoint)
+    soap_endpoint = "http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/?wsdl";
+  if (!soap_action)
+    soap_action = "new_path";
+  soap->encodingStyle = NULL;
+  soap_tmp___ns1__new_USCOREpath.ns1__new_USCOREpath = ns1__new_USCOREpath;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___ns1__new_USCOREpath(soap, &soap_tmp___ns1__new_USCOREpath);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap)
+        || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___ns1__new_USCOREpath(soap, &soap_tmp___ns1__new_USCOREpath, "-ns1:new_path", NULL)
+        || soap_body_end_out(soap)
+        || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap)
+      || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___ns1__new_USCOREpath(soap, &soap_tmp___ns1__new_USCOREpath, "-ns1:new_path", NULL)
+      || soap_body_end_out(soap)
+      || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!ns1__new_USCOREpathResponse)
+    return soap_closesock(soap);
+  soap_default_ns1__new_USCOREpathResponse(soap, ns1__new_USCOREpathResponse);
+  if (soap_begin_recv(soap)
+      || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap)
+      || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  soap_get_ns1__new_USCOREpathResponse(soap, ns1__new_USCOREpathResponse, "ns1:new_pathResponse", "ns1:new_pathResponse");
+  if (soap->error)
+    return soap_recv_fault(soap, 0);
+  if (soap_body_end_in(soap)
+      || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__remove_USCOREpath(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns1__remove_USCOREpath *ns1__remove_USCOREpath, struct ns1__remove_USCOREpathResponse *ns1__remove_USCOREpathResponse)
-{	struct __ns1__remove_USCOREpath soap_tmp___ns1__remove_USCOREpath;
-	if (!soap_endpoint)
-		soap_endpoint = "http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/?wsdl";
-	if (!soap_action)
-		soap_action = "remove_path";
-	soap->encodingStyle = NULL;
-	soap_tmp___ns1__remove_USCOREpath.ns1__remove_USCOREpath = ns1__remove_USCOREpath;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___ns1__remove_USCOREpath(soap, &soap_tmp___ns1__remove_USCOREpath);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___ns1__remove_USCOREpath(soap, &soap_tmp___ns1__remove_USCOREpath, "-ns1:remove_path", NULL)
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___ns1__remove_USCOREpath(soap, &soap_tmp___ns1__remove_USCOREpath, "-ns1:remove_path", NULL)
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!ns1__remove_USCOREpathResponse)
-		return soap_closesock(soap);
-	soap_default_ns1__remove_USCOREpathResponse(soap, ns1__remove_USCOREpathResponse);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_get_ns1__remove_USCOREpathResponse(soap, ns1__remove_USCOREpathResponse, "ns1:remove_pathResponse", "ns1:remove_pathResponse");
-	if (soap->error)
-		return soap_recv_fault(soap, 0);
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__remove_USCOREpath(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns1__remove_USCOREpath *ns1__remove_USCOREpath, struct ns1__remove_USCOREpathResponse *ns1__remove_USCOREpathResponse) {
+  struct __ns1__remove_USCOREpath soap_tmp___ns1__remove_USCOREpath;
+  if (!soap_endpoint)
+    soap_endpoint = "http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/?wsdl";
+  if (!soap_action)
+    soap_action = "remove_path";
+  soap->encodingStyle = NULL;
+  soap_tmp___ns1__remove_USCOREpath.ns1__remove_USCOREpath = ns1__remove_USCOREpath;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___ns1__remove_USCOREpath(soap, &soap_tmp___ns1__remove_USCOREpath);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap)
+        || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___ns1__remove_USCOREpath(soap, &soap_tmp___ns1__remove_USCOREpath, "-ns1:remove_path", NULL)
+        || soap_body_end_out(soap)
+        || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap)
+      || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___ns1__remove_USCOREpath(soap, &soap_tmp___ns1__remove_USCOREpath, "-ns1:remove_path", NULL)
+      || soap_body_end_out(soap)
+      || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!ns1__remove_USCOREpathResponse)
+    return soap_closesock(soap);
+  soap_default_ns1__remove_USCOREpathResponse(soap, ns1__remove_USCOREpathResponse);
+  if (soap_begin_recv(soap)
+      || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap)
+      || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  soap_get_ns1__remove_USCOREpathResponse(soap, ns1__remove_USCOREpathResponse, "ns1:remove_pathResponse", "ns1:remove_pathResponse");
+  if (soap->error)
+    return soap_recv_fault(soap, 0);
+  if (soap_body_end_in(soap)
+      || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__status_USCOREpath(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns1__status_USCOREpath *ns1__status_USCOREpath, struct ns1__status_USCOREpathResponse *ns1__status_USCOREpathResponse)
-{	struct __ns1__status_USCOREpath soap_tmp___ns1__status_USCOREpath;
-	if (!soap_endpoint)
-		soap_endpoint = "http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/?wsdl";
-	if (!soap_action)
-		soap_action = "status_path";
-	soap->encodingStyle = NULL;
-	soap_tmp___ns1__status_USCOREpath.ns1__status_USCOREpath = ns1__status_USCOREpath;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___ns1__status_USCOREpath(soap, &soap_tmp___ns1__status_USCOREpath);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___ns1__status_USCOREpath(soap, &soap_tmp___ns1__status_USCOREpath, "-ns1:status_path", NULL)
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___ns1__status_USCOREpath(soap, &soap_tmp___ns1__status_USCOREpath, "-ns1:status_path", NULL)
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!ns1__status_USCOREpathResponse)
-		return soap_closesock(soap);
-	soap_default_ns1__status_USCOREpathResponse(soap, ns1__status_USCOREpathResponse);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_get_ns1__status_USCOREpathResponse(soap, ns1__status_USCOREpathResponse, "ns1:status_pathResponse", "ns1:status_pathResponse");
-	if (soap->error)
-		return soap_recv_fault(soap, 0);
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__status_USCOREpath(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns1__status_USCOREpath *ns1__status_USCOREpath, struct ns1__status_USCOREpathResponse *ns1__status_USCOREpathResponse) {
+  struct __ns1__status_USCOREpath soap_tmp___ns1__status_USCOREpath;
+  if (!soap_endpoint)
+    soap_endpoint = "http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/?wsdl";
+  if (!soap_action)
+    soap_action = "status_path";
+  soap->encodingStyle = NULL;
+  soap_tmp___ns1__status_USCOREpath.ns1__status_USCOREpath = ns1__status_USCOREpath;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___ns1__status_USCOREpath(soap, &soap_tmp___ns1__status_USCOREpath);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap)
+        || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___ns1__status_USCOREpath(soap, &soap_tmp___ns1__status_USCOREpath, "-ns1:status_path", NULL)
+        || soap_body_end_out(soap)
+        || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap)
+      || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___ns1__status_USCOREpath(soap, &soap_tmp___ns1__status_USCOREpath, "-ns1:status_path", NULL)
+      || soap_body_end_out(soap)
+      || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!ns1__status_USCOREpathResponse)
+    return soap_closesock(soap);
+  soap_default_ns1__status_USCOREpathResponse(soap, ns1__status_USCOREpathResponse);
+  if (soap_begin_recv(soap)
+      || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap)
+      || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  soap_get_ns1__status_USCOREpathResponse(soap, ns1__status_USCOREpathResponse, "ns1:status_pathResponse", "ns1:status_pathResponse");
+  if (soap->error)
+    return soap_recv_fault(soap, 0);
+  if (soap_body_end_in(soap)
+      || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
 #ifdef __cplusplus

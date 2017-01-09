@@ -77,7 +77,7 @@ typedef uint64_t stp_identifier;
 #define STP_MAX_PORTS 255
 struct stp *stp_create(const char *name, stp_identifier bridge_id,
                        void (*send_bpdu)(struct ofpbuf *bpdu, int port_no,
-                                         void *aux),
+                           void *aux),
                        void *aux);
 void stp_destroy(struct stp *);
 void stp_tick(struct stp *, int ms);
@@ -107,11 +107,11 @@ bool stp_get_changed_port(struct stp *, struct stp_port **portp);
  * A port is in exactly one state at any given time, but distinct bits are used
  * for states to allow testing for more than one state with a bit mask. */
 enum stp_state {
-    STP_DISABLED = 1 << 0,       /* 8.4.5: Disabled by management. */
-    STP_LISTENING = 1 << 1,      /* 8.4.2: Not learning or relaying frames. */
-    STP_LEARNING = 1 << 2,       /* 8.4.3: Learning but not relaying frames. */
-    STP_FORWARDING = 1 << 3,     /* 8.4.4: Learning and relaying frames. */
-    STP_BLOCKING = 1 << 4        /* 8.4.1: Initial boot state. */
+  STP_DISABLED = 1 << 0,       /* 8.4.5: Disabled by management. */
+  STP_LISTENING = 1 << 1,      /* 8.4.2: Not learning or relaying frames. */
+  STP_LEARNING = 1 << 2,       /* 8.4.3: Learning but not relaying frames. */
+  STP_FORWARDING = 1 << 3,     /* 8.4.4: Learning and relaying frames. */
+  STP_BLOCKING = 1 << 4        /* 8.4.1: Initial boot state. */
 };
 const char *stp_state_name(enum stp_state);
 bool stp_forward_in_state(enum stp_state);

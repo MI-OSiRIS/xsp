@@ -102,117 +102,110 @@ typedef char* wsa5__RelationshipTypeOpenEnum;
 typedef char* wsa5__FaultCodesOpenEnumType;
 
 /// "http://www.w3.org/2005/08/addressing":RelationshipType is a simpleType restriction of xs:anyURI.
-enum wsa5__RelationshipType
-{
-	http_x003a_x002f_x002fwww_x002ew3_x002eorg_x002f2005_x002f08_x002faddressing_x002freply,	///< xs:anyURI value="http://www.w3.org/2005/08/addressing/reply"
+enum wsa5__RelationshipType {
+  http_x003a_x002f_x002fwww_x002ew3_x002eorg_x002f2005_x002f08_x002faddressing_x002freply,	///< xs:anyURI value="http://www.w3.org/2005/08/addressing/reply"
 };
 /// Typedef synonym for enum wsa5__RelationshipType.
 typedef enum wsa5__RelationshipType wsa5__RelationshipType;
 
 /// "http://www.w3.org/2005/08/addressing":FaultCodesType is a simpleType restriction of xs:QName.
-enum wsa5__FaultCodesType
-{
-	wsa5__InvalidAddressingHeader,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":InvalidAddressingHeader"
-	wsa5__InvalidAddress,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":InvalidAddress"
-	wsa5__InvalidEPR,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":InvalidEPR"
-	wsa5__InvalidCardinality,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":InvalidCardinality"
-	wsa5__MissingAddressInEPR,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":MissingAddressInEPR"
-	wsa5__DuplicateMessageID,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":DuplicateMessageID"
-	wsa5__ActionMismatch,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":ActionMismatch"
-	wsa5__MessageAddressingHeaderRequired,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":MessageAddressingHeaderRequired"
-	wsa5__DestinationUnreachable,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":DestinationUnreachable"
-	wsa5__ActionNotSupported,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":ActionNotSupported"
-	wsa5__EndpointUnavailable,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":EndpointUnavailable"
+enum wsa5__FaultCodesType {
+  wsa5__InvalidAddressingHeader,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":InvalidAddressingHeader"
+  wsa5__InvalidAddress,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":InvalidAddress"
+  wsa5__InvalidEPR,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":InvalidEPR"
+  wsa5__InvalidCardinality,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":InvalidCardinality"
+  wsa5__MissingAddressInEPR,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":MissingAddressInEPR"
+  wsa5__DuplicateMessageID,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":DuplicateMessageID"
+  wsa5__ActionMismatch,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":ActionMismatch"
+  wsa5__MessageAddressingHeaderRequired,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":MessageAddressingHeaderRequired"
+  wsa5__DestinationUnreachable,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":DestinationUnreachable"
+  wsa5__ActionNotSupported,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":ActionNotSupported"
+  wsa5__EndpointUnavailable,	///< xs:QName value=""http://www.w3.org/2005/08/addressing":EndpointUnavailable"
 };
 /// Typedef synonym for enum wsa5__FaultCodesType.
 typedef enum wsa5__FaultCodesType wsa5__FaultCodesType;
 
 /// "http://www.w3.org/2005/08/addressing":EndpointReferenceType is a complexType.
-struct wsa5__EndpointReferenceType
-{
+struct wsa5__EndpointReferenceType {
 /// Element Address of type "http://www.w3.org/2005/08/addressing":AttributedURIType.
-    char* /*URI*/                        Address                        1;	///< Required element.
+  char* /*URI*/                        Address                        1;	///< Required element.
 /// Element reference "http://www.w3.org/2005/08/addressing":ReferenceParameters.
-    struct wsa5__ReferenceParametersType*  ReferenceParameters            0;	///< Optional element.
+  struct wsa5__ReferenceParametersType*  ReferenceParameters            0;	///< Optional element.
 /// Element reference "http://www.w3.org/2005/08/addressing":Metadata.
-    struct wsa5__MetadataType*           Metadata                       0;	///< Optional element.
+  struct wsa5__MetadataType*           Metadata                       0;	///< Optional element.
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 ///       Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d to use xsd__anyType DOM.
 /// Size of the dynamic array of XML is 0..unbounded
-    int                                  __size                        ;
-    _XML                                *__any                         ;	///< Catch any element content in XML string.
+  int                                  __size                        ;
+  _XML                                *__any                         ;	///< Catch any element content in XML string.
 /// TODO: <anyAttribute namespace="##other">
 ///       Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this attribute.
-   @_XML                                 __anyAttribute                ;	///< Catch any attribute content in XML string.
+  @_XML                                 __anyAttribute                ;	///< Catch any attribute content in XML string.
 };
 
 /// "http://www.w3.org/2005/08/addressing":ReferenceParametersType is a complexType.
-struct wsa5__ReferenceParametersType
-{
+struct wsa5__ReferenceParametersType {
 /// TODO: <any namespace="##any" minOccurs="0" maxOccurs="unbounded">
 ///       Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d to use xsd__anyType DOM.
 /// Size of the dynamic array of XML is 0..unbounded
-    int                                  __size                        ;
-    _XML                                *__any                         ;	///< Catch any element content in XML string.
+  int                                  __size                        ;
+  _XML                                *__any                         ;	///< Catch any element content in XML string.
 /// TODO: <anyAttribute namespace="##other">
 ///       Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this attribute.
-   @_XML                                 __anyAttribute                ;	///< Catch any attribute content in XML string.
+  @_XML                                 __anyAttribute                ;	///< Catch any attribute content in XML string.
 };
 
 /// "http://www.w3.org/2005/08/addressing":MetadataType is a complexType.
-struct wsa5__MetadataType
-{
+struct wsa5__MetadataType {
 /// TODO: <any namespace="##any" minOccurs="0" maxOccurs="unbounded">
 ///       Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d to use xsd__anyType DOM.
 /// Size of the dynamic array of XML is 0..unbounded
-    int                                  __size                        ;
-    _XML                                *__any                         ;	///< Catch any element content in XML string.
+  int                                  __size                        ;
+  _XML                                *__any                         ;	///< Catch any element content in XML string.
 /// TODO: <anyAttribute namespace="##other">
 ///       Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this attribute.
-   @_XML                                 __anyAttribute                ;	///< Catch any attribute content in XML string.
+  @_XML                                 __anyAttribute                ;	///< Catch any attribute content in XML string.
 };
 
 /// "http://www.w3.org/2005/08/addressing":ProblemActionType is a complexType.
-struct wsa5__ProblemActionType
-{
+struct wsa5__ProblemActionType {
 /// Element reference "http://www.w3.org/2005/08/addressing":Action.
-    char* /*URI*/                        Action                         0;	///< Optional element.
+  char* /*URI*/                        Action                         0;	///< Optional element.
 /// Element SoapAction of type xs:anyURI.
-    char* /*URI*/                        SoapAction                     0;	///< Optional element.
+  char* /*URI*/                        SoapAction                     0;	///< Optional element.
 /// TODO: <anyAttribute namespace="##other">
 ///       Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this attribute.
-   @_XML                                 __anyAttribute                ;	///< Catch any attribute content in XML string.
+  @_XML                                 __anyAttribute                ;	///< Catch any attribute content in XML string.
 };
 
 /// "http://www.w3.org/2005/08/addressing":RelatesToType is a complexType with simpleContent.
-struct wsa5__RelatesToType
-{
+struct wsa5__RelatesToType {
 /// __item wraps 'xs:anyURI' simpleContent.
-    char* /*URI*/                        __item                        ;
+  char* /*URI*/                        __item                        ;
 /// Attribute RelationshipType of type "http://www.w3.org/2005/08/addressing":RelationshipTypeOpenEnum.
-   @wsa5__RelationshipTypeOpenEnum       RelationshipType               0;	///< Optional attribute.
+  @wsa5__RelationshipTypeOpenEnum       RelationshipType               0;	///< Optional attribute.
 /// TODO: <anyAttribute namespace="##other">
 ///       Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this attribute.
-   @_XML                                 __anyAttribute                ;	///< Catch any attribute content in XML string.
+  @_XML                                 __anyAttribute                ;	///< Catch any attribute content in XML string.
 };
 
 /// Element "http://www.w3.org/2005/08/addressing":EndpointReference of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
@@ -262,11 +255,10 @@ typedef struct wsa5__ProblemActionType _wsa5__ProblemAction;
 typedef enum _wsa5__IsReferenceParameter { wsa5__false, wsa5__true } _wsa5__IsReferenceParameter;
 
 /// Added
-struct SOAP_ENV__Header
-{
-                 _wsa5__MessageID  wsa5__MessageID 0;
-                 _wsa5__RelatesTo *wsa5__RelatesTo 0;
-                 _wsa5__From      *wsa5__From      0;
+struct SOAP_ENV__Header {
+  _wsa5__MessageID  wsa5__MessageID 0;
+  _wsa5__RelatesTo *wsa5__RelatesTo 0;
+  _wsa5__From      *wsa5__From      0;
   mustUnderstand _wsa5__ReplyTo   *wsa5__ReplyTo   0;
   mustUnderstand _wsa5__FaultTo   *wsa5__FaultTo   0;
   mustUnderstand _wsa5__To         wsa5__To        0;

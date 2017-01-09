@@ -7426,7 +7426,7 @@ SOAP_FMAC3 struct ns6__messagePropertiesType ** SOAP_FMAC4 soap_get_PointerTons6
 #define soap_serialize_ns3__AbsoluteOrRelativeTimeType(soap, a) soap_serialize_string(soap, a)
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns3__AbsoluteOrRelativeTimeType(struct soap*, const char*, int, char*const*, const char*);
-SOAP_FMAC3 char * * SOAP_FMAC4 soap_in_ns3__AbsoluteOrRelativeTimeType(struct soap*, const char*, char **, const char*);
+SOAP_FMAC3 char ** SOAP_FMAC4 soap_in_ns3__AbsoluteOrRelativeTimeType(struct soap*, const char*, char **, const char*);
 
 #ifndef soap_write_ns3__AbsoluteOrRelativeTimeType
 #define soap_write_ns3__AbsoluteOrRelativeTimeType(soap, data) ( soap_begin_send(soap) || (soap_serialize_ns3__AbsoluteOrRelativeTimeType(soap, data), 0) || soap_put_ns3__AbsoluteOrRelativeTimeType(soap, data, "byte", NULL) || soap_end_send(soap) )
@@ -7750,7 +7750,7 @@ SOAP_FMAC3 struct wsa5__RelatesToType ** SOAP_FMAC4 soap_get_PointerTo_wsa5__Rel
 #define soap_serialize__wsa5__ProblemHeaderQName(soap, a) soap_serialize_string(soap, a)
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__wsa5__ProblemHeaderQName(struct soap*, const char*, int, char*const*, const char*);
-SOAP_FMAC3 char * * SOAP_FMAC4 soap_in__wsa5__ProblemHeaderQName(struct soap*, const char*, char **, const char*);
+SOAP_FMAC3 char ** SOAP_FMAC4 soap_in__wsa5__ProblemHeaderQName(struct soap*, const char*, char **, const char*);
 
 #ifndef soap_write__wsa5__ProblemHeaderQName
 #define soap_write__wsa5__ProblemHeaderQName(soap, data) ( soap_begin_send(soap) || (soap_serialize__wsa5__ProblemHeaderQName(soap, data), 0) || soap_put__wsa5__ProblemHeaderQName(soap, data, "byte", NULL) || soap_end_send(soap) )
@@ -7914,7 +7914,7 @@ SOAP_FMAC3 struct wsa5__ReferenceParametersType ** SOAP_FMAC4 soap_get_PointerTo
 #define soap_serialize_wsa5__FaultCodesOpenEnumType(soap, a) soap_serialize_string(soap, a)
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__FaultCodesOpenEnumType(struct soap*, const char*, int, char*const*, const char*);
-SOAP_FMAC3 char * * SOAP_FMAC4 soap_in_wsa5__FaultCodesOpenEnumType(struct soap*, const char*, char **, const char*);
+SOAP_FMAC3 char ** SOAP_FMAC4 soap_in_wsa5__FaultCodesOpenEnumType(struct soap*, const char*, char **, const char*);
 
 #ifndef soap_write_wsa5__FaultCodesOpenEnumType
 #define soap_write_wsa5__FaultCodesOpenEnumType(soap, data) ( soap_begin_send(soap) || (soap_serialize_wsa5__FaultCodesOpenEnumType(soap, data), 0) || soap_put_wsa5__FaultCodesOpenEnumType(soap, data, "byte", NULL) || soap_end_send(soap) )
@@ -7938,7 +7938,7 @@ SOAP_FMAC3 char ** SOAP_FMAC4 soap_get_wsa5__FaultCodesOpenEnumType(struct soap*
 #define soap_serialize_wsa5__RelationshipTypeOpenEnum(soap, a) soap_serialize_string(soap, a)
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_wsa5__RelationshipTypeOpenEnum(struct soap*, const char*, int, char*const*, const char*);
-SOAP_FMAC3 char * * SOAP_FMAC4 soap_in_wsa5__RelationshipTypeOpenEnum(struct soap*, const char*, char **, const char*);
+SOAP_FMAC3 char ** SOAP_FMAC4 soap_in_wsa5__RelationshipTypeOpenEnum(struct soap*, const char*, char **, const char*);
 
 #ifndef soap_write_wsa5__RelationshipTypeOpenEnum
 #define soap_write_wsa5__RelationshipTypeOpenEnum(soap, data) ( soap_begin_send(soap) || (soap_serialize_wsa5__RelationshipTypeOpenEnum(soap, data), 0) || soap_put_wsa5__RelationshipTypeOpenEnum(soap, data, "byte", NULL) || soap_end_send(soap) )
@@ -8494,7 +8494,7 @@ SOAP_FMAC3 struct ds__SignedInfoType ** SOAP_FMAC4 soap_get_PointerTods__SignedI
 #define soap_serialize__QName(soap, a) soap_serialize_string(soap, a)
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__QName(struct soap*, const char*, int, char*const*, const char*);
-SOAP_FMAC3 char * * SOAP_FMAC4 soap_in__QName(struct soap*, const char*, char **, const char*);
+SOAP_FMAC3 char ** SOAP_FMAC4 soap_in__QName(struct soap*, const char*, char **, const char*);
 
 #ifndef soap_write__QName
 #define soap_write__QName(soap, data) ( soap_begin_send(soap) || (soap_serialize__QName(soap, data), 0) || soap_put__QName(soap, data, "byte", NULL) || soap_end_send(soap) )
@@ -8514,7 +8514,7 @@ SOAP_FMAC3 char ** SOAP_FMAC4 soap_get__QName(struct soap*, char **, const char*
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_string(struct soap*, char **);
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_string(struct soap*, char *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_string(struct soap*, const char*, int, char*const*, const char*);
-SOAP_FMAC3 char * * SOAP_FMAC4 soap_in_string(struct soap*, const char*, char **, const char*);
+SOAP_FMAC3 char ** SOAP_FMAC4 soap_in_string(struct soap*, const char*, char **, const char*);
 
 #ifndef soap_write_string
 #define soap_write_string(soap, data) ( soap_begin_send(soap) || (soap_serialize_string(soap, data), 0) || soap_put_string(soap, data, "byte", NULL) || soap_end_send(soap) )

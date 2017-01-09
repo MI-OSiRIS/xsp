@@ -107,20 +107,18 @@ static inline bool tag_is_valid(tag_type);
 /* Returns true if 'a' and 'b' have at least one tag in common,
  * false if their set of tags is disjoint. . */
 static inline bool
-tag_intersects(tag_type a, tag_type b)
-{
-    tag_type x = a & b;
-    return (x & (x - 1)) != 0;
+tag_intersects(tag_type a, tag_type b) {
+  tag_type x = a & b;
+  return (x & (x - 1)) != 0;
 }
 
 /* Returns true if 'tag' is a valid tag, that is, if exactly two bits are set
  * to 1 and the rest to 0.   Otherwise, returns false. */
 static inline bool
-tag_is_valid(tag_type tag)
-{
-    tag_type x = tag & (tag - 1);
-    tag_type y = x & (x - 1);
-    return x && !y;
+tag_is_valid(tag_type tag) {
+  tag_type x = tag & (tag - 1);
+  tag_type y = x & (x - 1);
+  return x && !y;
 }
 
 /*
@@ -130,9 +128,9 @@ tag_is_valid(tag_type tag)
  */
 #define TAG_SET_SIZE 4
 struct tag_set {
-    tag_type total;
-    tag_type tags[TAG_SET_SIZE];
-    unsigned int n;
+  tag_type total;
+  tag_type tags[TAG_SET_SIZE];
+  unsigned int n;
 };
 
 void tag_set_init(struct tag_set *);
@@ -143,22 +141,20 @@ static inline bool tag_set_intersects(const struct tag_set *, tag_type);
 /* Returns true if 'set' will match no tags at all,
  * false if it will match at least one tag. */
 static inline bool
-tag_set_is_empty(const struct tag_set *set)
-{
-    return !set->n;
+tag_set_is_empty(const struct tag_set *set) {
+  return !set->n;
 }
 
 /* Returns true if any of the tags in 'tags' are also in 'set',
  * false if the intersection is empty. */
 static inline bool
-tag_set_intersects(const struct tag_set *set, tag_type tags)
-{
-    BUILD_ASSERT_DECL(TAG_SET_SIZE == 4);
-    return (tag_intersects(set->total, tags)
-            && (tag_intersects(set->tags[0], tags)
-                || tag_intersects(set->tags[1], tags)
-                || tag_intersects(set->tags[2], tags)
-                || tag_intersects(set->tags[3], tags)));
+tag_set_intersects(const struct tag_set *set, tag_type tags) {
+  BUILD_ASSERT_DECL(TAG_SET_SIZE == 4);
+  return (tag_intersects(set->total, tags)
+          && (tag_intersects(set->tags[0], tags)
+              || tag_intersects(set->tags[1], tags)
+              || tag_intersects(set->tags[2], tags)
+              || tag_intersects(set->tags[3], tags)));
 }
 
 #endif /* tag.h */

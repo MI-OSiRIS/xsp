@@ -12,12 +12,12 @@
 // =============================================================================
 /*!
  * @file th-lock.h
- * @brief 
+ * @brief
  *
  * @author
  * @date 02/02/2013
  * @version
- * @details 
+ * @details
  *
  */
 #ifndef TH_LOCK_H
@@ -38,8 +38,8 @@
 #include <openssl/crypto.h>
 #include "stdsoap2.h"
 
-struct CRYPTO_dynlock_value { 
-   MUTEX_TYPE mutex; 
+struct CRYPTO_dynlock_value {
+  MUTEX_TYPE mutex;
 };
 
 /*!
@@ -48,7 +48,7 @@ struct CRYPTO_dynlock_value {
  * @fn dyn_create_function(const char *file, int line)
  * @param file
  * @param line
- * @return 
+ * @return
  *
  * @details [detailed description]
  */
@@ -58,7 +58,7 @@ static struct CRYPTO_dynlock_value *dyn_create_function(const char *file, int li
  * @brief
  *
  * @fn dyn_lock_function(int mode, struct CRYPTO_dynlock_value *l, const char *file, int line)
- * @param mode 
+ * @param mode
  * @param l
  * @param file
  * @param line
@@ -74,7 +74,7 @@ static void dyn_lock_function(int mode, struct CRYPTO_dynlock_value *l, const ch
  * @param l
  * @param file
  * @param line
- * @return 
+ * @return
  *
  * @details [detailed description]
  */
@@ -84,7 +84,7 @@ static void dyn_destroy_function(struct CRYPTO_dynlock_value *l, const char *fil
  * @brief
  *
  * @fn locking_function(int mode, int n, const char *file, int line)
- * @param mode 
+ * @param mode
  * @param n
  * @param file
  * @param line

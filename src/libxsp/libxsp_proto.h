@@ -17,10 +17,10 @@
 #include "libxsp_block.h"
 
 typedef struct xsp_proto_handler_t {
-	int (**parse) (const void *arg, int remainder, void **msg_body);
-	int (**writeout) (void *arg, char *buf, int remainder);
-	int (*write_hdr) (void *arg, char *buf);
-	uint8_t max_msg_type;
+  int (**parse) (const void *arg, int remainder, void **msg_body);
+  int (**writeout) (void *arg, char *buf, int remainder);
+  int (*write_hdr) (void *arg, char *buf);
+  uint8_t max_msg_type;
 } xspProtoHandler;
 
 int xsp_proto_init();

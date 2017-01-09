@@ -105,8 +105,8 @@ extern const char *soap_wsa_faultAction;;
 @struct soap_wsa_data
 @brief plugin data to override callbacks
 */
-struct soap_wsa_data
-{ /** fheader callback is invoked immediately after parsing a SOAP Header */
+struct soap_wsa_data {
+  /** fheader callback is invoked immediately after parsing a SOAP Header */
   int (*fheader)(struct soap*);
   /** fseterror callback is used to inspect and change gSOAP error codes */
   void (*fseterror)(struct soap*, const char**, const char**);

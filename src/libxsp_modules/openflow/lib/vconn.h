@@ -13,7 +13,7 @@
 
 /* Copyright (c) 2008, 2009 The Board of Trustees of The Leland Stanford
  * Junior University
- * 
+ *
  * We are making the OpenFlow specification and associated documentation
  * (Software) available for public use and benefit with the expectation
  * that others will use, modify and enhance the Software and contribute
@@ -26,10 +26,10 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -38,7 +38,7 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  * The name and trademarks of copyright holder(s) may NOT be used in
  * advertising or publicity pertaining to the Software or any
  * derivatives without specific, written prior permission.
@@ -77,9 +77,9 @@ int vconn_send_block(struct vconn *, struct ofpbuf *);
 int vconn_recv_block(struct vconn *, struct ofpbuf **);
 
 enum vconn_wait_type {
-    WAIT_CONNECT,
-    WAIT_RECV,
-    WAIT_SEND
+  WAIT_CONNECT,
+  WAIT_RECV,
+  WAIT_SEND
 };
 void vconn_wait(struct vconn *, enum vconn_wait_type);
 void vconn_connect_wait(struct vconn *);
@@ -111,7 +111,7 @@ struct ofpbuf *make_add_simple_flow(const struct flow *,
 struct ofpbuf *make_buffered_packet_out(uint32_t buffer_id,
                                         uint16_t in_port, uint16_t out_port);
 struct ofpbuf *make_unbuffered_packet_out(const struct ofpbuf *packet,
-                                          uint16_t in_port, uint16_t out_port);
+    uint16_t in_port, uint16_t out_port);
 struct ofpbuf *make_echo_request(void);
 struct ofpbuf *make_echo_reply(const struct ofp_header *rq);
 int check_ofp_message(const struct ofp_header *, uint8_t type, size_t size);
@@ -120,10 +120,10 @@ int check_ofp_message_array(const struct ofp_header *, uint8_t type,
                             size_t *n_array_elts);
 
 struct flow_stats_iterator {
-    const uint8_t *pos, *end;
+  const uint8_t *pos, *end;
 };
 const struct ofp_flow_stats *flow_stats_first(struct flow_stats_iterator *,
-                                              const struct ofp_stats_reply *);
+    const struct ofp_stats_reply *);
 const struct ofp_flow_stats *flow_stats_next(struct flow_stats_iterator *);
 
 #endif /* vconn.h */

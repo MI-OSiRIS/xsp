@@ -29,820 +29,820 @@ extern "C" {
 SOAP_SOURCE_STAMP("@(#) tpsClient.c ver 2.8.1 2011-02-15 02:46:10 GMT")
 
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__getAllReservationsForClass(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__getAllReservationsForClass *ns2__getAllReservationsForClass, struct ns2__getAllReservationsForClassResponse *ns2__getAllReservationsForClassResponse)
-{	struct __ns1__getAllReservationsForClass soap_tmp___ns1__getAllReservationsForClass;
-	if (!soap_endpoint)
-		soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
-	if (!soap_action)
-		soap_action = "";
-	soap->encodingStyle = NULL;
-	soap_tmp___ns1__getAllReservationsForClass.ns2__getAllReservationsForClass = ns2__getAllReservationsForClass;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___ns1__getAllReservationsForClass(soap, &soap_tmp___ns1__getAllReservationsForClass);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___ns1__getAllReservationsForClass(soap, &soap_tmp___ns1__getAllReservationsForClass, "-ns1:getAllReservationsForClass", NULL)
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___ns1__getAllReservationsForClass(soap, &soap_tmp___ns1__getAllReservationsForClass, "-ns1:getAllReservationsForClass", NULL)
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!ns2__getAllReservationsForClassResponse)
-		return soap_closesock(soap);
-	soap_default_ns2__getAllReservationsForClassResponse(soap, ns2__getAllReservationsForClassResponse);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_get_ns2__getAllReservationsForClassResponse(soap, ns2__getAllReservationsForClassResponse, "ns2:getAllReservationsForClassResponse", "ns2:getAllReservationsForClassResponse");
-	if (soap->error)
-		return soap_recv_fault(soap, 0);
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__getAllReservationsForClass(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__getAllReservationsForClass *ns2__getAllReservationsForClass, struct ns2__getAllReservationsForClassResponse *ns2__getAllReservationsForClassResponse) {
+  struct __ns1__getAllReservationsForClass soap_tmp___ns1__getAllReservationsForClass;
+  if (!soap_endpoint)
+    soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
+  if (!soap_action)
+    soap_action = "";
+  soap->encodingStyle = NULL;
+  soap_tmp___ns1__getAllReservationsForClass.ns2__getAllReservationsForClass = ns2__getAllReservationsForClass;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___ns1__getAllReservationsForClass(soap, &soap_tmp___ns1__getAllReservationsForClass);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap)
+        || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___ns1__getAllReservationsForClass(soap, &soap_tmp___ns1__getAllReservationsForClass, "-ns1:getAllReservationsForClass", NULL)
+        || soap_body_end_out(soap)
+        || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap)
+      || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___ns1__getAllReservationsForClass(soap, &soap_tmp___ns1__getAllReservationsForClass, "-ns1:getAllReservationsForClass", NULL)
+      || soap_body_end_out(soap)
+      || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!ns2__getAllReservationsForClassResponse)
+    return soap_closesock(soap);
+  soap_default_ns2__getAllReservationsForClassResponse(soap, ns2__getAllReservationsForClassResponse);
+  if (soap_begin_recv(soap)
+      || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap)
+      || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  soap_get_ns2__getAllReservationsForClassResponse(soap, ns2__getAllReservationsForClassResponse, "ns2:getAllReservationsForClassResponse", "ns2:getAllReservationsForClassResponse");
+  if (soap->error)
+    return soap_recv_fault(soap, 0);
+  if (soap_body_end_in(soap)
+      || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCORELocalCancel(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCORELocalCancel *ns2__tpsAPI_USCORELocalCancel, struct ns2__tpsAPI_USCORELocalCancelResponse *ns2__tpsAPI_USCORELocalCancelResponse)
-{	struct __ns1__tpsAPI_USCORELocalCancel soap_tmp___ns1__tpsAPI_USCORELocalCancel;
-	if (!soap_endpoint)
-		soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
-	if (!soap_action)
-		soap_action = "";
-	soap->encodingStyle = NULL;
-	soap_tmp___ns1__tpsAPI_USCORELocalCancel.ns2__tpsAPI_USCORELocalCancel = ns2__tpsAPI_USCORELocalCancel;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___ns1__tpsAPI_USCORELocalCancel(soap, &soap_tmp___ns1__tpsAPI_USCORELocalCancel);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___ns1__tpsAPI_USCORELocalCancel(soap, &soap_tmp___ns1__tpsAPI_USCORELocalCancel, "-ns1:tpsAPI_LocalCancel", NULL)
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___ns1__tpsAPI_USCORELocalCancel(soap, &soap_tmp___ns1__tpsAPI_USCORELocalCancel, "-ns1:tpsAPI_LocalCancel", NULL)
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!ns2__tpsAPI_USCORELocalCancelResponse)
-		return soap_closesock(soap);
-	soap_default_ns2__tpsAPI_USCORELocalCancelResponse(soap, ns2__tpsAPI_USCORELocalCancelResponse);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_get_ns2__tpsAPI_USCORELocalCancelResponse(soap, ns2__tpsAPI_USCORELocalCancelResponse, "ns2:tpsAPI_LocalCancelResponse", "ns2:tpsAPI_LocalCancelResponse");
-	if (soap->error)
-		return soap_recv_fault(soap, 0);
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCORELocalCancel(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCORELocalCancel *ns2__tpsAPI_USCORELocalCancel, struct ns2__tpsAPI_USCORELocalCancelResponse *ns2__tpsAPI_USCORELocalCancelResponse) {
+  struct __ns1__tpsAPI_USCORELocalCancel soap_tmp___ns1__tpsAPI_USCORELocalCancel;
+  if (!soap_endpoint)
+    soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
+  if (!soap_action)
+    soap_action = "";
+  soap->encodingStyle = NULL;
+  soap_tmp___ns1__tpsAPI_USCORELocalCancel.ns2__tpsAPI_USCORELocalCancel = ns2__tpsAPI_USCORELocalCancel;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___ns1__tpsAPI_USCORELocalCancel(soap, &soap_tmp___ns1__tpsAPI_USCORELocalCancel);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap)
+        || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___ns1__tpsAPI_USCORELocalCancel(soap, &soap_tmp___ns1__tpsAPI_USCORELocalCancel, "-ns1:tpsAPI_LocalCancel", NULL)
+        || soap_body_end_out(soap)
+        || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap)
+      || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___ns1__tpsAPI_USCORELocalCancel(soap, &soap_tmp___ns1__tpsAPI_USCORELocalCancel, "-ns1:tpsAPI_LocalCancel", NULL)
+      || soap_body_end_out(soap)
+      || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!ns2__tpsAPI_USCORELocalCancelResponse)
+    return soap_closesock(soap);
+  soap_default_ns2__tpsAPI_USCORELocalCancelResponse(soap, ns2__tpsAPI_USCORELocalCancelResponse);
+  if (soap_begin_recv(soap)
+      || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap)
+      || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  soap_get_ns2__tpsAPI_USCORELocalCancelResponse(soap, ns2__tpsAPI_USCORELocalCancelResponse, "ns2:tpsAPI_LocalCancelResponse", "ns2:tpsAPI_LocalCancelResponse");
+  if (soap->error)
+    return soap_recv_fault(soap, 0);
+  if (soap_body_end_in(soap)
+      || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCORELocalCommit(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCORELocalCommit *ns2__tpsAPI_USCORELocalCommit, struct ns2__tpsAPI_USCORELocalCommitResponse *ns2__tpsAPI_USCORELocalCommitResponse)
-{	struct __ns1__tpsAPI_USCORELocalCommit soap_tmp___ns1__tpsAPI_USCORELocalCommit;
-	if (!soap_endpoint)
-		soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
-	if (!soap_action)
-		soap_action = "";
-	soap->encodingStyle = NULL;
-	soap_tmp___ns1__tpsAPI_USCORELocalCommit.ns2__tpsAPI_USCORELocalCommit = ns2__tpsAPI_USCORELocalCommit;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___ns1__tpsAPI_USCORELocalCommit(soap, &soap_tmp___ns1__tpsAPI_USCORELocalCommit);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___ns1__tpsAPI_USCORELocalCommit(soap, &soap_tmp___ns1__tpsAPI_USCORELocalCommit, "-ns1:tpsAPI_LocalCommit", NULL)
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___ns1__tpsAPI_USCORELocalCommit(soap, &soap_tmp___ns1__tpsAPI_USCORELocalCommit, "-ns1:tpsAPI_LocalCommit", NULL)
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!ns2__tpsAPI_USCORELocalCommitResponse)
-		return soap_closesock(soap);
-	soap_default_ns2__tpsAPI_USCORELocalCommitResponse(soap, ns2__tpsAPI_USCORELocalCommitResponse);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_get_ns2__tpsAPI_USCORELocalCommitResponse(soap, ns2__tpsAPI_USCORELocalCommitResponse, "ns2:tpsAPI_LocalCommitResponse", "ns2:tpsAPI_LocalCommitResponse");
-	if (soap->error)
-		return soap_recv_fault(soap, 0);
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCORELocalCommit(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCORELocalCommit *ns2__tpsAPI_USCORELocalCommit, struct ns2__tpsAPI_USCORELocalCommitResponse *ns2__tpsAPI_USCORELocalCommitResponse) {
+  struct __ns1__tpsAPI_USCORELocalCommit soap_tmp___ns1__tpsAPI_USCORELocalCommit;
+  if (!soap_endpoint)
+    soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
+  if (!soap_action)
+    soap_action = "";
+  soap->encodingStyle = NULL;
+  soap_tmp___ns1__tpsAPI_USCORELocalCommit.ns2__tpsAPI_USCORELocalCommit = ns2__tpsAPI_USCORELocalCommit;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___ns1__tpsAPI_USCORELocalCommit(soap, &soap_tmp___ns1__tpsAPI_USCORELocalCommit);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap)
+        || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___ns1__tpsAPI_USCORELocalCommit(soap, &soap_tmp___ns1__tpsAPI_USCORELocalCommit, "-ns1:tpsAPI_LocalCommit", NULL)
+        || soap_body_end_out(soap)
+        || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap)
+      || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___ns1__tpsAPI_USCORELocalCommit(soap, &soap_tmp___ns1__tpsAPI_USCORELocalCommit, "-ns1:tpsAPI_LocalCommit", NULL)
+      || soap_body_end_out(soap)
+      || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!ns2__tpsAPI_USCORELocalCommitResponse)
+    return soap_closesock(soap);
+  soap_default_ns2__tpsAPI_USCORELocalCommitResponse(soap, ns2__tpsAPI_USCORELocalCommitResponse);
+  if (soap_begin_recv(soap)
+      || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap)
+      || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  soap_get_ns2__tpsAPI_USCORELocalCommitResponse(soap, ns2__tpsAPI_USCORELocalCommitResponse, "ns2:tpsAPI_LocalCommitResponse", "ns2:tpsAPI_LocalCommitResponse");
+  if (soap->error)
+    return soap_recv_fault(soap, 0);
+  if (soap_body_end_in(soap)
+      || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCORELocalRemove(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCORELocalRemove *ns2__tpsAPI_USCORELocalRemove, struct ns2__tpsAPI_USCORELocalRemoveResponse *ns2__tpsAPI_USCORELocalRemoveResponse)
-{	struct __ns1__tpsAPI_USCORELocalRemove soap_tmp___ns1__tpsAPI_USCORELocalRemove;
-	if (!soap_endpoint)
-		soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
-	if (!soap_action)
-		soap_action = "";
-	soap->encodingStyle = NULL;
-	soap_tmp___ns1__tpsAPI_USCORELocalRemove.ns2__tpsAPI_USCORELocalRemove = ns2__tpsAPI_USCORELocalRemove;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___ns1__tpsAPI_USCORELocalRemove(soap, &soap_tmp___ns1__tpsAPI_USCORELocalRemove);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___ns1__tpsAPI_USCORELocalRemove(soap, &soap_tmp___ns1__tpsAPI_USCORELocalRemove, "-ns1:tpsAPI_LocalRemove", NULL)
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___ns1__tpsAPI_USCORELocalRemove(soap, &soap_tmp___ns1__tpsAPI_USCORELocalRemove, "-ns1:tpsAPI_LocalRemove", NULL)
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!ns2__tpsAPI_USCORELocalRemoveResponse)
-		return soap_closesock(soap);
-	soap_default_ns2__tpsAPI_USCORELocalRemoveResponse(soap, ns2__tpsAPI_USCORELocalRemoveResponse);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_get_ns2__tpsAPI_USCORELocalRemoveResponse(soap, ns2__tpsAPI_USCORELocalRemoveResponse, "ns2:tpsAPI_LocalRemoveResponse", "ns2:tpsAPI_LocalRemoveResponse");
-	if (soap->error)
-		return soap_recv_fault(soap, 0);
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCORELocalRemove(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCORELocalRemove *ns2__tpsAPI_USCORELocalRemove, struct ns2__tpsAPI_USCORELocalRemoveResponse *ns2__tpsAPI_USCORELocalRemoveResponse) {
+  struct __ns1__tpsAPI_USCORELocalRemove soap_tmp___ns1__tpsAPI_USCORELocalRemove;
+  if (!soap_endpoint)
+    soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
+  if (!soap_action)
+    soap_action = "";
+  soap->encodingStyle = NULL;
+  soap_tmp___ns1__tpsAPI_USCORELocalRemove.ns2__tpsAPI_USCORELocalRemove = ns2__tpsAPI_USCORELocalRemove;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___ns1__tpsAPI_USCORELocalRemove(soap, &soap_tmp___ns1__tpsAPI_USCORELocalRemove);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap)
+        || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___ns1__tpsAPI_USCORELocalRemove(soap, &soap_tmp___ns1__tpsAPI_USCORELocalRemove, "-ns1:tpsAPI_LocalRemove", NULL)
+        || soap_body_end_out(soap)
+        || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap)
+      || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___ns1__tpsAPI_USCORELocalRemove(soap, &soap_tmp___ns1__tpsAPI_USCORELocalRemove, "-ns1:tpsAPI_LocalRemove", NULL)
+      || soap_body_end_out(soap)
+      || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!ns2__tpsAPI_USCORELocalRemoveResponse)
+    return soap_closesock(soap);
+  soap_default_ns2__tpsAPI_USCORELocalRemoveResponse(soap, ns2__tpsAPI_USCORELocalRemoveResponse);
+  if (soap_begin_recv(soap)
+      || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap)
+      || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  soap_get_ns2__tpsAPI_USCORELocalRemoveResponse(soap, ns2__tpsAPI_USCORELocalRemoveResponse, "ns2:tpsAPI_LocalRemoveResponse", "ns2:tpsAPI_LocalRemoveResponse");
+  if (soap->error)
+    return soap_recv_fault(soap, 0);
+  if (soap_body_end_in(soap)
+      || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCORELocalReserve(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCORELocalReserve *ns2__tpsAPI_USCORELocalReserve, struct ns2__tpsAPI_USCORELocalReserveResponse *ns2__tpsAPI_USCORELocalReserveResponse)
-{	struct __ns1__tpsAPI_USCORELocalReserve soap_tmp___ns1__tpsAPI_USCORELocalReserve;
-	if (!soap_endpoint)
-		soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
-	if (!soap_action)
-		soap_action = "";
-	soap->encodingStyle = NULL;
-	soap_tmp___ns1__tpsAPI_USCORELocalReserve.ns2__tpsAPI_USCORELocalReserve = ns2__tpsAPI_USCORELocalReserve;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___ns1__tpsAPI_USCORELocalReserve(soap, &soap_tmp___ns1__tpsAPI_USCORELocalReserve);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___ns1__tpsAPI_USCORELocalReserve(soap, &soap_tmp___ns1__tpsAPI_USCORELocalReserve, "-ns1:tpsAPI_LocalReserve", NULL)
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___ns1__tpsAPI_USCORELocalReserve(soap, &soap_tmp___ns1__tpsAPI_USCORELocalReserve, "-ns1:tpsAPI_LocalReserve", NULL)
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!ns2__tpsAPI_USCORELocalReserveResponse)
-		return soap_closesock(soap);
-	soap_default_ns2__tpsAPI_USCORELocalReserveResponse(soap, ns2__tpsAPI_USCORELocalReserveResponse);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_get_ns2__tpsAPI_USCORELocalReserveResponse(soap, ns2__tpsAPI_USCORELocalReserveResponse, "ns2:tpsAPI_LocalReserveResponse", "ns2:tpsAPI_LocalReserveResponse");
-	if (soap->error)
-		return soap_recv_fault(soap, 0);
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCORELocalReserve(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCORELocalReserve *ns2__tpsAPI_USCORELocalReserve, struct ns2__tpsAPI_USCORELocalReserveResponse *ns2__tpsAPI_USCORELocalReserveResponse) {
+  struct __ns1__tpsAPI_USCORELocalReserve soap_tmp___ns1__tpsAPI_USCORELocalReserve;
+  if (!soap_endpoint)
+    soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
+  if (!soap_action)
+    soap_action = "";
+  soap->encodingStyle = NULL;
+  soap_tmp___ns1__tpsAPI_USCORELocalReserve.ns2__tpsAPI_USCORELocalReserve = ns2__tpsAPI_USCORELocalReserve;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___ns1__tpsAPI_USCORELocalReserve(soap, &soap_tmp___ns1__tpsAPI_USCORELocalReserve);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap)
+        || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___ns1__tpsAPI_USCORELocalReserve(soap, &soap_tmp___ns1__tpsAPI_USCORELocalReserve, "-ns1:tpsAPI_LocalReserve", NULL)
+        || soap_body_end_out(soap)
+        || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap)
+      || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___ns1__tpsAPI_USCORELocalReserve(soap, &soap_tmp___ns1__tpsAPI_USCORELocalReserve, "-ns1:tpsAPI_LocalReserve", NULL)
+      || soap_body_end_out(soap)
+      || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!ns2__tpsAPI_USCORELocalReserveResponse)
+    return soap_closesock(soap);
+  soap_default_ns2__tpsAPI_USCORELocalReserveResponse(soap, ns2__tpsAPI_USCORELocalReserveResponse);
+  if (soap_begin_recv(soap)
+      || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap)
+      || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  soap_get_ns2__tpsAPI_USCORELocalReserveResponse(soap, ns2__tpsAPI_USCORELocalReserveResponse, "ns2:tpsAPI_LocalReserveResponse", "ns2:tpsAPI_LocalReserveResponse");
+  if (soap->error)
+    return soap_recv_fault(soap, 0);
+  if (soap_body_end_in(soap)
+      || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCORELocalStart(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCORELocalStart *ns2__tpsAPI_USCORELocalStart, struct ns2__tpsAPI_USCORELocalStartResponse *ns2__tpsAPI_USCORELocalStartResponse)
-{	struct __ns1__tpsAPI_USCORELocalStart soap_tmp___ns1__tpsAPI_USCORELocalStart;
-	if (!soap_endpoint)
-		soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
-	if (!soap_action)
-		soap_action = "";
-	soap->encodingStyle = NULL;
-	soap_tmp___ns1__tpsAPI_USCORELocalStart.ns2__tpsAPI_USCORELocalStart = ns2__tpsAPI_USCORELocalStart;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___ns1__tpsAPI_USCORELocalStart(soap, &soap_tmp___ns1__tpsAPI_USCORELocalStart);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___ns1__tpsAPI_USCORELocalStart(soap, &soap_tmp___ns1__tpsAPI_USCORELocalStart, "-ns1:tpsAPI_LocalStart", NULL)
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___ns1__tpsAPI_USCORELocalStart(soap, &soap_tmp___ns1__tpsAPI_USCORELocalStart, "-ns1:tpsAPI_LocalStart", NULL)
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!ns2__tpsAPI_USCORELocalStartResponse)
-		return soap_closesock(soap);
-	soap_default_ns2__tpsAPI_USCORELocalStartResponse(soap, ns2__tpsAPI_USCORELocalStartResponse);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_get_ns2__tpsAPI_USCORELocalStartResponse(soap, ns2__tpsAPI_USCORELocalStartResponse, "ns2:tpsAPI_LocalStartResponse", "ns2:tpsAPI_LocalStartResponse");
-	if (soap->error)
-		return soap_recv_fault(soap, 0);
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCORELocalStart(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCORELocalStart *ns2__tpsAPI_USCORELocalStart, struct ns2__tpsAPI_USCORELocalStartResponse *ns2__tpsAPI_USCORELocalStartResponse) {
+  struct __ns1__tpsAPI_USCORELocalStart soap_tmp___ns1__tpsAPI_USCORELocalStart;
+  if (!soap_endpoint)
+    soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
+  if (!soap_action)
+    soap_action = "";
+  soap->encodingStyle = NULL;
+  soap_tmp___ns1__tpsAPI_USCORELocalStart.ns2__tpsAPI_USCORELocalStart = ns2__tpsAPI_USCORELocalStart;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___ns1__tpsAPI_USCORELocalStart(soap, &soap_tmp___ns1__tpsAPI_USCORELocalStart);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap)
+        || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___ns1__tpsAPI_USCORELocalStart(soap, &soap_tmp___ns1__tpsAPI_USCORELocalStart, "-ns1:tpsAPI_LocalStart", NULL)
+        || soap_body_end_out(soap)
+        || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap)
+      || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___ns1__tpsAPI_USCORELocalStart(soap, &soap_tmp___ns1__tpsAPI_USCORELocalStart, "-ns1:tpsAPI_LocalStart", NULL)
+      || soap_body_end_out(soap)
+      || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!ns2__tpsAPI_USCORELocalStartResponse)
+    return soap_closesock(soap);
+  soap_default_ns2__tpsAPI_USCORELocalStartResponse(soap, ns2__tpsAPI_USCORELocalStartResponse);
+  if (soap_begin_recv(soap)
+      || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap)
+      || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  soap_get_ns2__tpsAPI_USCORELocalStartResponse(soap, ns2__tpsAPI_USCORELocalStartResponse, "ns2:tpsAPI_LocalStartResponse", "ns2:tpsAPI_LocalStartResponse");
+  if (soap->error)
+    return soap_recv_fault(soap, 0);
+  if (soap_body_end_in(soap)
+      || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCOREaddRelatedReservationId *ns2__tpsAPI_USCOREaddRelatedReservationId, struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *ns2__tpsAPI_USCOREaddRelatedReservationIdResponse)
-{	struct __ns1__tpsAPI_USCOREaddRelatedReservationId soap_tmp___ns1__tpsAPI_USCOREaddRelatedReservationId;
-	if (!soap_endpoint)
-		soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
-	if (!soap_action)
-		soap_action = "";
-	soap->encodingStyle = NULL;
-	soap_tmp___ns1__tpsAPI_USCOREaddRelatedReservationId.ns2__tpsAPI_USCOREaddRelatedReservationId = ns2__tpsAPI_USCOREaddRelatedReservationId;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___ns1__tpsAPI_USCOREaddRelatedReservationId(soap, &soap_tmp___ns1__tpsAPI_USCOREaddRelatedReservationId);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___ns1__tpsAPI_USCOREaddRelatedReservationId(soap, &soap_tmp___ns1__tpsAPI_USCOREaddRelatedReservationId, "-ns1:tpsAPI_addRelatedReservationId", NULL)
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___ns1__tpsAPI_USCOREaddRelatedReservationId(soap, &soap_tmp___ns1__tpsAPI_USCOREaddRelatedReservationId, "-ns1:tpsAPI_addRelatedReservationId", NULL)
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!ns2__tpsAPI_USCOREaddRelatedReservationIdResponse)
-		return soap_closesock(soap);
-	soap_default_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, ns2__tpsAPI_USCOREaddRelatedReservationIdResponse);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_get_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, ns2__tpsAPI_USCOREaddRelatedReservationIdResponse, "ns2:tpsAPI_addRelatedReservationIdResponse", "ns2:tpsAPI_addRelatedReservationIdResponse");
-	if (soap->error)
-		return soap_recv_fault(soap, 0);
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCOREaddRelatedReservationId *ns2__tpsAPI_USCOREaddRelatedReservationId, struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *ns2__tpsAPI_USCOREaddRelatedReservationIdResponse) {
+  struct __ns1__tpsAPI_USCOREaddRelatedReservationId soap_tmp___ns1__tpsAPI_USCOREaddRelatedReservationId;
+  if (!soap_endpoint)
+    soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
+  if (!soap_action)
+    soap_action = "";
+  soap->encodingStyle = NULL;
+  soap_tmp___ns1__tpsAPI_USCOREaddRelatedReservationId.ns2__tpsAPI_USCOREaddRelatedReservationId = ns2__tpsAPI_USCOREaddRelatedReservationId;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___ns1__tpsAPI_USCOREaddRelatedReservationId(soap, &soap_tmp___ns1__tpsAPI_USCOREaddRelatedReservationId);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap)
+        || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___ns1__tpsAPI_USCOREaddRelatedReservationId(soap, &soap_tmp___ns1__tpsAPI_USCOREaddRelatedReservationId, "-ns1:tpsAPI_addRelatedReservationId", NULL)
+        || soap_body_end_out(soap)
+        || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap)
+      || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___ns1__tpsAPI_USCOREaddRelatedReservationId(soap, &soap_tmp___ns1__tpsAPI_USCOREaddRelatedReservationId, "-ns1:tpsAPI_addRelatedReservationId", NULL)
+      || soap_body_end_out(soap)
+      || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!ns2__tpsAPI_USCOREaddRelatedReservationIdResponse)
+    return soap_closesock(soap);
+  soap_default_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, ns2__tpsAPI_USCOREaddRelatedReservationIdResponse);
+  if (soap_begin_recv(soap)
+      || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap)
+      || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  soap_get_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, ns2__tpsAPI_USCOREaddRelatedReservationIdResponse, "ns2:tpsAPI_addRelatedReservationIdResponse", "ns2:tpsAPI_addRelatedReservationIdResponse");
+  if (soap->error)
+    return soap_recv_fault(soap, 0);
+  if (soap_body_end_in(soap)
+      || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCOREcancel(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCOREcancel *ns2__tpsAPI_USCOREcancel, struct ns2__tpsAPI_USCOREcancelResponse *ns2__tpsAPI_USCOREcancelResponse)
-{	struct __ns1__tpsAPI_USCOREcancel soap_tmp___ns1__tpsAPI_USCOREcancel;
-	if (!soap_endpoint)
-		soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
-	if (!soap_action)
-		soap_action = "";
-	soap->encodingStyle = NULL;
-	soap_tmp___ns1__tpsAPI_USCOREcancel.ns2__tpsAPI_USCOREcancel = ns2__tpsAPI_USCOREcancel;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___ns1__tpsAPI_USCOREcancel(soap, &soap_tmp___ns1__tpsAPI_USCOREcancel);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___ns1__tpsAPI_USCOREcancel(soap, &soap_tmp___ns1__tpsAPI_USCOREcancel, "-ns1:tpsAPI_cancel", NULL)
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___ns1__tpsAPI_USCOREcancel(soap, &soap_tmp___ns1__tpsAPI_USCOREcancel, "-ns1:tpsAPI_cancel", NULL)
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!ns2__tpsAPI_USCOREcancelResponse)
-		return soap_closesock(soap);
-	soap_default_ns2__tpsAPI_USCOREcancelResponse(soap, ns2__tpsAPI_USCOREcancelResponse);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_get_ns2__tpsAPI_USCOREcancelResponse(soap, ns2__tpsAPI_USCOREcancelResponse, "ns2:tpsAPI_cancelResponse", "ns2:tpsAPI_cancelResponse");
-	if (soap->error)
-		return soap_recv_fault(soap, 0);
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCOREcancel(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCOREcancel *ns2__tpsAPI_USCOREcancel, struct ns2__tpsAPI_USCOREcancelResponse *ns2__tpsAPI_USCOREcancelResponse) {
+  struct __ns1__tpsAPI_USCOREcancel soap_tmp___ns1__tpsAPI_USCOREcancel;
+  if (!soap_endpoint)
+    soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
+  if (!soap_action)
+    soap_action = "";
+  soap->encodingStyle = NULL;
+  soap_tmp___ns1__tpsAPI_USCOREcancel.ns2__tpsAPI_USCOREcancel = ns2__tpsAPI_USCOREcancel;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___ns1__tpsAPI_USCOREcancel(soap, &soap_tmp___ns1__tpsAPI_USCOREcancel);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap)
+        || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___ns1__tpsAPI_USCOREcancel(soap, &soap_tmp___ns1__tpsAPI_USCOREcancel, "-ns1:tpsAPI_cancel", NULL)
+        || soap_body_end_out(soap)
+        || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap)
+      || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___ns1__tpsAPI_USCOREcancel(soap, &soap_tmp___ns1__tpsAPI_USCOREcancel, "-ns1:tpsAPI_cancel", NULL)
+      || soap_body_end_out(soap)
+      || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!ns2__tpsAPI_USCOREcancelResponse)
+    return soap_closesock(soap);
+  soap_default_ns2__tpsAPI_USCOREcancelResponse(soap, ns2__tpsAPI_USCOREcancelResponse);
+  if (soap_begin_recv(soap)
+      || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap)
+      || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  soap_get_ns2__tpsAPI_USCOREcancelResponse(soap, ns2__tpsAPI_USCOREcancelResponse, "ns2:tpsAPI_cancelResponse", "ns2:tpsAPI_cancelResponse");
+  if (soap->error)
+    return soap_recv_fault(soap, 0);
+  if (soap_body_end_in(soap)
+      || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCOREcommit(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCOREcommit *ns2__tpsAPI_USCOREcommit, struct ns2__tpsAPI_USCOREcommitResponse *ns2__tpsAPI_USCOREcommitResponse)
-{	struct __ns1__tpsAPI_USCOREcommit soap_tmp___ns1__tpsAPI_USCOREcommit;
-	if (!soap_endpoint)
-		soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
-	if (!soap_action)
-		soap_action = "";
-	soap->encodingStyle = NULL;
-	soap_tmp___ns1__tpsAPI_USCOREcommit.ns2__tpsAPI_USCOREcommit = ns2__tpsAPI_USCOREcommit;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___ns1__tpsAPI_USCOREcommit(soap, &soap_tmp___ns1__tpsAPI_USCOREcommit);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___ns1__tpsAPI_USCOREcommit(soap, &soap_tmp___ns1__tpsAPI_USCOREcommit, "-ns1:tpsAPI_commit", NULL)
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___ns1__tpsAPI_USCOREcommit(soap, &soap_tmp___ns1__tpsAPI_USCOREcommit, "-ns1:tpsAPI_commit", NULL)
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!ns2__tpsAPI_USCOREcommitResponse)
-		return soap_closesock(soap);
-	soap_default_ns2__tpsAPI_USCOREcommitResponse(soap, ns2__tpsAPI_USCOREcommitResponse);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_get_ns2__tpsAPI_USCOREcommitResponse(soap, ns2__tpsAPI_USCOREcommitResponse, "ns2:tpsAPI_commitResponse", "ns2:tpsAPI_commitResponse");
-	if (soap->error)
-		return soap_recv_fault(soap, 0);
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCOREcommit(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCOREcommit *ns2__tpsAPI_USCOREcommit, struct ns2__tpsAPI_USCOREcommitResponse *ns2__tpsAPI_USCOREcommitResponse) {
+  struct __ns1__tpsAPI_USCOREcommit soap_tmp___ns1__tpsAPI_USCOREcommit;
+  if (!soap_endpoint)
+    soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
+  if (!soap_action)
+    soap_action = "";
+  soap->encodingStyle = NULL;
+  soap_tmp___ns1__tpsAPI_USCOREcommit.ns2__tpsAPI_USCOREcommit = ns2__tpsAPI_USCOREcommit;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___ns1__tpsAPI_USCOREcommit(soap, &soap_tmp___ns1__tpsAPI_USCOREcommit);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap)
+        || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___ns1__tpsAPI_USCOREcommit(soap, &soap_tmp___ns1__tpsAPI_USCOREcommit, "-ns1:tpsAPI_commit", NULL)
+        || soap_body_end_out(soap)
+        || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap)
+      || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___ns1__tpsAPI_USCOREcommit(soap, &soap_tmp___ns1__tpsAPI_USCOREcommit, "-ns1:tpsAPI_commit", NULL)
+      || soap_body_end_out(soap)
+      || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!ns2__tpsAPI_USCOREcommitResponse)
+    return soap_closesock(soap);
+  soap_default_ns2__tpsAPI_USCOREcommitResponse(soap, ns2__tpsAPI_USCOREcommitResponse);
+  if (soap_begin_recv(soap)
+      || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap)
+      || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  soap_get_ns2__tpsAPI_USCOREcommitResponse(soap, ns2__tpsAPI_USCOREcommitResponse, "ns2:tpsAPI_commitResponse", "ns2:tpsAPI_commitResponse");
+  if (soap->error)
+    return soap_recv_fault(soap, 0);
+  if (soap_body_end_in(soap)
+      || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCOREgetBandwidths(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCOREgetBandwidths *ns2__tpsAPI_USCOREgetBandwidths, struct ns2__tpsAPI_USCOREgetBandwidthsResponse *ns2__tpsAPI_USCOREgetBandwidthsResponse)
-{	struct __ns1__tpsAPI_USCOREgetBandwidths soap_tmp___ns1__tpsAPI_USCOREgetBandwidths;
-	if (!soap_endpoint)
-		soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
-	if (!soap_action)
-		soap_action = "";
-	soap->encodingStyle = NULL;
-	soap_tmp___ns1__tpsAPI_USCOREgetBandwidths.ns2__tpsAPI_USCOREgetBandwidths = ns2__tpsAPI_USCOREgetBandwidths;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___ns1__tpsAPI_USCOREgetBandwidths(soap, &soap_tmp___ns1__tpsAPI_USCOREgetBandwidths);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___ns1__tpsAPI_USCOREgetBandwidths(soap, &soap_tmp___ns1__tpsAPI_USCOREgetBandwidths, "-ns1:tpsAPI_getBandwidths", NULL)
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___ns1__tpsAPI_USCOREgetBandwidths(soap, &soap_tmp___ns1__tpsAPI_USCOREgetBandwidths, "-ns1:tpsAPI_getBandwidths", NULL)
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!ns2__tpsAPI_USCOREgetBandwidthsResponse)
-		return soap_closesock(soap);
-	soap_default_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, ns2__tpsAPI_USCOREgetBandwidthsResponse);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_get_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, ns2__tpsAPI_USCOREgetBandwidthsResponse, "ns2:tpsAPI_getBandwidthsResponse", "ns2:tpsAPI_getBandwidthsResponse");
-	if (soap->error)
-		return soap_recv_fault(soap, 0);
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCOREgetBandwidths(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCOREgetBandwidths *ns2__tpsAPI_USCOREgetBandwidths, struct ns2__tpsAPI_USCOREgetBandwidthsResponse *ns2__tpsAPI_USCOREgetBandwidthsResponse) {
+  struct __ns1__tpsAPI_USCOREgetBandwidths soap_tmp___ns1__tpsAPI_USCOREgetBandwidths;
+  if (!soap_endpoint)
+    soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
+  if (!soap_action)
+    soap_action = "";
+  soap->encodingStyle = NULL;
+  soap_tmp___ns1__tpsAPI_USCOREgetBandwidths.ns2__tpsAPI_USCOREgetBandwidths = ns2__tpsAPI_USCOREgetBandwidths;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___ns1__tpsAPI_USCOREgetBandwidths(soap, &soap_tmp___ns1__tpsAPI_USCOREgetBandwidths);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap)
+        || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___ns1__tpsAPI_USCOREgetBandwidths(soap, &soap_tmp___ns1__tpsAPI_USCOREgetBandwidths, "-ns1:tpsAPI_getBandwidths", NULL)
+        || soap_body_end_out(soap)
+        || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap)
+      || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___ns1__tpsAPI_USCOREgetBandwidths(soap, &soap_tmp___ns1__tpsAPI_USCOREgetBandwidths, "-ns1:tpsAPI_getBandwidths", NULL)
+      || soap_body_end_out(soap)
+      || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!ns2__tpsAPI_USCOREgetBandwidthsResponse)
+    return soap_closesock(soap);
+  soap_default_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, ns2__tpsAPI_USCOREgetBandwidthsResponse);
+  if (soap_begin_recv(soap)
+      || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap)
+      || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  soap_get_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, ns2__tpsAPI_USCOREgetBandwidthsResponse, "ns2:tpsAPI_getBandwidthsResponse", "ns2:tpsAPI_getBandwidthsResponse");
+  if (soap->error)
+    return soap_recv_fault(soap, 0);
+  if (soap_body_end_in(soap)
+      || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCOREgetLocalBandwidths *ns2__tpsAPI_USCOREgetLocalBandwidths, struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *ns2__tpsAPI_USCOREgetLocalBandwidthsResponse)
-{	struct __ns1__tpsAPI_USCOREgetLocalBandwidths soap_tmp___ns1__tpsAPI_USCOREgetLocalBandwidths;
-	if (!soap_endpoint)
-		soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
-	if (!soap_action)
-		soap_action = "";
-	soap->encodingStyle = NULL;
-	soap_tmp___ns1__tpsAPI_USCOREgetLocalBandwidths.ns2__tpsAPI_USCOREgetLocalBandwidths = ns2__tpsAPI_USCOREgetLocalBandwidths;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___ns1__tpsAPI_USCOREgetLocalBandwidths(soap, &soap_tmp___ns1__tpsAPI_USCOREgetLocalBandwidths);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___ns1__tpsAPI_USCOREgetLocalBandwidths(soap, &soap_tmp___ns1__tpsAPI_USCOREgetLocalBandwidths, "-ns1:tpsAPI_getLocalBandwidths", NULL)
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___ns1__tpsAPI_USCOREgetLocalBandwidths(soap, &soap_tmp___ns1__tpsAPI_USCOREgetLocalBandwidths, "-ns1:tpsAPI_getLocalBandwidths", NULL)
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!ns2__tpsAPI_USCOREgetLocalBandwidthsResponse)
-		return soap_closesock(soap);
-	soap_default_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, ns2__tpsAPI_USCOREgetLocalBandwidthsResponse);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_get_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, ns2__tpsAPI_USCOREgetLocalBandwidthsResponse, "ns2:tpsAPI_getLocalBandwidthsResponse", "ns2:tpsAPI_getLocalBandwidthsResponse");
-	if (soap->error)
-		return soap_recv_fault(soap, 0);
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCOREgetLocalBandwidths *ns2__tpsAPI_USCOREgetLocalBandwidths, struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *ns2__tpsAPI_USCOREgetLocalBandwidthsResponse) {
+  struct __ns1__tpsAPI_USCOREgetLocalBandwidths soap_tmp___ns1__tpsAPI_USCOREgetLocalBandwidths;
+  if (!soap_endpoint)
+    soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
+  if (!soap_action)
+    soap_action = "";
+  soap->encodingStyle = NULL;
+  soap_tmp___ns1__tpsAPI_USCOREgetLocalBandwidths.ns2__tpsAPI_USCOREgetLocalBandwidths = ns2__tpsAPI_USCOREgetLocalBandwidths;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___ns1__tpsAPI_USCOREgetLocalBandwidths(soap, &soap_tmp___ns1__tpsAPI_USCOREgetLocalBandwidths);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap)
+        || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___ns1__tpsAPI_USCOREgetLocalBandwidths(soap, &soap_tmp___ns1__tpsAPI_USCOREgetLocalBandwidths, "-ns1:tpsAPI_getLocalBandwidths", NULL)
+        || soap_body_end_out(soap)
+        || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap)
+      || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___ns1__tpsAPI_USCOREgetLocalBandwidths(soap, &soap_tmp___ns1__tpsAPI_USCOREgetLocalBandwidths, "-ns1:tpsAPI_getLocalBandwidths", NULL)
+      || soap_body_end_out(soap)
+      || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!ns2__tpsAPI_USCOREgetLocalBandwidthsResponse)
+    return soap_closesock(soap);
+  soap_default_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, ns2__tpsAPI_USCOREgetLocalBandwidthsResponse);
+  if (soap_begin_recv(soap)
+      || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap)
+      || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  soap_get_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, ns2__tpsAPI_USCOREgetLocalBandwidthsResponse, "ns2:tpsAPI_getLocalBandwidthsResponse", "ns2:tpsAPI_getLocalBandwidthsResponse");
+  if (soap->error)
+    return soap_recv_fault(soap, 0);
+  if (soap_body_end_in(soap)
+      || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCOREgetPath(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCOREgetPath *ns2__tpsAPI_USCOREgetPath, struct ns2__tpsAPI_USCOREgetPathResponse *ns2__tpsAPI_USCOREgetPathResponse)
-{	struct __ns1__tpsAPI_USCOREgetPath soap_tmp___ns1__tpsAPI_USCOREgetPath;
-	if (!soap_endpoint)
-		soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
-	if (!soap_action)
-		soap_action = "";
-	soap->encodingStyle = NULL;
-	soap_tmp___ns1__tpsAPI_USCOREgetPath.ns2__tpsAPI_USCOREgetPath = ns2__tpsAPI_USCOREgetPath;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___ns1__tpsAPI_USCOREgetPath(soap, &soap_tmp___ns1__tpsAPI_USCOREgetPath);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___ns1__tpsAPI_USCOREgetPath(soap, &soap_tmp___ns1__tpsAPI_USCOREgetPath, "-ns1:tpsAPI_getPath", NULL)
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___ns1__tpsAPI_USCOREgetPath(soap, &soap_tmp___ns1__tpsAPI_USCOREgetPath, "-ns1:tpsAPI_getPath", NULL)
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!ns2__tpsAPI_USCOREgetPathResponse)
-		return soap_closesock(soap);
-	soap_default_ns2__tpsAPI_USCOREgetPathResponse(soap, ns2__tpsAPI_USCOREgetPathResponse);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_get_ns2__tpsAPI_USCOREgetPathResponse(soap, ns2__tpsAPI_USCOREgetPathResponse, "ns2:tpsAPI_getPathResponse", "ns2:tpsAPI_getPathResponse");
-	if (soap->error)
-		return soap_recv_fault(soap, 0);
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCOREgetPath(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCOREgetPath *ns2__tpsAPI_USCOREgetPath, struct ns2__tpsAPI_USCOREgetPathResponse *ns2__tpsAPI_USCOREgetPathResponse) {
+  struct __ns1__tpsAPI_USCOREgetPath soap_tmp___ns1__tpsAPI_USCOREgetPath;
+  if (!soap_endpoint)
+    soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
+  if (!soap_action)
+    soap_action = "";
+  soap->encodingStyle = NULL;
+  soap_tmp___ns1__tpsAPI_USCOREgetPath.ns2__tpsAPI_USCOREgetPath = ns2__tpsAPI_USCOREgetPath;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___ns1__tpsAPI_USCOREgetPath(soap, &soap_tmp___ns1__tpsAPI_USCOREgetPath);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap)
+        || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___ns1__tpsAPI_USCOREgetPath(soap, &soap_tmp___ns1__tpsAPI_USCOREgetPath, "-ns1:tpsAPI_getPath", NULL)
+        || soap_body_end_out(soap)
+        || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap)
+      || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___ns1__tpsAPI_USCOREgetPath(soap, &soap_tmp___ns1__tpsAPI_USCOREgetPath, "-ns1:tpsAPI_getPath", NULL)
+      || soap_body_end_out(soap)
+      || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!ns2__tpsAPI_USCOREgetPathResponse)
+    return soap_closesock(soap);
+  soap_default_ns2__tpsAPI_USCOREgetPathResponse(soap, ns2__tpsAPI_USCOREgetPathResponse);
+  if (soap_begin_recv(soap)
+      || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap)
+      || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  soap_get_ns2__tpsAPI_USCOREgetPathResponse(soap, ns2__tpsAPI_USCOREgetPathResponse, "ns2:tpsAPI_getPathResponse", "ns2:tpsAPI_getPathResponse");
+  if (soap->error)
+    return soap_recv_fault(soap, 0);
+  if (soap_body_end_in(soap)
+      || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCOREgetRelatedReservationIds *ns2__tpsAPI_USCOREgetRelatedReservationIds, struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse)
-{	struct __ns1__tpsAPI_USCOREgetRelatedReservationIds soap_tmp___ns1__tpsAPI_USCOREgetRelatedReservationIds;
-	if (!soap_endpoint)
-		soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
-	if (!soap_action)
-		soap_action = "";
-	soap->encodingStyle = NULL;
-	soap_tmp___ns1__tpsAPI_USCOREgetRelatedReservationIds.ns2__tpsAPI_USCOREgetRelatedReservationIds = ns2__tpsAPI_USCOREgetRelatedReservationIds;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___ns1__tpsAPI_USCOREgetRelatedReservationIds(soap, &soap_tmp___ns1__tpsAPI_USCOREgetRelatedReservationIds);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___ns1__tpsAPI_USCOREgetRelatedReservationIds(soap, &soap_tmp___ns1__tpsAPI_USCOREgetRelatedReservationIds, "-ns1:tpsAPI_getRelatedReservationIds", NULL)
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___ns1__tpsAPI_USCOREgetRelatedReservationIds(soap, &soap_tmp___ns1__tpsAPI_USCOREgetRelatedReservationIds, "-ns1:tpsAPI_getRelatedReservationIds", NULL)
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse)
-		return soap_closesock(soap);
-	soap_default_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_get_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse, "ns2:tpsAPI_getRelatedReservationIdsResponse", "ns2:tpsAPI_getRelatedReservationIdsResponse");
-	if (soap->error)
-		return soap_recv_fault(soap, 0);
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCOREgetRelatedReservationIds *ns2__tpsAPI_USCOREgetRelatedReservationIds, struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse) {
+  struct __ns1__tpsAPI_USCOREgetRelatedReservationIds soap_tmp___ns1__tpsAPI_USCOREgetRelatedReservationIds;
+  if (!soap_endpoint)
+    soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
+  if (!soap_action)
+    soap_action = "";
+  soap->encodingStyle = NULL;
+  soap_tmp___ns1__tpsAPI_USCOREgetRelatedReservationIds.ns2__tpsAPI_USCOREgetRelatedReservationIds = ns2__tpsAPI_USCOREgetRelatedReservationIds;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___ns1__tpsAPI_USCOREgetRelatedReservationIds(soap, &soap_tmp___ns1__tpsAPI_USCOREgetRelatedReservationIds);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap)
+        || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___ns1__tpsAPI_USCOREgetRelatedReservationIds(soap, &soap_tmp___ns1__tpsAPI_USCOREgetRelatedReservationIds, "-ns1:tpsAPI_getRelatedReservationIds", NULL)
+        || soap_body_end_out(soap)
+        || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap)
+      || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___ns1__tpsAPI_USCOREgetRelatedReservationIds(soap, &soap_tmp___ns1__tpsAPI_USCOREgetRelatedReservationIds, "-ns1:tpsAPI_getRelatedReservationIds", NULL)
+      || soap_body_end_out(soap)
+      || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse)
+    return soap_closesock(soap);
+  soap_default_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse);
+  if (soap_begin_recv(soap)
+      || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap)
+      || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  soap_get_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse, "ns2:tpsAPI_getRelatedReservationIdsResponse", "ns2:tpsAPI_getRelatedReservationIdsResponse");
+  if (soap->error)
+    return soap_recv_fault(soap, 0);
+  if (soap_body_end_in(soap)
+      || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCOREgetReservationData(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCOREgetReservationData *ns2__tpsAPI_USCOREgetReservationData, struct ns2__tpsAPI_USCOREgetReservationDataResponse *ns2__tpsAPI_USCOREgetReservationDataResponse)
-{	struct __ns1__tpsAPI_USCOREgetReservationData soap_tmp___ns1__tpsAPI_USCOREgetReservationData;
-	if (!soap_endpoint)
-		soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
-	if (!soap_action)
-		soap_action = "";
-	soap->encodingStyle = NULL;
-	soap_tmp___ns1__tpsAPI_USCOREgetReservationData.ns2__tpsAPI_USCOREgetReservationData = ns2__tpsAPI_USCOREgetReservationData;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___ns1__tpsAPI_USCOREgetReservationData(soap, &soap_tmp___ns1__tpsAPI_USCOREgetReservationData);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___ns1__tpsAPI_USCOREgetReservationData(soap, &soap_tmp___ns1__tpsAPI_USCOREgetReservationData, "-ns1:tpsAPI_getReservationData", NULL)
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___ns1__tpsAPI_USCOREgetReservationData(soap, &soap_tmp___ns1__tpsAPI_USCOREgetReservationData, "-ns1:tpsAPI_getReservationData", NULL)
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!ns2__tpsAPI_USCOREgetReservationDataResponse)
-		return soap_closesock(soap);
-	soap_default_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, ns2__tpsAPI_USCOREgetReservationDataResponse);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_get_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, ns2__tpsAPI_USCOREgetReservationDataResponse, "ns2:tpsAPI_getReservationDataResponse", "ns2:tpsAPI_getReservationDataResponse");
-	if (soap->error)
-		return soap_recv_fault(soap, 0);
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCOREgetReservationData(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCOREgetReservationData *ns2__tpsAPI_USCOREgetReservationData, struct ns2__tpsAPI_USCOREgetReservationDataResponse *ns2__tpsAPI_USCOREgetReservationDataResponse) {
+  struct __ns1__tpsAPI_USCOREgetReservationData soap_tmp___ns1__tpsAPI_USCOREgetReservationData;
+  if (!soap_endpoint)
+    soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
+  if (!soap_action)
+    soap_action = "";
+  soap->encodingStyle = NULL;
+  soap_tmp___ns1__tpsAPI_USCOREgetReservationData.ns2__tpsAPI_USCOREgetReservationData = ns2__tpsAPI_USCOREgetReservationData;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___ns1__tpsAPI_USCOREgetReservationData(soap, &soap_tmp___ns1__tpsAPI_USCOREgetReservationData);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap)
+        || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___ns1__tpsAPI_USCOREgetReservationData(soap, &soap_tmp___ns1__tpsAPI_USCOREgetReservationData, "-ns1:tpsAPI_getReservationData", NULL)
+        || soap_body_end_out(soap)
+        || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap)
+      || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___ns1__tpsAPI_USCOREgetReservationData(soap, &soap_tmp___ns1__tpsAPI_USCOREgetReservationData, "-ns1:tpsAPI_getReservationData", NULL)
+      || soap_body_end_out(soap)
+      || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!ns2__tpsAPI_USCOREgetReservationDataResponse)
+    return soap_closesock(soap);
+  soap_default_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, ns2__tpsAPI_USCOREgetReservationDataResponse);
+  if (soap_begin_recv(soap)
+      || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap)
+      || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  soap_get_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, ns2__tpsAPI_USCOREgetReservationDataResponse, "ns2:tpsAPI_getReservationDataResponse", "ns2:tpsAPI_getReservationDataResponse");
+  if (soap->error)
+    return soap_recv_fault(soap, 0);
+  if (soap_body_end_in(soap)
+      || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCORElookupUser(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCORElookupUser *ns2__tpsAPI_USCORElookupUser, struct ns2__tpsAPI_USCORElookupUserResponse *ns2__tpsAPI_USCORElookupUserResponse)
-{	struct __ns1__tpsAPI_USCORElookupUser soap_tmp___ns1__tpsAPI_USCORElookupUser;
-	if (!soap_endpoint)
-		soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
-	if (!soap_action)
-		soap_action = "";
-	soap->encodingStyle = NULL;
-	soap_tmp___ns1__tpsAPI_USCORElookupUser.ns2__tpsAPI_USCORElookupUser = ns2__tpsAPI_USCORElookupUser;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___ns1__tpsAPI_USCORElookupUser(soap, &soap_tmp___ns1__tpsAPI_USCORElookupUser);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___ns1__tpsAPI_USCORElookupUser(soap, &soap_tmp___ns1__tpsAPI_USCORElookupUser, "-ns1:tpsAPI_lookupUser", NULL)
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___ns1__tpsAPI_USCORElookupUser(soap, &soap_tmp___ns1__tpsAPI_USCORElookupUser, "-ns1:tpsAPI_lookupUser", NULL)
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!ns2__tpsAPI_USCORElookupUserResponse)
-		return soap_closesock(soap);
-	soap_default_ns2__tpsAPI_USCORElookupUserResponse(soap, ns2__tpsAPI_USCORElookupUserResponse);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_get_ns2__tpsAPI_USCORElookupUserResponse(soap, ns2__tpsAPI_USCORElookupUserResponse, "ns2:tpsAPI_lookupUserResponse", "ns2:tpsAPI_lookupUserResponse");
-	if (soap->error)
-		return soap_recv_fault(soap, 0);
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCORElookupUser(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCORElookupUser *ns2__tpsAPI_USCORElookupUser, struct ns2__tpsAPI_USCORElookupUserResponse *ns2__tpsAPI_USCORElookupUserResponse) {
+  struct __ns1__tpsAPI_USCORElookupUser soap_tmp___ns1__tpsAPI_USCORElookupUser;
+  if (!soap_endpoint)
+    soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
+  if (!soap_action)
+    soap_action = "";
+  soap->encodingStyle = NULL;
+  soap_tmp___ns1__tpsAPI_USCORElookupUser.ns2__tpsAPI_USCORElookupUser = ns2__tpsAPI_USCORElookupUser;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___ns1__tpsAPI_USCORElookupUser(soap, &soap_tmp___ns1__tpsAPI_USCORElookupUser);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap)
+        || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___ns1__tpsAPI_USCORElookupUser(soap, &soap_tmp___ns1__tpsAPI_USCORElookupUser, "-ns1:tpsAPI_lookupUser", NULL)
+        || soap_body_end_out(soap)
+        || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap)
+      || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___ns1__tpsAPI_USCORElookupUser(soap, &soap_tmp___ns1__tpsAPI_USCORElookupUser, "-ns1:tpsAPI_lookupUser", NULL)
+      || soap_body_end_out(soap)
+      || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!ns2__tpsAPI_USCORElookupUserResponse)
+    return soap_closesock(soap);
+  soap_default_ns2__tpsAPI_USCORElookupUserResponse(soap, ns2__tpsAPI_USCORElookupUserResponse);
+  if (soap_begin_recv(soap)
+      || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap)
+      || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  soap_get_ns2__tpsAPI_USCORElookupUserResponse(soap, ns2__tpsAPI_USCORElookupUserResponse, "ns2:tpsAPI_lookupUserResponse", "ns2:tpsAPI_lookupUserResponse");
+  if (soap->error)
+    return soap_recv_fault(soap, 0);
+  if (soap_body_end_in(soap)
+      || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCOREreserve(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCOREreserve *ns2__tpsAPI_USCOREreserve, struct ns2__tpsAPI_USCOREreserveResponse *ns2__tpsAPI_USCOREreserveResponse)
-{	struct __ns1__tpsAPI_USCOREreserve soap_tmp___ns1__tpsAPI_USCOREreserve;
-	if (!soap_endpoint)
-		soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
-	if (!soap_action)
-		soap_action = "";
-	soap->encodingStyle = NULL;
-	soap_tmp___ns1__tpsAPI_USCOREreserve.ns2__tpsAPI_USCOREreserve = ns2__tpsAPI_USCOREreserve;
-	soap_begin(soap);
-	soap_serializeheader(soap);
-	soap_serialize___ns1__tpsAPI_USCOREreserve(soap, &soap_tmp___ns1__tpsAPI_USCOREreserve);
-	if (soap_begin_count(soap))
-		return soap->error;
-	if (soap->mode & SOAP_IO_LENGTH)
-	{	if (soap_envelope_begin_out(soap)
-		 || soap_putheader(soap)
-		 || soap_body_begin_out(soap)
-		 || soap_put___ns1__tpsAPI_USCOREreserve(soap, &soap_tmp___ns1__tpsAPI_USCOREreserve, "-ns1:tpsAPI_reserve", NULL)
-		 || soap_body_end_out(soap)
-		 || soap_envelope_end_out(soap))
-			 return soap->error;
-	}
-	if (soap_end_count(soap))
-		return soap->error;
-	if (soap_connect(soap, soap_endpoint, soap_action)
-	 || soap_envelope_begin_out(soap)
-	 || soap_putheader(soap)
-	 || soap_body_begin_out(soap)
-	 || soap_put___ns1__tpsAPI_USCOREreserve(soap, &soap_tmp___ns1__tpsAPI_USCOREreserve, "-ns1:tpsAPI_reserve", NULL)
-	 || soap_body_end_out(soap)
-	 || soap_envelope_end_out(soap)
-	 || soap_end_send(soap))
-		return soap_closesock(soap);
-	if (!ns2__tpsAPI_USCOREreserveResponse)
-		return soap_closesock(soap);
-	soap_default_ns2__tpsAPI_USCOREreserveResponse(soap, ns2__tpsAPI_USCOREreserveResponse);
-	if (soap_begin_recv(soap)
-	 || soap_envelope_begin_in(soap)
-	 || soap_recv_header(soap)
-	 || soap_body_begin_in(soap))
-		return soap_closesock(soap);
-	soap_get_ns2__tpsAPI_USCOREreserveResponse(soap, ns2__tpsAPI_USCOREreserveResponse, "ns2:tpsAPI_reserveResponse", "ns2:tpsAPI_reserveResponse");
-	if (soap->error)
-		return soap_recv_fault(soap, 0);
-	if (soap_body_end_in(soap)
-	 || soap_envelope_end_in(soap)
-	 || soap_end_recv(soap))
-		return soap_closesock(soap);
-	return soap_closesock(soap);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__tpsAPI_USCOREreserve(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct ns2__tpsAPI_USCOREreserve *ns2__tpsAPI_USCOREreserve, struct ns2__tpsAPI_USCOREreserveResponse *ns2__tpsAPI_USCOREreserveResponse) {
+  struct __ns1__tpsAPI_USCOREreserve soap_tmp___ns1__tpsAPI_USCOREreserve;
+  if (!soap_endpoint)
+    soap_endpoint = "http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI";
+  if (!soap_action)
+    soap_action = "";
+  soap->encodingStyle = NULL;
+  soap_tmp___ns1__tpsAPI_USCOREreserve.ns2__tpsAPI_USCOREreserve = ns2__tpsAPI_USCOREreserve;
+  soap_begin(soap);
+  soap_serializeheader(soap);
+  soap_serialize___ns1__tpsAPI_USCOREreserve(soap, &soap_tmp___ns1__tpsAPI_USCOREreserve);
+  if (soap_begin_count(soap))
+    return soap->error;
+  if (soap->mode & SOAP_IO_LENGTH) {
+    if (soap_envelope_begin_out(soap)
+        || soap_putheader(soap)
+        || soap_body_begin_out(soap)
+        || soap_put___ns1__tpsAPI_USCOREreserve(soap, &soap_tmp___ns1__tpsAPI_USCOREreserve, "-ns1:tpsAPI_reserve", NULL)
+        || soap_body_end_out(soap)
+        || soap_envelope_end_out(soap))
+      return soap->error;
+  }
+  if (soap_end_count(soap))
+    return soap->error;
+  if (soap_connect(soap, soap_endpoint, soap_action)
+      || soap_envelope_begin_out(soap)
+      || soap_putheader(soap)
+      || soap_body_begin_out(soap)
+      || soap_put___ns1__tpsAPI_USCOREreserve(soap, &soap_tmp___ns1__tpsAPI_USCOREreserve, "-ns1:tpsAPI_reserve", NULL)
+      || soap_body_end_out(soap)
+      || soap_envelope_end_out(soap)
+      || soap_end_send(soap))
+    return soap_closesock(soap);
+  if (!ns2__tpsAPI_USCOREreserveResponse)
+    return soap_closesock(soap);
+  soap_default_ns2__tpsAPI_USCOREreserveResponse(soap, ns2__tpsAPI_USCOREreserveResponse);
+  if (soap_begin_recv(soap)
+      || soap_envelope_begin_in(soap)
+      || soap_recv_header(soap)
+      || soap_body_begin_in(soap))
+    return soap_closesock(soap);
+  soap_get_ns2__tpsAPI_USCOREreserveResponse(soap, ns2__tpsAPI_USCOREreserveResponse, "ns2:tpsAPI_reserveResponse", "ns2:tpsAPI_reserveResponse");
+  if (soap->error)
+    return soap_recv_fault(soap, 0);
+  if (soap_body_end_in(soap)
+      || soap_envelope_end_in(soap)
+      || soap_end_recv(soap))
+    return soap_closesock(soap);
+  return soap_closesock(soap);
 }
 
 #ifdef __cplusplus

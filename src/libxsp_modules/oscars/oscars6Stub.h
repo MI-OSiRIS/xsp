@@ -112,12 +112,11 @@ enum ns8__DecisionType {ns8__DecisionType__Permit = 0, ns8__DecisionType__Deny =
 #ifndef SOAP_TYPE_ds__SignatureType
 #define SOAP_TYPE_ds__SignatureType (7)
 /* ds:SignatureType */
-struct ds__SignatureType
-{
-	struct ds__SignedInfoType *SignedInfo;	/* optional element of type ds:SignedInfoType */
-	char *SignatureValue;	/* optional element of type xsd:string */
-	struct ds__KeyInfoType *KeyInfo;	/* optional element of type ds:KeyInfoType */
-	char *Id;	/* optional attribute of type xsd:string */
+struct ds__SignatureType {
+  struct ds__SignedInfoType *SignedInfo;	/* optional element of type ds:SignedInfoType */
+  char *SignatureValue;	/* optional element of type xsd:string */
+  struct ds__KeyInfoType *KeyInfo;	/* optional element of type ds:KeyInfoType */
+  char *Id;	/* optional attribute of type xsd:string */
 };
 typedef struct ds__SignatureType ds__SignatureType;
 #endif
@@ -125,9 +124,8 @@ typedef struct ds__SignatureType ds__SignatureType;
 #ifndef SOAP_TYPE__c14n__InclusiveNamespaces
 #define SOAP_TYPE__c14n__InclusiveNamespaces (17)
 /* c14n:InclusiveNamespaces */
-struct _c14n__InclusiveNamespaces
-{
-	char *PrefixList;	/* optional attribute of type xsd:string */
+struct _c14n__InclusiveNamespaces {
+  char *PrefixList;	/* optional attribute of type xsd:string */
 };
 typedef struct _c14n__InclusiveNamespaces _c14n__InclusiveNamespaces;
 #endif
@@ -135,11 +133,10 @@ typedef struct _c14n__InclusiveNamespaces _c14n__InclusiveNamespaces;
 #ifndef SOAP_TYPE_ds__TransformType
 #define SOAP_TYPE_ds__TransformType (18)
 /* ds:TransformType */
-struct ds__TransformType
-{
-	struct _c14n__InclusiveNamespaces *c14n__InclusiveNamespaces;	/* optional element of type c14n:InclusiveNamespaces */
-	char *__any;
-	char *Algorithm;	/* optional attribute of type xsd:string */
+struct ds__TransformType {
+  struct _c14n__InclusiveNamespaces *c14n__InclusiveNamespaces;	/* optional element of type c14n:InclusiveNamespaces */
+  char *__any;
+  char *Algorithm;	/* optional attribute of type xsd:string */
 };
 typedef struct ds__TransformType ds__TransformType;
 #endif
@@ -147,14 +144,13 @@ typedef struct ds__TransformType ds__TransformType;
 #ifndef SOAP_TYPE_ds__KeyInfoType
 #define SOAP_TYPE_ds__KeyInfoType (10)
 /* ds:KeyInfoType */
-struct ds__KeyInfoType
-{
-	char *KeyName;	/* optional element of type xsd:string */
-	struct ds__KeyValueType *KeyValue;	/* optional element of type ds:KeyValueType */
-	struct ds__RetrievalMethodType *RetrievalMethod;	/* optional element of type ds:RetrievalMethodType */
-	struct ds__X509DataType *X509Data;	/* optional element of type ds:X509DataType */
-	struct _wsse__SecurityTokenReference *wsse__SecurityTokenReference;	/* optional element of type wsse:SecurityTokenReference */
-	char *Id;	/* optional attribute of type xsd:string */
+struct ds__KeyInfoType {
+  char *KeyName;	/* optional element of type xsd:string */
+  struct ds__KeyValueType *KeyValue;	/* optional element of type ds:KeyValueType */
+  struct ds__RetrievalMethodType *RetrievalMethod;	/* optional element of type ds:RetrievalMethodType */
+  struct ds__X509DataType *X509Data;	/* optional element of type ds:X509DataType */
+  struct _wsse__SecurityTokenReference *wsse__SecurityTokenReference;	/* optional element of type wsse:SecurityTokenReference */
+  char *Id;	/* optional attribute of type xsd:string */
 };
 typedef struct ds__KeyInfoType ds__KeyInfoType;
 #endif
@@ -162,13 +158,12 @@ typedef struct ds__KeyInfoType ds__KeyInfoType;
 #ifndef SOAP_TYPE_ds__SignedInfoType
 #define SOAP_TYPE_ds__SignedInfoType (8)
 /* ds:SignedInfoType */
-struct ds__SignedInfoType
-{
-	struct ds__CanonicalizationMethodType *CanonicalizationMethod;	/* required element of type ds:CanonicalizationMethodType */
-	struct ds__SignatureMethodType *SignatureMethod;	/* required element of type ds:SignatureMethodType */
-	int __sizeReference;	/* sequence of elements <Reference> */
-	struct ds__ReferenceType **Reference;	/* required element of type ds:ReferenceType */
-	char *Id;	/* optional attribute of type xsd:string */
+struct ds__SignedInfoType {
+  struct ds__CanonicalizationMethodType *CanonicalizationMethod;	/* required element of type ds:CanonicalizationMethodType */
+  struct ds__SignatureMethodType *SignatureMethod;	/* required element of type ds:SignatureMethodType */
+  int __sizeReference;	/* sequence of elements <Reference> */
+  struct ds__ReferenceType **Reference;	/* required element of type ds:ReferenceType */
+  char *Id;	/* optional attribute of type xsd:string */
 };
 typedef struct ds__SignedInfoType ds__SignedInfoType;
 #endif
@@ -176,10 +171,9 @@ typedef struct ds__SignedInfoType ds__SignedInfoType;
 #ifndef SOAP_TYPE_ds__CanonicalizationMethodType
 #define SOAP_TYPE_ds__CanonicalizationMethodType (13)
 /* ds:CanonicalizationMethodType */
-struct ds__CanonicalizationMethodType
-{
-	char *Algorithm;	/* required attribute of type xsd:string */
-	struct _c14n__InclusiveNamespaces *c14n__InclusiveNamespaces;	/* optional element of type c14n:InclusiveNamespaces */
+struct ds__CanonicalizationMethodType {
+  char *Algorithm;	/* required attribute of type xsd:string */
+  struct _c14n__InclusiveNamespaces *c14n__InclusiveNamespaces;	/* optional element of type c14n:InclusiveNamespaces */
 };
 typedef struct ds__CanonicalizationMethodType ds__CanonicalizationMethodType;
 #endif
@@ -187,10 +181,9 @@ typedef struct ds__CanonicalizationMethodType ds__CanonicalizationMethodType;
 #ifndef SOAP_TYPE_ds__SignatureMethodType
 #define SOAP_TYPE_ds__SignatureMethodType (14)
 /* ds:SignatureMethodType */
-struct ds__SignatureMethodType
-{
-	int *HMACOutputLength;	/* optional element of type xsd:int */
-	char *Algorithm;	/* required attribute of type xsd:string */
+struct ds__SignatureMethodType {
+  int *HMACOutputLength;	/* optional element of type xsd:int */
+  char *Algorithm;	/* required attribute of type xsd:string */
 };
 typedef struct ds__SignatureMethodType ds__SignatureMethodType;
 #endif
@@ -198,14 +191,13 @@ typedef struct ds__SignatureMethodType ds__SignatureMethodType;
 #ifndef SOAP_TYPE_ds__ReferenceType
 #define SOAP_TYPE_ds__ReferenceType (15)
 /* ds:ReferenceType */
-struct ds__ReferenceType
-{
-	struct ds__TransformsType *Transforms;	/* optional element of type ds:TransformsType */
-	struct ds__DigestMethodType *DigestMethod;	/* required element of type ds:DigestMethodType */
-	char *DigestValue;	/* required element of type xsd:string */
-	char *Id;	/* optional attribute of type xsd:string */
-	char *URI;	/* optional attribute of type xsd:string */
-	char *Type;	/* optional attribute of type xsd:string */
+struct ds__ReferenceType {
+  struct ds__TransformsType *Transforms;	/* optional element of type ds:TransformsType */
+  struct ds__DigestMethodType *DigestMethod;	/* required element of type ds:DigestMethodType */
+  char *DigestValue;	/* required element of type xsd:string */
+  char *Id;	/* optional attribute of type xsd:string */
+  char *URI;	/* optional attribute of type xsd:string */
+  char *Type;	/* optional attribute of type xsd:string */
 };
 typedef struct ds__ReferenceType ds__ReferenceType;
 #endif
@@ -213,10 +205,9 @@ typedef struct ds__ReferenceType ds__ReferenceType;
 #ifndef SOAP_TYPE_ds__TransformsType
 #define SOAP_TYPE_ds__TransformsType (16)
 /* ds:TransformsType */
-struct ds__TransformsType
-{
-	int __sizeTransform;	/* sequence of elements <Transform> */
-	struct ds__TransformType *Transform;	/* required element of type ds:TransformType */
+struct ds__TransformsType {
+  int __sizeTransform;	/* sequence of elements <Transform> */
+  struct ds__TransformType *Transform;	/* required element of type ds:TransformType */
 };
 typedef struct ds__TransformsType ds__TransformsType;
 #endif
@@ -224,9 +215,8 @@ typedef struct ds__TransformsType ds__TransformsType;
 #ifndef SOAP_TYPE_ds__DigestMethodType
 #define SOAP_TYPE_ds__DigestMethodType (21)
 /* ds:DigestMethodType */
-struct ds__DigestMethodType
-{
-	char *Algorithm;	/* required attribute of type xsd:string */
+struct ds__DigestMethodType {
+  char *Algorithm;	/* required attribute of type xsd:string */
 };
 typedef struct ds__DigestMethodType ds__DigestMethodType;
 #endif
@@ -234,10 +224,9 @@ typedef struct ds__DigestMethodType ds__DigestMethodType;
 #ifndef SOAP_TYPE_ds__KeyValueType
 #define SOAP_TYPE_ds__KeyValueType (22)
 /* ds:KeyValueType */
-struct ds__KeyValueType
-{
-	struct ds__DSAKeyValueType *DSAKeyValue;	/* required element of type ds:DSAKeyValueType */
-	struct ds__RSAKeyValueType *RSAKeyValue;	/* required element of type ds:RSAKeyValueType */
+struct ds__KeyValueType {
+  struct ds__DSAKeyValueType *DSAKeyValue;	/* required element of type ds:DSAKeyValueType */
+  struct ds__RSAKeyValueType *RSAKeyValue;	/* required element of type ds:RSAKeyValueType */
 };
 typedef struct ds__KeyValueType ds__KeyValueType;
 #endif
@@ -245,11 +234,10 @@ typedef struct ds__KeyValueType ds__KeyValueType;
 #ifndef SOAP_TYPE_ds__RetrievalMethodType
 #define SOAP_TYPE_ds__RetrievalMethodType (24)
 /* ds:RetrievalMethodType */
-struct ds__RetrievalMethodType
-{
-	struct ds__TransformsType *Transforms;	/* optional element of type ds:TransformsType */
-	char *URI;	/* optional attribute of type xsd:string */
-	char *Type;	/* optional attribute of type xsd:string */
+struct ds__RetrievalMethodType {
+  struct ds__TransformsType *Transforms;	/* optional element of type ds:TransformsType */
+  char *URI;	/* optional attribute of type xsd:string */
+  char *Type;	/* optional attribute of type xsd:string */
 };
 typedef struct ds__RetrievalMethodType ds__RetrievalMethodType;
 #endif
@@ -257,13 +245,12 @@ typedef struct ds__RetrievalMethodType ds__RetrievalMethodType;
 #ifndef SOAP_TYPE_ds__X509DataType
 #define SOAP_TYPE_ds__X509DataType (26)
 /* ds:X509DataType */
-struct ds__X509DataType
-{
-	struct ds__X509IssuerSerialType *X509IssuerSerial;	/* required element of type ds:X509IssuerSerialType */
-	char *X509SKI;	/* required element of type xsd:string */
-	char *X509SubjectName;	/* required element of type xsd:string */
-	char *X509Certificate;	/* required element of type xsd:string */
-	char *X509CRL;	/* required element of type xsd:string */
+struct ds__X509DataType {
+  struct ds__X509IssuerSerialType *X509IssuerSerial;	/* required element of type ds:X509IssuerSerialType */
+  char *X509SKI;	/* required element of type xsd:string */
+  char *X509SubjectName;	/* required element of type xsd:string */
+  char *X509Certificate;	/* required element of type xsd:string */
+  char *X509CRL;	/* required element of type xsd:string */
 };
 typedef struct ds__X509DataType ds__X509DataType;
 #endif
@@ -271,10 +258,9 @@ typedef struct ds__X509DataType ds__X509DataType;
 #ifndef SOAP_TYPE_ds__X509IssuerSerialType
 #define SOAP_TYPE_ds__X509IssuerSerialType (31)
 /* ds:X509IssuerSerialType */
-struct ds__X509IssuerSerialType
-{
-	char *X509IssuerName;	/* required element of type xsd:string */
-	int X509SerialNumber;	/* required element of type xsd:int */
+struct ds__X509IssuerSerialType {
+  char *X509IssuerName;	/* required element of type xsd:string */
+  int X509SerialNumber;	/* required element of type xsd:int */
 };
 typedef struct ds__X509IssuerSerialType ds__X509IssuerSerialType;
 #endif
@@ -282,15 +268,14 @@ typedef struct ds__X509IssuerSerialType ds__X509IssuerSerialType;
 #ifndef SOAP_TYPE_ds__DSAKeyValueType
 #define SOAP_TYPE_ds__DSAKeyValueType (32)
 /* ds:DSAKeyValueType */
-struct ds__DSAKeyValueType
-{
-	char *G;	/* optional element of type xsd:string */
-	char *Y;	/* required element of type xsd:string */
-	char *J;	/* optional element of type xsd:string */
-	char *P;	/* required element of type xsd:string */
-	char *Q;	/* required element of type xsd:string */
-	char *Seed;	/* required element of type xsd:string */
-	char *PgenCounter;	/* required element of type xsd:string */
+struct ds__DSAKeyValueType {
+  char *G;	/* optional element of type xsd:string */
+  char *Y;	/* required element of type xsd:string */
+  char *J;	/* optional element of type xsd:string */
+  char *P;	/* required element of type xsd:string */
+  char *Q;	/* required element of type xsd:string */
+  char *Seed;	/* required element of type xsd:string */
+  char *PgenCounter;	/* required element of type xsd:string */
 };
 typedef struct ds__DSAKeyValueType ds__DSAKeyValueType;
 #endif
@@ -298,10 +283,9 @@ typedef struct ds__DSAKeyValueType ds__DSAKeyValueType;
 #ifndef SOAP_TYPE_ds__RSAKeyValueType
 #define SOAP_TYPE_ds__RSAKeyValueType (33)
 /* ds:RSAKeyValueType */
-struct ds__RSAKeyValueType
-{
-	char *Modulus;	/* required element of type xsd:string */
-	char *Exponent;	/* required element of type xsd:string */
+struct ds__RSAKeyValueType {
+  char *Modulus;	/* required element of type xsd:string */
+  char *Exponent;	/* required element of type xsd:string */
 };
 typedef struct ds__RSAKeyValueType ds__RSAKeyValueType;
 #endif
@@ -309,10 +293,9 @@ typedef struct ds__RSAKeyValueType ds__RSAKeyValueType;
 #ifndef SOAP_TYPE_xenc__EncryptionPropertyType
 #define SOAP_TYPE_xenc__EncryptionPropertyType (55)
 /* xenc:EncryptionPropertyType */
-struct xenc__EncryptionPropertyType
-{
-	char *Target;	/* optional attribute of type xsd:string */
-	char *Id;	/* optional attribute of type xsd:string */
+struct xenc__EncryptionPropertyType {
+  char *Target;	/* optional attribute of type xsd:string */
+  char *Id;	/* optional attribute of type xsd:string */
 };
 typedef struct xenc__EncryptionPropertyType xenc__EncryptionPropertyType;
 #endif
@@ -320,16 +303,15 @@ typedef struct xenc__EncryptionPropertyType xenc__EncryptionPropertyType;
 #ifndef SOAP_TYPE_xenc__EncryptedType
 #define SOAP_TYPE_xenc__EncryptedType (45)
 /* xenc:EncryptedType */
-struct xenc__EncryptedType
-{
-	struct xenc__EncryptionMethodType *EncryptionMethod;	/* optional element of type xenc:EncryptionMethodType */
-	struct ds__KeyInfoType *ds__KeyInfo;	/* optional element of type ds:KeyInfo */
-	struct xenc__CipherDataType *CipherData;	/* required element of type xenc:CipherDataType */
-	struct xenc__EncryptionPropertiesType *EncryptionProperties;	/* optional element of type xenc:EncryptionPropertiesType */
-	char *Id;	/* optional attribute of type xsd:string */
-	char *Type;	/* optional attribute of type xsd:string */
-	char *MimeType;	/* optional attribute of type xsd:string */
-	char *Encoding;	/* optional attribute of type xsd:string */
+struct xenc__EncryptedType {
+  struct xenc__EncryptionMethodType *EncryptionMethod;	/* optional element of type xenc:EncryptionMethodType */
+  struct ds__KeyInfoType *ds__KeyInfo;	/* optional element of type ds:KeyInfo */
+  struct xenc__CipherDataType *CipherData;	/* required element of type xenc:CipherDataType */
+  struct xenc__EncryptionPropertiesType *EncryptionProperties;	/* optional element of type xenc:EncryptionPropertiesType */
+  char *Id;	/* optional attribute of type xsd:string */
+  char *Type;	/* optional attribute of type xsd:string */
+  char *MimeType;	/* optional attribute of type xsd:string */
+  char *Encoding;	/* optional attribute of type xsd:string */
 };
 typedef struct xenc__EncryptedType xenc__EncryptedType;
 #endif
@@ -337,12 +319,11 @@ typedef struct xenc__EncryptedType xenc__EncryptedType;
 #ifndef SOAP_TYPE_xenc__EncryptionMethodType
 #define SOAP_TYPE_xenc__EncryptionMethodType (46)
 /* xenc:EncryptionMethodType */
-struct xenc__EncryptionMethodType
-{
-	int *KeySize;	/* optional element of type xsd:int */
-	char *OAEPparams;	/* optional element of type xsd:string */
-	char *Algorithm;	/* required attribute of type xsd:string */
-	char *__mixed;
+struct xenc__EncryptionMethodType {
+  int *KeySize;	/* optional element of type xsd:int */
+  char *OAEPparams;	/* optional element of type xsd:string */
+  char *Algorithm;	/* required attribute of type xsd:string */
+  char *__mixed;
 };
 typedef struct xenc__EncryptionMethodType xenc__EncryptionMethodType;
 #endif
@@ -350,10 +331,9 @@ typedef struct xenc__EncryptionMethodType xenc__EncryptionMethodType;
 #ifndef SOAP_TYPE_xenc__CipherDataType
 #define SOAP_TYPE_xenc__CipherDataType (47)
 /* xenc:CipherDataType */
-struct xenc__CipherDataType
-{
-	char *CipherValue;	/* optional element of type xsd:string */
-	struct xenc__CipherReferenceType *CipherReference;	/* optional element of type xenc:CipherReferenceType */
+struct xenc__CipherDataType {
+  char *CipherValue;	/* optional element of type xsd:string */
+  struct xenc__CipherReferenceType *CipherReference;	/* optional element of type xenc:CipherReferenceType */
 };
 typedef struct xenc__CipherDataType xenc__CipherDataType;
 #endif
@@ -361,10 +341,9 @@ typedef struct xenc__CipherDataType xenc__CipherDataType;
 #ifndef SOAP_TYPE_xenc__CipherReferenceType
 #define SOAP_TYPE_xenc__CipherReferenceType (48)
 /* xenc:CipherReferenceType */
-struct xenc__CipherReferenceType
-{
-	struct xenc__TransformsType *Transforms;	/* optional element of type xenc:TransformsType */
-	char *URI;	/* required attribute of type xsd:string */
+struct xenc__CipherReferenceType {
+  struct xenc__TransformsType *Transforms;	/* optional element of type xenc:TransformsType */
+  char *URI;	/* required attribute of type xsd:string */
 };
 typedef struct xenc__CipherReferenceType xenc__CipherReferenceType;
 #endif
@@ -372,9 +351,8 @@ typedef struct xenc__CipherReferenceType xenc__CipherReferenceType;
 #ifndef SOAP_TYPE_xenc__TransformsType
 #define SOAP_TYPE_xenc__TransformsType (49)
 /* xenc:TransformsType */
-struct xenc__TransformsType
-{
-	struct ds__TransformType ds__Transform;	/* required element of type ds:Transform */
+struct xenc__TransformsType {
+  struct ds__TransformType ds__Transform;	/* required element of type ds:Transform */
 };
 typedef struct xenc__TransformsType xenc__TransformsType;
 #endif
@@ -382,13 +360,12 @@ typedef struct xenc__TransformsType xenc__TransformsType;
 #ifndef SOAP_TYPE_xenc__AgreementMethodType
 #define SOAP_TYPE_xenc__AgreementMethodType (52)
 /* xenc:AgreementMethodType */
-struct xenc__AgreementMethodType
-{
-	char *KA_Nonce;	/* optional element of type xsd:string */
-	struct ds__KeyInfoType *OriginatorKeyInfo;	/* optional element of type ds:KeyInfoType */
-	struct ds__KeyInfoType *RecipientKeyInfo;	/* optional element of type ds:KeyInfoType */
-	char *Algorithm;	/* required attribute of type xsd:string */
-	char *__mixed;
+struct xenc__AgreementMethodType {
+  char *KA_Nonce;	/* optional element of type xsd:string */
+  struct ds__KeyInfoType *OriginatorKeyInfo;	/* optional element of type ds:KeyInfoType */
+  struct ds__KeyInfoType *RecipientKeyInfo;	/* optional element of type ds:KeyInfoType */
+  char *Algorithm;	/* required attribute of type xsd:string */
+  char *__mixed;
 };
 typedef struct xenc__AgreementMethodType xenc__AgreementMethodType;
 #endif
@@ -396,9 +373,8 @@ typedef struct xenc__AgreementMethodType xenc__AgreementMethodType;
 #ifndef SOAP_TYPE_xenc__ReferenceType
 #define SOAP_TYPE_xenc__ReferenceType (53)
 /* xenc:ReferenceType */
-struct xenc__ReferenceType
-{
-	char *URI;	/* required attribute of type xsd:string */
+struct xenc__ReferenceType {
+  char *URI;	/* required attribute of type xsd:string */
 };
 typedef struct xenc__ReferenceType xenc__ReferenceType;
 #endif
@@ -406,11 +382,10 @@ typedef struct xenc__ReferenceType xenc__ReferenceType;
 #ifndef SOAP_TYPE_xenc__EncryptionPropertiesType
 #define SOAP_TYPE_xenc__EncryptionPropertiesType (54)
 /* xenc:EncryptionPropertiesType */
-struct xenc__EncryptionPropertiesType
-{
-	int __sizeEncryptionProperty;	/* sequence of elements <EncryptionProperty> */
-	struct xenc__EncryptionPropertyType *EncryptionProperty;	/* required element of type xenc:EncryptionPropertyType */
-	char *Id;	/* optional attribute of type xsd:string */
+struct xenc__EncryptionPropertiesType {
+  int __sizeEncryptionProperty;	/* sequence of elements <EncryptionProperty> */
+  struct xenc__EncryptionPropertyType *EncryptionProperty;	/* required element of type xenc:EncryptionPropertyType */
+  char *Id;	/* optional attribute of type xsd:string */
 };
 typedef struct xenc__EncryptionPropertiesType xenc__EncryptionPropertiesType;
 #endif
@@ -418,20 +393,18 @@ typedef struct xenc__EncryptionPropertiesType xenc__EncryptionPropertiesType;
 #ifndef SOAP_TYPE___xenc__union_ReferenceList
 #define SOAP_TYPE___xenc__union_ReferenceList (64)
 /* Operation wrapper: */
-struct __xenc__union_ReferenceList
-{
-	struct xenc__ReferenceType *DataReference;	/* optional element of type xenc:ReferenceType */
-	struct xenc__ReferenceType *KeyReference;	/* optional element of type xenc:ReferenceType */
+struct __xenc__union_ReferenceList {
+  struct xenc__ReferenceType *DataReference;	/* optional element of type xenc:ReferenceType */
+  struct xenc__ReferenceType *KeyReference;	/* optional element of type xenc:ReferenceType */
 };
 #endif
 
 #ifndef SOAP_TYPE__xenc__ReferenceList
 #define SOAP_TYPE__xenc__ReferenceList (56)
 /* xenc:ReferenceList */
-struct _xenc__ReferenceList
-{
-	int __size_ReferenceList;	/* sequence of elements <-union-ReferenceList> */
-	struct __xenc__union_ReferenceList *__union_ReferenceList;
+struct _xenc__ReferenceList {
+  int __size_ReferenceList;	/* sequence of elements <-union-ReferenceList> */
+  struct __xenc__union_ReferenceList *__union_ReferenceList;
 };
 typedef struct _xenc__ReferenceList _xenc__ReferenceList;
 #endif
@@ -439,16 +412,15 @@ typedef struct _xenc__ReferenceList _xenc__ReferenceList;
 #ifndef SOAP_TYPE_xenc__EncryptedDataType
 #define SOAP_TYPE_xenc__EncryptedDataType (50)
 /* xenc:EncryptedDataType */
-struct xenc__EncryptedDataType
-{
-	struct xenc__EncryptionMethodType *EncryptionMethod;	/* optional element of type xenc:EncryptionMethodType */
-	struct ds__KeyInfoType *ds__KeyInfo;	/* optional element of type ds:KeyInfo */
-	struct xenc__CipherDataType *CipherData;	/* required element of type xenc:CipherDataType */
-	struct xenc__EncryptionPropertiesType *EncryptionProperties;	/* optional element of type xenc:EncryptionPropertiesType */
-	char *Id;	/* optional attribute of type xsd:string */
-	char *Type;	/* optional attribute of type xsd:string */
-	char *MimeType;	/* optional attribute of type xsd:string */
-	char *Encoding;	/* optional attribute of type xsd:string */
+struct xenc__EncryptedDataType {
+  struct xenc__EncryptionMethodType *EncryptionMethod;	/* optional element of type xenc:EncryptionMethodType */
+  struct ds__KeyInfoType *ds__KeyInfo;	/* optional element of type ds:KeyInfo */
+  struct xenc__CipherDataType *CipherData;	/* required element of type xenc:CipherDataType */
+  struct xenc__EncryptionPropertiesType *EncryptionProperties;	/* optional element of type xenc:EncryptionPropertiesType */
+  char *Id;	/* optional attribute of type xsd:string */
+  char *Type;	/* optional attribute of type xsd:string */
+  char *MimeType;	/* optional attribute of type xsd:string */
+  char *Encoding;	/* optional attribute of type xsd:string */
 };
 typedef struct xenc__EncryptedDataType xenc__EncryptedDataType;
 #endif
@@ -456,19 +428,18 @@ typedef struct xenc__EncryptedDataType xenc__EncryptedDataType;
 #ifndef SOAP_TYPE_xenc__EncryptedKeyType
 #define SOAP_TYPE_xenc__EncryptedKeyType (51)
 /* xenc:EncryptedKeyType */
-struct xenc__EncryptedKeyType
-{
-	struct xenc__EncryptionMethodType *EncryptionMethod;	/* optional element of type xenc:EncryptionMethodType */
-	struct ds__KeyInfoType *ds__KeyInfo;	/* optional element of type ds:KeyInfo */
-	struct xenc__CipherDataType *CipherData;	/* required element of type xenc:CipherDataType */
-	struct xenc__EncryptionPropertiesType *EncryptionProperties;	/* optional element of type xenc:EncryptionPropertiesType */
-	char *Id;	/* optional attribute of type xsd:string */
-	char *Type;	/* optional attribute of type xsd:string */
-	char *MimeType;	/* optional attribute of type xsd:string */
-	char *Encoding;	/* optional attribute of type xsd:string */
-	struct _xenc__ReferenceList *ReferenceList;	/* optional element of type xenc:ReferenceList */
-	char *CarriedKeyName;	/* optional element of type xsd:string */
-	char *Recipient;	/* optional attribute of type xsd:string */
+struct xenc__EncryptedKeyType {
+  struct xenc__EncryptionMethodType *EncryptionMethod;	/* optional element of type xenc:EncryptionMethodType */
+  struct ds__KeyInfoType *ds__KeyInfo;	/* optional element of type ds:KeyInfo */
+  struct xenc__CipherDataType *CipherData;	/* required element of type xenc:CipherDataType */
+  struct xenc__EncryptionPropertiesType *EncryptionProperties;	/* optional element of type xenc:EncryptionPropertiesType */
+  char *Id;	/* optional attribute of type xsd:string */
+  char *Type;	/* optional attribute of type xsd:string */
+  char *MimeType;	/* optional attribute of type xsd:string */
+  char *Encoding;	/* optional attribute of type xsd:string */
+  struct _xenc__ReferenceList *ReferenceList;	/* optional element of type xenc:ReferenceList */
+  char *CarriedKeyName;	/* optional element of type xsd:string */
+  char *Recipient;	/* optional attribute of type xsd:string */
 };
 typedef struct xenc__EncryptedKeyType xenc__EncryptedKeyType;
 #endif
@@ -476,14 +447,13 @@ typedef struct xenc__EncryptedKeyType xenc__EncryptedKeyType;
 #ifndef SOAP_TYPE_wsa5__EndpointReferenceType
 #define SOAP_TYPE_wsa5__EndpointReferenceType (75)
 /* wsa5:EndpointReferenceType */
-struct wsa5__EndpointReferenceType
-{
-	char *Address;	/* required element of type xsd:string */
-	struct wsa5__ReferenceParametersType *ReferenceParameters;	/* optional element of type wsa5:ReferenceParametersType */
-	struct wsa5__MetadataType *Metadata;	/* optional element of type wsa5:MetadataType */
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
-	char *__anyAttribute;	/* optional attribute of type xsd:anyType */
+struct wsa5__EndpointReferenceType {
+  char *Address;	/* required element of type xsd:string */
+  struct wsa5__ReferenceParametersType *ReferenceParameters;	/* optional element of type wsa5:ReferenceParametersType */
+  struct wsa5__MetadataType *Metadata;	/* optional element of type wsa5:MetadataType */
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
+  char *__anyAttribute;	/* optional attribute of type xsd:anyType */
 };
 typedef struct wsa5__EndpointReferenceType wsa5__EndpointReferenceType;
 #endif
@@ -491,11 +461,10 @@ typedef struct wsa5__EndpointReferenceType wsa5__EndpointReferenceType;
 #ifndef SOAP_TYPE_wsa5__ReferenceParametersType
 #define SOAP_TYPE_wsa5__ReferenceParametersType (76)
 /* wsa5:ReferenceParametersType */
-struct wsa5__ReferenceParametersType
-{
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
-	char *__anyAttribute;	/* optional attribute of type xsd:anyType */
+struct wsa5__ReferenceParametersType {
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
+  char *__anyAttribute;	/* optional attribute of type xsd:anyType */
 };
 typedef struct wsa5__ReferenceParametersType wsa5__ReferenceParametersType;
 #endif
@@ -503,11 +472,10 @@ typedef struct wsa5__ReferenceParametersType wsa5__ReferenceParametersType;
 #ifndef SOAP_TYPE_wsa5__MetadataType
 #define SOAP_TYPE_wsa5__MetadataType (77)
 /* wsa5:MetadataType */
-struct wsa5__MetadataType
-{
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
-	char *__anyAttribute;	/* optional attribute of type xsd:anyType */
+struct wsa5__MetadataType {
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
+  char *__anyAttribute;	/* optional attribute of type xsd:anyType */
 };
 typedef struct wsa5__MetadataType wsa5__MetadataType;
 #endif
@@ -515,11 +483,10 @@ typedef struct wsa5__MetadataType wsa5__MetadataType;
 #ifndef SOAP_TYPE_wsa5__ProblemActionType
 #define SOAP_TYPE_wsa5__ProblemActionType (79)
 /* wsa5:ProblemActionType */
-struct wsa5__ProblemActionType
-{
-	char *Action;	/* optional element of type xsd:string */
-	char *SoapAction;	/* optional element of type xsd:string */
-	char *__anyAttribute;	/* optional attribute of type xsd:anyType */
+struct wsa5__ProblemActionType {
+  char *Action;	/* optional element of type xsd:string */
+  char *SoapAction;	/* optional element of type xsd:string */
+  char *__anyAttribute;	/* optional attribute of type xsd:anyType */
 };
 typedef struct wsa5__ProblemActionType wsa5__ProblemActionType;
 #endif
@@ -527,11 +494,10 @@ typedef struct wsa5__ProblemActionType wsa5__ProblemActionType;
 #ifndef SOAP_TYPE_wsa5__RelatesToType
 #define SOAP_TYPE_wsa5__RelatesToType (78)
 /* Primitive wsa5:RelatesToType schema type: */
-struct wsa5__RelatesToType
-{
-	char *__item;
-	char *RelationshipType;	/* optional attribute of type wsa5:RelationshipTypeOpenEnum */
-	char *__anyAttribute;	/* optional attribute of type xsd:anyType */
+struct wsa5__RelatesToType {
+  char *__item;
+  char *RelationshipType;	/* optional attribute of type wsa5:RelationshipTypeOpenEnum */
+  char *__anyAttribute;	/* optional attribute of type xsd:anyType */
 };
 typedef struct wsa5__RelatesToType wsa5__RelatesToType;
 #endif
@@ -541,16 +507,15 @@ typedef struct wsa5__RelatesToType wsa5__RelatesToType;
 #ifndef SOAP_TYPE_SOAP_ENV__Header
 #define SOAP_TYPE_SOAP_ENV__Header (103)
 /* SOAP Header: */
-struct SOAP_ENV__Header
-{
-	char *wsa5__MessageID;	/* optional element of type wsa5:MessageID */
-	struct wsa5__RelatesToType *wsa5__RelatesTo;	/* optional element of type wsa5:RelatesTo */
-	struct wsa5__EndpointReferenceType *wsa5__From;	/* optional element of type wsa5:From */
-	struct wsa5__EndpointReferenceType *wsa5__ReplyTo;	/* mustUnderstand */
-	struct wsa5__EndpointReferenceType *wsa5__FaultTo;	/* mustUnderstand */
-	char *wsa5__To;	/* mustUnderstand */
-	char *wsa5__Action;	/* mustUnderstand */
-	struct _wsse__Security *wsse__Security;	/* mustUnderstand */
+struct SOAP_ENV__Header {
+  char *wsa5__MessageID;	/* optional element of type wsa5:MessageID */
+  struct wsa5__RelatesToType *wsa5__RelatesTo;	/* optional element of type wsa5:RelatesTo */
+  struct wsa5__EndpointReferenceType *wsa5__From;	/* optional element of type wsa5:From */
+  struct wsa5__EndpointReferenceType *wsa5__ReplyTo;	/* mustUnderstand */
+  struct wsa5__EndpointReferenceType *wsa5__FaultTo;	/* mustUnderstand */
+  char *wsa5__To;	/* mustUnderstand */
+  char *wsa5__Action;	/* mustUnderstand */
+  struct _wsse__Security *wsse__Security;	/* mustUnderstand */
 };
 #endif
 
@@ -559,11 +524,10 @@ struct SOAP_ENV__Header
 #ifndef SOAP_TYPE__wsu__Timestamp
 #define SOAP_TYPE__wsu__Timestamp (109)
 /* wsu:Timestamp */
-struct _wsu__Timestamp
-{
-	char *wsu__Id;	/* optional attribute of type xsd:string */
-	char *Created;	/* optional element of type xsd:string */
-	char *Expires;	/* optional element of type xsd:string */
+struct _wsu__Timestamp {
+  char *wsu__Id;	/* optional attribute of type xsd:string */
+  char *Created;	/* optional element of type xsd:string */
+  char *Expires;	/* optional element of type xsd:string */
 };
 typedef struct _wsu__Timestamp _wsu__Timestamp;
 #endif
@@ -571,13 +535,12 @@ typedef struct _wsu__Timestamp _wsu__Timestamp;
 #ifndef SOAP_TYPE__wsse__UsernameToken
 #define SOAP_TYPE__wsse__UsernameToken (111)
 /* wsse:UsernameToken */
-struct _wsse__UsernameToken
-{
-	char *Username;	/* optional element of type xsd:string */
-	struct _wsse__Password *Password;	/* optional element of type wsse:Password */
-	char *Nonce;	/* optional element of type xsd:string */
-	char *wsu__Created;	/* optional element of type xsd:string */
-	char *wsu__Id;	/* optional attribute of type xsd:string */
+struct _wsse__UsernameToken {
+  char *Username;	/* optional element of type xsd:string */
+  struct _wsse__Password *Password;	/* optional element of type wsse:Password */
+  char *Nonce;	/* optional element of type xsd:string */
+  char *wsu__Created;	/* optional element of type xsd:string */
+  char *wsu__Id;	/* optional attribute of type xsd:string */
 };
 typedef struct _wsse__UsernameToken _wsse__UsernameToken;
 #endif
@@ -585,12 +548,11 @@ typedef struct _wsse__UsernameToken _wsse__UsernameToken;
 #ifndef SOAP_TYPE__wsse__BinarySecurityToken
 #define SOAP_TYPE__wsse__BinarySecurityToken (114)
 /* Primitive wsse:BinarySecurityToken schema type: */
-struct _wsse__BinarySecurityToken
-{
-	char *__item;
-	char *wsu__Id;	/* optional attribute of type xsd:string */
-	char *ValueType;	/* optional attribute of type xsd:string */
-	char *EncodingType;	/* optional attribute of type xsd:string */
+struct _wsse__BinarySecurityToken {
+  char *__item;
+  char *wsu__Id;	/* optional attribute of type xsd:string */
+  char *ValueType;	/* optional attribute of type xsd:string */
+  char *EncodingType;	/* optional attribute of type xsd:string */
 };
 typedef struct _wsse__BinarySecurityToken _wsse__BinarySecurityToken;
 #endif
@@ -598,10 +560,9 @@ typedef struct _wsse__BinarySecurityToken _wsse__BinarySecurityToken;
 #ifndef SOAP_TYPE__wsse__Reference
 #define SOAP_TYPE__wsse__Reference (115)
 /* wsse:Reference */
-struct _wsse__Reference
-{
-	char *URI;	/* optional attribute of type xsd:string */
-	char *ValueType;	/* optional attribute of type xsd:string */
+struct _wsse__Reference {
+  char *URI;	/* optional attribute of type xsd:string */
+  char *ValueType;	/* optional attribute of type xsd:string */
 };
 typedef struct _wsse__Reference _wsse__Reference;
 #endif
@@ -609,10 +570,9 @@ typedef struct _wsse__Reference _wsse__Reference;
 #ifndef SOAP_TYPE__wsse__Embedded
 #define SOAP_TYPE__wsse__Embedded (116)
 /* wsse:Embedded */
-struct _wsse__Embedded
-{
-	char *wsu__Id;	/* optional attribute of type xsd:string */
-	char *ValueType;	/* optional attribute of type xsd:string */
+struct _wsse__Embedded {
+  char *wsu__Id;	/* optional attribute of type xsd:string */
+  char *ValueType;	/* optional attribute of type xsd:string */
 };
 typedef struct _wsse__Embedded _wsse__Embedded;
 #endif
@@ -620,12 +580,11 @@ typedef struct _wsse__Embedded _wsse__Embedded;
 #ifndef SOAP_TYPE__wsse__KeyIdentifier
 #define SOAP_TYPE__wsse__KeyIdentifier (117)
 /* Primitive wsse:KeyIdentifier schema type: */
-struct _wsse__KeyIdentifier
-{
-	char *__item;
-	char *wsu__Id;	/* optional attribute of type xsd:string */
-	char *ValueType;	/* optional attribute of type xsd:string */
-	char *EncodingType;	/* optional attribute of type xsd:string */
+struct _wsse__KeyIdentifier {
+  char *__item;
+  char *wsu__Id;	/* optional attribute of type xsd:string */
+  char *ValueType;	/* optional attribute of type xsd:string */
+  char *EncodingType;	/* optional attribute of type xsd:string */
 };
 typedef struct _wsse__KeyIdentifier _wsse__KeyIdentifier;
 #endif
@@ -633,13 +592,12 @@ typedef struct _wsse__KeyIdentifier _wsse__KeyIdentifier;
 #ifndef SOAP_TYPE__wsse__SecurityTokenReference
 #define SOAP_TYPE__wsse__SecurityTokenReference (28)
 /* wsse:SecurityTokenReference */
-struct _wsse__SecurityTokenReference
-{
-	struct _wsse__Reference *Reference;	/* optional element of type wsse:Reference */
-	struct _wsse__KeyIdentifier *KeyIdentifier;	/* optional element of type wsse:KeyIdentifier */
-	struct _wsse__Embedded *Embedded;	/* optional element of type wsse:Embedded */
-	char *wsu__Id;	/* optional attribute of type xsd:string */
-	char *Usage;	/* optional attribute of type xsd:string */
+struct _wsse__SecurityTokenReference {
+  struct _wsse__Reference *Reference;	/* optional element of type wsse:Reference */
+  struct _wsse__KeyIdentifier *KeyIdentifier;	/* optional element of type wsse:KeyIdentifier */
+  struct _wsse__Embedded *Embedded;	/* optional element of type wsse:Embedded */
+  char *wsu__Id;	/* optional attribute of type xsd:string */
+  char *Usage;	/* optional attribute of type xsd:string */
 };
 typedef struct _wsse__SecurityTokenReference _wsse__SecurityTokenReference;
 #endif
@@ -647,16 +605,15 @@ typedef struct _wsse__SecurityTokenReference _wsse__SecurityTokenReference;
 #ifndef SOAP_TYPE__wsse__Security
 #define SOAP_TYPE__wsse__Security (121)
 /* wsse:Security */
-struct _wsse__Security
-{
-	struct _wsu__Timestamp *wsu__Timestamp;	/* optional element of type wsu:Timestamp */
-	struct _wsse__UsernameToken *UsernameToken;	/* optional element of type wsse:UsernameToken */
-	struct _wsse__BinarySecurityToken *BinarySecurityToken;	/* optional element of type wsse:BinarySecurityToken */
-	struct xenc__EncryptedKeyType *xenc__EncryptedKey;	/* optional element of type xenc:EncryptedKeyType */
-	struct _xenc__ReferenceList *xenc__ReferenceList;	/* optional element of type xenc:ReferenceList */
-	struct ds__SignatureType *ds__Signature;	/* optional element of type ds:SignatureType */
-	char *SOAP_ENV__actor;	/* optional attribute of type xsd:string */
-	char *SOAP_ENV__role;	/* optional attribute of type xsd:string */
+struct _wsse__Security {
+  struct _wsu__Timestamp *wsu__Timestamp;	/* optional element of type wsu:Timestamp */
+  struct _wsse__UsernameToken *UsernameToken;	/* optional element of type wsse:UsernameToken */
+  struct _wsse__BinarySecurityToken *BinarySecurityToken;	/* optional element of type wsse:BinarySecurityToken */
+  struct xenc__EncryptedKeyType *xenc__EncryptedKey;	/* optional element of type xenc:EncryptedKeyType */
+  struct _xenc__ReferenceList *xenc__ReferenceList;	/* optional element of type xenc:ReferenceList */
+  struct ds__SignatureType *ds__Signature;	/* optional element of type ds:SignatureType */
+  char *SOAP_ENV__actor;	/* optional attribute of type xsd:string */
+  char *SOAP_ENV__role;	/* optional attribute of type xsd:string */
 };
 typedef struct _wsse__Security _wsse__Security;
 #endif
@@ -664,10 +621,9 @@ typedef struct _wsse__Security _wsse__Security;
 #ifndef SOAP_TYPE__wsse__Password
 #define SOAP_TYPE__wsse__Password (112)
 /* Primitive wsse:Password schema type: */
-struct _wsse__Password
-{
-	char *__item;
-	char *Type;	/* optional attribute of type xsd:string */
+struct _wsse__Password {
+  char *__item;
+  char *Type;	/* optional attribute of type xsd:string */
 };
 typedef struct _wsse__Password _wsse__Password;
 #endif
@@ -675,486 +631,445 @@ typedef struct _wsse__Password _wsse__Password;
 #ifndef SOAP_TYPE_ns1__resCreateContent
 #define SOAP_TYPE_ns1__resCreateContent (131)
 /* ns1:resCreateContent */
-struct ns1__resCreateContent
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* optional element of type ns6:messagePropertiesType */
-	char *globalReservationId;	/* optional element of type xsd:string */
-	char *description;	/* required element of type xsd:string */
-	struct ns1__userRequestConstraintType *userRequestConstraint;	/* required element of type ns1:userRequestConstraintType */
-	struct ns1__reservedConstraintType *reservedConstraint;	/* optional element of type ns1:reservedConstraintType */
-	int __sizeoptionalConstraint;	/* sequence of elements <optionalConstraint> */
-	struct ns1__optionalConstraintType **optionalConstraint;	/* optional element of type ns1:optionalConstraintType */
+struct ns1__resCreateContent {
+  struct ns6__messagePropertiesType *messageProperties;	/* optional element of type ns6:messagePropertiesType */
+  char *globalReservationId;	/* optional element of type xsd:string */
+  char *description;	/* required element of type xsd:string */
+  struct ns1__userRequestConstraintType *userRequestConstraint;	/* required element of type ns1:userRequestConstraintType */
+  struct ns1__reservedConstraintType *reservedConstraint;	/* optional element of type ns1:reservedConstraintType */
+  int __sizeoptionalConstraint;	/* sequence of elements <optionalConstraint> */
+  struct ns1__optionalConstraintType **optionalConstraint;	/* optional element of type ns1:optionalConstraintType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__createReply
 #define SOAP_TYPE_ns1__createReply (141)
 /* ns1:createReply */
-struct ns1__createReply
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns6:messagePropertiesType */
-	char *globalReservationId;	/* required element of type xsd:string */
-	char *token;	/* optional element of type xsd:string */
-	char *status;	/* required element of type xsd:string */
-	struct ns1__userRequestConstraintType *userRequestConstraint;	/* required element of type ns1:userRequestConstraintType */
-	struct ns1__reservedConstraintType *reservedConstraint;	/* optional element of type ns1:reservedConstraintType */
-	int __sizeoptionalConstraint;	/* sequence of elements <optionalConstraint> */
-	struct ns1__optionalConstraintType **optionalConstraint;	/* optional element of type ns1:optionalConstraintType */
+struct ns1__createReply {
+  struct ns6__messagePropertiesType *messageProperties;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns6:messagePropertiesType */
+  char *globalReservationId;	/* required element of type xsd:string */
+  char *token;	/* optional element of type xsd:string */
+  char *status;	/* required element of type xsd:string */
+  struct ns1__userRequestConstraintType *userRequestConstraint;	/* required element of type ns1:userRequestConstraintType */
+  struct ns1__reservedConstraintType *reservedConstraint;	/* optional element of type ns1:reservedConstraintType */
+  int __sizeoptionalConstraint;	/* sequence of elements <optionalConstraint> */
+  struct ns1__optionalConstraintType **optionalConstraint;	/* optional element of type ns1:optionalConstraintType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__cancelResContent
 #define SOAP_TYPE_ns1__cancelResContent (142)
 /* ns1:cancelResContent */
-struct ns1__cancelResContent
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* optional element of type ns6:messagePropertiesType */
-	char *globalReservationId;	/* required element of type xsd:string */
+struct ns1__cancelResContent {
+  struct ns6__messagePropertiesType *messageProperties;	/* optional element of type ns6:messagePropertiesType */
+  char *globalReservationId;	/* required element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__cancelResReply
 #define SOAP_TYPE_ns1__cancelResReply (143)
 /* ns1:cancelResReply */
-struct ns1__cancelResReply
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns6:messagePropertiesType */
-	char *status;	/* required element of type xsd:string */
+struct ns1__cancelResReply {
+  struct ns6__messagePropertiesType *messageProperties;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns6:messagePropertiesType */
+  char *status;	/* required element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__queryResContent
 #define SOAP_TYPE_ns1__queryResContent (144)
 /* ns1:queryResContent */
-struct ns1__queryResContent
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* optional element of type ns6:messagePropertiesType */
-	char *globalReservationId;	/* required element of type xsd:string */
+struct ns1__queryResContent {
+  struct ns6__messagePropertiesType *messageProperties;	/* optional element of type ns6:messagePropertiesType */
+  char *globalReservationId;	/* required element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__queryResReply
 #define SOAP_TYPE_ns1__queryResReply (145)
 /* ns1:queryResReply */
-struct ns1__queryResReply
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns6:messagePropertiesType */
-	struct ns1__resDetails *reservationDetails;	/* required element of type ns1:resDetails */
+struct ns1__queryResReply {
+  struct ns6__messagePropertiesType *messageProperties;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns6:messagePropertiesType */
+  struct ns1__resDetails *reservationDetails;	/* required element of type ns1:resDetails */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__modifyResContent
 #define SOAP_TYPE_ns1__modifyResContent (148)
 /* ns1:modifyResContent */
-struct ns1__modifyResContent
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* optional element of type ns6:messagePropertiesType */
-	char *globalReservationId;	/* required element of type xsd:string */
-	char *description;	/* required element of type xsd:string */
-	struct ns1__userRequestConstraintType *userRequestConstraint;	/* required element of type ns1:userRequestConstraintType */
-	struct ns1__reservedConstraintType *reservedConstraint;	/* optional element of type ns1:reservedConstraintType */
-	int __sizeoptionalConstraint;	/* sequence of elements <optionalConstraint> */
-	struct ns1__optionalConstraintType **optionalConstraint;	/* optional element of type ns1:optionalConstraintType */
+struct ns1__modifyResContent {
+  struct ns6__messagePropertiesType *messageProperties;	/* optional element of type ns6:messagePropertiesType */
+  char *globalReservationId;	/* required element of type xsd:string */
+  char *description;	/* required element of type xsd:string */
+  struct ns1__userRequestConstraintType *userRequestConstraint;	/* required element of type ns1:userRequestConstraintType */
+  struct ns1__reservedConstraintType *reservedConstraint;	/* optional element of type ns1:reservedConstraintType */
+  int __sizeoptionalConstraint;	/* sequence of elements <optionalConstraint> */
+  struct ns1__optionalConstraintType **optionalConstraint;	/* optional element of type ns1:optionalConstraintType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__modifyResReply
 #define SOAP_TYPE_ns1__modifyResReply (149)
 /* ns1:modifyResReply */
-struct ns1__modifyResReply
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns6:messagePropertiesType */
-	struct ns1__resDetails *reservation;	/* required element of type ns1:resDetails */
+struct ns1__modifyResReply {
+  struct ns6__messagePropertiesType *messageProperties;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns6:messagePropertiesType */
+  struct ns1__resDetails *reservation;	/* required element of type ns1:resDetails */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__getTopologyContent
 #define SOAP_TYPE_ns1__getTopologyContent (150)
 /* ns1:getTopologyContent */
-struct ns1__getTopologyContent
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* optional element of type ns6:messagePropertiesType */
-	char *topologyType;	/* required element of type xsd:string */
+struct ns1__getTopologyContent {
+  struct ns6__messagePropertiesType *messageProperties;	/* optional element of type ns6:messagePropertiesType */
+  char *topologyType;	/* required element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__getTopologyResponseContent
 #define SOAP_TYPE_ns1__getTopologyResponseContent (151)
 /* ns1:getTopologyResponseContent */
-struct ns1__getTopologyResponseContent
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns6:messagePropertiesType */
-	struct ns5__CtrlPlaneTopologyContent *ns5__topology;	/* required element of type ns5:CtrlPlaneTopologyContent */
+struct ns1__getTopologyResponseContent {
+  struct ns6__messagePropertiesType *messageProperties;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns6:messagePropertiesType */
+  struct ns5__CtrlPlaneTopologyContent *ns5__topology;	/* required element of type ns5:CtrlPlaneTopologyContent */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__createPathContent
 #define SOAP_TYPE_ns1__createPathContent (154)
 /* ns1:createPathContent */
-struct ns1__createPathContent
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* optional element of type ns6:messagePropertiesType */
-	char *token;	/* optional element of type xsd:string */
-	char *globalReservationId;	/* required element of type xsd:string */
+struct ns1__createPathContent {
+  struct ns6__messagePropertiesType *messageProperties;	/* optional element of type ns6:messagePropertiesType */
+  char *token;	/* optional element of type xsd:string */
+  char *globalReservationId;	/* required element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__createPathResponseContent
 #define SOAP_TYPE_ns1__createPathResponseContent (155)
 /* ns1:createPathResponseContent */
-struct ns1__createPathResponseContent
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns6:messagePropertiesType */
-	char *globalReservationId;	/* required element of type xsd:string */
-	char *status;	/* required element of type xsd:string */
+struct ns1__createPathResponseContent {
+  struct ns6__messagePropertiesType *messageProperties;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns6:messagePropertiesType */
+  char *globalReservationId;	/* required element of type xsd:string */
+  char *status;	/* required element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__refreshPathContent
 #define SOAP_TYPE_ns1__refreshPathContent (156)
 /* ns1:refreshPathContent */
-struct ns1__refreshPathContent
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* optional element of type ns6:messagePropertiesType */
-	char *token;	/* optional element of type xsd:string */
-	char *globalReservationId;	/* required element of type xsd:string */
+struct ns1__refreshPathContent {
+  struct ns6__messagePropertiesType *messageProperties;	/* optional element of type ns6:messagePropertiesType */
+  char *token;	/* optional element of type xsd:string */
+  char *globalReservationId;	/* required element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__refreshPathResponseContent
 #define SOAP_TYPE_ns1__refreshPathResponseContent (157)
 /* ns1:refreshPathResponseContent */
-struct ns1__refreshPathResponseContent
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns6:messagePropertiesType */
-	char *globalReservationId;	/* required element of type xsd:string */
-	char *status;	/* required element of type xsd:string */
+struct ns1__refreshPathResponseContent {
+  struct ns6__messagePropertiesType *messageProperties;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns6:messagePropertiesType */
+  char *globalReservationId;	/* required element of type xsd:string */
+  char *status;	/* required element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__teardownPathContent
 #define SOAP_TYPE_ns1__teardownPathContent (158)
 /* ns1:teardownPathContent */
-struct ns1__teardownPathContent
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* optional element of type ns6:messagePropertiesType */
-	char *token;	/* optional element of type xsd:string */
-	char *globalReservationId;	/* required element of type xsd:string */
+struct ns1__teardownPathContent {
+  struct ns6__messagePropertiesType *messageProperties;	/* optional element of type ns6:messagePropertiesType */
+  char *token;	/* optional element of type xsd:string */
+  char *globalReservationId;	/* required element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__teardownPathResponseContent
 #define SOAP_TYPE_ns1__teardownPathResponseContent (159)
 /* ns1:teardownPathResponseContent */
-struct ns1__teardownPathResponseContent
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns6:messagePropertiesType */
-	char *globalReservationId;	/* required element of type xsd:string */
-	char *status;	/* required element of type xsd:string */
+struct ns1__teardownPathResponseContent {
+  struct ns6__messagePropertiesType *messageProperties;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns6:messagePropertiesType */
+  char *globalReservationId;	/* required element of type xsd:string */
+  char *status;	/* required element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__resDetails
 #define SOAP_TYPE_ns1__resDetails (146)
 /* ns1:resDetails */
-struct ns1__resDetails
-{
-	char *globalReservationId;	/* required element of type xsd:string */
-	char *login;	/* required element of type xsd:string */
-	char *description;	/* required element of type xsd:string */
-	LONG64 createTime;	/* required element of type xsd:long */
-	char *status;	/* required element of type xsd:string */
-	struct ns1__userRequestConstraintType *userRequestConstraint;	/* required element of type ns1:userRequestConstraintType */
-	struct ns1__reservedConstraintType *reservedConstraint;	/* optional element of type ns1:reservedConstraintType */
-	int __sizeoptionalConstraint;	/* sequence of elements <optionalConstraint> */
-	struct ns1__optionalConstraintType **optionalConstraint;	/* optional element of type ns1:optionalConstraintType */
+struct ns1__resDetails {
+  char *globalReservationId;	/* required element of type xsd:string */
+  char *login;	/* required element of type xsd:string */
+  char *description;	/* required element of type xsd:string */
+  LONG64 createTime;	/* required element of type xsd:long */
+  char *status;	/* required element of type xsd:string */
+  struct ns1__userRequestConstraintType *userRequestConstraint;	/* required element of type ns1:userRequestConstraintType */
+  struct ns1__reservedConstraintType *reservedConstraint;	/* optional element of type ns1:reservedConstraintType */
+  int __sizeoptionalConstraint;	/* sequence of elements <optionalConstraint> */
+  struct ns1__optionalConstraintType **optionalConstraint;	/* optional element of type ns1:optionalConstraintType */
 };
 #endif
 
 #ifndef SOAP_TYPE___ns1__listRequest_sequence
 #define SOAP_TYPE___ns1__listRequest_sequence (163)
 /* Operation wrapper: */
-struct __ns1__listRequest_sequence
-{
-	LONG64 startTime;	/* required element of type xsd:long */
-	LONG64 endTime;	/* required element of type xsd:long */
+struct __ns1__listRequest_sequence {
+  LONG64 startTime;	/* required element of type xsd:long */
+  LONG64 endTime;	/* required element of type xsd:long */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__listRequest
 #define SOAP_TYPE_ns1__listRequest (161)
 /* ns1:listRequest */
-struct ns1__listRequest
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* optional element of type ns6:messagePropertiesType */
-	int __sizeresStatus;	/* sequence of 0 to 5 elements <resStatus> */
-	char **resStatus;	/* sequence of 0 to 5 elements of type xsd:string */
-	int __size_listRequest_sequence;	/* sequence of elements <-listRequest-sequence> */
-	struct __ns1__listRequest_sequence *__listRequest_sequence;
-	char *description;	/* optional element of type xsd:string */
-	int __sizelinkId;	/* sequence of elements <linkId> */
-	char **linkId;	/* optional element of type xsd:string */
-	int __sizevlanTag;	/* sequence of elements <vlanTag> */
-	struct ns1__vlanTag **vlanTag;	/* optional element of type ns1:vlanTag */
-	int *resRequested;	/* optional element of type xsd:int */
-	int *resOffset;	/* optional element of type xsd:int */
+struct ns1__listRequest {
+  struct ns6__messagePropertiesType *messageProperties;	/* optional element of type ns6:messagePropertiesType */
+  int __sizeresStatus;	/* sequence of 0 to 5 elements <resStatus> */
+  char **resStatus;	/* sequence of 0 to 5 elements of type xsd:string */
+  int __size_listRequest_sequence;	/* sequence of elements <-listRequest-sequence> */
+  struct __ns1__listRequest_sequence *__listRequest_sequence;
+  char *description;	/* optional element of type xsd:string */
+  int __sizelinkId;	/* sequence of elements <linkId> */
+  char **linkId;	/* optional element of type xsd:string */
+  int __sizevlanTag;	/* sequence of elements <vlanTag> */
+  struct ns1__vlanTag **vlanTag;	/* optional element of type ns1:vlanTag */
+  int *resRequested;	/* optional element of type xsd:int */
+  int *resOffset;	/* optional element of type xsd:int */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__listReply
 #define SOAP_TYPE_ns1__listReply (168)
 /* ns1:listReply */
-struct ns1__listReply
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns6:messagePropertiesType */
-	int __sizeresDetails;	/* sequence of elements <resDetails> */
-	struct ns1__resDetails **resDetails;	/* optional element of type ns1:resDetails */
-	int *totalResults;	/* optional element of type xsd:int */
+struct ns1__listReply {
+  struct ns6__messagePropertiesType *messageProperties;	/* SOAP 1.2 RPC return element (when namespace qualified) */	/* optional element of type ns6:messagePropertiesType */
+  int __sizeresDetails;	/* sequence of elements <resDetails> */
+  struct ns1__resDetails **resDetails;	/* optional element of type ns1:resDetails */
+  int *totalResults;	/* optional element of type xsd:int */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__pathInfo
 #define SOAP_TYPE_ns1__pathInfo (170)
 /* ns1:pathInfo */
-struct ns1__pathInfo
-{
-	char *pathSetupMode;	/* required element of type xsd:string */
-	char *pathType;	/* optional element of type xsd:string */
-	struct ns5__CtrlPlanePathContent *path;	/* optional element of type ns5:CtrlPlanePathContent */
-	struct ns1__layer2Info *layer2Info;	/* optional element of type ns1:layer2Info */
-	struct ns1__layer3Info *layer3Info;	/* optional element of type ns1:layer3Info */
-	struct ns1__mplsInfo *mplsInfo;	/* optional element of type ns1:mplsInfo */
+struct ns1__pathInfo {
+  char *pathSetupMode;	/* required element of type xsd:string */
+  char *pathType;	/* optional element of type xsd:string */
+  struct ns5__CtrlPlanePathContent *path;	/* optional element of type ns5:CtrlPlanePathContent */
+  struct ns1__layer2Info *layer2Info;	/* optional element of type ns1:layer2Info */
+  struct ns1__layer3Info *layer3Info;	/* optional element of type ns1:layer3Info */
+  struct ns1__mplsInfo *mplsInfo;	/* optional element of type ns1:mplsInfo */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__layer2Info
 #define SOAP_TYPE_ns1__layer2Info (173)
 /* ns1:layer2Info */
-struct ns1__layer2Info
-{
-	struct ns1__vlanTag *srcVtag;	/* optional element of type ns1:vlanTag */
-	struct ns1__vlanTag *destVtag;	/* optional element of type ns1:vlanTag */
-	char *srcEndpoint;	/* required element of type xsd:string */
-	char *destEndpoint;	/* required element of type xsd:string */
+struct ns1__layer2Info {
+  struct ns1__vlanTag *srcVtag;	/* optional element of type ns1:vlanTag */
+  struct ns1__vlanTag *destVtag;	/* optional element of type ns1:vlanTag */
+  char *srcEndpoint;	/* required element of type xsd:string */
+  char *destEndpoint;	/* required element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__layer3Info
 #define SOAP_TYPE_ns1__layer3Info (175)
 /* ns1:layer3Info */
-struct ns1__layer3Info
-{
-	char *srcHost;	/* required element of type xsd:string */
-	char *destHost;	/* required element of type xsd:string */
-	char *protocol;	/* optional element of type xsd:string */
-	int *srcIpPort;	/* optional element of type xsd:int */
-	int *destIpPort;	/* optional element of type xsd:int */
-	char *dscp;	/* optional element of type xsd:string */
+struct ns1__layer3Info {
+  char *srcHost;	/* required element of type xsd:string */
+  char *destHost;	/* required element of type xsd:string */
+  char *protocol;	/* optional element of type xsd:string */
+  int *srcIpPort;	/* optional element of type xsd:int */
+  int *destIpPort;	/* optional element of type xsd:int */
+  char *dscp;	/* optional element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__mplsInfo
 #define SOAP_TYPE_ns1__mplsInfo (177)
 /* ns1:mplsInfo */
-struct ns1__mplsInfo
-{
-	int burstLimit;	/* required element of type xsd:int */
-	char *lspClass;	/* optional element of type xsd:string */
+struct ns1__mplsInfo {
+  int burstLimit;	/* required element of type xsd:int */
+  char *lspClass;	/* optional element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__interDomainEventContent
 #define SOAP_TYPE_ns1__interDomainEventContent (179)
 /* ns1:interDomainEventContent */
-struct ns1__interDomainEventContent
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* required element of type ns6:messagePropertiesType */
-	char *type;	/* required element of type xsd:string */
-	char *errorSource;	/* optional element of type xsd:string */
-	char *errorCode;	/* optional element of type xsd:string */
-	char *errorMessage;	/* optional element of type xsd:string */
-	struct ns1__resDetails *resDetails;	/* optional element of type ns1:resDetails */
+struct ns1__interDomainEventContent {
+  struct ns6__messagePropertiesType *messageProperties;	/* required element of type ns6:messagePropertiesType */
+  char *type;	/* required element of type xsd:string */
+  char *errorSource;	/* optional element of type xsd:string */
+  char *errorCode;	/* optional element of type xsd:string */
+  char *errorMessage;	/* optional element of type xsd:string */
+  struct ns1__resDetails *resDetails;	/* optional element of type ns1:resDetails */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__eventContent
 #define SOAP_TYPE_ns1__eventContent (180)
 /* ns1:eventContent */
-struct ns1__eventContent
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* required element of type ns6:messagePropertiesType */
-	char *type;	/* required element of type xsd:string */
-	LONG64 timestamp;	/* required element of type xsd:long */
-	char *errorSource;	/* optional element of type xsd:string */
-	char *errorCode;	/* optional element of type xsd:string */
-	char *errorMessage;	/* optional element of type xsd:string */
-	struct ns1__resDetails *resDetails;	/* optional element of type ns1:resDetails */
-	struct ns1__localDetails *localDetails;	/* optional element of type ns1:localDetails */
-	char *id;	/* required attribute of type xsd:string */
+struct ns1__eventContent {
+  struct ns6__messagePropertiesType *messageProperties;	/* required element of type ns6:messagePropertiesType */
+  char *type;	/* required element of type xsd:string */
+  LONG64 timestamp;	/* required element of type xsd:long */
+  char *errorSource;	/* optional element of type xsd:string */
+  char *errorCode;	/* optional element of type xsd:string */
+  char *errorMessage;	/* optional element of type xsd:string */
+  struct ns1__resDetails *resDetails;	/* optional element of type ns1:resDetails */
+  struct ns1__localDetails *localDetails;	/* optional element of type ns1:localDetails */
+  char *id;	/* required attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__localDetails
 #define SOAP_TYPE_ns1__localDetails (181)
 /* ns1:localDetails */
-struct ns1__localDetails
-{
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct ns1__localDetails {
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__globalReservationId
 #define SOAP_TYPE_ns1__globalReservationId (183)
 /* ns1:globalReservationId */
-struct ns1__globalReservationId
-{
-	char *gri;	/* required element of type xsd:string */
+struct ns1__globalReservationId {
+  char *gri;	/* required element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__optionalConstraintType
 #define SOAP_TYPE_ns1__optionalConstraintType (138)
 /* ns1:optionalConstraintType */
-struct ns1__optionalConstraintType
-{
-	struct ns1__optionalConstraintValue *value;	/* required element of type ns1:optionalConstraintValue */
-	char *category;	/* required attribute of type xsd:string */
+struct ns1__optionalConstraintType {
+  struct ns1__optionalConstraintValue *value;	/* required element of type ns1:optionalConstraintValue */
+  char *category;	/* required attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__optionalConstraintValue
 #define SOAP_TYPE_ns1__optionalConstraintValue (184)
 /* ns1:optionalConstraintValue */
-struct ns1__optionalConstraintValue
-{
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct ns1__optionalConstraintValue {
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__userRequestConstraintType
 #define SOAP_TYPE_ns1__userRequestConstraintType (134)
 /* ns1:userRequestConstraintType */
-struct ns1__userRequestConstraintType
-{
-	LONG64 startTime;	/* required element of type xsd:long */
-	LONG64 endTime;	/* required element of type xsd:long */
-	int bandwidth;	/* required element of type xsd:int */
-	struct ns1__pathInfo *pathInfo;	/* required element of type ns1:pathInfo */
+struct ns1__userRequestConstraintType {
+  LONG64 startTime;	/* required element of type xsd:long */
+  LONG64 endTime;	/* required element of type xsd:long */
+  int bandwidth;	/* required element of type xsd:int */
+  struct ns1__pathInfo *pathInfo;	/* required element of type ns1:pathInfo */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__reservedConstraintType
 #define SOAP_TYPE_ns1__reservedConstraintType (136)
 /* ns1:reservedConstraintType */
-struct ns1__reservedConstraintType
-{
-	LONG64 startTime;	/* required element of type xsd:long */
-	LONG64 endTime;	/* required element of type xsd:long */
-	int bandwidth;	/* required element of type xsd:int */
-	struct ns1__pathInfo *pathInfo;	/* required element of type ns1:pathInfo */
+struct ns1__reservedConstraintType {
+  LONG64 startTime;	/* required element of type xsd:long */
+  LONG64 endTime;	/* required element of type xsd:long */
+  int bandwidth;	/* required element of type xsd:int */
+  struct ns1__pathInfo *pathInfo;	/* required element of type ns1:pathInfo */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns2__emptyArg
 #define SOAP_TYPE_ns2__emptyArg (187)
 /* ns2:emptyArg */
-struct ns2__emptyArg
-{
-	char *msg;	/* optional element of type xsd:string */
+struct ns2__emptyArg {
+  char *msg;	/* optional element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE__ns2__OSCARSFault
 #define SOAP_TYPE__ns2__OSCARSFault (188)
 /* ns2:OSCARSFault */
-struct _ns2__OSCARSFault
-{
-	char *msg;	/* required element of type xsd:string */
-	char *details;	/* required element of type xsd:string */
+struct _ns2__OSCARSFault {
+  char *msg;	/* required element of type xsd:string */
+  char *details;	/* required element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__FilterType
 #define SOAP_TYPE_ns3__FilterType (189)
 /* ns3:FilterType */
-struct ns3__FilterType
-{
-	int __sizeTopicExpression;	/* sequence of elements <TopicExpression> */
-	struct ns3__TopicExpressionType **TopicExpression;	/* optional element of type ns3:TopicExpressionType */
-	int __sizeProducerProperties;	/* sequence of elements <ProducerProperties> */
-	struct ns3__QueryExpressionType **ProducerProperties;	/* optional element of type ns3:QueryExpressionType */
-	int __sizeMessageContent;	/* sequence of elements <MessageContent> */
-	struct ns3__QueryExpressionType **MessageContent;	/* optional element of type ns3:QueryExpressionType */
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct ns3__FilterType {
+  int __sizeTopicExpression;	/* sequence of elements <TopicExpression> */
+  struct ns3__TopicExpressionType **TopicExpression;	/* optional element of type ns3:TopicExpressionType */
+  int __sizeProducerProperties;	/* sequence of elements <ProducerProperties> */
+  struct ns3__QueryExpressionType **ProducerProperties;	/* optional element of type ns3:QueryExpressionType */
+  int __sizeMessageContent;	/* sequence of elements <MessageContent> */
+  struct ns3__QueryExpressionType **MessageContent;	/* optional element of type ns3:QueryExpressionType */
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__SubscriptionPolicyType
 #define SOAP_TYPE_ns3__SubscriptionPolicyType (196)
 /* ns3:SubscriptionPolicyType */
-struct ns3__SubscriptionPolicyType
-{
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct ns3__SubscriptionPolicyType {
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__NotificationMessageHolderType
 #define SOAP_TYPE_ns3__NotificationMessageHolderType (197)
 /* ns3:NotificationMessageHolderType */
-struct ns3__NotificationMessageHolderType
-{
-	struct wsa5__EndpointReferenceType *SubscriptionReference;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns3__TopicExpressionType *Topic;	/* optional element of type ns3:TopicExpressionType */
-	struct wsa5__EndpointReferenceType *ProducerReference;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns3__MessageType *Message;	/* required element of type ns3:MessageType */
+struct ns3__NotificationMessageHolderType {
+  struct wsa5__EndpointReferenceType *SubscriptionReference;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns3__TopicExpressionType *Topic;	/* optional element of type ns3:TopicExpressionType */
+  struct wsa5__EndpointReferenceType *ProducerReference;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns3__MessageType *Message;	/* required element of type ns3:MessageType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__MessageType
 #define SOAP_TYPE_ns3__MessageType (199)
 /* ns3:MessageType */
-struct ns3__MessageType
-{
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct ns3__MessageType {
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__SubscriptionManagerRP
 #define SOAP_TYPE__ns3__SubscriptionManagerRP (201)
 /* ns3:SubscriptionManagerRP */
-struct _ns3__SubscriptionManagerRP
-{
-	struct wsa5__EndpointReferenceType ConsumerReference;	/* required element of type wsa5:EndpointReferenceType */
-	struct ns3__FilterType *Filter;	/* optional element of type ns3:FilterType */
-	struct ns3__SubscriptionPolicyType *SubscriptionPolicy;	/* optional element of type ns3:SubscriptionPolicyType */
-	time_t *CreationTime;	/* optional element of type xsd:dateTime */
+struct _ns3__SubscriptionManagerRP {
+  struct wsa5__EndpointReferenceType ConsumerReference;	/* required element of type wsa5:EndpointReferenceType */
+  struct ns3__FilterType *Filter;	/* optional element of type ns3:FilterType */
+  struct ns3__SubscriptionPolicyType *SubscriptionPolicy;	/* optional element of type ns3:SubscriptionPolicyType */
+  time_t *CreationTime;	/* optional element of type xsd:dateTime */
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__Notify
 #define SOAP_TYPE__ns3__Notify (206)
 /* ns3:Notify */
-struct _ns3__Notify
-{
-	int __sizeNotificationMessage;	/* sequence of elements <NotificationMessage> */
-	struct ns3__NotificationMessageHolderType **NotificationMessage;	/* required element of type ns3:NotificationMessageHolderType */
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct _ns3__Notify {
+  int __sizeNotificationMessage;	/* sequence of elements <NotificationMessage> */
+  struct ns3__NotificationMessageHolderType **NotificationMessage;	/* required element of type ns3:NotificationMessageHolderType */
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__UseRaw
 #define SOAP_TYPE__ns3__UseRaw (209)
 /* ns3:UseRaw */
-struct _ns3__UseRaw
-{
+struct _ns3__UseRaw {
 #ifdef WITH_NOEMPTYSTRUCT
-	char dummy;	/* dummy member to enable compilation */
+  char dummy;	/* dummy member to enable compilation */
 #endif
 };
 #endif
@@ -1162,605 +1077,556 @@ struct _ns3__UseRaw
 #ifndef SOAP_TYPE__ns3__Subscribe_SubscriptionPolicy
 #define SOAP_TYPE__ns3__Subscribe_SubscriptionPolicy (211)
 /* ns3:Subscribe-SubscriptionPolicy */
-struct _ns3__Subscribe_SubscriptionPolicy
-{
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct _ns3__Subscribe_SubscriptionPolicy {
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__Subscribe
 #define SOAP_TYPE__ns3__Subscribe (210)
 /* ns3:Subscribe */
-struct _ns3__Subscribe
-{
-	struct wsa5__EndpointReferenceType ConsumerReference;	/* required element of type wsa5:EndpointReferenceType */
-	struct ns3__FilterType *Filter;	/* optional element of type ns3:FilterType */
-	char *InitialTerminationTime;	/* optional element of type ns3:AbsoluteOrRelativeTimeType */
-	struct _ns3__Subscribe_SubscriptionPolicy *SubscriptionPolicy;	/* optional element of type ns3:Subscribe-SubscriptionPolicy */
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct _ns3__Subscribe {
+  struct wsa5__EndpointReferenceType ConsumerReference;	/* required element of type wsa5:EndpointReferenceType */
+  struct ns3__FilterType *Filter;	/* optional element of type ns3:FilterType */
+  char *InitialTerminationTime;	/* optional element of type ns3:AbsoluteOrRelativeTimeType */
+  struct _ns3__Subscribe_SubscriptionPolicy *SubscriptionPolicy;	/* optional element of type ns3:Subscribe-SubscriptionPolicy */
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__SubscribeResponse
 #define SOAP_TYPE__ns3__SubscribeResponse (213)
 /* ns3:SubscribeResponse */
-struct _ns3__SubscribeResponse
-{
-	struct wsa5__EndpointReferenceType SubscriptionReference;	/* required element of type wsa5:EndpointReferenceType */
-	time_t *CurrentTime;	/* optional element of type xsd:dateTime */
-	time_t *TerminationTime;	/* optional element of type xsd:dateTime */
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct _ns3__SubscribeResponse {
+  struct wsa5__EndpointReferenceType SubscriptionReference;	/* required element of type wsa5:EndpointReferenceType */
+  time_t *CurrentTime;	/* optional element of type xsd:dateTime */
+  time_t *TerminationTime;	/* optional element of type xsd:dateTime */
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__GetCurrentMessage
 #define SOAP_TYPE__ns3__GetCurrentMessage (214)
 /* ns3:GetCurrentMessage */
-struct _ns3__GetCurrentMessage
-{
-	struct ns3__TopicExpressionType *Topic;	/* required element of type ns3:TopicExpressionType */
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct _ns3__GetCurrentMessage {
+  struct ns3__TopicExpressionType *Topic;	/* required element of type ns3:TopicExpressionType */
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__GetCurrentMessageResponse
 #define SOAP_TYPE__ns3__GetCurrentMessageResponse (215)
 /* ns3:GetCurrentMessageResponse */
-struct _ns3__GetCurrentMessageResponse
-{
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct _ns3__GetCurrentMessageResponse {
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__GetMessages
 #define SOAP_TYPE__ns3__GetMessages (216)
 /* ns3:GetMessages */
-struct _ns3__GetMessages
-{
-	unsigned int *MaximumNumber;	/* optional element of type xsd:unsignedInt */
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct _ns3__GetMessages {
+  unsigned int *MaximumNumber;	/* optional element of type xsd:unsignedInt */
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__GetMessagesResponse
 #define SOAP_TYPE__ns3__GetMessagesResponse (219)
 /* ns3:GetMessagesResponse */
-struct _ns3__GetMessagesResponse
-{
-	int __sizeNotificationMessage;	/* sequence of elements <NotificationMessage> */
-	struct ns3__NotificationMessageHolderType **NotificationMessage;	/* optional element of type ns3:NotificationMessageHolderType */
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct _ns3__GetMessagesResponse {
+  int __sizeNotificationMessage;	/* sequence of elements <NotificationMessage> */
+  struct ns3__NotificationMessageHolderType **NotificationMessage;	/* optional element of type ns3:NotificationMessageHolderType */
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__DestroyPullPoint
 #define SOAP_TYPE__ns3__DestroyPullPoint (220)
 /* ns3:DestroyPullPoint */
-struct _ns3__DestroyPullPoint
-{
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct _ns3__DestroyPullPoint {
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__DestroyPullPointResponse
 #define SOAP_TYPE__ns3__DestroyPullPointResponse (221)
 /* ns3:DestroyPullPointResponse */
-struct _ns3__DestroyPullPointResponse
-{
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct _ns3__DestroyPullPointResponse {
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__CreatePullPoint
 #define SOAP_TYPE__ns3__CreatePullPoint (222)
 /* ns3:CreatePullPoint */
-struct _ns3__CreatePullPoint
-{
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct _ns3__CreatePullPoint {
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__CreatePullPointResponse
 #define SOAP_TYPE__ns3__CreatePullPointResponse (223)
 /* ns3:CreatePullPointResponse */
-struct _ns3__CreatePullPointResponse
-{
-	struct wsa5__EndpointReferenceType PullPoint;	/* required element of type wsa5:EndpointReferenceType */
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct _ns3__CreatePullPointResponse {
+  struct wsa5__EndpointReferenceType PullPoint;	/* required element of type wsa5:EndpointReferenceType */
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__Renew
 #define SOAP_TYPE__ns3__Renew (224)
 /* ns3:Renew */
-struct _ns3__Renew
-{
-	char *TerminationTime;	/* required element of type xsd:string */
-	struct wsa5__EndpointReferenceType SubscriptionReference;	/* required element of type wsa5:EndpointReferenceType */
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct _ns3__Renew {
+  char *TerminationTime;	/* required element of type xsd:string */
+  struct wsa5__EndpointReferenceType SubscriptionReference;	/* required element of type wsa5:EndpointReferenceType */
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__RenewResponse
 #define SOAP_TYPE__ns3__RenewResponse (225)
 /* ns3:RenewResponse */
-struct _ns3__RenewResponse
-{
-	time_t TerminationTime;	/* required element of type xsd:dateTime */
-	time_t *CurrentTime;	/* optional element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *SubscriptionReference;	/* optional element of type wsa5:EndpointReferenceType */
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct _ns3__RenewResponse {
+  time_t TerminationTime;	/* required element of type xsd:dateTime */
+  time_t *CurrentTime;	/* optional element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *SubscriptionReference;	/* optional element of type wsa5:EndpointReferenceType */
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__Unsubscribe
 #define SOAP_TYPE__ns3__Unsubscribe (226)
 /* ns3:Unsubscribe */
-struct _ns3__Unsubscribe
-{
-	struct wsa5__EndpointReferenceType SubscriptionReference;	/* required element of type wsa5:EndpointReferenceType */
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct _ns3__Unsubscribe {
+  struct wsa5__EndpointReferenceType SubscriptionReference;	/* required element of type wsa5:EndpointReferenceType */
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__UnsubscribeResponse
 #define SOAP_TYPE__ns3__UnsubscribeResponse (227)
 /* ns3:UnsubscribeResponse */
-struct _ns3__UnsubscribeResponse
-{
-	struct wsa5__EndpointReferenceType *SubscriptionReference;	/* optional element of type wsa5:EndpointReferenceType */
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct _ns3__UnsubscribeResponse {
+  struct wsa5__EndpointReferenceType *SubscriptionReference;	/* optional element of type wsa5:EndpointReferenceType */
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__PauseSubscription
 #define SOAP_TYPE__ns3__PauseSubscription (228)
 /* ns3:PauseSubscription */
-struct _ns3__PauseSubscription
-{
-	struct wsa5__EndpointReferenceType SubscriptionReference;	/* required element of type wsa5:EndpointReferenceType */
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct _ns3__PauseSubscription {
+  struct wsa5__EndpointReferenceType SubscriptionReference;	/* required element of type wsa5:EndpointReferenceType */
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__PauseSubscriptionResponse
 #define SOAP_TYPE__ns3__PauseSubscriptionResponse (229)
 /* ns3:PauseSubscriptionResponse */
-struct _ns3__PauseSubscriptionResponse
-{
-	struct wsa5__EndpointReferenceType *SubscriptionReference;	/* optional element of type wsa5:EndpointReferenceType */
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct _ns3__PauseSubscriptionResponse {
+  struct wsa5__EndpointReferenceType *SubscriptionReference;	/* optional element of type wsa5:EndpointReferenceType */
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__ResumeSubscription
 #define SOAP_TYPE__ns3__ResumeSubscription (230)
 /* ns3:ResumeSubscription */
-struct _ns3__ResumeSubscription
-{
-	struct wsa5__EndpointReferenceType SubscriptionReference;	/* required element of type wsa5:EndpointReferenceType */
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct _ns3__ResumeSubscription {
+  struct wsa5__EndpointReferenceType SubscriptionReference;	/* required element of type wsa5:EndpointReferenceType */
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns3__ResumeSubscriptionResponse
 #define SOAP_TYPE__ns3__ResumeSubscriptionResponse (231)
 /* ns3:ResumeSubscriptionResponse */
-struct _ns3__ResumeSubscriptionResponse
-{
-	struct wsa5__EndpointReferenceType *SubscriptionReference;	/* optional element of type wsa5:EndpointReferenceType */
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
+struct _ns3__ResumeSubscriptionResponse {
+  struct wsa5__EndpointReferenceType *SubscriptionReference;	/* optional element of type wsa5:EndpointReferenceType */
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
 };
 #endif
 
 #ifndef SOAP_TYPE_ns5__CtrlPlaneTopologyContent
 #define SOAP_TYPE_ns5__CtrlPlaneTopologyContent (152)
 /* ns5:CtrlPlaneTopologyContent */
-struct ns5__CtrlPlaneTopologyContent
-{
-	char *idcId;	/* required element of type xsd:string */
-	int __sizepath;	/* sequence of elements <path> */
-	struct ns5__CtrlPlanePathContent **path;	/* optional element of type ns5:CtrlPlanePathContent */
-	int __sizedomain;	/* sequence of elements <domain> */
-	struct ns5__CtrlPlaneDomainContent **domain;	/* optional element of type ns5:CtrlPlaneDomainContent */
-	int __sizedomainSignature;	/* sequence of elements <domainSignature> */
-	struct ns5__CtrlPlaneDomainSignatureContent **domainSignature;	/* optional element of type ns5:CtrlPlaneDomainSignatureContent */
-	char *id;	/* required attribute of type xsd:string */
+struct ns5__CtrlPlaneTopologyContent {
+  char *idcId;	/* required element of type xsd:string */
+  int __sizepath;	/* sequence of elements <path> */
+  struct ns5__CtrlPlanePathContent **path;	/* optional element of type ns5:CtrlPlanePathContent */
+  int __sizedomain;	/* sequence of elements <domain> */
+  struct ns5__CtrlPlaneDomainContent **domain;	/* optional element of type ns5:CtrlPlaneDomainContent */
+  int __sizedomainSignature;	/* sequence of elements <domainSignature> */
+  struct ns5__CtrlPlaneDomainSignatureContent **domainSignature;	/* optional element of type ns5:CtrlPlaneDomainSignatureContent */
+  char *id;	/* required attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns5__CtrlPlaneDomainContent
 #define SOAP_TYPE_ns5__CtrlPlaneDomainContent (233)
 /* ns5:CtrlPlaneDomainContent */
-struct ns5__CtrlPlaneDomainContent
-{
-	struct ns5__Lifetime *lifetime;	/* optional element of type ns5:Lifetime */
-	int __sizenode;	/* sequence of elements <node> */
-	struct ns5__CtrlPlaneNodeContent **node;	/* optional element of type ns5:CtrlPlaneNodeContent */
-	int __sizeport;	/* sequence of elements <port> */
-	struct ns5__CtrlPlanePortContent **port;	/* optional element of type ns5:CtrlPlanePortContent */
-	int __sizelink;	/* sequence of elements <link> */
-	struct ns5__CtrlPlaneLinkContent **link;	/* optional element of type ns5:CtrlPlaneLinkContent */
-	char *id;	/* required attribute of type xsd:string */
+struct ns5__CtrlPlaneDomainContent {
+  struct ns5__Lifetime *lifetime;	/* optional element of type ns5:Lifetime */
+  int __sizenode;	/* sequence of elements <node> */
+  struct ns5__CtrlPlaneNodeContent **node;	/* optional element of type ns5:CtrlPlaneNodeContent */
+  int __sizeport;	/* sequence of elements <port> */
+  struct ns5__CtrlPlanePortContent **port;	/* optional element of type ns5:CtrlPlanePortContent */
+  int __sizelink;	/* sequence of elements <link> */
+  struct ns5__CtrlPlaneLinkContent **link;	/* optional element of type ns5:CtrlPlaneLinkContent */
+  char *id;	/* required attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns5__CtrlPlaneNodeContent
 #define SOAP_TYPE_ns5__CtrlPlaneNodeContent (241)
 /* ns5:CtrlPlaneNodeContent */
-struct ns5__CtrlPlaneNodeContent
-{
-	struct ns5__Lifetime *lifetime;	/* optional element of type ns5:Lifetime */
-	struct ns5__CtrlPlaneAddressContent *address;	/* optional element of type ns5:CtrlPlaneAddressContent */
-	int __sizeport;	/* sequence of elements <port> */
-	struct ns5__CtrlPlanePortContent **port;	/* optional element of type ns5:CtrlPlanePortContent */
-	char *id;	/* required attribute of type xsd:string */
+struct ns5__CtrlPlaneNodeContent {
+  struct ns5__Lifetime *lifetime;	/* optional element of type ns5:Lifetime */
+  struct ns5__CtrlPlaneAddressContent *address;	/* optional element of type ns5:CtrlPlaneAddressContent */
+  int __sizeport;	/* sequence of elements <port> */
+  struct ns5__CtrlPlanePortContent **port;	/* optional element of type ns5:CtrlPlanePortContent */
+  char *id;	/* required attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns5__CtrlPlanePortContent
 #define SOAP_TYPE_ns5__CtrlPlanePortContent (244)
 /* ns5:CtrlPlanePortContent */
-struct ns5__CtrlPlanePortContent
-{
-	struct ns5__Lifetime *lifetime;	/* optional element of type ns5:Lifetime */
-	char *capacity;	/* optional element of type xsd:string */
-	char *maximumReservableCapacity;	/* optional element of type xsd:string */
-	char *minimumReservableCapacity;	/* optional element of type xsd:string */
-	char *granularity;	/* optional element of type xsd:string */
-	char *unreservedCapacity;	/* optional element of type xsd:string */
-	int __sizelink;	/* sequence of elements <link> */
-	struct ns5__CtrlPlaneLinkContent **link;	/* optional element of type ns5:CtrlPlaneLinkContent */
-	char *id;	/* required attribute of type xsd:string */
+struct ns5__CtrlPlanePortContent {
+  struct ns5__Lifetime *lifetime;	/* optional element of type ns5:Lifetime */
+  char *capacity;	/* optional element of type xsd:string */
+  char *maximumReservableCapacity;	/* optional element of type xsd:string */
+  char *minimumReservableCapacity;	/* optional element of type xsd:string */
+  char *granularity;	/* optional element of type xsd:string */
+  char *unreservedCapacity;	/* optional element of type xsd:string */
+  int __sizelink;	/* sequence of elements <link> */
+  struct ns5__CtrlPlaneLinkContent **link;	/* optional element of type ns5:CtrlPlaneLinkContent */
+  char *id;	/* required attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns5__CtrlPlaneLinkContent
 #define SOAP_TYPE_ns5__CtrlPlaneLinkContent (247)
 /* ns5:CtrlPlaneLinkContent */
-struct ns5__CtrlPlaneLinkContent
-{
-	char *remoteLinkId;	/* optional element of type xsd:string */
-	char *trafficEngineeringMetric;	/* required element of type xsd:string */
-	char *capacity;	/* optional element of type xsd:string */
-	char *maximumReservableCapacity;	/* optional element of type xsd:string */
-	char *minimumReservableCapacity;	/* optional element of type xsd:string */
-	char *granularity;	/* optional element of type xsd:string */
-	char *unreservedCapacity;	/* optional element of type xsd:string */
-	int __sizelinkProtectionTypes;	/* sequence of elements <linkProtectionTypes> */
-	char **linkProtectionTypes;	/* optional element of type xsd:string */
-	int __sizeadministrativeGroups;	/* sequence of elements <administrativeGroups> */
-	struct ns5__CtrlPlaneAdministrativeGroup **administrativeGroups;	/* optional element of type ns5:CtrlPlaneAdministrativeGroup */
-	struct ns5__CtrlPlaneSwcapContent *SwitchingCapabilityDescriptors;	/* required element of type ns5:CtrlPlaneSwcapContent */
-	char *id;	/* required attribute of type xsd:string */
+struct ns5__CtrlPlaneLinkContent {
+  char *remoteLinkId;	/* optional element of type xsd:string */
+  char *trafficEngineeringMetric;	/* required element of type xsd:string */
+  char *capacity;	/* optional element of type xsd:string */
+  char *maximumReservableCapacity;	/* optional element of type xsd:string */
+  char *minimumReservableCapacity;	/* optional element of type xsd:string */
+  char *granularity;	/* optional element of type xsd:string */
+  char *unreservedCapacity;	/* optional element of type xsd:string */
+  int __sizelinkProtectionTypes;	/* sequence of elements <linkProtectionTypes> */
+  char **linkProtectionTypes;	/* optional element of type xsd:string */
+  int __sizeadministrativeGroups;	/* sequence of elements <administrativeGroups> */
+  struct ns5__CtrlPlaneAdministrativeGroup **administrativeGroups;	/* optional element of type ns5:CtrlPlaneAdministrativeGroup */
+  struct ns5__CtrlPlaneSwcapContent *SwitchingCapabilityDescriptors;	/* required element of type ns5:CtrlPlaneSwcapContent */
+  char *id;	/* required attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns5__CtrlPlanePathContent
 #define SOAP_TYPE_ns5__CtrlPlanePathContent (171)
 /* ns5:CtrlPlanePathContent */
-struct ns5__CtrlPlanePathContent
-{
-	struct ns5__Lifetime *lifetime;	/* optional element of type ns5:Lifetime */
-	int __sizehop;	/* sequence of elements <hop> */
-	struct ns5__CtrlPlaneHopContent **hop;	/* optional element of type ns5:CtrlPlaneHopContent */
-	char *id;	/* required attribute of type xsd:string */
-	char *direction;	/* optional attribute of type xsd:string */
+struct ns5__CtrlPlanePathContent {
+  struct ns5__Lifetime *lifetime;	/* optional element of type ns5:Lifetime */
+  int __sizehop;	/* sequence of elements <hop> */
+  struct ns5__CtrlPlaneHopContent **hop;	/* optional element of type ns5:CtrlPlaneHopContent */
+  char *id;	/* required attribute of type xsd:string */
+  char *direction;	/* optional attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns5__CtrlPlaneHopContent
 #define SOAP_TYPE_ns5__CtrlPlaneHopContent (257)
 /* ns5:CtrlPlaneHopContent */
-struct ns5__CtrlPlaneHopContent
-{
-	char *domainIdRef;	/* optional element of type xsd:string */
-	char *nodeIdRef;	/* optional element of type xsd:string */
-	char *portIdRef;	/* optional element of type xsd:string */
-	char *linkIdRef;	/* optional element of type xsd:string */
-	struct ns5__CtrlPlaneDomainContent *domain;	/* optional element of type ns5:CtrlPlaneDomainContent */
-	struct ns5__CtrlPlaneNodeContent *node;	/* optional element of type ns5:CtrlPlaneNodeContent */
-	struct ns5__CtrlPlanePortContent *port;	/* optional element of type ns5:CtrlPlanePortContent */
-	struct ns5__CtrlPlaneLinkContent *link;	/* optional element of type ns5:CtrlPlaneLinkContent */
-	int __sizenextHop;	/* sequence of elements <nextHop> */
-	struct ns5__CtrlPlaneNextHopContent **nextHop;	/* optional element of type ns5:CtrlPlaneNextHopContent */
-	char *id;	/* required attribute of type xsd:string */
+struct ns5__CtrlPlaneHopContent {
+  char *domainIdRef;	/* optional element of type xsd:string */
+  char *nodeIdRef;	/* optional element of type xsd:string */
+  char *portIdRef;	/* optional element of type xsd:string */
+  char *linkIdRef;	/* optional element of type xsd:string */
+  struct ns5__CtrlPlaneDomainContent *domain;	/* optional element of type ns5:CtrlPlaneDomainContent */
+  struct ns5__CtrlPlaneNodeContent *node;	/* optional element of type ns5:CtrlPlaneNodeContent */
+  struct ns5__CtrlPlanePortContent *port;	/* optional element of type ns5:CtrlPlanePortContent */
+  struct ns5__CtrlPlaneLinkContent *link;	/* optional element of type ns5:CtrlPlaneLinkContent */
+  int __sizenextHop;	/* sequence of elements <nextHop> */
+  struct ns5__CtrlPlaneNextHopContent **nextHop;	/* optional element of type ns5:CtrlPlaneNextHopContent */
+  char *id;	/* required attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns5__Lifetime
 #define SOAP_TYPE_ns5__Lifetime (239)
 /* ns5:Lifetime */
-struct ns5__Lifetime
-{
-	struct ns5__TimeContent *start;	/* optional element of type ns5:TimeContent */
-	struct ns5__TimeContent *end;	/* optional element of type ns5:TimeContent */
-	struct ns5__Duration *duration;	/* optional element of type ns5:Duration */
-	char *id;	/* required attribute of type xsd:string */
-	char *direction;	/* optional attribute of type xsd:string */
+struct ns5__Lifetime {
+  struct ns5__TimeContent *start;	/* optional element of type ns5:TimeContent */
+  struct ns5__TimeContent *end;	/* optional element of type ns5:TimeContent */
+  struct ns5__Duration *duration;	/* optional element of type ns5:Duration */
+  char *id;	/* required attribute of type xsd:string */
+  char *direction;	/* optional attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns5__CtrlPlaneDomainSignatureContent
 #define SOAP_TYPE_ns5__CtrlPlaneDomainSignatureContent (236)
 /* ns5:CtrlPlaneDomainSignatureContent */
-struct ns5__CtrlPlaneDomainSignatureContent
-{
-	char *domainId;	/* required attribute of type xsd:string */
+struct ns5__CtrlPlaneDomainSignatureContent {
+  char *domainId;	/* required attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns5__CtrlPlaneSwcapContent
 #define SOAP_TYPE_ns5__CtrlPlaneSwcapContent (255)
 /* ns5:CtrlPlaneSwcapContent */
-struct ns5__CtrlPlaneSwcapContent
-{
-	char *switchingcapType;	/* required element of type xsd:string */
-	char *encodingType;	/* required element of type xsd:string */
-	struct ns5__CtrlPlaneSwitchingCapabilitySpecificInfo *switchingCapabilitySpecificInfo;	/* required element of type ns5:CtrlPlaneSwitchingCapabilitySpecificInfo */
+struct ns5__CtrlPlaneSwcapContent {
+  char *switchingcapType;	/* required element of type xsd:string */
+  char *encodingType;	/* required element of type xsd:string */
+  struct ns5__CtrlPlaneSwitchingCapabilitySpecificInfo *switchingCapabilitySpecificInfo;	/* required element of type ns5:CtrlPlaneSwitchingCapabilitySpecificInfo */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns5__CtrlPlaneAdministrativeGroup
 #define SOAP_TYPE_ns5__CtrlPlaneAdministrativeGroup (252)
 /* ns5:CtrlPlaneAdministrativeGroup */
-struct ns5__CtrlPlaneAdministrativeGroup
-{
-	int group;	/* required element of type xsd:int */
-	char *groupID;	/* optional element of type xsd:string */
+struct ns5__CtrlPlaneAdministrativeGroup {
+  int group;	/* required element of type xsd:int */
+  char *groupID;	/* optional element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns5__CtrlPlaneSwitchingCapabilitySpecificInfo
 #define SOAP_TYPE_ns5__CtrlPlaneSwitchingCapabilitySpecificInfo (267)
 /* ns5:CtrlPlaneSwitchingCapabilitySpecificInfo */
-struct ns5__CtrlPlaneSwitchingCapabilitySpecificInfo
-{
-	char *capability;	/* optional element of type xsd:string */
-	int *interfaceMTU;	/* optional element of type xsd:int */
-	char *vlanRangeAvailability;	/* optional element of type xsd:string */
-	char *suggestedVLANRange;	/* optional element of type xsd:string */
-	enum xsd__boolean_ *vlanTranslation;	/* optional element of type xsd:boolean */
+struct ns5__CtrlPlaneSwitchingCapabilitySpecificInfo {
+  char *capability;	/* optional element of type xsd:string */
+  int *interfaceMTU;	/* optional element of type xsd:int */
+  char *vlanRangeAvailability;	/* optional element of type xsd:string */
+  char *suggestedVLANRange;	/* optional element of type xsd:string */
+  enum xsd__boolean_ *vlanTranslation;	/* optional element of type xsd:boolean */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns6__messagePropertiesType
 #define SOAP_TYPE_ns6__messagePropertiesType (132)
 /* ns6:messagePropertiesType */
-struct ns6__messagePropertiesType
-{
-	char *globalTransactionId;	/* required element of type xsd:string */
-	struct ns6__subjectAttributes *originator;	/* required element of type ns6:subjectAttributes */
+struct ns6__messagePropertiesType {
+  char *globalTransactionId;	/* required element of type xsd:string */
+  struct ns6__subjectAttributes *originator;	/* required element of type ns6:subjectAttributes */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns6__subjectAttributes
 #define SOAP_TYPE_ns6__subjectAttributes (270)
 /* ns6:subjectAttributes */
-struct ns6__subjectAttributes
-{
-	int __sizesubjectAttribute;	/* sequence of elements <subjectAttribute> */
-	struct ns8__AttributeType **subjectAttribute;	/* required element of type ns8:AttributeType */
+struct ns6__subjectAttributes {
+  int __sizesubjectAttribute;	/* sequence of elements <subjectAttribute> */
+  struct ns8__AttributeType **subjectAttribute;	/* required element of type ns8:AttributeType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns6__authConditions
 #define SOAP_TYPE_ns6__authConditions (275)
 /* ns6:authConditions */
-struct ns6__authConditions
-{
-	int __sizeauthCondition;	/* sequence of elements <authCondition> */
-	struct ns6__authConditionType **authCondition;	/* optional element of type ns6:authConditionType */
+struct ns6__authConditions {
+  int __sizeauthCondition;	/* sequence of elements <authCondition> */
+  struct ns6__authConditionType **authCondition;	/* optional element of type ns6:authConditionType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns6__authConditionType
 #define SOAP_TYPE_ns6__authConditionType (276)
 /* ns6:authConditionType */
-struct ns6__authConditionType
-{
-	int __sizeconditionValue;	/* sequence of elements <conditionValue> */
-	char **conditionValue;	/* required element of type xsd:string */
-	char *name;	/* required attribute of type xsd:string */
+struct ns6__authConditionType {
+  int __sizeconditionValue;	/* sequence of elements <conditionValue> */
+  char **conditionValue;	/* required element of type xsd:string */
+  char *name;	/* required attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns7__BaseFaultType
 #define SOAP_TYPE_ns7__BaseFaultType (279)
 /* ns7:BaseFaultType */
-struct ns7__BaseFaultType
-{
-	time_t Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <Description> */
-	char **Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *FaultCause;	/* optional element of type ns7:FaultCauseType */
+struct ns7__BaseFaultType {
+  time_t Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <Description> */
+  char **Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *FaultCause;	/* optional element of type ns7:FaultCauseType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__BaseIDAbstractType
 #define SOAP_TYPE_ns8__BaseIDAbstractType (284)
 /* ns8:BaseIDAbstractType */
-struct ns8__BaseIDAbstractType
-{
-	char *NameQualifier;	/* optional attribute of type xsd:string */
-	char *SPNameQualifier;	/* optional attribute of type xsd:string */
+struct ns8__BaseIDAbstractType {
+  char *NameQualifier;	/* optional attribute of type xsd:string */
+  char *SPNameQualifier;	/* optional attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__EncryptedElementType
 #define SOAP_TYPE_ns8__EncryptedElementType (285)
 /* ns8:EncryptedElementType */
-struct ns8__EncryptedElementType
-{
-	struct xenc__EncryptedDataType xenc__EncryptedData;	/* required element of type xenc:EncryptedData */
-	struct xenc__EncryptedKeyType *xenc__EncryptedKey;	/* optional element of type xenc:EncryptedKey */
+struct ns8__EncryptedElementType {
+  struct xenc__EncryptedDataType xenc__EncryptedData;	/* required element of type xenc:EncryptedData */
+  struct xenc__EncryptedKeyType *xenc__EncryptedKey;	/* optional element of type xenc:EncryptedKey */
 };
 #endif
 
 #ifndef SOAP_TYPE__ns8__union_AssertionType
 #define SOAP_TYPE__ns8__union_AssertionType (306)
 /* xsd:choice */
-union _ns8__union_AssertionType
-{
+union _ns8__union_AssertionType {
 #define SOAP_UNION__ns8__union_AssertionType_Statement	(1)
-	struct ns8__StatementAbstractType *Statement;
+  struct ns8__StatementAbstractType *Statement;
 #define SOAP_UNION__ns8__union_AssertionType_AuthnStatement	(2)
-	struct ns8__AuthnStatementType *AuthnStatement;
+  struct ns8__AuthnStatementType *AuthnStatement;
 #define SOAP_UNION__ns8__union_AssertionType_AuthzDecisionStatement	(3)
-	struct ns8__AuthzDecisionStatementType *AuthzDecisionStatement;
+  struct ns8__AuthzDecisionStatementType *AuthzDecisionStatement;
 #define SOAP_UNION__ns8__union_AssertionType_AttributeStatement	(4)
-	struct ns8__AttributeStatementType *AttributeStatement;
+  struct ns8__AttributeStatementType *AttributeStatement;
 };
 #endif
 
 #ifndef SOAP_TYPE___ns8__union_AssertionType
 #define SOAP_TYPE___ns8__union_AssertionType (297)
 /* Operation wrapper: */
-struct __ns8__union_AssertionType
-{
-	int __union_AssertionType;	/* union discriminant (of union defined below) */
-	union _ns8__union_AssertionType union_AssertionType;	/* required element of type xsd:choice */
+struct __ns8__union_AssertionType {
+  int __union_AssertionType;	/* union discriminant (of union defined below) */
+  union _ns8__union_AssertionType union_AssertionType;	/* required element of type xsd:choice */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__AssertionType
 #define SOAP_TYPE_ns8__AssertionType (287)
 /* ns8:AssertionType */
-struct ns8__AssertionType
-{
-	struct ns8__NameIDType *Issuer;	/* required element of type ns8:NameIDType */
-	struct ds__SignatureType *ds__Signature;	/* optional element of type ds:Signature */
-	struct ns8__SubjectType *Subject;	/* optional element of type ns8:SubjectType */
-	struct ns8__ConditionsType *Conditions;	/* optional element of type ns8:ConditionsType */
-	struct ns8__AdviceType *Advice;	/* optional element of type ns8:AdviceType */
-	int __size_AssertionType;	/* sequence of elements <-union-AssertionType> */
-	struct __ns8__union_AssertionType *__union_AssertionType;
-	char *Version;	/* required attribute of type xsd:string */
-	char *ID;	/* required attribute of type xsd:string */
-	time_t IssueInstant;	/* required attribute of type xsd:dateTime */
+struct ns8__AssertionType {
+  struct ns8__NameIDType *Issuer;	/* required element of type ns8:NameIDType */
+  struct ds__SignatureType *ds__Signature;	/* optional element of type ds:Signature */
+  struct ns8__SubjectType *Subject;	/* optional element of type ns8:SubjectType */
+  struct ns8__ConditionsType *Conditions;	/* optional element of type ns8:ConditionsType */
+  struct ns8__AdviceType *Advice;	/* optional element of type ns8:AdviceType */
+  int __size_AssertionType;	/* sequence of elements <-union-AssertionType> */
+  struct __ns8__union_AssertionType *__union_AssertionType;
+  char *Version;	/* required attribute of type xsd:string */
+  char *ID;	/* required attribute of type xsd:string */
+  time_t IssueInstant;	/* required attribute of type xsd:dateTime */
 };
 #endif
 
 #ifndef SOAP_TYPE__ns8__union_SubjectType_
 #define SOAP_TYPE__ns8__union_SubjectType_ (310)
 /* xsd:choice */
-union _ns8__union_SubjectType_
-{
+union _ns8__union_SubjectType_ {
 #define SOAP_UNION__ns8__union_SubjectType__BaseID	(1)
-	struct ns8__BaseIDAbstractType *BaseID;
+  struct ns8__BaseIDAbstractType *BaseID;
 #define SOAP_UNION__ns8__union_SubjectType__NameID	(2)
-	struct ns8__NameIDType *NameID;
+  struct ns8__NameIDType *NameID;
 #define SOAP_UNION__ns8__union_SubjectType__EncryptedID	(3)
-	struct ns8__EncryptedElementType *EncryptedID;
+  struct ns8__EncryptedElementType *EncryptedID;
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__SubjectType
 #define SOAP_TYPE_ns8__SubjectType (291)
 /* ns8:SubjectType */
-struct ns8__SubjectType
-{
-	int __union_SubjectType_;	/* union discriminant (of union defined below) */
-	union _ns8__union_SubjectType_ union_SubjectType_;	/* required element of type xsd:choice */
-	int __sizeSubjectConfirmation;	/* sequence of elements <SubjectConfirmation> */
-	struct ns8__SubjectConfirmationType **SubjectConfirmation;	/* optional element of type ns8:SubjectConfirmationType */
-	int __sizeSubjectConfirmation_;	/* sequence of elements <SubjectConfirmation> */
-	struct ns8__SubjectConfirmationType **SubjectConfirmation_;	/* optional element of type ns8:SubjectConfirmationType */
+struct ns8__SubjectType {
+  int __union_SubjectType_;	/* union discriminant (of union defined below) */
+  union _ns8__union_SubjectType_ union_SubjectType_;	/* required element of type xsd:choice */
+  int __sizeSubjectConfirmation;	/* sequence of elements <SubjectConfirmation> */
+  struct ns8__SubjectConfirmationType **SubjectConfirmation;	/* optional element of type ns8:SubjectConfirmationType */
+  int __sizeSubjectConfirmation_;	/* sequence of elements <SubjectConfirmation> */
+  struct ns8__SubjectConfirmationType **SubjectConfirmation_;	/* optional element of type ns8:SubjectConfirmationType */
 };
 #endif
 
 #ifndef SOAP_TYPE__ns8__union_SubjectConfirmationType
 #define SOAP_TYPE__ns8__union_SubjectConfirmationType (314)
 /* xsd:choice */
-union _ns8__union_SubjectConfirmationType
-{
+union _ns8__union_SubjectConfirmationType {
 #define SOAP_UNION__ns8__union_SubjectConfirmationType_BaseID	(1)
-	struct ns8__BaseIDAbstractType *BaseID;
+  struct ns8__BaseIDAbstractType *BaseID;
 #define SOAP_UNION__ns8__union_SubjectConfirmationType_NameID	(2)
-	struct ns8__NameIDType *NameID;
+  struct ns8__NameIDType *NameID;
 #define SOAP_UNION__ns8__union_SubjectConfirmationType_EncryptedID	(3)
-	struct ns8__EncryptedElementType *EncryptedID;
+  struct ns8__EncryptedElementType *EncryptedID;
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__SubjectConfirmationType
 #define SOAP_TYPE_ns8__SubjectConfirmationType (311)
 /* ns8:SubjectConfirmationType */
-struct ns8__SubjectConfirmationType
-{
-	int __union_SubjectConfirmationType;	/* union discriminant (of union defined below) */
-	union _ns8__union_SubjectConfirmationType union_SubjectConfirmationType;	/* required element of type xsd:choice */
-	struct ns8__SubjectConfirmationDataType *SubjectConfirmationData;	/* optional element of type ns8:SubjectConfirmationDataType */
-	char *Method;	/* required attribute of type xsd:string */
+struct ns8__SubjectConfirmationType {
+  int __union_SubjectConfirmationType;	/* union discriminant (of union defined below) */
+  union _ns8__union_SubjectConfirmationType union_SubjectConfirmationType;	/* required element of type xsd:choice */
+  struct ns8__SubjectConfirmationDataType *SubjectConfirmationData;	/* optional element of type ns8:SubjectConfirmationDataType */
+  char *Method;	/* required attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE__ns8__union_ConditionsType
 #define SOAP_TYPE__ns8__union_ConditionsType (326)
 /* xsd:choice */
-union _ns8__union_ConditionsType
-{
+union _ns8__union_ConditionsType {
 #define SOAP_UNION__ns8__union_ConditionsType_Condition	(1)
-	struct ns8__ConditionAbstractType *Condition;
+  struct ns8__ConditionAbstractType *Condition;
 #define SOAP_UNION__ns8__union_ConditionsType_AudienceRestriction	(2)
-	struct ns8__AudienceRestrictionType *AudienceRestriction;
+  struct ns8__AudienceRestrictionType *AudienceRestriction;
 #define SOAP_UNION__ns8__union_ConditionsType_OneTimeUse	(3)
-	struct ns8__OneTimeUseType *OneTimeUse;
+  struct ns8__OneTimeUseType *OneTimeUse;
 #define SOAP_UNION__ns8__union_ConditionsType_ProxyRestriction	(4)
-	struct ns8__ProxyRestrictionType *ProxyRestriction;
+  struct ns8__ProxyRestrictionType *ProxyRestriction;
 };
 #endif
 
 #ifndef SOAP_TYPE___ns8__union_ConditionsType
 #define SOAP_TYPE___ns8__union_ConditionsType (317)
 /* Operation wrapper: */
-struct __ns8__union_ConditionsType
-{
-	int __union_ConditionsType;	/* union discriminant (of union defined below) */
-	union _ns8__union_ConditionsType union_ConditionsType;	/* required element of type xsd:choice */
+struct __ns8__union_ConditionsType {
+  int __union_ConditionsType;	/* union discriminant (of union defined below) */
+  union _ns8__union_ConditionsType union_ConditionsType;	/* required element of type xsd:choice */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__ConditionsType
 #define SOAP_TYPE_ns8__ConditionsType (293)
 /* ns8:ConditionsType */
-struct ns8__ConditionsType
-{
-	int __size_ConditionsType;	/* sequence of elements <-union-ConditionsType> */
-	struct __ns8__union_ConditionsType *__union_ConditionsType;
-	time_t *NotBefore;	/* optional attribute of type xsd:dateTime */
-	time_t *NotOnOrAfter;	/* optional attribute of type xsd:dateTime */
+struct ns8__ConditionsType {
+  int __size_ConditionsType;	/* sequence of elements <-union-ConditionsType> */
+  struct __ns8__union_ConditionsType *__union_ConditionsType;
+  time_t *NotBefore;	/* optional attribute of type xsd:dateTime */
+  time_t *NotOnOrAfter;	/* optional attribute of type xsd:dateTime */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__ConditionAbstractType
 #define SOAP_TYPE_ns8__ConditionAbstractType (318)
 /* ns8:ConditionAbstractType */
-struct ns8__ConditionAbstractType
-{
+struct ns8__ConditionAbstractType {
 #ifdef WITH_NOEMPTYSTRUCT
-	char dummy;	/* dummy member to enable compilation */
+  char dummy;	/* dummy member to enable compilation */
 #endif
 };
 #endif
@@ -1768,48 +1634,44 @@ struct ns8__ConditionAbstractType
 #ifndef SOAP_TYPE__ns8__union_AdviceType
 #define SOAP_TYPE__ns8__union_AdviceType (330)
 /* xsd:choice */
-union _ns8__union_AdviceType
-{
+union _ns8__union_AdviceType {
 #define SOAP_UNION__ns8__union_AdviceType_AssertionIDRef	(1)
-	char *AssertionIDRef;
+  char *AssertionIDRef;
 #define SOAP_UNION__ns8__union_AdviceType_AssertionURIRef	(2)
-	char *AssertionURIRef;
+  char *AssertionURIRef;
 #define SOAP_UNION__ns8__union_AdviceType_Assertion	(3)
-	struct ns8__AssertionType *Assertion;
+  struct ns8__AssertionType *Assertion;
 #define SOAP_UNION__ns8__union_AdviceType_EncryptedAssertion	(4)
-	struct ns8__EncryptedElementType *EncryptedAssertion;
+  struct ns8__EncryptedElementType *EncryptedAssertion;
 #define SOAP_UNION__ns8__union_AdviceType___any	(5)
-	char *__any;
+  char *__any;
 };
 #endif
 
 #ifndef SOAP_TYPE___ns8__union_AdviceType
 #define SOAP_TYPE___ns8__union_AdviceType (328)
 /* Operation wrapper: */
-struct __ns8__union_AdviceType
-{
-	int __union_AdviceType;	/* union discriminant (of union defined below) */
-	union _ns8__union_AdviceType union_AdviceType;	/* required element of type xsd:choice */
+struct __ns8__union_AdviceType {
+  int __union_AdviceType;	/* union discriminant (of union defined below) */
+  union _ns8__union_AdviceType union_AdviceType;	/* required element of type xsd:choice */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__AdviceType
 #define SOAP_TYPE_ns8__AdviceType (295)
 /* ns8:AdviceType */
-struct ns8__AdviceType
-{
-	int __size_AdviceType;	/* sequence of elements <-union-AdviceType> */
-	struct __ns8__union_AdviceType *__union_AdviceType;
+struct ns8__AdviceType {
+  int __size_AdviceType;	/* sequence of elements <-union-AdviceType> */
+  struct __ns8__union_AdviceType *__union_AdviceType;
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__StatementAbstractType
 #define SOAP_TYPE_ns8__StatementAbstractType (298)
 /* ns8:StatementAbstractType */
-struct ns8__StatementAbstractType
-{
+struct ns8__StatementAbstractType {
 #ifdef WITH_NOEMPTYSTRUCT
-	char dummy;	/* dummy member to enable compilation */
+  char dummy;	/* dummy member to enable compilation */
 #endif
 };
 #endif
@@ -1817,586 +1679,541 @@ struct ns8__StatementAbstractType
 #ifndef SOAP_TYPE_ns8__SubjectLocalityType
 #define SOAP_TYPE_ns8__SubjectLocalityType (332)
 /* ns8:SubjectLocalityType */
-struct ns8__SubjectLocalityType
-{
-	char *Address;	/* optional attribute of type xsd:string */
-	char *DNSName;	/* optional attribute of type xsd:string */
+struct ns8__SubjectLocalityType {
+  char *Address;	/* optional attribute of type xsd:string */
+  char *DNSName;	/* optional attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE__ns8__union_AuthnContextType_
 #define SOAP_TYPE__ns8__union_AuthnContextType_ (334)
 /* xsd:choice */
-union _ns8__union_AuthnContextType_
-{
+union _ns8__union_AuthnContextType_ {
 #define SOAP_UNION__ns8__union_AuthnContextType__AuthnContextDecl	(1)
-	char *AuthnContextDecl;
+  char *AuthnContextDecl;
 #define SOAP_UNION__ns8__union_AuthnContextType__AuthnContextDeclRef	(2)
-	char *AuthnContextDeclRef;
+  char *AuthnContextDeclRef;
 };
 #endif
 
 #ifndef SOAP_TYPE__ns8__union_AuthnContextType__
 #define SOAP_TYPE__ns8__union_AuthnContextType__ (335)
 /* xsd:choice */
-union _ns8__union_AuthnContextType__
-{
+union _ns8__union_AuthnContextType__ {
 #define SOAP_UNION__ns8__union_AuthnContextType___AuthnContextDecl	(1)
-	char *AuthnContextDecl;
+  char *AuthnContextDecl;
 #define SOAP_UNION__ns8__union_AuthnContextType___AuthnContextDeclRef	(2)
-	char *AuthnContextDeclRef;
+  char *AuthnContextDeclRef;
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__AuthnContextType
 #define SOAP_TYPE_ns8__AuthnContextType (333)
 /* ns8:AuthnContextType */
-struct ns8__AuthnContextType
-{
-	char *AuthnContextClassRef;	/* optional element of type xsd:string */
-	int __union_AuthnContextType_;	/* union discriminant (of union defined below) */
-	union _ns8__union_AuthnContextType_ union_AuthnContextType_;	/* required element of type xsd:choice */
-	int __union_AuthnContextType__;	/* union discriminant (of union defined below) */
-	union _ns8__union_AuthnContextType__ union_AuthnContextType__;	/* required element of type xsd:choice */
-	int __sizeAuthenticatingAuthority;	/* sequence of elements <AuthenticatingAuthority> */
-	char **AuthenticatingAuthority;	/* optional element of type xsd:string */
+struct ns8__AuthnContextType {
+  char *AuthnContextClassRef;	/* optional element of type xsd:string */
+  int __union_AuthnContextType_;	/* union discriminant (of union defined below) */
+  union _ns8__union_AuthnContextType_ union_AuthnContextType_;	/* required element of type xsd:choice */
+  int __union_AuthnContextType__;	/* union discriminant (of union defined below) */
+  union _ns8__union_AuthnContextType__ union_AuthnContextType__;	/* required element of type xsd:choice */
+  int __sizeAuthenticatingAuthority;	/* sequence of elements <AuthenticatingAuthority> */
+  char **AuthenticatingAuthority;	/* optional element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE__ns8__union_EvidenceType
 #define SOAP_TYPE__ns8__union_EvidenceType (338)
 /* xsd:choice */
-union _ns8__union_EvidenceType
-{
+union _ns8__union_EvidenceType {
 #define SOAP_UNION__ns8__union_EvidenceType_AssertionIDRef	(1)
-	char *AssertionIDRef;
+  char *AssertionIDRef;
 #define SOAP_UNION__ns8__union_EvidenceType_AssertionURIRef	(2)
-	char *AssertionURIRef;
+  char *AssertionURIRef;
 #define SOAP_UNION__ns8__union_EvidenceType_Assertion	(3)
-	struct ns8__AssertionType *Assertion;
+  struct ns8__AssertionType *Assertion;
 #define SOAP_UNION__ns8__union_EvidenceType_EncryptedAssertion	(4)
-	struct ns8__EncryptedElementType *EncryptedAssertion;
+  struct ns8__EncryptedElementType *EncryptedAssertion;
 };
 #endif
 
 #ifndef SOAP_TYPE___ns8__union_EvidenceType
 #define SOAP_TYPE___ns8__union_EvidenceType (337)
 /* Operation wrapper: */
-struct __ns8__union_EvidenceType
-{
-	int __union_EvidenceType;	/* union discriminant (of union defined below) */
-	union _ns8__union_EvidenceType union_EvidenceType;	/* required element of type xsd:choice */
+struct __ns8__union_EvidenceType {
+  int __union_EvidenceType;	/* union discriminant (of union defined below) */
+  union _ns8__union_EvidenceType union_EvidenceType;	/* required element of type xsd:choice */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__EvidenceType
 #define SOAP_TYPE_ns8__EvidenceType (336)
 /* ns8:EvidenceType */
-struct ns8__EvidenceType
-{
-	int __size_EvidenceType;	/* sequence of elements <-union-EvidenceType> */
-	struct __ns8__union_EvidenceType *__union_EvidenceType;
+struct ns8__EvidenceType {
+  int __size_EvidenceType;	/* sequence of elements <-union-EvidenceType> */
+  struct __ns8__union_EvidenceType *__union_EvidenceType;
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__AttributeType
 #define SOAP_TYPE_ns8__AttributeType (272)
 /* ns8:AttributeType */
-struct ns8__AttributeType
-{
-	int __sizeAttributeValue;	/* sequence of elements <AttributeValue> */
-	char **AttributeValue;	/* optional element of type xsd:anyType */
-	char *Name;	/* required attribute of type xsd:string */
-	char *NameFormat;	/* optional attribute of type xsd:string */
-	char *FriendlyName;	/* optional attribute of type xsd:string */
-	char *__anyAttribute;	/* optional attribute of type xsd:anyType */
+struct ns8__AttributeType {
+  int __sizeAttributeValue;	/* sequence of elements <AttributeValue> */
+  char **AttributeValue;	/* optional element of type xsd:anyType */
+  char *Name;	/* required attribute of type xsd:string */
+  char *NameFormat;	/* optional attribute of type xsd:string */
+  char *FriendlyName;	/* optional attribute of type xsd:string */
+  char *__anyAttribute;	/* optional attribute of type xsd:anyType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__vlanTag
 #define SOAP_TYPE_ns1__vlanTag (165)
 /* Primitive ns1:vlanTag schema type: */
-struct ns1__vlanTag
-{
-	char *__item;
-	enum xsd__boolean_ tagged;	/* optional attribute of type xsd:boolean */
+struct ns1__vlanTag {
+  char *__item;
+  enum xsd__boolean_ tagged;	/* optional attribute of type xsd:boolean */
 };
 #endif
 
 #ifndef SOAP_TYPE___ns1__reservationResourceType_sequence
 #define SOAP_TYPE___ns1__reservationResourceType_sequence (341)
 /* Operation wrapper: */
-struct __ns1__reservationResourceType_sequence
-{
-	struct ns1__localDetails *localDetails;	/* optional element of type ns1:localDetails */
+struct __ns1__reservationResourceType_sequence {
+  struct ns1__localDetails *localDetails;	/* optional element of type ns1:localDetails */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns1__reservationResourceType
 #define SOAP_TYPE_ns1__reservationResourceType (340)
 /* ns1:reservationResourceType */
-struct ns1__reservationResourceType
-{
-	struct ns6__messagePropertiesType *messageProperties;	/* optional element of type ns6:messagePropertiesType */
-	char *globalReservationId;	/* optional element of type xsd:string */
-	char *description;	/* required element of type xsd:string */
-	struct ns1__userRequestConstraintType *userRequestConstraint;	/* required element of type ns1:userRequestConstraintType */
-	struct ns1__reservedConstraintType *reservedConstraint;	/* optional element of type ns1:reservedConstraintType */
-	int __sizeoptionalConstraint;	/* sequence of elements <optionalConstraint> */
-	struct ns1__optionalConstraintType **optionalConstraint;	/* optional element of type ns1:optionalConstraintType */
-	int __size_reservationResourceType_sequence;	/* sequence of elements <-reservationResourceType-sequence> */
-	struct __ns1__reservationResourceType_sequence *__reservationResourceType_sequence;
+struct ns1__reservationResourceType {
+  struct ns6__messagePropertiesType *messageProperties;	/* optional element of type ns6:messagePropertiesType */
+  char *globalReservationId;	/* optional element of type xsd:string */
+  char *description;	/* required element of type xsd:string */
+  struct ns1__userRequestConstraintType *userRequestConstraint;	/* required element of type ns1:userRequestConstraintType */
+  struct ns1__reservedConstraintType *reservedConstraint;	/* optional element of type ns1:reservedConstraintType */
+  int __sizeoptionalConstraint;	/* sequence of elements <optionalConstraint> */
+  struct ns1__optionalConstraintType **optionalConstraint;	/* optional element of type ns1:optionalConstraintType */
+  int __size_reservationResourceType_sequence;	/* sequence of elements <-reservationResourceType-sequence> */
+  struct __ns1__reservationResourceType_sequence *__reservationResourceType_sequence;
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__QueryExpressionType
 #define SOAP_TYPE_ns3__QueryExpressionType (193)
 /* Primitive ns3:QueryExpressionType schema type: */
-struct ns3__QueryExpressionType
-{
-	char *__item;
-	char *Dialect;	/* required attribute of type xsd:string */
+struct ns3__QueryExpressionType {
+  char *__item;
+  char *Dialect;	/* required attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__TopicExpressionType
 #define SOAP_TYPE_ns3__TopicExpressionType (190)
 /* ns3:TopicExpressionType */
-struct ns3__TopicExpressionType
-{
-	char *__item;
-	char *Dialect;	/* required attribute of type xsd:string */
-	char *__mixed;
+struct ns3__TopicExpressionType {
+  char *__item;
+  char *Dialect;	/* required attribute of type xsd:string */
+  char *__mixed;
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__SubscribeCreationFailedFaultType
 #define SOAP_TYPE_ns3__SubscribeCreationFailedFaultType (343)
 /* ns3:SubscribeCreationFailedFaultType */
-struct ns3__SubscribeCreationFailedFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+struct ns3__SubscribeCreationFailedFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__InvalidFilterFaultType
 #define SOAP_TYPE_ns3__InvalidFilterFaultType (344)
 /* ns3:InvalidFilterFaultType */
-struct ns3__InvalidFilterFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
-	int __sizeUnknownFilter;	/* sequence of elements <UnknownFilter> */
-	char **UnknownFilter;	/* required element of type xsd:QName */
+struct ns3__InvalidFilterFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+  int __sizeUnknownFilter;	/* sequence of elements <UnknownFilter> */
+  char **UnknownFilter;	/* required element of type xsd:QName */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__TopicExpressionDialectUnknownFaultType
 #define SOAP_TYPE_ns3__TopicExpressionDialectUnknownFaultType (346)
 /* ns3:TopicExpressionDialectUnknownFaultType */
-struct ns3__TopicExpressionDialectUnknownFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+struct ns3__TopicExpressionDialectUnknownFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__InvalidTopicExpressionFaultType
 #define SOAP_TYPE_ns3__InvalidTopicExpressionFaultType (347)
 /* ns3:InvalidTopicExpressionFaultType */
-struct ns3__InvalidTopicExpressionFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+struct ns3__InvalidTopicExpressionFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__TopicNotSupportedFaultType
 #define SOAP_TYPE_ns3__TopicNotSupportedFaultType (348)
 /* ns3:TopicNotSupportedFaultType */
-struct ns3__TopicNotSupportedFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+struct ns3__TopicNotSupportedFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__MultipleTopicsSpecifiedFaultType
 #define SOAP_TYPE_ns3__MultipleTopicsSpecifiedFaultType (349)
 /* ns3:MultipleTopicsSpecifiedFaultType */
-struct ns3__MultipleTopicsSpecifiedFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+struct ns3__MultipleTopicsSpecifiedFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__InvalidProducerPropertiesExpressionFaultType
 #define SOAP_TYPE_ns3__InvalidProducerPropertiesExpressionFaultType (350)
 /* ns3:InvalidProducerPropertiesExpressionFaultType */
-struct ns3__InvalidProducerPropertiesExpressionFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+struct ns3__InvalidProducerPropertiesExpressionFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__InvalidMessageContentExpressionFaultType
 #define SOAP_TYPE_ns3__InvalidMessageContentExpressionFaultType (351)
 /* ns3:InvalidMessageContentExpressionFaultType */
-struct ns3__InvalidMessageContentExpressionFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+struct ns3__InvalidMessageContentExpressionFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__UnrecognizedPolicyRequestFaultType
 #define SOAP_TYPE_ns3__UnrecognizedPolicyRequestFaultType (352)
 /* ns3:UnrecognizedPolicyRequestFaultType */
-struct ns3__UnrecognizedPolicyRequestFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
-	int __sizeUnrecognizedPolicy;	/* sequence of elements <UnrecognizedPolicy> */
-	char **UnrecognizedPolicy;	/* optional element of type xsd:QName */
+struct ns3__UnrecognizedPolicyRequestFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+  int __sizeUnrecognizedPolicy;	/* sequence of elements <UnrecognizedPolicy> */
+  char **UnrecognizedPolicy;	/* optional element of type xsd:QName */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__UnsupportedPolicyRequestFaultType
 #define SOAP_TYPE_ns3__UnsupportedPolicyRequestFaultType (353)
 /* ns3:UnsupportedPolicyRequestFaultType */
-struct ns3__UnsupportedPolicyRequestFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
-	int __sizeUnsupportedPolicy;	/* sequence of elements <UnsupportedPolicy> */
-	char **UnsupportedPolicy;	/* optional element of type xsd:QName */
+struct ns3__UnsupportedPolicyRequestFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+  int __sizeUnsupportedPolicy;	/* sequence of elements <UnsupportedPolicy> */
+  char **UnsupportedPolicy;	/* optional element of type xsd:QName */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__NotifyMessageNotSupportedFaultType
 #define SOAP_TYPE_ns3__NotifyMessageNotSupportedFaultType (354)
 /* ns3:NotifyMessageNotSupportedFaultType */
-struct ns3__NotifyMessageNotSupportedFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+struct ns3__NotifyMessageNotSupportedFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__UnacceptableInitialTerminationTimeFaultType
 #define SOAP_TYPE_ns3__UnacceptableInitialTerminationTimeFaultType (355)
 /* ns3:UnacceptableInitialTerminationTimeFaultType */
-struct ns3__UnacceptableInitialTerminationTimeFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
-	time_t MinimumTime;	/* required element of type xsd:dateTime */
-	time_t *MaximumTime;	/* optional element of type xsd:dateTime */
+struct ns3__UnacceptableInitialTerminationTimeFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+  time_t MinimumTime;	/* required element of type xsd:dateTime */
+  time_t *MaximumTime;	/* optional element of type xsd:dateTime */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__NoCurrentMessageOnTopicFaultType
 #define SOAP_TYPE_ns3__NoCurrentMessageOnTopicFaultType (356)
 /* ns3:NoCurrentMessageOnTopicFaultType */
-struct ns3__NoCurrentMessageOnTopicFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+struct ns3__NoCurrentMessageOnTopicFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__UnableToGetMessagesFaultType
 #define SOAP_TYPE_ns3__UnableToGetMessagesFaultType (357)
 /* ns3:UnableToGetMessagesFaultType */
-struct ns3__UnableToGetMessagesFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+struct ns3__UnableToGetMessagesFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__UnableToDestroyPullPointFaultType
 #define SOAP_TYPE_ns3__UnableToDestroyPullPointFaultType (358)
 /* ns3:UnableToDestroyPullPointFaultType */
-struct ns3__UnableToDestroyPullPointFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+struct ns3__UnableToDestroyPullPointFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__UnableToCreatePullPointFaultType
 #define SOAP_TYPE_ns3__UnableToCreatePullPointFaultType (359)
 /* ns3:UnableToCreatePullPointFaultType */
-struct ns3__UnableToCreatePullPointFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+struct ns3__UnableToCreatePullPointFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__UnacceptableTerminationTimeFaultType
 #define SOAP_TYPE_ns3__UnacceptableTerminationTimeFaultType (360)
 /* ns3:UnacceptableTerminationTimeFaultType */
-struct ns3__UnacceptableTerminationTimeFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
-	time_t MinimumTime;	/* required element of type xsd:dateTime */
-	time_t *MaximumTime;	/* optional element of type xsd:dateTime */
+struct ns3__UnacceptableTerminationTimeFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+  time_t MinimumTime;	/* required element of type xsd:dateTime */
+  time_t *MaximumTime;	/* optional element of type xsd:dateTime */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__UnableToDestroySubscriptionFaultType
 #define SOAP_TYPE_ns3__UnableToDestroySubscriptionFaultType (361)
 /* ns3:UnableToDestroySubscriptionFaultType */
-struct ns3__UnableToDestroySubscriptionFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+struct ns3__UnableToDestroySubscriptionFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__PauseFailedFaultType
 #define SOAP_TYPE_ns3__PauseFailedFaultType (362)
 /* ns3:PauseFailedFaultType */
-struct ns3__PauseFailedFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+struct ns3__PauseFailedFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns3__ResumeFailedFaultType
 #define SOAP_TYPE_ns3__ResumeFailedFaultType (363)
 /* ns3:ResumeFailedFaultType */
-struct ns3__ResumeFailedFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+struct ns3__ResumeFailedFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns4__ResourceUnknownFaultType
 #define SOAP_TYPE_ns4__ResourceUnknownFaultType (364)
 /* ns4:ResourceUnknownFaultType */
-struct ns4__ResourceUnknownFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+struct ns4__ResourceUnknownFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns4__ResourceUnavailableFaultType
 #define SOAP_TYPE_ns4__ResourceUnavailableFaultType (365)
 /* ns4:ResourceUnavailableFaultType */
-struct ns4__ResourceUnavailableFaultType
-{
-	time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
-	struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
-	struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
-	int __sizeDescription;	/* sequence of elements <ns7:Description> */
-	char **ns7__Description;	/* optional element of type xsd:string */
-	struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
+struct ns4__ResourceUnavailableFaultType {
+  time_t ns7__Timestamp;	/* required element of type xsd:dateTime */
+  struct wsa5__EndpointReferenceType *ns7__Originator;	/* optional element of type wsa5:EndpointReferenceType */
+  struct ns7__ErrorCodeType *ns7__ErrorCode;	/* optional element of type ns7:ErrorCodeType */
+  int __sizeDescription;	/* sequence of elements <ns7:Description> */
+  char **ns7__Description;	/* optional element of type xsd:string */
+  struct ns7__FaultCauseType *ns7__FaultCause;	/* optional element of type ns7:FaultCauseType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns5__CtrlPlaneNextHopContent
 #define SOAP_TYPE_ns5__CtrlPlaneNextHopContent (260)
 /* Primitive ns5:CtrlPlaneNextHopContent schema type: */
-struct ns5__CtrlPlaneNextHopContent
-{
-	char *__item;
-	int *weight;	/* optional attribute of type xsd:int */
-	enum xsd__boolean_ *optional;	/* optional attribute of type xsd:boolean */
+struct ns5__CtrlPlaneNextHopContent {
+  char *__item;
+  int *weight;	/* optional attribute of type xsd:int */
+  enum xsd__boolean_ *optional;	/* optional attribute of type xsd:boolean */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns5__TimeContent
 #define SOAP_TYPE_ns5__TimeContent (263)
 /* Primitive ns5:TimeContent schema type: */
-struct ns5__TimeContent
-{
-	char *__item;
-	char *type;	/* required attribute of type xsd:string */
+struct ns5__TimeContent {
+  char *__item;
+  char *type;	/* required attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns5__Duration
 #define SOAP_TYPE_ns5__Duration (265)
 /* Primitive ns5:Duration schema type: */
-struct ns5__Duration
-{
-	char *__item;
-	char *type;	/* required attribute of type xsd:string */
+struct ns5__Duration {
+  char *__item;
+  char *type;	/* required attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns5__CtrlPlaneAddressContent
 #define SOAP_TYPE_ns5__CtrlPlaneAddressContent (250)
 /* Primitive ns5:CtrlPlaneAddressContent schema type: */
-struct ns5__CtrlPlaneAddressContent
-{
-	char *__item;
-	char *value;	/* optional attribute of type xsd:string */
-	char *type;	/* optional attribute of type xsd:string */
+struct ns5__CtrlPlaneAddressContent {
+  char *__item;
+  char *value;	/* optional attribute of type xsd:string */
+  char *type;	/* optional attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns7__ErrorCodeType
 #define SOAP_TYPE_ns7__ErrorCodeType (280)
 /* Primitive ns7:ErrorCodeType schema type: */
-struct ns7__ErrorCodeType
-{
-	char *__item;
-	char *dialect;	/* required attribute of type xsd:string */
+struct ns7__ErrorCodeType {
+  char *__item;
+  char *dialect;	/* required attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns7__FaultCauseType
 #define SOAP_TYPE_ns7__FaultCauseType (282)
 /* Primitive ns7:FaultCauseType schema type: */
-struct ns7__FaultCauseType
-{
-	char *__item;
-	char *dialect;	/* optional attribute of type xsd:string */
+struct ns7__FaultCauseType {
+  char *__item;
+  char *dialect;	/* optional attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__NameIDType
 #define SOAP_TYPE_ns8__NameIDType (288)
 /* Primitive ns8:NameIDType schema type: */
-struct ns8__NameIDType
-{
-	char *__item;
-	char *Format;	/* optional attribute of type xsd:string */
-	char *SPProvidedID;	/* optional attribute of type xsd:string */
-	char *NameQualifier;	/* optional attribute of type xsd:string */
-	char *SPNameQualifier;	/* optional attribute of type xsd:string */
+struct ns8__NameIDType {
+  char *__item;
+  char *Format;	/* optional attribute of type xsd:string */
+  char *SPProvidedID;	/* optional attribute of type xsd:string */
+  char *NameQualifier;	/* optional attribute of type xsd:string */
+  char *SPNameQualifier;	/* optional attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__SubjectConfirmationDataType
 #define SOAP_TYPE_ns8__SubjectConfirmationDataType (315)
 /* ns8:SubjectConfirmationDataType */
-struct ns8__SubjectConfirmationDataType
-{
-	int __size;	/* sequence of elements <-any> */
-	char **__any;
-	time_t *NotBefore;	/* optional attribute of type xsd:dateTime */
-	time_t *NotOnOrAfter;	/* optional attribute of type xsd:dateTime */
-	char *Recipient;	/* optional attribute of type xsd:string */
-	char *InResponseTo;	/* optional attribute of type xsd:string */
-	char *Address;	/* optional attribute of type xsd:string */
-	char *__anyAttribute;	/* optional attribute of type xsd:anyType */
-	char *__mixed;
+struct ns8__SubjectConfirmationDataType {
+  int __size;	/* sequence of elements <-any> */
+  char **__any;
+  time_t *NotBefore;	/* optional attribute of type xsd:dateTime */
+  time_t *NotOnOrAfter;	/* optional attribute of type xsd:dateTime */
+  char *Recipient;	/* optional attribute of type xsd:string */
+  char *InResponseTo;	/* optional attribute of type xsd:string */
+  char *Address;	/* optional attribute of type xsd:string */
+  char *__anyAttribute;	/* optional attribute of type xsd:anyType */
+  char *__mixed;
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__AudienceRestrictionType
 #define SOAP_TYPE_ns8__AudienceRestrictionType (320)
 /* ns8:AudienceRestrictionType */
-struct ns8__AudienceRestrictionType
-{
-	int __sizeAudience;	/* sequence of elements <Audience> */
-	char **Audience;	/* required element of type xsd:string */
+struct ns8__AudienceRestrictionType {
+  int __sizeAudience;	/* sequence of elements <Audience> */
+  char **Audience;	/* required element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__OneTimeUseType
 #define SOAP_TYPE_ns8__OneTimeUseType (322)
 /* ns8:OneTimeUseType */
-struct ns8__OneTimeUseType
-{
+struct ns8__OneTimeUseType {
 #ifdef WITH_NOEMPTYSTRUCT
-	char dummy;	/* dummy member to enable compilation */
+  char dummy;	/* dummy member to enable compilation */
 #endif
 };
 #endif
@@ -2404,94 +2221,86 @@ struct ns8__OneTimeUseType
 #ifndef SOAP_TYPE_ns8__ProxyRestrictionType
 #define SOAP_TYPE_ns8__ProxyRestrictionType (324)
 /* ns8:ProxyRestrictionType */
-struct ns8__ProxyRestrictionType
-{
-	int __sizeAudience;	/* sequence of elements <Audience> */
-	char **Audience;	/* optional element of type xsd:string */
-	unsigned int *Count;	/* optional attribute of type xsd:unsignedInt */
+struct ns8__ProxyRestrictionType {
+  int __sizeAudience;	/* sequence of elements <Audience> */
+  char **Audience;	/* optional element of type xsd:string */
+  unsigned int *Count;	/* optional attribute of type xsd:unsignedInt */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__AuthnStatementType
 #define SOAP_TYPE_ns8__AuthnStatementType (300)
 /* ns8:AuthnStatementType */
-struct ns8__AuthnStatementType
-{
-	struct ns8__SubjectLocalityType *SubjectLocality;	/* optional element of type ns8:SubjectLocalityType */
-	struct ns8__AuthnContextType *AuthnContext;	/* required element of type ns8:AuthnContextType */
-	time_t AuthnInstant;	/* required attribute of type xsd:dateTime */
-	char *SessionIndex;	/* optional attribute of type xsd:string */
-	time_t *SessionNotOnOrAfter;	/* optional attribute of type xsd:dateTime */
+struct ns8__AuthnStatementType {
+  struct ns8__SubjectLocalityType *SubjectLocality;	/* optional element of type ns8:SubjectLocalityType */
+  struct ns8__AuthnContextType *AuthnContext;	/* required element of type ns8:AuthnContextType */
+  time_t AuthnInstant;	/* required attribute of type xsd:dateTime */
+  char *SessionIndex;	/* optional attribute of type xsd:string */
+  time_t *SessionNotOnOrAfter;	/* optional attribute of type xsd:dateTime */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__AuthzDecisionStatementType
 #define SOAP_TYPE_ns8__AuthzDecisionStatementType (302)
 /* ns8:AuthzDecisionStatementType */
-struct ns8__AuthzDecisionStatementType
-{
-	int __sizeAction;	/* sequence of elements <Action> */
-	struct ns8__ActionType **Action;	/* required element of type ns8:ActionType */
-	struct ns8__EvidenceType *Evidence;	/* optional element of type ns8:EvidenceType */
-	char *Resource;	/* required attribute of type xsd:string */
-	enum ns8__DecisionType Decision;	/* required attribute of type ns8:DecisionType */
+struct ns8__AuthzDecisionStatementType {
+  int __sizeAction;	/* sequence of elements <Action> */
+  struct ns8__ActionType **Action;	/* required element of type ns8:ActionType */
+  struct ns8__EvidenceType *Evidence;	/* optional element of type ns8:EvidenceType */
+  char *Resource;	/* required attribute of type xsd:string */
+  enum ns8__DecisionType Decision;	/* required attribute of type ns8:DecisionType */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__ActionType
 #define SOAP_TYPE_ns8__ActionType (368)
 /* Primitive ns8:ActionType schema type: */
-struct ns8__ActionType
-{
-	char *__item;
-	char *Namespace;	/* required attribute of type xsd:string */
+struct ns8__ActionType {
+  char *__item;
+  char *Namespace;	/* required attribute of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE__ns8__union_AttributeStatementType
 #define SOAP_TYPE__ns8__union_AttributeStatementType (373)
 /* xsd:choice */
-union _ns8__union_AttributeStatementType
-{
+union _ns8__union_AttributeStatementType {
 #define SOAP_UNION__ns8__union_AttributeStatementType_Attribute	(1)
-	struct ns8__AttributeType *Attribute;
+  struct ns8__AttributeType *Attribute;
 #define SOAP_UNION__ns8__union_AttributeStatementType_EncryptedAttribute	(2)
-	struct ns8__EncryptedElementType *EncryptedAttribute;
+  struct ns8__EncryptedElementType *EncryptedAttribute;
 };
 #endif
 
 #ifndef SOAP_TYPE___ns8__union_AttributeStatementType
 #define SOAP_TYPE___ns8__union_AttributeStatementType (372)
 /* Operation wrapper: */
-struct __ns8__union_AttributeStatementType
-{
-	int __union_AttributeStatementType;	/* union discriminant (of union defined below) */
-	union _ns8__union_AttributeStatementType union_AttributeStatementType;	/* required element of type xsd:choice */
+struct __ns8__union_AttributeStatementType {
+  int __union_AttributeStatementType;	/* union discriminant (of union defined below) */
+  union _ns8__union_AttributeStatementType union_AttributeStatementType;	/* required element of type xsd:choice */
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__AttributeStatementType
 #define SOAP_TYPE_ns8__AttributeStatementType (304)
 /* ns8:AttributeStatementType */
-struct ns8__AttributeStatementType
-{
-	int __size_AttributeStatementType;	/* sequence of elements <-union-AttributeStatementType> */
-	struct __ns8__union_AttributeStatementType *__union_AttributeStatementType;
+struct ns8__AttributeStatementType {
+  int __size_AttributeStatementType;	/* sequence of elements <-union-AttributeStatementType> */
+  struct __ns8__union_AttributeStatementType *__union_AttributeStatementType;
 };
 #endif
 
 #ifndef SOAP_TYPE_ns8__KeyInfoConfirmationDataType
 #define SOAP_TYPE_ns8__KeyInfoConfirmationDataType (375)
 /* ns8:KeyInfoConfirmationDataType */
-struct ns8__KeyInfoConfirmationDataType
-{
-	struct ds__KeyInfoType ds__KeyInfo;	/* required element of type ds:KeyInfo */
-	time_t *NotBefore;	/* optional attribute of type xsd:dateTime */
-	time_t *NotOnOrAfter;	/* optional attribute of type xsd:dateTime */
-	char *Recipient;	/* optional attribute of type xsd:string */
-	char *InResponseTo;	/* optional attribute of type xsd:string */
-	char *Address;	/* optional attribute of type xsd:string */
-	char *__anyAttribute;	/* optional attribute of type xsd:anyType */
+struct ns8__KeyInfoConfirmationDataType {
+  struct ds__KeyInfoType ds__KeyInfo;	/* required element of type ds:KeyInfo */
+  time_t *NotBefore;	/* optional attribute of type xsd:dateTime */
+  time_t *NotOnOrAfter;	/* optional attribute of type xsd:dateTime */
+  char *Recipient;	/* optional attribute of type xsd:string */
+  char *InResponseTo;	/* optional attribute of type xsd:string */
+  char *Address;	/* optional attribute of type xsd:string */
+  char *__anyAttribute;	/* optional attribute of type xsd:anyType */
 };
 #endif
 
@@ -2500,12 +2309,11 @@ struct ns8__KeyInfoConfirmationDataType
 #ifndef SOAP_TYPE_SOAP_ENV__Detail
 #define SOAP_TYPE_SOAP_ENV__Detail (376)
 /* SOAP-ENV:Detail */
-struct SOAP_ENV__Detail
-{
-	char *__any;
-	struct _ns2__OSCARSFault *ns2__OSCARSFault;	/* optional element of type ns2:OSCARSFault */
-	int __type;	/* any type of element <fault> (defined below) */
-	void *fault;	/* transient */
+struct SOAP_ENV__Detail {
+  char *__any;
+  struct _ns2__OSCARSFault *ns2__OSCARSFault;	/* optional element of type ns2:OSCARSFault */
+  int __type;	/* any type of element <fault> (defined below) */
+  void *fault;	/* transient */
 };
 #endif
 
@@ -2514,90 +2322,80 @@ struct SOAP_ENV__Detail
 #ifndef SOAP_TYPE___ns1__createReservation
 #define SOAP_TYPE___ns1__createReservation (383)
 /* Operation wrapper: */
-struct __ns1__createReservation
-{
-	struct ns1__resCreateContent *ns1__createReservation;	/* optional element of type ns1:resCreateContent */
+struct __ns1__createReservation {
+  struct ns1__resCreateContent *ns1__createReservation;	/* optional element of type ns1:resCreateContent */
 };
 #endif
 
 #ifndef SOAP_TYPE___ns1__queryReservation
 #define SOAP_TYPE___ns1__queryReservation (387)
 /* Operation wrapper: */
-struct __ns1__queryReservation
-{
-	struct ns1__queryResContent *ns1__queryReservation;	/* optional element of type ns1:queryResContent */
+struct __ns1__queryReservation {
+  struct ns1__queryResContent *ns1__queryReservation;	/* optional element of type ns1:queryResContent */
 };
 #endif
 
 #ifndef SOAP_TYPE___ns1__listReservations
 #define SOAP_TYPE___ns1__listReservations (391)
 /* Operation wrapper: */
-struct __ns1__listReservations
-{
-	struct ns1__listRequest *ns1__listReservations;	/* optional element of type ns1:listRequest */
+struct __ns1__listReservations {
+  struct ns1__listRequest *ns1__listReservations;	/* optional element of type ns1:listRequest */
 };
 #endif
 
 #ifndef SOAP_TYPE___ns1__cancelReservation
 #define SOAP_TYPE___ns1__cancelReservation (395)
 /* Operation wrapper: */
-struct __ns1__cancelReservation
-{
-	struct ns1__cancelResContent *ns1__cancelReservation;	/* optional element of type ns1:cancelResContent */
+struct __ns1__cancelReservation {
+  struct ns1__cancelResContent *ns1__cancelReservation;	/* optional element of type ns1:cancelResContent */
 };
 #endif
 
 #ifndef SOAP_TYPE___ns1__modifyReservation
 #define SOAP_TYPE___ns1__modifyReservation (399)
 /* Operation wrapper: */
-struct __ns1__modifyReservation
-{
-	struct ns1__modifyResContent *ns1__modifyReservation;	/* optional element of type ns1:modifyResContent */
+struct __ns1__modifyReservation {
+  struct ns1__modifyResContent *ns1__modifyReservation;	/* optional element of type ns1:modifyResContent */
 };
 #endif
 
 #ifndef SOAP_TYPE___ns1__getNetworkTopology
 #define SOAP_TYPE___ns1__getNetworkTopology (403)
 /* Operation wrapper: */
-struct __ns1__getNetworkTopology
-{
-	struct ns1__getTopologyContent *ns1__getNetworkTopology;	/* optional element of type ns1:getTopologyContent */
+struct __ns1__getNetworkTopology {
+  struct ns1__getTopologyContent *ns1__getNetworkTopology;	/* optional element of type ns1:getTopologyContent */
 };
 #endif
 
 #ifndef SOAP_TYPE___ns1__createPath
 #define SOAP_TYPE___ns1__createPath (407)
 /* Operation wrapper: */
-struct __ns1__createPath
-{
-	struct ns1__createPathContent *ns1__createPath;	/* optional element of type ns1:createPathContent */
+struct __ns1__createPath {
+  struct ns1__createPathContent *ns1__createPath;	/* optional element of type ns1:createPathContent */
 };
 #endif
 
 #ifndef SOAP_TYPE___ns1__refreshPath
 #define SOAP_TYPE___ns1__refreshPath (411)
 /* Operation wrapper: */
-struct __ns1__refreshPath
-{
-	struct ns1__refreshPathContent *ns1__refreshPath;	/* optional element of type ns1:refreshPathContent */
+struct __ns1__refreshPath {
+  struct ns1__refreshPathContent *ns1__refreshPath;	/* optional element of type ns1:refreshPathContent */
 };
 #endif
 
 #ifndef SOAP_TYPE___ns1__teardownPath
 #define SOAP_TYPE___ns1__teardownPath (415)
 /* Operation wrapper: */
-struct __ns1__teardownPath
-{
-	struct ns1__teardownPathContent *ns1__teardownPath;	/* optional element of type ns1:teardownPathContent */
+struct __ns1__teardownPath {
+  struct ns1__teardownPathContent *ns1__teardownPath;	/* optional element of type ns1:teardownPathContent */
 };
 #endif
 
 #ifndef SOAP_TYPE___ns1__interDomainEvent
 #define SOAP_TYPE___ns1__interDomainEvent (418)
 /* Operation wrapper: */
-struct __ns1__interDomainEvent
-{
-	struct ns1__interDomainEventContent *ns1__interDomainEvent;	/* optional element of type ns1:interDomainEventContent */
+struct __ns1__interDomainEvent {
+  struct ns1__interDomainEventContent *ns1__interDomainEvent;	/* optional element of type ns1:interDomainEventContent */
 };
 #endif
 
@@ -2606,10 +2404,9 @@ struct __ns1__interDomainEvent
 #ifndef SOAP_TYPE_SOAP_ENV__Code
 #define SOAP_TYPE_SOAP_ENV__Code (419)
 /* SOAP Fault Code: */
-struct SOAP_ENV__Code
-{
-	char *SOAP_ENV__Value;	/* optional element of type xsd:QName */
-	struct SOAP_ENV__Code *SOAP_ENV__Subcode;	/* optional element of type SOAP-ENV:Code */
+struct SOAP_ENV__Code {
+  char *SOAP_ENV__Value;	/* optional element of type xsd:QName */
+  struct SOAP_ENV__Code *SOAP_ENV__Subcode;	/* optional element of type SOAP-ENV:Code */
 };
 #endif
 
@@ -2620,9 +2417,8 @@ struct SOAP_ENV__Code
 #ifndef SOAP_TYPE_SOAP_ENV__Reason
 #define SOAP_TYPE_SOAP_ENV__Reason (421)
 /* SOAP-ENV:Reason */
-struct SOAP_ENV__Reason
-{
-	char *SOAP_ENV__Text;	/* optional element of type xsd:string */
+struct SOAP_ENV__Reason {
+  char *SOAP_ENV__Text;	/* optional element of type xsd:string */
 };
 #endif
 
@@ -2633,17 +2429,16 @@ struct SOAP_ENV__Reason
 #ifndef SOAP_TYPE_SOAP_ENV__Fault
 #define SOAP_TYPE_SOAP_ENV__Fault (422)
 /* SOAP Fault: */
-struct SOAP_ENV__Fault
-{
-	char *faultcode;	/* optional element of type xsd:QName */
-	char *faultstring;	/* optional element of type xsd:string */
-	char *faultactor;	/* optional element of type xsd:string */
-	struct SOAP_ENV__Detail *detail;	/* optional element of type SOAP-ENV:Detail */
-	struct SOAP_ENV__Code *SOAP_ENV__Code;	/* optional element of type SOAP-ENV:Code */
-	struct SOAP_ENV__Reason *SOAP_ENV__Reason;	/* optional element of type SOAP-ENV:Reason */
-	char *SOAP_ENV__Node;	/* optional element of type xsd:string */
-	char *SOAP_ENV__Role;	/* optional element of type xsd:string */
-	struct SOAP_ENV__Detail *SOAP_ENV__Detail;	/* optional element of type SOAP-ENV:Detail */
+struct SOAP_ENV__Fault {
+  char *faultcode;	/* optional element of type xsd:QName */
+  char *faultstring;	/* optional element of type xsd:string */
+  char *faultactor;	/* optional element of type xsd:string */
+  struct SOAP_ENV__Detail *detail;	/* optional element of type SOAP-ENV:Detail */
+  struct SOAP_ENV__Code *SOAP_ENV__Code;	/* optional element of type SOAP-ENV:Code */
+  struct SOAP_ENV__Reason *SOAP_ENV__Reason;	/* optional element of type SOAP-ENV:Reason */
+  char *SOAP_ENV__Node;	/* optional element of type xsd:string */
+  char *SOAP_ENV__Role;	/* optional element of type xsd:string */
+  struct SOAP_ENV__Detail *SOAP_ENV__Detail;	/* optional element of type SOAP-ENV:Detail */
 };
 #endif
 

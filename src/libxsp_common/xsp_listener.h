@@ -18,25 +18,25 @@
 enum listener_status { LISTENER_STOPPED, LISTENER_RUNNING };
 
 typedef struct xsp_listener_t {
-	char *id;
-	char *name;
-	enum listener_status status;
+  char *id;
+  char *name;
+  enum listener_status status;
 
-	const char *protocol;
-	xspSettings *settings;
-	int one_shot;
-	int (*callback) (struct xsp_listener_t *listener, struct xsp_connection_t *conn, void *arg);
-	void *arg;
+  const char *protocol;
+  xspSettings *settings;
+  int one_shot;
+  int (*callback) (struct xsp_listener_t *listener, struct xsp_connection_t *conn, void *arg);
+  void *arg;
 
-	void *proto_private;
+  void *proto_private;
 
-	int (*start) (struct xsp_listener_t *listener);
-	int (*stop) (struct xsp_listener_t *listener);
-	void (*free) (struct xsp_listener_t *listener);
+  int (*start) (struct xsp_listener_t *listener);
+  int (*stop) (struct xsp_listener_t *listener);
+  void (*free) (struct xsp_listener_t *listener);
 
-	int references;
+  int references;
 
-	pthread_mutex_t lock;
+  pthread_mutex_t lock;
 } xspListener;
 
 typedef int (*listener_cb) (xspListener *listener, struct xsp_connection_t *conn, void *arg);

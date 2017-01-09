@@ -52,8 +52,8 @@
 #define BACKTRACE_MAX_FRAMES 31
 
 struct backtrace {
-    int n_frames;
-    uintptr_t frames[BACKTRACE_MAX_FRAMES];
+  int n_frames;
+  uintptr_t frames[BACKTRACE_MAX_FRAMES];
 };
 
 void backtrace_capture(struct backtrace *);

@@ -29,16 +29,16 @@
 #include "xsp-proto.h"
 
 typedef struct xsp_hop {
-	uint16_t opt_type;
-	uint16_t flags;
-	char hop_id[XSP_HOPID_LEN + 1];
+  uint16_t opt_type;
+  uint16_t flags;
+  char hop_id[XSP_HOPID_LEN + 1];
 
-	char protocol[XSP_PROTO_NAME_LEN + 1];
+  char protocol[XSP_PROTO_NAME_LEN + 1];
 
-	struct xsp_sess_info_t *session;
+  struct xsp_sess_info_t *session;
 
-	struct xsp_hop **child;
-	int child_count;
+  struct xsp_hop **child;
+  int child_count;
 } xspHop;
 
 xspHop *xsp_alloc_hop();
@@ -49,19 +49,19 @@ int xsp_hop_copy(xspHop **dest, xspHop *src);
 int xsp_hop_total_child_count(xspHop *hop);
 
 inline char *xsp_hop_getid(xspHop *hop) {
-	return hop->hop_id;
+  return hop->hop_id;
 }
 
 inline void xsp_hop_setid(xspHop *hop, const char *hop_id) {
-	strlcpy(hop->hop_id, hop_id, XSP_HOPID_LEN + 1);
+  strlcpy(hop->hop_id, hop_id, XSP_HOPID_LEN + 1);
 }
 
 inline void xsp_hop_set_flag(xspHop *hop, uint16_t flag) {
-	hop->flags |= flag;
+  hop->flags |= flag;
 }
 
 inline int xsp_hop_check_flag(xspHop *hop, uint16_t flag) {
-	return (hop->flags & flag);
+  return (hop->flags & flag);
 }
 
 #endif

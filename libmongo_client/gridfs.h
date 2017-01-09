@@ -42,25 +42,25 @@ typedef uint64_t gridfs_offset;
 
 /* A GridFS represents a single collection of GridFS files in the database. */
 typedef struct {
-    mongo *client; /**> The client to db-connection. */
-    const char *dbname; /**> The root database name */
-    const char *prefix; /**> The prefix of the GridFS's collections, default is NULL */
-    const char *files_ns; /**> The namespace where the file's metadata is stored */
-    const char *chunks_ns; /**. The namespace where the files's data is stored in chunks */
+  mongo *client; /**> The client to db-connection. */
+  const char *dbname; /**> The root database name */
+  const char *prefix; /**> The prefix of the GridFS's collections, default is NULL */
+  const char *files_ns; /**> The namespace where the file's metadata is stored */
+  const char *chunks_ns; /**. The namespace where the files's data is stored in chunks */
 } gridfs;
 
 /* A GridFile is a single GridFS file. */
 typedef struct {
-    gridfs *gfs;        /**> The GridFS where the GridFile is located */
-    bson *meta;         /**> The GridFile's bson object where all its metadata is located */
-    gridfs_offset pos;  /**> The position is the offset in the file */
-    bson_oid_t id;      /**> The files_id of the gridfile */
-    char *remote_name;  /**> The name of the gridfile as a string */
-    char *content_type; /**> The gridfile's content type */
-    gridfs_offset length; /**> The length of this gridfile */
-    int chunk_num;      /**> The number of the current chunk being written to */
-    char *pending_data; /**> A buffer storing data still to be written to chunks */
-    int pending_len;    /**> Length of pending_data buffer */
+  gridfs *gfs;        /**> The GridFS where the GridFile is located */
+  bson *meta;         /**> The GridFile's bson object where all its metadata is located */
+  gridfs_offset pos;  /**> The position is the offset in the file */
+  bson_oid_t id;      /**> The files_id of the gridfile */
+  char *remote_name;  /**> The name of the gridfile as a string */
+  char *content_type; /**> The gridfile's content type */
+  gridfs_offset length; /**> The length of this gridfile */
+  int chunk_num;      /**> The number of the current chunk being written to */
+  char *pending_data; /**> A buffer storing data still to be written to chunks */
+  int pending_len;    /**> Length of pending_data buffer */
 } gridfile;
 
 MONGO_EXPORT gridfs* gridfs_create( void );
@@ -79,7 +79,7 @@ MONGO_EXPORT void gridfile_get_descriptor(gridfile* gf, bson* out);
  *  @return - MONGO_OK or MONGO_ERROR.
  */
 MONGO_EXPORT int gridfs_init( mongo *client, const char *dbname,
-                 const char *prefix, gridfs *gfs );
+                              const char *prefix, gridfs *gfs );
 
 /**
  * Destroys a GridFS object. Call this when finished with
@@ -96,7 +96,7 @@ MONGO_EXPORT void gridfs_destroy( gridfs *gfs );
  *
  */
 MONGO_EXPORT void gridfile_writer_init( gridfile *gfile, gridfs *gfs, const char *remote_name,
-                           const char *content_type );
+                                        const char *content_type );
 
 /**
  *  Write to a GridFS file incrementally. You can call this function any number
@@ -105,7 +105,7 @@ MONGO_EXPORT void gridfile_writer_init( gridfile *gfile, gridfs *gfs, const char
  *
  */
 MONGO_EXPORT void gridfile_write_buffer( gridfile *gfile, const char *data,
-                            gridfs_offset length );
+    gridfs_offset length );
 
 /**
  *  Signal that writing of this gridfile is complete by
@@ -127,8 +127,8 @@ MONGO_EXPORT int gridfile_writer_done( gridfile *gfile );
  *  @return - MONGO_OK or MONGO_ERROR.
  */
 MONGO_EXPORT int gridfs_store_buffer( gridfs *gfs, const char *data, gridfs_offset length,
-                          const char *remotename,
-                          const char *contenttype );
+                                      const char *remotename,
+                                      const char *contenttype );
 
 /**
  *  Open the file referenced by filename and store it as a GridFS file.
@@ -140,7 +140,7 @@ MONGO_EXPORT int gridfs_store_buffer( gridfs *gfs, const char *data, gridfs_offs
  *  @return - MONGO_OK or MONGO_ERROR.
  */
 MONGO_EXPORT int gridfs_store_file( gridfs *gfs, const char *filename,
-                        const char *remotename, const char *contenttype );
+                                    const char *remotename, const char *contenttype );
 
 /**
  *  Removes the files referenced by filename from the db

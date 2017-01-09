@@ -639,7 +639,7 @@ SOAP_FMAC3 struct ns1__PathData ** SOAP_FMAC4 soap_get_PointerTons1__PathData(st
 #define soap_serialize__QName(soap, a) soap_serialize_string(soap, a)
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__QName(struct soap*, const char*, int, char*const*, const char*);
-SOAP_FMAC3 char * * SOAP_FMAC4 soap_in__QName(struct soap*, const char*, char **, const char*);
+SOAP_FMAC3 char ** SOAP_FMAC4 soap_in__QName(struct soap*, const char*, char **, const char*);
 
 #ifndef soap_write__QName
 #define soap_write__QName(soap, data) ( soap_begin_send(soap) || (soap_serialize__QName(soap, data), 0) || soap_put__QName(soap, data, "byte", NULL) || soap_end_send(soap) )
@@ -659,7 +659,7 @@ SOAP_FMAC3 char ** SOAP_FMAC4 soap_get__QName(struct soap*, char **, const char*
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_string(struct soap*, char **);
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_string(struct soap*, char *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_string(struct soap*, const char*, int, char*const*, const char*);
-SOAP_FMAC3 char * * SOAP_FMAC4 soap_in_string(struct soap*, const char*, char **, const char*);
+SOAP_FMAC3 char ** SOAP_FMAC4 soap_in_string(struct soap*, const char*, char **, const char*);
 
 #ifndef soap_write_string
 #define soap_write_string(soap, data) ( soap_begin_send(soap) || (soap_serialize_string(soap, data), 0) || soap_put_string(soap, data, "byte", NULL) || soap_end_send(soap) )

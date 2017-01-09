@@ -26,12 +26,12 @@
  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE. 
+ * SUCH DAMAGE.
  * * * *
  *
- * The second license is OpenBSD's ISC-like license, which is used for 
+ * The second license is OpenBSD's ISC-like license, which is used for
  * strlcpy() and strlcat().  See the license later on in the file.
- * 
+ *
  * Everthing else has had its copyright explicitly disclaimed by the author.
  */
 
@@ -88,80 +88,73 @@
  * Ignores `locale' stuff.  Assumes that the upper and lower case
  * alphabets and digits are each contiguous.
  */
-unsigned long strtoul (const char *nptr, char **endptr, int base)
-{
-	const char *s;
-	unsigned long acc, cutoff;
-	int c;
-	int neg, any, cutlim;
+unsigned long strtoul (const char *nptr, char **endptr, int base) {
+  const char *s;
+  unsigned long acc, cutoff;
+  int c;
+  int neg, any, cutlim;
 
-	s = nptr;
-	do
-		c = *s++;
-	while (isspace(c));
+  s = nptr;
+  do
+    c = *s++;
+  while (isspace(c));
 
-	if (c == '-') 
-	{
-		neg = 1;
-		c = *s++;
-	} 
-	else 
-	{
-		neg = 0;
-		if (c == '+')
-			c = *s++;
-	}
+  if (c == '-') {
+    neg = 1;
+    c = *s++;
+  }
+  else {
+    neg = 0;
+    if (c == '+')
+      c = *s++;
+  }
 
-	if ((base == 0 || base == 16) && c == '0' && (*s == 'x' || *s == 'X')) 
-	{
-		c = s[1];
-		s += 2;
-		base = 16;
-	}
+  if ((base == 0 || base == 16) && c == '0' && (*s == 'x' || *s == 'X')) {
+    c = s[1];
+    s += 2;
+    base = 16;
+  }
 
-	if (base == 0)
-		base = c == '0' ? 8 : 10;
+  if (base == 0)
+    base = c == '0' ? 8 : 10;
 
 #ifndef ULONG_MAX
 #define ULONG_MAX (unsigned long) -1
 #endif
 
-	cutoff = ULONG_MAX / (unsigned long)base;
-	cutlim = ULONG_MAX % (unsigned long)base;
+  cutoff = ULONG_MAX / (unsigned long)base;
+  cutlim = ULONG_MAX % (unsigned long)base;
 
-	for (acc = 0, any = 0;; c = *s++) 
-	{
-		if (isdigit(c))
-			c -= '0';
-		else if (isalpha(c))
-			c -= isupper(c) ? 'A' - 10 : 'a' - 10;
-		else
-			break;
+  for (acc = 0, any = 0;; c = *s++) {
+    if (isdigit(c))
+      c -= '0';
+    else if (isalpha(c))
+      c -= isupper(c) ? 'A' - 10 : 'a' - 10;
+    else
+      break;
 
-		if (c >= base)
-			break;
+    if (c >= base)
+      break;
 
-		if (any < 0)
-			continue;
+    if (any < 0)
+      continue;
 
-		if (acc > cutoff || (acc == cutoff && c > cutlim))
-		{
-			any = -1;
-			acc = ULONG_MAX;
-			errno = ERANGE;
-		}
-		else 
-		{
-			any = 1;
-			acc *= (unsigned long)base;
-			acc += c;
-		}
-	}
-	if (neg && any > 0)
-		acc = -acc;
-	if (endptr != 0)
-		*endptr = (char *) (any ? s - 1 : nptr);
-	return (acc);
+    if (acc > cutoff || (acc == cutoff && c > cutlim)) {
+      any = -1;
+      acc = ULONG_MAX;
+      errno = ERANGE;
+    }
+    else {
+      any = 1;
+      acc *= (unsigned long)base;
+      acc += c;
+    }
+  }
+  if (neg && any > 0)
+    acc = -acc;
+  if (endptr != 0)
+    *endptr = (char *) (any ? s - 1 : nptr);
+  return (acc);
 }
 #endif /* DO NOT HAVE STRTOUL */
 
@@ -169,31 +162,27 @@ unsigned long strtoul (const char *nptr, char **endptr, int base)
 # ifdef HAVE_LONG_LONG
 #  ifdef HAVE_STRTOLL
 #   define HAVE_ATOLL_REPLACEMENT
-long long	atoll (const char *str)
-{
-	return strtoll(str, NULL, 0);
+long long	atoll (const char *str) {
+  return strtoll(str, NULL, 0);
 }
 #  else
 #   ifdef HAVE_ATOQ
 #    define HAVE_ATOLL_REPLACEMENT
-long long	atoll (const char *str)
-{
-	return (long long)atoq(str);
+long long	atoll (const char *str) {
+  return (long long)atoq(str);
 }
 #   endif
 #  endif
 # endif
 # ifndef HAVE_ATOLL_REPLACEMENT
 #  ifdef HAVE_LONG_LONG
-long long	atoll (const char *str)
-{
-	return (long long)atol(str);
+long long	atoll (const char *str) {
+  return (long long)atol(str);
 }
 #  else
 #warning "atoll is simply a wrapper for atol. results may not be exactly as expected"
-long long atoll (const char *str)
-{
-	return (long long) atol(str);
+long long atoll (const char *str) {
+  return (long long) atol(str);
 }
 #  endif
 # endif
@@ -222,31 +211,31 @@ long long atoll (const char *str)
  * will be copied.  Always NUL terminates (unless siz == 0).
  * Returns strlen(src); if retval >= siz, truncation occurred.
  */
-size_t	strlcpy (char *dst, const char *src, size_t siz)
-{
-	char *d = dst;
-	const char *s = src;
-	size_t n = siz;
+size_t	strlcpy (char *dst, const char *src, size_t siz) {
+  char *d = dst;
+  const char *s = src;
+  size_t n = siz;
 
-	/* Copy as many bytes as will fit */
-	if (n != 0 && --n != 0) {
-		do {
-			if ((*d = *s) == 0)
-				break;
-			d++;
-			s++;
-		} while (--n != 0);
-	}
+  /* Copy as many bytes as will fit */
+  if (n != 0 && --n != 0) {
+    do {
+      if ((*d = *s) == 0)
+        break;
+      d++;
+      s++;
+    }
+    while (--n != 0);
+  }
 
-	/* Not enough room in dst, add NUL and traverse rest of src */
-	if (n == 0) {
-		if (siz != 0)
-			*d = '\0';		/* NUL-terminate dst */
-		while (*s)
-			s++;
-	}
+  /* Not enough room in dst, add NUL and traverse rest of src */
+  if (n == 0) {
+    if (siz != 0)
+      *d = '\0';		/* NUL-terminate dst */
+    while (*s)
+      s++;
+  }
 
-	return(s - src);	/* count does not include NUL */
+  return(s - src);	/* count does not include NUL */
 }
 #endif
 
@@ -259,985 +248,988 @@ size_t	strlcpy (char *dst, const char *src, size_t siz)
  * Returns strlen(src) + MIN(siz, strlen(initial dst)).
  * If retval >= siz, truncation occurred.
  */
-size_t	strlcat (char *dst, const char *src, size_t siz)
-{
-        char *d = dst;
-        const char *s = src;
-        size_t n = siz;
-        size_t dlen;
+size_t	strlcat (char *dst, const char *src, size_t siz) {
+  char *d = dst;
+  const char *s = src;
+  size_t n = siz;
+  size_t dlen;
 
-        /* Find the end of dst and adjust bytes left but don't go past end */
-        while (n-- != 0 && *d != '\0')
-                d++;
-        dlen = d - dst;
-        n = siz - dlen;
+  /* Find the end of dst and adjust bytes left but don't go past end */
+  while (n-- != 0 && *d != '\0')
+    d++;
+  dlen = d - dst;
+  n = siz - dlen;
 
-        if (n == 0)
-                return(dlen + strlen(s));
-        while (*s != '\0') {
-                if (n != 1) {
-                        *d++ = *s;
-                        n--;
-                }
-                s++;
-        }
-        *d = '\0';
+  if (n == 0)
+    return(dlen + strlen(s));
+  while (*s != '\0') {
+    if (n != 1) {
+      *d++ = *s;
+      n--;
+    }
+    s++;
+  }
+  *d = '\0';
 
-        return(dlen + (s - src));        /* count does not include NUL */
+  return(dlen + (s - src));        /* count does not include NUL */
 }
 #endif
 
 char *bin2hex(const char *src, char *dst, int size) {
-	int i;
-	char *tmp = dst;
+  int i;
+  char *tmp = dst;
 
-	for(i = 0; i < size; i++) {
-		char t = src[i];
-		sprintf(tmp, "%X", (t & 0xF0) >> 4);
-		tmp++;
-		sprintf(tmp, "%X", (t & 0x0F));
-		tmp++;
-	}
+  for(i = 0; i < size; i++) {
+    char t = src[i];
+    sprintf(tmp, "%X", (t & 0xF0) >> 4);
+    tmp++;
+    sprintf(tmp, "%X", (t & 0x0F));
+    tmp++;
+  }
 
-	tmp = '\0';
+  tmp = '\0';
 
-	return dst;
+  return dst;
 }
 
 char *hex2bin(const char *src, char *dst, int size) {
-	int i;
+  int i;
 
-	if (size % 2 != 0)
-		return NULL;
+  if (size % 2 != 0)
+    return NULL;
 
-	for(i = 0; i < size; i+=2) {
-		char tmp[3];
-		int n;
+  for(i = 0; i < size; i+=2) {
+    char tmp[3];
+    int n;
 
-		tmp[0] = src[i];
-		tmp[1] = src[i + 1];
-		tmp[2] = '\0';
+    tmp[0] = src[i];
+    tmp[1] = src[i + 1];
+    tmp[2] = '\0';
 
-		sscanf(tmp, "%x", &n);
+    sscanf(tmp, "%x", &n);
 
-		dst[i/2] = (unsigned char) n;
-	}
+    dst[i/2] = (unsigned char) n;
+  }
 
-	return dst;
+  return dst;
 }
 
 char **split(const char *string, char *delimiters, int *count) {
-	char *buf = strdup(string);
-	char *token, *save_ptr;
-	char **retval;
-	char **new_retval;
-	int i;
+  char *buf = strdup(string);
+  char *token, *save_ptr;
+  char **retval;
+  char **new_retval;
+  int i;
 
-	if (!buf)
-		goto error_exit;
+  if (!buf)
+    goto error_exit;
 
-	save_ptr = buf;
-	retval = NULL;
-	i = 0;
+  save_ptr = buf;
+  retval = NULL;
+  i = 0;
 
-	while((token = strtok_r(NULL, delimiters, &save_ptr)) != NULL) {
-		new_retval = realloc(retval, sizeof(char *) * (i + 1));
-		if (new_retval == NULL)
-			goto error_exit2;
+  while((token = strtok_r(NULL, delimiters, &save_ptr)) != NULL) {
+    new_retval = realloc(retval, sizeof(char *) * (i + 1));
+    if (new_retval == NULL)
+      goto error_exit2;
 
-		retval = new_retval;
+    retval = new_retval;
 
-		retval[i] = strdup(token);
-		i++;
-	}
+    retval[i] = strdup(token);
+    i++;
+  }
 
-	*count = i;
+  *count = i;
 
-	free(buf);
+  free(buf);
 
-	return retval;
+  return retval;
 
 error_exit2:
-	if (retval)
-		free(retval);
-	free(buf);
+  if (retval)
+    free(retval);
+  free(buf);
 error_exit:
-	*count = 0;
-	return NULL;
+  *count = 0;
+  return NULL;
 }
 
 char **split_inline(char *string, char *delimiters, int skip_empty, int *count) {
-	char **retval;
-	char **new_retval;
-	int i, j;
-	char *str_start;
-	int curr_spot;
+  char **retval;
+  char **new_retval;
+  int i, j;
+  char *str_start;
+  int curr_spot;
 
-	retval = malloc(sizeof(char *));
-	if (!retval) {
-		goto error_exit;
-	}
+  retval = malloc(sizeof(char *));
+  if (!retval) {
+    goto error_exit;
+  }
 
-	curr_spot = 0;
+  curr_spot = 0;
 
-	str_start = string;
+  str_start = string;
 
-	for(i = 0; string[i] != '\0'; i++) {
-		for(j = 0; j < strlen(delimiters); j++) {
-			if (string[i] == delimiters[j]) {
-				string[i] = '\0';
+  for(i = 0; string[i] != '\0'; i++) {
+    for(j = 0; j < strlen(delimiters); j++) {
+      if (string[i] == delimiters[j]) {
+        string[i] = '\0';
 
-				if (!skip_empty || (skip_empty && strlen(str_start)) > 0) {
-					new_retval = realloc(retval, sizeof(char *) * (curr_spot + 1));
-					if (new_retval == NULL)
-						goto error_exit2;
+        if (!skip_empty || (skip_empty && strlen(str_start)) > 0) {
+          new_retval = realloc(retval, sizeof(char *) * (curr_spot + 1));
+          if (new_retval == NULL)
+            goto error_exit2;
 
-					retval = new_retval;
+          retval = new_retval;
 
-					retval[curr_spot] = str_start;
+          retval[curr_spot] = str_start;
 
-					curr_spot++;
-				}
+          curr_spot++;
+        }
 
-				str_start = string + i + 1;
+        str_start = string + i + 1;
 
-				break;
-			}
-		}
-	}
+        break;
+      }
+    }
+  }
 
-	if (!skip_empty || (skip_empty && strlen(str_start) > 0)) {
-		new_retval = realloc(retval, sizeof(char *) * (curr_spot + 1));
-		if (new_retval == NULL)
-			goto error_exit2;
+  if (!skip_empty || (skip_empty && strlen(str_start) > 0)) {
+    new_retval = realloc(retval, sizeof(char *) * (curr_spot + 1));
+    if (new_retval == NULL)
+      goto error_exit2;
 
-		retval = new_retval;
+    retval = new_retval;
 
-		retval[curr_spot] = str_start;
+    retval[curr_spot] = str_start;
 
-		curr_spot++;
-	}
+    curr_spot++;
+  }
 
-	*count = curr_spot;
+  *count = curr_spot;
 
-	return retval;
+  return retval;
 
 error_exit2:
-	free(retval);
+  free(retval);
 error_exit:
-	*count = 0;
-	return NULL;
+  *count = 0;
+  return NULL;
 }
 
 double difftv(struct timeval *start, struct timeval *end) {
-	double retval;
+  double retval;
 
-	retval = end->tv_sec - start->tv_sec;
+  retval = end->tv_sec - start->tv_sec;
 
-	if(end->tv_usec >= start->tv_usec) {
-		retval += ((double)(end->tv_usec - start->tv_usec)) / 1000000;
-	} else {
-		retval -= 1.0;
-		retval += ((double)(end->tv_usec + 1000000) - start->tv_usec) / 1000000;
-	}
+  if(end->tv_usec >= start->tv_usec) {
+    retval += ((double)(end->tv_usec - start->tv_usec)) / 1000000;
+  }
+  else {
+    retval -= 1.0;
+    retval += ((double)(end->tv_usec + 1000000) - start->tv_usec) / 1000000;
+  }
 
-	return retval;
+  return retval;
 }
 
 char *lookup_servername() {
-	struct hostent *he;
-	char hostname_buf[512];
+  struct hostent *he;
+  char hostname_buf[512];
 
-	if (gethostname(hostname_buf, sizeof(hostname_buf)) == -1)
-		goto error_exit;
+  if (gethostname(hostname_buf, sizeof(hostname_buf)) == -1)
+    goto error_exit;
 
-	he = gethostbyname(hostname_buf);
-	if (he == NULL)
-		goto error_exit;
+  he = gethostbyname(hostname_buf);
+  if (he == NULL)
+    goto error_exit;
 
-	return get_fqdn(he);
+  return get_fqdn(he);
 
 error_exit:
-	return NULL;
+  return NULL;
 }
 
 char *get_fqdn(struct hostent *he) {
-	int i;
-	char *fqdn = NULL;
+  int i;
+  char *fqdn = NULL;
 
-	if(!strchr(he->h_name, '.')) {
-		if (he->h_aliases) {
-			for(i=0; he->h_aliases[i] != NULL; i++) {
-				if (strchr(he->h_aliases[i], '.')) {
-					fqdn = strdup(he->h_aliases[i]);
-					break;
-				}
-			}
+  if(!strchr(he->h_name, '.')) {
+    if (he->h_aliases) {
+      for(i=0; he->h_aliases[i] != NULL; i++) {
+        if (strchr(he->h_aliases[i], '.')) {
+          fqdn = strdup(he->h_aliases[i]);
+          break;
+        }
+      }
 
-			if (fqdn == NULL)
-				goto error_exit;
-		} else {
-			goto error_exit;
-		}
-	} else {
-		fqdn = strdup(he->h_name);
-	}
+      if (fqdn == NULL)
+        goto error_exit;
+    }
+    else {
+      goto error_exit;
+    }
+  }
+  else {
+    fqdn = strdup(he->h_name);
+  }
 
-	return fqdn;
+  return fqdn;
 
 error_exit:
-	return NULL;
+  return NULL;
 }
 
 int daemonize(char *pid_file, char *user, char *group) {
-	uid_t uid;
-	gid_t gid;
-	struct group *gr;
-        struct passwd *pw;
+  uid_t uid;
+  gid_t gid;
+  struct group *gr;
+  struct passwd *pw;
 
-	pid_t pid, sid, parent;
+  pid_t pid, sid, parent;
 
-	/* already a daemon */
-	if (getppid() == 1) return 0;
+  /* already a daemon */
+  if (getppid() == 1) return 0;
 
-	/* Fork off the parent process */
-	pid = fork();
-	if (pid < 0) {
-		exit(EXIT_FAILURE);
-	}
-	/* If we got a good PID, then we can exit the parent process. */
-	if (pid > 0) {
-		exit(EXIT_SUCCESS);
-	}
+  /* Fork off the parent process */
+  pid = fork();
+  if (pid < 0) {
+    exit(EXIT_FAILURE);
+  }
+  /* If we got a good PID, then we can exit the parent process. */
+  if (pid > 0) {
+    exit(EXIT_SUCCESS);
+  }
 
-	/* At this point we are executing as the child process */
-	parent = getppid();
-	pid = getpid();
+  /* At this point we are executing as the child process */
+  parent = getppid();
+  pid = getpid();
 
-	/* Change the file mode mask */
-	umask(0);
+  /* Change the file mode mask */
+  umask(0);
 
-	/* Create a new SID for the child process */
-	sid = setsid();
-	if (sid < 0) {
-		exit(EXIT_FAILURE);
-	}
-	
-	/* Cancel certain signals */
-	signal(SIGCHLD,SIG_DFL); /* A child process dies */
-	signal(SIGTSTP,SIG_IGN); /* Various TTY signals */
-	signal(SIGTTOU,SIG_IGN);
-	signal(SIGTTIN,SIG_IGN);
-	signal(SIGHUP, SIG_IGN); /* Ignore hangup signal */
-	signal(SIGTERM,SIG_DFL); /* Die on SIGTERM */
+  /* Create a new SID for the child process */
+  sid = setsid();
+  if (sid < 0) {
+    exit(EXIT_FAILURE);
+  }
 
-	chdir("/tmp");
-	
-        if (pid) {
-                FILE *pid_out = fopen(pid_file, "w+");
-                if (!pid_out) {
-                        printf("Couldn't open pid file: %s\n", pid_file);
-                        exit(-1);
-                }
-		
-                fprintf(pid_out, "%d", getpid());
-                fclose(pid_out);
-        }
+  /* Cancel certain signals */
+  signal(SIGCHLD,SIG_DFL); /* A child process dies */
+  signal(SIGTSTP,SIG_IGN); /* Various TTY signals */
+  signal(SIGTTOU,SIG_IGN);
+  signal(SIGTTIN,SIG_IGN);
+  signal(SIGHUP, SIG_IGN); /* Ignore hangup signal */
+  signal(SIGTERM,SIG_DFL); /* Die on SIGTERM */
 
-        if (group) {
-                gr = getgrnam(group);
-                if (gr) {
-                        gid = gr->gr_gid;
-                }
+  chdir("/tmp");
 
-                if (!gid) {
-                        fprintf(stderr, "Invalid group '%s'\n", group);
-                        exit(-1);
-                }
+  if (pid) {
+    FILE *pid_out = fopen(pid_file, "w+");
+    if (!pid_out) {
+      printf("Couldn't open pid file: %s\n", pid_file);
+      exit(-1);
+    }
 
-                if (setgid(gid) < 0) {
-                        fprintf(stderr, "Couldn't change process group to %s", group);
-                }
-        }
+    fprintf(pid_out, "%d", getpid());
+    fclose(pid_out);
+  }
 
-        if (user) {
-                pw = getpwnam(user);
-                if (pw) {
-                        uid = pw->pw_uid;
-                }
+  if (group) {
+    gr = getgrnam(group);
+    if (gr) {
+      gid = gr->gr_gid;
+    }
 
-                if (!uid) {
-                        fprintf(stderr, "Invalid user '%s'\n", user);
-                        exit(-1);
-                }
+    if (!gid) {
+      fprintf(stderr, "Invalid group '%s'\n", group);
+      exit(-1);
+    }
 
-                if (setuid(uid) < 0) {
-                        fprintf(stderr, "Couldn't change process user to %s", user);
-                }
-        }
+    if (setgid(gid) < 0) {
+      fprintf(stderr, "Couldn't change process group to %s", group);
+    }
+  }
 
-	/* Redirect standard files to /dev/null */
-	freopen("/dev/null", "r", stdin);
-	freopen("/dev/null", "w", stdout);
-	freopen("/dev/null", "w", stderr);
+  if (user) {
+    pw = getpwnam(user);
+    if (pw) {
+      uid = pw->pw_uid;
+    }
 
-	kill(parent, SIGUSR1);
+    if (!uid) {
+      fprintf(stderr, "Invalid user '%s'\n", user);
+      exit(-1);
+    }
 
-	return 0;
+    if (setuid(uid) < 0) {
+      fprintf(stderr, "Couldn't change process user to %s", user);
+    }
+  }
+
+  /* Redirect standard files to /dev/null */
+  freopen("/dev/null", "r", stdin);
+  freopen("/dev/null", "w", stdout);
+  freopen("/dev/null", "w", stderr);
+
+  kill(parent, SIGUSR1);
+
+  return 0;
 }
 
 int strlist_add(const char *str, char ***list, int *list_length) {
-	char **new_list;
-	char *new_str;
+  char **new_list;
+  char *new_str;
 
-	new_str = strdup(str);
-	if (!new_str)
-		goto error_exit;
+  new_str = strdup(str);
+  if (!new_str)
+    goto error_exit;
 
-	new_list = realloc(*list, sizeof(char *) * (*list_length + 1));
-	if (new_list == NULL)
-		goto error_exit2;
+  new_list = realloc(*list, sizeof(char *) * (*list_length + 1));
+  if (new_list == NULL)
+    goto error_exit2;
 
-	new_list[*list_length] = new_str;
+  new_list[*list_length] = new_str;
 
-	*list = new_list;
-	*list_length = *list_length + 1;
+  *list = new_list;
+  *list_length = *list_length + 1;
 
-	return 0;
+  return 0;
 
 error_exit2:
-	free(new_str);
+  free(new_str);
 error_exit:
-	return -1;
+  return -1;
 }
 
 void strlist_free(char **list, int list_length) {
-	int i;
+  int i;
 
-	for(i = 0; i < list_length; i++)
-		free(list[i]);
-	free(list);
+  for(i = 0; i < list_length; i++)
+    free(list[i]);
+  free(list);
 }
 
 #if !defined(HAVE_OPENSSL) || defined(USE_COMPAT_SHA)
 
-// Code by: B-Con (http://b-con.us) 
-// Released under the GNU GPL 
-// MD5 Hash Digest implementation (little endian byte order) 
+// Code by: B-Con (http://b-con.us)
+// Released under the GNU GPL
+// MD5 Hash Digest implementation (little endian byte order)
 
-#include <stdio.h> 
-#include <string.h> 
+#include <stdio.h>
+#include <string.h>
 
 // DBL_INT_ADD treats two unsigned ints a and b as one 64-bit integer and adds c to it
-#define ROTLEFT(a,b) ((a << b) | (a >> (32-b))) 
-#define DBL_INT_ADD(a,b,c) if (a > 0xffffffff - c) ++b; a += c; 
+#define ROTLEFT(a,b) ((a << b) | (a >> (32-b)))
+#define DBL_INT_ADD(a,b,c) if (a > 0xffffffff - c) ++b; a += c;
 
-void sha1_transform(SHA1_CTX *ctx, const uchar data[]) 
-{  
-   uint a,b,c,d,e,i,j,t,m[80]; 
-      
-   for (i=0,j=0; i < 16; ++i, j += 4) 
-      m[i] = (data[j] << 24) + (data[j+1] << 16) + (data[j+2] << 8) + (data[j+3]); 
-   for ( ; i < 80; ++i) { 
-      m[i] = (m[i-3] ^ m[i-8] ^ m[i-14] ^ m[i-16]); 
-      m[i] = (m[i] << 1) | (m[i] >> 31); 
-   }  
-   
-   a = ctx->state[0]; 
-   b = ctx->state[1]; 
-   c = ctx->state[2]; 
-   d = ctx->state[3]; 
-   e = ctx->state[4]; 
-   
-   for (i=0; i < 20; ++i) { 
-      t = ROTLEFT(a,5) + ((b & c) ^ (~b & d)) + e + ctx->k[0] + m[i]; 
-      e = d; 
-      d = c; 
-      c = ROTLEFT(b,30); 
-      b = a; 
-      a = t; 
-   }  
-   for ( ; i < 40; ++i) { 
-      t = ROTLEFT(a,5) + (b ^ c ^ d) + e + ctx->k[1] + m[i]; 
-      e = d; 
-      d = c; 
-      c = ROTLEFT(b,30); 
-      b = a; 
-      a = t; 
-   }  
-   for ( ; i < 60; ++i) { 
-      t = ROTLEFT(a,5) + ((b & c) ^ (b & d) ^ (c & d))  + e + ctx->k[2] + m[i]; 
-      e = d; 
-      d = c; 
-      c = ROTLEFT(b,30); 
-      b = a; 
-      a = t; 
-   }  
-   for ( ; i < 80; ++i) { 
-      t = ROTLEFT(a,5) + (b ^ c ^ d) + e + ctx->k[3] + m[i]; 
-      e = d; 
-      d = c; 
-      c = ROTLEFT(b,30); 
-      b = a; 
-      a = t; 
-   }  
-   
-   ctx->state[0] += a; 
-   ctx->state[1] += b; 
-   ctx->state[2] += c; 
-   ctx->state[3] += d; 
-   ctx->state[4] += e; 
-}  
+void sha1_transform(SHA1_CTX *ctx, const uchar data[]) {
+  uint a,b,c,d,e,i,j,t,m[80];
 
-void sha1_init(SHA1_CTX *ctx) 
-{  
-   ctx->datalen = 0; 
-   ctx->bitlen[0] = 0; 
-   ctx->bitlen[1] = 0; 
-   ctx->state[0] = 0x67452301; 
-   ctx->state[1] = 0xEFCDAB89; 
-   ctx->state[2] = 0x98BADCFE; 
-   ctx->state[3] = 0x10325476; 
-   ctx->state[4] = 0xc3d2e1f0; 
-   ctx->k[0] = 0x5a827999; 
-   ctx->k[1] = 0x6ed9eba1; 
-   ctx->k[2] = 0x8f1bbcdc; 
-   ctx->k[3] = 0xca62c1d6; 
-}  
+  for (i=0,j=0; i < 16; ++i, j += 4)
+    m[i] = (data[j] << 24) + (data[j+1] << 16) + (data[j+2] << 8) + (data[j+3]);
+  for ( ; i < 80; ++i) {
+    m[i] = (m[i-3] ^ m[i-8] ^ m[i-14] ^ m[i-16]);
+    m[i] = (m[i] << 1) | (m[i] >> 31);
+  }
 
-void sha1_update(SHA1_CTX *ctx, const uchar data[], uint len) 
-{  
-   uint t,i;
-   
-   for (i=0; i < len; ++i) { 
-      ctx->data[ctx->datalen] = data[i]; 
-      ctx->datalen++; 
-      if (ctx->datalen == 64) { 
-         sha1_transform(ctx,ctx->data); 
-         DBL_INT_ADD(ctx->bitlen[0],ctx->bitlen[1],512); 
-         ctx->datalen = 0; 
-      }  
-   }  
-}  
+  a = ctx->state[0];
+  b = ctx->state[1];
+  c = ctx->state[2];
+  d = ctx->state[3];
+  e = ctx->state[4];
 
-void sha1_final(SHA1_CTX *ctx, uchar hash[]) 
-{  
-   uint i; 
-   
-   i = ctx->datalen; 
-   
-   // Pad whatever data is left in the buffer. 
-   if (ctx->datalen < 56) { 
-      ctx->data[i++] = 0x80; 
-      while (i < 56) 
-         ctx->data[i++] = 0x00; 
-   }  
-   else { 
-      ctx->data[i++] = 0x80; 
-      while (i < 64) 
-         ctx->data[i++] = 0x00; 
-      sha1_transform(ctx,ctx->data); 
-      bzero(ctx->data,56); 
-   }  
-   
-   // Append to the padding the total message's length in bits and transform. 
-   DBL_INT_ADD(ctx->bitlen[0],ctx->bitlen[1],8 * ctx->datalen); 
-   ctx->data[63] = ctx->bitlen[0]; 
-   ctx->data[62] = ctx->bitlen[0] >> 8; 
-   ctx->data[61] = ctx->bitlen[0] >> 16; 
-   ctx->data[60] = ctx->bitlen[0] >> 24; 
-   ctx->data[59] = ctx->bitlen[1]; 
-   ctx->data[58] = ctx->bitlen[1] >> 8; 
-   ctx->data[57] = ctx->bitlen[1] >> 16;  
-   ctx->data[56] = ctx->bitlen[1] >> 24; 
-   sha1_transform(ctx,ctx->data); 
-   
-   // Since this implementation uses little endian byte ordering and MD uses big endian, 
-   // reverse all the bytes when copying the final state to the output hash. 
-   for (i=0; i < 4; ++i) { 
-      hash[i]    = (ctx->state[0] >> (24-i*8)) & 0x000000ff; 
-      hash[i+4]  = (ctx->state[1] >> (24-i*8)) & 0x000000ff; 
-      hash[i+8]  = (ctx->state[2] >> (24-i*8)) & 0x000000ff; 
-      hash[i+12] = (ctx->state[3] >> (24-i*8)) & 0x000000ff; 
-      hash[i+16] = (ctx->state[4] >> (24-i*8)) & 0x000000ff; 
-   }  
-}  
+  for (i=0; i < 20; ++i) {
+    t = ROTLEFT(a,5) + ((b & c) ^ (~b & d)) + e + ctx->k[0] + m[i];
+    e = d;
+    d = c;
+    c = ROTLEFT(b,30);
+    b = a;
+    a = t;
+  }
+  for ( ; i < 40; ++i) {
+    t = ROTLEFT(a,5) + (b ^ c ^ d) + e + ctx->k[1] + m[i];
+    e = d;
+    d = c;
+    c = ROTLEFT(b,30);
+    b = a;
+    a = t;
+  }
+  for ( ; i < 60; ++i) {
+    t = ROTLEFT(a,5) + ((b & c) ^ (b & d) ^ (c & d))  + e + ctx->k[2] + m[i];
+    e = d;
+    d = c;
+    c = ROTLEFT(b,30);
+    b = a;
+    a = t;
+  }
+  for ( ; i < 80; ++i) {
+    t = ROTLEFT(a,5) + (b ^ c ^ d) + e + ctx->k[3] + m[i];
+    e = d;
+    d = c;
+    c = ROTLEFT(b,30);
+    b = a;
+    a = t;
+  }
+
+  ctx->state[0] += a;
+  ctx->state[1] += b;
+  ctx->state[2] += c;
+  ctx->state[3] += d;
+  ctx->state[4] += e;
+}
+
+void sha1_init(SHA1_CTX *ctx) {
+  ctx->datalen = 0;
+  ctx->bitlen[0] = 0;
+  ctx->bitlen[1] = 0;
+  ctx->state[0] = 0x67452301;
+  ctx->state[1] = 0xEFCDAB89;
+  ctx->state[2] = 0x98BADCFE;
+  ctx->state[3] = 0x10325476;
+  ctx->state[4] = 0xc3d2e1f0;
+  ctx->k[0] = 0x5a827999;
+  ctx->k[1] = 0x6ed9eba1;
+  ctx->k[2] = 0x8f1bbcdc;
+  ctx->k[3] = 0xca62c1d6;
+}
+
+void sha1_update(SHA1_CTX *ctx, const uchar data[], uint len) {
+  uint t,i;
+
+  for (i=0; i < len; ++i) {
+    ctx->data[ctx->datalen] = data[i];
+    ctx->datalen++;
+    if (ctx->datalen == 64) {
+      sha1_transform(ctx,ctx->data);
+      DBL_INT_ADD(ctx->bitlen[0],ctx->bitlen[1],512);
+      ctx->datalen = 0;
+    }
+  }
+}
+
+void sha1_final(SHA1_CTX *ctx, uchar hash[]) {
+  uint i;
+
+  i = ctx->datalen;
+
+  // Pad whatever data is left in the buffer.
+  if (ctx->datalen < 56) {
+    ctx->data[i++] = 0x80;
+    while (i < 56)
+      ctx->data[i++] = 0x00;
+  }
+  else {
+    ctx->data[i++] = 0x80;
+    while (i < 64)
+      ctx->data[i++] = 0x00;
+    sha1_transform(ctx,ctx->data);
+    bzero(ctx->data,56);
+  }
+
+  // Append to the padding the total message's length in bits and transform.
+  DBL_INT_ADD(ctx->bitlen[0],ctx->bitlen[1],8 * ctx->datalen);
+  ctx->data[63] = ctx->bitlen[0];
+  ctx->data[62] = ctx->bitlen[0] >> 8;
+  ctx->data[61] = ctx->bitlen[0] >> 16;
+  ctx->data[60] = ctx->bitlen[0] >> 24;
+  ctx->data[59] = ctx->bitlen[1];
+  ctx->data[58] = ctx->bitlen[1] >> 8;
+  ctx->data[57] = ctx->bitlen[1] >> 16;
+  ctx->data[56] = ctx->bitlen[1] >> 24;
+  sha1_transform(ctx,ctx->data);
+
+  // Since this implementation uses little endian byte ordering and MD uses big endian,
+  // reverse all the bytes when copying the final state to the output hash.
+  for (i=0; i < 4; ++i) {
+    hash[i]    = (ctx->state[0] >> (24-i*8)) & 0x000000ff;
+    hash[i+4]  = (ctx->state[1] >> (24-i*8)) & 0x000000ff;
+    hash[i+8]  = (ctx->state[2] >> (24-i*8)) & 0x000000ff;
+    hash[i+12] = (ctx->state[3] >> (24-i*8)) & 0x000000ff;
+    hash[i+16] = (ctx->state[4] >> (24-i*8)) & 0x000000ff;
+  }
+}
 
 #endif
 
-void SHA1_wrapper(const uchar *buf, unsigned long length, uchar *hash) 
-{
+void SHA1_wrapper(const uchar *buf, unsigned long length, uchar *hash) {
 #if !defined(HAVE_OPENSSL) || defined(USE_COMPAT_SHA)
-   SHA1_CTX ctx; 
-    
-   sha1_init(&ctx); 
-   sha1_update(&ctx, buf, length); 
-   sha1_final(&ctx, hash); 
+  SHA1_CTX ctx;
+
+  sha1_init(&ctx);
+  sha1_update(&ctx, buf, length);
+  sha1_final(&ctx, hash);
 #else
-   SHA1(buf, length, hash);
+  SHA1(buf, length, hash);
 #endif
 }
 
 #ifndef JUNOS
 int get_addrs(char ***addrs, int *addr_count) {
-        struct ifaddrs *if_info;
-        struct ifaddrs *curr_if;
-        char **interfaces = NULL;
-        int i, count = 0;
+  struct ifaddrs *if_info;
+  struct ifaddrs *curr_if;
+  char **interfaces = NULL;
+  int i, count = 0;
 
-        if (getifaddrs(&if_info) != 0) {
-                goto error_exit;
-        }
+  if (getifaddrs(&if_info) != 0) {
+    goto error_exit;
+  }
 
-        for(curr_if = if_info; curr_if != NULL; curr_if = curr_if->ifa_next) {
-                char buf[255];
-                socklen_t sa_len;
-                char **new_interfaces;
+  for(curr_if = if_info; curr_if != NULL; curr_if = curr_if->ifa_next) {
+    char buf[255];
+    socklen_t sa_len;
+    char **new_interfaces;
 
-                if (!curr_if->ifa_addr)
-                        continue;
+    if (!curr_if->ifa_addr)
+      continue;
 
-                if ((curr_if->ifa_flags & IFF_LOOPBACK) || (curr_if->ifa_flags & IFF_POINTOPOINT) || !(curr_if->ifa_flags & IFF_UP))
-                        continue;
+    if ((curr_if->ifa_flags & IFF_LOOPBACK) || (curr_if->ifa_flags & IFF_POINTOPOINT) || !(curr_if->ifa_flags & IFF_UP))
+      continue;
 
-                if(curr_if->ifa_addr->sa_family != AF_INET && curr_if->ifa_addr->sa_family != AF_INET6)
-                        continue;
+    if(curr_if->ifa_addr->sa_family != AF_INET && curr_if->ifa_addr->sa_family != AF_INET6)
+      continue;
 
-                if (curr_if->ifa_addr->sa_family == AF_INET)
-                        sa_len = sizeof (struct sockaddr_in);
-                else
-                        sa_len = sizeof (struct sockaddr_in6);
+    if (curr_if->ifa_addr->sa_family == AF_INET)
+      sa_len = sizeof (struct sockaddr_in);
+    else
+      sa_len = sizeof (struct sockaddr_in6);
 
-                if (getnameinfo (curr_if->ifa_addr, sa_len, buf, sizeof (buf), NULL, 0, NI_NUMERICHOST) < 0) {
-                        perror ("getnameinfo");
-                        continue;
-                }
+    if (getnameinfo (curr_if->ifa_addr, sa_len, buf, sizeof (buf), NULL, 0, NI_NUMERICHOST) < 0) {
+      perror ("getnameinfo");
+      continue;
+    }
 
-                new_interfaces = realloc(interfaces, sizeof(char *) * (count + 1));
-                if (!new_interfaces) {
-                        goto error_exit2;
-                }
+    new_interfaces = realloc(interfaces, sizeof(char *) * (count + 1));
+    if (!new_interfaces) {
+      goto error_exit2;
+    }
 
-                new_interfaces[count] = strdup(buf);
-                if (!new_interfaces[count]) {
-                        goto error_exit2;
-                }
+    new_interfaces[count] = strdup(buf);
+    if (!new_interfaces[count]) {
+      goto error_exit2;
+    }
 
-                count += 1;
+    count += 1;
 
-                interfaces = new_interfaces;
-        }
+    interfaces = new_interfaces;
+  }
 
-        freeifaddrs(if_info);
+  freeifaddrs(if_info);
 
-        *addrs = interfaces;
-        *addr_count = count;
+  *addrs = interfaces;
+  *addr_count = count;
 
-        return 0;
+  return 0;
 
 error_exit2:
-        for(i = 0; i < count; i++) {
-                free(interfaces[i]);
-        }
-        free(interfaces);
-        freeifaddrs(if_info);
+  for(i = 0; i < count; i++) {
+    free(interfaces[i]);
+  }
+  free(interfaces);
+  freeifaddrs(if_info);
 error_exit:
-        return -1;
+  return -1;
 }
 #endif // JUNOS
 
 int *listen_port_iface(char **interfaces, int interface_count, int protocol, int port, int *length) {
-	int *sd_list;
-	int sd_count;
-	int i;
-	int sd;
+  int *sd_list;
+  int sd_count;
+  int i;
+  int sd;
 
-	sd_list = NULL;
-	sd_count = 0;
+  sd_list = NULL;
+  sd_count = 0;
 
-	for(i = 0; i < interface_count; i++) {
-		struct hostent *he;
-		struct sockaddr_storage sa;
-		int *new_sd_list;
+  for(i = 0; i < interface_count; i++) {
+    struct hostent *he;
+    struct sockaddr_storage sa;
+    int *new_sd_list;
 
-		sd = socket(AF_INET, SOCK_STREAM, protocol);
-		if (!sd) {
-			printf("failed to get the socket\n");
-			goto error_exit;
-		}
+    sd = socket(AF_INET, SOCK_STREAM, protocol);
+    if (!sd) {
+      printf("failed to get the socket\n");
+      goto error_exit;
+    }
 
-		he = gethostbyname(interfaces[i]);
-		if (he != NULL) {
-			bzero((void *)&sa, sizeof(struct sockaddr_storage));
-			((struct sockaddr *)&sa)->sa_family = he->h_addrtype;
-			if (he->h_addrtype == AF_INET) {
-				memcpy (&(((struct sockaddr_in *) &sa)->sin_addr), he->h_addr_list[0], he->h_length);
-				((struct sockaddr_in *) &sa)->sin_port = htons(port);
-			} else {
-				memcpy (&(((struct sockaddr_in6 *) &sa)->sin6_addr), he->h_addr_list[0], he->h_length);
-				((struct sockaddr_in6 *) &sa)->sin6_port = htons(port);
-			}
-		} else {
-			goto error_exit2;
-		}
+    he = gethostbyname(interfaces[i]);
+    if (he != NULL) {
+      bzero((void *)&sa, sizeof(struct sockaddr_storage));
+      ((struct sockaddr *)&sa)->sa_family = he->h_addrtype;
+      if (he->h_addrtype == AF_INET) {
+        memcpy (&(((struct sockaddr_in *) &sa)->sin_addr), he->h_addr_list[0], he->h_length);
+        ((struct sockaddr_in *) &sa)->sin_port = htons(port);
+      }
+      else {
+        memcpy (&(((struct sockaddr_in6 *) &sa)->sin6_addr), he->h_addr_list[0], he->h_length);
+        ((struct sockaddr_in6 *) &sa)->sin6_port = htons(port);
+      }
+    }
+    else {
+      goto error_exit2;
+    }
 
-		if (bind(sd, (struct sockaddr *)&sa, sizeof(sa)) != 0) {
-			goto error_exit2;
-		}
+    if (bind(sd, (struct sockaddr *)&sa, sizeof(sa)) != 0) {
+      goto error_exit2;
+    }
 
-		if (listen(sd, 32) < 0) {
-			goto error_exit2;
-		}
+    if (listen(sd, 32) < 0) {
+      goto error_exit2;
+    }
 
-		new_sd_list = realloc(sd_list, sizeof(int) * (sd_count + 1));
-		if (!new_sd_list) {
-			goto error_exit2;
-		}
+    new_sd_list = realloc(sd_list, sizeof(int) * (sd_count + 1));
+    if (!new_sd_list) {
+      goto error_exit2;
+    }
 
-		new_sd_list[sd_count] = sd;
-		sd_list = new_sd_list;
-		sd_count++;
-	}
+    new_sd_list[sd_count] = sd;
+    sd_list = new_sd_list;
+    sd_count++;
+  }
 
-	*length = sd_count;
+  *length = sd_count;
 
-	return sd_list;
+  return sd_list;
 
 error_exit2:
-	close(sd);
+  close(sd);
 error_exit:
-	if (sd_list != NULL)
-		free(sd_list);
-	return NULL;
+  if (sd_list != NULL)
+    free(sd_list);
+  return NULL;
 }
 
 int *listen_port(int protocol, int family, int port, int *length, struct addrinfo **ret_addrs) {
-	struct addrinfo hints;
-	struct addrinfo *srv_addrs, *srv;
-	int on = 1;
-	char sport[10];
-	int error;
-	int srv_addrs_size;
-	int *ret_sockets;
-	int num_sockets;
-	struct addrinfo *unused_addrs, *used_addrs, *next_addr;
-	struct addrinfo *used_addr_tail;
+  struct addrinfo hints;
+  struct addrinfo *srv_addrs, *srv;
+  int on = 1;
+  char sport[10];
+  int error;
+  int srv_addrs_size;
+  int *ret_sockets;
+  int num_sockets;
+  struct addrinfo *unused_addrs, *used_addrs, *next_addr;
+  struct addrinfo *used_addr_tail;
 
-	bzero(&hints, sizeof(struct addrinfo));
+  bzero(&hints, sizeof(struct addrinfo));
 
-	hints.ai_family = family;
-	hints.ai_socktype = SOCK_STREAM;
-	hints.ai_protocol = protocol;
-	hints.ai_flags = AI_PASSIVE;
+  hints.ai_family = family;
+  hints.ai_socktype = SOCK_STREAM;
+  hints.ai_protocol = protocol;
+  hints.ai_flags = AI_PASSIVE;
 
-	snprintf(sport, sizeof(sport), "%d", port);
+  snprintf(sport, sizeof(sport), "%d", port);
 
-	error = getaddrinfo(NULL, sport, &hints, &srv_addrs);
-	if (error != 0)
-		goto error_exit;
+  error = getaddrinfo(NULL, sport, &hints, &srv_addrs);
+  if (error != 0)
+    goto error_exit;
 
-	srv_addrs_size = 0;
+  srv_addrs_size = 0;
 
-	for(srv = srv_addrs; srv != NULL; srv = srv->ai_next)
-		srv_addrs_size++;
+  for(srv = srv_addrs; srv != NULL; srv = srv->ai_next)
+    srv_addrs_size++;
 
-	ret_sockets = (int *) malloc(srv_addrs_size * sizeof(int));
-	if (!ret_sockets)
-		goto error_exit2;
-
-
-	num_sockets = 0;
-
-	unused_addrs = NULL;
-	used_addrs = NULL;
-	used_addr_tail = NULL;
+  ret_sockets = (int *) malloc(srv_addrs_size * sizeof(int));
+  if (!ret_sockets)
+    goto error_exit2;
 
 
-	for(srv = srv_addrs; srv != NULL; srv = next_addr) {
+  num_sockets = 0;
 
-		next_addr = srv->ai_next;
+  unused_addrs = NULL;
+  used_addrs = NULL;
+  used_addr_tail = NULL;
 
-		ret_sockets[num_sockets] = socket(srv->ai_family, srv->ai_socktype, srv->ai_protocol);
-		if (ret_sockets[num_sockets] < 0) {
-			srv->ai_next = unused_addrs;
-			unused_addrs = srv;
-			continue;
-		}
 
-		setsockopt(ret_sockets[num_sockets], SOL_SOCKET, SO_REUSEADDR, (void *)&on, sizeof on);
+  for(srv = srv_addrs; srv != NULL; srv = next_addr) {
 
-		if (bind(ret_sockets[num_sockets], srv->ai_addr, srv->ai_addrlen) < 0) {
-			close(ret_sockets[num_sockets]);
-			srv->ai_next = unused_addrs;
-			unused_addrs = srv;
-			continue;
-		}
+    next_addr = srv->ai_next;
 
-		if (listen(ret_sockets[num_sockets], 32) < 0) {
-			close(ret_sockets[num_sockets]);
-			srv->ai_next = unused_addrs;
-			unused_addrs = srv;
-			continue;
-		}
+    ret_sockets[num_sockets] = socket(srv->ai_family, srv->ai_socktype, srv->ai_protocol);
+    if (ret_sockets[num_sockets] < 0) {
+      srv->ai_next = unused_addrs;
+      unused_addrs = srv;
+      continue;
+    }
 
-		if (used_addr_tail != NULL) {
-			used_addr_tail->ai_next = srv;
-		} else {
-			used_addr_tail = srv;
-			used_addrs = srv;
-		}
+    setsockopt(ret_sockets[num_sockets], SOL_SOCKET, SO_REUSEADDR, (void *)&on, sizeof on);
 
-		srv->ai_next = NULL;
+    if (bind(ret_sockets[num_sockets], srv->ai_addr, srv->ai_addrlen) < 0) {
+      close(ret_sockets[num_sockets]);
+      srv->ai_next = unused_addrs;
+      unused_addrs = srv;
+      continue;
+    }
 
-		// we've got a listening socket, 
-		num_sockets++;
-	}
+    if (listen(ret_sockets[num_sockets], 32) < 0) {
+      close(ret_sockets[num_sockets]);
+      srv->ai_next = unused_addrs;
+      unused_addrs = srv;
+      continue;
+    }
 
-	srv_addrs = NULL;
+    if (used_addr_tail != NULL) {
+      used_addr_tail->ai_next = srv;
+    }
+    else {
+      used_addr_tail = srv;
+      used_addrs = srv;
+    }
 
-	if (num_sockets == 0)
-		goto error_exit3;
+    srv->ai_next = NULL;
 
-	*length = num_sockets;
+    // we've got a listening socket,
+    num_sockets++;
+  }
 
-	if (unused_addrs)
-		freeaddrinfo(unused_addrs);
+  srv_addrs = NULL;
 
-	if (ret_addrs == NULL)
-		freeaddrinfo(used_addrs);
-	else
-		*ret_addrs = used_addrs;
+  if (num_sockets == 0)
+    goto error_exit3;
 
-	return ret_sockets;
+  *length = num_sockets;
+
+  if (unused_addrs)
+    freeaddrinfo(unused_addrs);
+
+  if (ret_addrs == NULL)
+    freeaddrinfo(used_addrs);
+  else
+    *ret_addrs = used_addrs;
+
+  return ret_sockets;
 
 error_exit3:
-	free(ret_sockets);
+  free(ret_sockets);
 
-	if (unused_addrs)
-		freeaddrinfo(unused_addrs);
+  if (unused_addrs)
+    freeaddrinfo(unused_addrs);
 
-	if (used_addrs)
-		freeaddrinfo(used_addrs);
+  if (used_addrs)
+    freeaddrinfo(used_addrs);
 error_exit2:
-	if (srv_addrs)
-		freeaddrinfo(srv_addrs);
+  if (srv_addrs)
+    freeaddrinfo(srv_addrs);
 error_exit:
-	return NULL;
+  return NULL;
 }
 
 #ifndef htonll
 uint64_t htonll(uint64_t val) {
-	uint32_t a = INT_MAX;
+  uint32_t a = INT_MAX;
 
-	// check if we're in big endian or little endian mode
-	if (a == htonl(a)) {
-		return val;
-	} else {
-		return (((uint64_t) htonl(val)) << 32) + htonl(val >> 32);
-	}
+  // check if we're in big endian or little endian mode
+  if (a == htonl(a)) {
+    return val;
+  }
+  else {
+    return (((uint64_t) htonl(val)) << 32) + htonl(val >> 32);
+  }
 }
 
 uint64_t ntohll(uint64_t val) {
-	uint32_t a = INT_MAX;
+  uint32_t a = INT_MAX;
 
-	// check if we're in big endian or little endian mode
-	if (a == htonl(a)) {
-		return val;
-	} else {
-		return (((uint64_t) ntohl(val)) << 32) + ntohl(val >> 32);
-	}
+  // check if we're in big endian or little endian mode
+  if (a == htonl(a)) {
+    return val;
+  }
+  else {
+    return (((uint64_t) ntohl(val)) << 32) + ntohl(val >> 32);
+  }
 }
 #endif
 
 int get_ips(char ***ret_ips, int *ret_ip_count) {
-	struct ifaddrs *ifaces, *curr;
-	char **ips;
-	int ip_count;
+  struct ifaddrs *ifaces, *curr;
+  char **ips;
+  int ip_count;
 
-	if (getifaddrs(&ifaces) != 0) {
-		fprintf(stderr, "Failed to get interfaces for host\n");
-		return -1;
-	}
+  if (getifaddrs(&ifaces) != 0) {
+    fprintf(stderr, "Failed to get interfaces for host\n");
+    return -1;
+  }
 
-	ips = NULL;
-	ip_count = 0;
+  ips = NULL;
+  ip_count = 0;
 
-	for(curr = ifaces; curr != NULL; curr = curr->ifa_next) {
-		char ip[255];
-		size_t salen;
+  for(curr = ifaces; curr != NULL; curr = curr->ifa_next) {
+    char ip[255];
+    size_t salen;
 
-		if (!curr->ifa_addr)
-			continue;
+    if (!curr->ifa_addr)
+      continue;
 
-		if (curr->ifa_addr->sa_family == AF_INET)
-			salen = sizeof (struct sockaddr_in);
-		else if (curr->ifa_addr->sa_family == AF_INET6)
-			salen = sizeof (struct sockaddr_in6);
-		else
-			continue;
+    if (curr->ifa_addr->sa_family == AF_INET)
+      salen = sizeof (struct sockaddr_in);
+    else if (curr->ifa_addr->sa_family == AF_INET6)
+      salen = sizeof (struct sockaddr_in6);
+    else
+      continue;
 
 
-		if (getnameinfo (curr->ifa_addr, salen, ip, sizeof (ip), NULL, 0, NI_NUMERICHOST) < 0) {
-			continue;
-		}
+    if (getnameinfo (curr->ifa_addr, salen, ip, sizeof (ip), NULL, 0, NI_NUMERICHOST) < 0) {
+      continue;
+    }
 
-		if (strlist_add(ip, &ips, &ip_count) != 0) {
-			continue;
-		}
-	}
+    if (strlist_add(ip, &ips, &ip_count) != 0) {
+      continue;
+    }
+  }
 
-	*ret_ips = ips;
-	*ret_ip_count = ip_count;
+  *ret_ips = ips;
+  *ret_ip_count = ip_count;
 
-	return 0;
+  return 0;
 }
 
 int strlfcat(char *buf, int buflen, const char *fmt, ...) {
-	char *str;
-	va_list argp;
-	int n;
+  char *str;
+  va_list argp;
+  int n;
 
-	va_start(argp, fmt);
-	n = vasprintf(&str, fmt, argp);
-	va_end(argp);
+  va_start(argp, fmt);
+  n = vasprintf(&str, fmt, argp);
+  va_end(argp);
 
-	if (n < 0) {
-		return -1;
-	}
+  if (n < 0) {
+    return -1;
+  }
 
-	n = strlcat(buf, str, buflen);
+  n = strlcat(buf, str, buflen);
 
-	free(str);
+  free(str);
 
-	return n;
+  return n;
 }
 
 int parse_uri(const char *uri, char **protocol, char **address, int *port) {
-	char tmp[255];
-	const char *c;
-	int i;
+  char tmp[255];
+  const char *c;
+  int i;
 
 
-	c = uri;
+  c = uri;
 
-	// read the protocol
-	i = 0;
-	while(*c != ':') {
-		tmp[i] = *c;
+  // read the protocol
+  i = 0;
+  while(*c != ':') {
+    tmp[i] = *c;
 
-		i++;
-		c++;
-	}
-	tmp[i] = '\0';
+    i++;
+    c++;
+  }
+  tmp[i] = '\0';
 
-	if (strcmp(tmp, "") == 0) {
-		goto error_exit;
-	}
+  if (strcmp(tmp, "") == 0) {
+    goto error_exit;
+  }
 
-	*protocol = strdup(tmp);
+  *protocol = strdup(tmp);
 
-	c++;
-	if (*c != '/') {
-		goto error_exit_proto;
-	}
-	c++;
-	if (*c != '/') {
-		goto error_exit_proto;
-	}
+  c++;
+  if (*c != '/') {
+    goto error_exit_proto;
+  }
+  c++;
+  if (*c != '/') {
+    goto error_exit_proto;
+  }
 
-	// read the ip
-	i = 0; 
-	c++;
-	if (*c == '[') {
-		// IPv6 address
-		c++;
-		while(*c != ']') {
-			tmp[i] = *c;
-			i++;
-			c++;
-		}
+  // read the ip
+  i = 0;
+  c++;
+  if (*c == '[') {
+    // IPv6 address
+    c++;
+    while(*c != ']') {
+      tmp[i] = *c;
+      i++;
+      c++;
+    }
 
-		if (*c != ':' && *c != '\0') {
-			goto error_exit_proto;
-		}
-	} else {
-		// something else
-		while(*c != ':' && *c != '\0') {
-			tmp[i] = *c;
-			i++;
-			c++;
-		}
-	}
+    if (*c != ':' && *c != '\0') {
+      goto error_exit_proto;
+    }
+  }
+  else {
+    // something else
+    while(*c != ':' && *c != '\0') {
+      tmp[i] = *c;
+      i++;
+      c++;
+    }
+  }
 
-	tmp[i] = '\0';
+  tmp[i] = '\0';
 
-	if (strcmp(tmp, "") == 0) {
-		goto error_exit_proto;
-	}
+  if (strcmp(tmp, "") == 0) {
+    goto error_exit_proto;
+  }
 
-	*address = strdup(tmp);
+  *address = strdup(tmp);
 
-	if (*c == ':') {
-		char *eptr;
-		// read the port
-		i = 0; 
-		c++;
-		while(*c != '\0') {
-			tmp[i] = *c;
-			i++;
-			c++;
-		}
-		tmp[i] = '\0';
+  if (*c == ':') {
+    char *eptr;
+    // read the port
+    i = 0;
+    c++;
+    while(*c != '\0') {
+      tmp[i] = *c;
+      i++;
+      c++;
+    }
+    tmp[i] = '\0';
 
-		if (strcmp(tmp, "") == 0) {
-			goto error_exit_addr;
-		}
+    if (strcmp(tmp, "") == 0) {
+      goto error_exit_addr;
+    }
 
-		*port = strtol(tmp, &eptr, 0);
-		if (*port == 0 && errno != 0) {
-			goto error_exit_addr;
-		}
+    *port = strtol(tmp, &eptr, 0);
+    if (*port == 0 && errno != 0) {
+      goto error_exit_addr;
+    }
 
-		if ((*port == LONG_MAX || *port == LONG_MIN) && errno == ERANGE) {
-			goto error_exit_addr;
-		}
+    if ((*port == LONG_MAX || *port == LONG_MIN) && errno == ERANGE) {
+      goto error_exit_addr;
+    }
 
-		if (*eptr != '\0') {
-			goto error_exit_addr;
-		}
-	}
+    if (*eptr != '\0') {
+      goto error_exit_addr;
+    }
+  }
 
-	return 0;
+  return 0;
 
 error_exit_addr:
-	free(*address);
+  free(*address);
 error_exit_proto:
-	free(*protocol);
+  free(*protocol);
 error_exit:
-	return -1;
+  return -1;
 }
 
 int send_email(const char *sendmail_binary, const char *email_address, const char *subject, const char *body) {
-	FILE *fptr;
-	char sendmail_cmd[1024];
+  FILE *fptr;
+  char sendmail_cmd[1024];
 
-	snprintf(sendmail_cmd, sizeof(sendmail_cmd), "%s -t %s ", sendmail_binary, email_address);
-	fptr = popen(sendmail_cmd, "w");
-	if (!fptr) {
-		goto error_exit;
-	}
+  snprintf(sendmail_cmd, sizeof(sendmail_cmd), "%s -t %s ", sendmail_binary, email_address);
+  fptr = popen(sendmail_cmd, "w");
+  if (!fptr) {
+    goto error_exit;
+  }
 
-	fprintf(fptr, "Subject: %s\n", subject);
-	fprintf(fptr, "\n");
-	fprintf(fptr, "%s\n", body);
-	fprintf(fptr, ".\n");
+  fprintf(fptr, "Subject: %s\n", subject);
+  fprintf(fptr, "\n");
+  fprintf(fptr, "%s\n", body);
+  fprintf(fptr, ".\n");
 
-	if (pclose(fptr)) {
-		goto error_exit;
-	}
+  if (pclose(fptr)) {
+    goto error_exit;
+  }
 
-	return 0;
+  return 0;
 
 error_exit:
-	return -1;
+  return -1;
 }

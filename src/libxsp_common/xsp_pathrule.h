@@ -18,21 +18,21 @@
 #include "xsp_pathrule.h"
 
 typedef struct xsp_pathrule_t {
-	pthread_mutex_t lock;
-	pthread_cond_t timeout_cond;
+  pthread_mutex_t lock;
+  pthread_cond_t timeout_cond;
 
-	struct xsp_addr eid;
-	struct xsp_sess_net_path_rule_crit_t crit;
-	char *description;
-	int tag;
-	int status;
-	int op;
+  struct xsp_addr eid;
+  struct xsp_sess_net_path_rule_crit_t crit;
+  char *description;
+  int tag;
+  int status;
+  int op;
 
-	int (*apply) (struct xsp_pathrule_t *rule, int action, char **ret_error_msg);
-	void (*free) (struct xsp_pathrule_t *rule);
-	
-	struct xsp_path_t *path;
-	void *private;
+  int (*apply) (struct xsp_pathrule_t *rule, int action, char **ret_error_msg);
+  void (*free) (struct xsp_pathrule_t *rule);
+
+  struct xsp_path_t *path;
+  void *private;
 } xspPathRule;
 
 xspPathRule *xsp_alloc_pathrule();

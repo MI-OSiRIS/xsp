@@ -18,17 +18,17 @@
 enum xsp_setting_types { XSP_SETTING_STRING, XSP_SETTING_BOOL, XSP_SETTING_INT, XSP_SETTING_LIST };
 
 typedef struct xsp_settings_t {
-	config_t root;
+  config_t root;
 } xspSettings;
 
 typedef struct xsp_setting_desc_t {
-	char *name;
-	enum xsp_setting_types type;
+  char *name;
+  enum xsp_setting_types type;
 } xspSettingDesc;
 int xsp_settings_get_section_names(xspSettings *settings, const char *group,
-				  char ***list);
+                                   char ***list);
 int xsp_settings_get_no_section(xspSettings *settings, const char *group,
-				int *value);
+                                int *value);
 int xsp_settings_get(const xspSettings *settings, const char *setting, char **value);
 int xsp_settings_get_int(const xspSettings *settings, const char *setting, int *value);
 int xsp_settings_get_bool(const xspSettings *settings, const char *setting, int *value);

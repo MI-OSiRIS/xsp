@@ -16,8 +16,8 @@
 #include "libconfig.h"
 
 typedef struct xsp_protocol_settings_t {
-	config_t root;
-	const char *type;
+  config_t root;
+  const char *type;
 } xspProtocolSettings;
 
 xspProtocolSettings *xsp_alloc_protocol_settings();

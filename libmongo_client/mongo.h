@@ -51,158 +51,158 @@ MONGO_EXTERN_C_START
 #define MONGO_ERR_LEN 128
 
 typedef enum mongo_error_t {
-    MONGO_CONN_SUCCESS = 0,  /**< Connection success! */
-    MONGO_CONN_NO_SOCKET,    /**< Could not create a socket. */
-    MONGO_CONN_FAIL,         /**< An error occured while calling connect(). */
-    MONGO_CONN_ADDR_FAIL,    /**< An error occured while calling getaddrinfo(). */
-    MONGO_CONN_NOT_MASTER,   /**< Warning: connected to a non-master node (read-only). */
-    MONGO_CONN_BAD_SET_NAME, /**< Given rs name doesn't match this replica set. */
-    MONGO_CONN_NO_PRIMARY,   /**< Can't find primary in replica set. Connection closed. */
+  MONGO_CONN_SUCCESS = 0,  /**< Connection success! */
+  MONGO_CONN_NO_SOCKET,    /**< Could not create a socket. */
+  MONGO_CONN_FAIL,         /**< An error occured while calling connect(). */
+  MONGO_CONN_ADDR_FAIL,    /**< An error occured while calling getaddrinfo(). */
+  MONGO_CONN_NOT_MASTER,   /**< Warning: connected to a non-master node (read-only). */
+  MONGO_CONN_BAD_SET_NAME, /**< Given rs name doesn't match this replica set. */
+  MONGO_CONN_NO_PRIMARY,   /**< Can't find primary in replica set. Connection closed. */
 
-    MONGO_IO_ERROR,          /**< An error occurred while reading or writing on the socket. */
-    MONGO_SOCKET_ERROR,      /**< Other socket error. */
-    MONGO_READ_SIZE_ERROR,   /**< The response is not the expected length. */
-    MONGO_COMMAND_FAILED,    /**< The command returned with 'ok' value of 0. */
-    MONGO_WRITE_ERROR,       /**< Write with given write_concern returned an error. */
-    MONGO_NS_INVALID,        /**< The name for the ns (database or collection) is invalid. */
-    MONGO_BSON_INVALID,      /**< BSON not valid for the specified op. */
-    MONGO_BSON_NOT_FINISHED, /**< BSON object has not been finished. */
-    MONGO_BSON_TOO_LARGE,    /**< BSON object exceeds max BSON size. */
-    MONGO_WRITE_CONCERN_INVALID /**< Supplied write concern object is invalid. */
+  MONGO_IO_ERROR,          /**< An error occurred while reading or writing on the socket. */
+  MONGO_SOCKET_ERROR,      /**< Other socket error. */
+  MONGO_READ_SIZE_ERROR,   /**< The response is not the expected length. */
+  MONGO_COMMAND_FAILED,    /**< The command returned with 'ok' value of 0. */
+  MONGO_WRITE_ERROR,       /**< Write with given write_concern returned an error. */
+  MONGO_NS_INVALID,        /**< The name for the ns (database or collection) is invalid. */
+  MONGO_BSON_INVALID,      /**< BSON not valid for the specified op. */
+  MONGO_BSON_NOT_FINISHED, /**< BSON object has not been finished. */
+  MONGO_BSON_TOO_LARGE,    /**< BSON object exceeds max BSON size. */
+  MONGO_WRITE_CONCERN_INVALID /**< Supplied write concern object is invalid. */
 } mongo_error_t;
 
 typedef enum mongo_cursor_error_t {
-    MONGO_CURSOR_EXHAUSTED,  /**< The cursor has no more results. */
-    MONGO_CURSOR_INVALID,    /**< The cursor has timed out or is not recognized. */
-    MONGO_CURSOR_PENDING,    /**< Tailable cursor still alive but no data. */
-    MONGO_CURSOR_QUERY_FAIL, /**< The server returned an '$err' object, indicating query failure.
+  MONGO_CURSOR_EXHAUSTED,  /**< The cursor has no more results. */
+  MONGO_CURSOR_INVALID,    /**< The cursor has timed out or is not recognized. */
+  MONGO_CURSOR_PENDING,    /**< Tailable cursor still alive but no data. */
+  MONGO_CURSOR_QUERY_FAIL, /**< The server returned an '$err' object, indicating query failure.
                                   See conn->lasterrcode and conn->lasterrstr for details. */
-    MONGO_CURSOR_BSON_ERROR  /**< Something is wrong with the BSON provided. See conn->err
+  MONGO_CURSOR_BSON_ERROR  /**< Something is wrong with the BSON provided. See conn->err
                                   for details. */
 } mongo_cursor_error_t;
 
 enum mongo_cursor_flags {
-    MONGO_CURSOR_MUST_FREE = 1,      /**< mongo_cursor_destroy should free cursor. */
-    MONGO_CURSOR_QUERY_SENT = ( 1<<1 ) /**< Initial query has been sent. */
+  MONGO_CURSOR_MUST_FREE = 1,      /**< mongo_cursor_destroy should free cursor. */
+  MONGO_CURSOR_QUERY_SENT = ( 1<<1 ) /**< Initial query has been sent. */
 };
 
 enum mongo_index_opts {
-    MONGO_INDEX_UNIQUE = ( 1<<0 ),
-    MONGO_INDEX_DROP_DUPS = ( 1<<2 ),
-    MONGO_INDEX_BACKGROUND = ( 1<<3 ),
-    MONGO_INDEX_SPARSE = ( 1<<4 )
+  MONGO_INDEX_UNIQUE = ( 1<<0 ),
+  MONGO_INDEX_DROP_DUPS = ( 1<<2 ),
+  MONGO_INDEX_BACKGROUND = ( 1<<3 ),
+  MONGO_INDEX_SPARSE = ( 1<<4 )
 };
 
 enum mongo_update_opts {
-    MONGO_UPDATE_UPSERT = 0x1,
-    MONGO_UPDATE_MULTI = 0x2,
-    MONGO_UPDATE_BASIC = 0x4
+  MONGO_UPDATE_UPSERT = 0x1,
+  MONGO_UPDATE_MULTI = 0x2,
+  MONGO_UPDATE_BASIC = 0x4
 };
 
 enum mongo_insert_opts {
-    MONGO_CONTINUE_ON_ERROR = 0x1
+  MONGO_CONTINUE_ON_ERROR = 0x1
 };
 
 enum mongo_cursor_opts {
-    MONGO_TAILABLE = ( 1<<1 ),        /**< Create a tailable cursor. */
-    MONGO_SLAVE_OK = ( 1<<2 ),        /**< Allow queries on a non-primary node. */
-    MONGO_NO_CURSOR_TIMEOUT = ( 1<<4 ), /**< Disable cursor timeouts. */
-    MONGO_AWAIT_DATA = ( 1<<5 ),      /**< Momentarily block for more data. */
-    MONGO_EXHAUST = ( 1<<6 ),         /**< Stream in multiple 'more' packages. */
-    MONGO_PARTIAL = ( 1<<7 )          /**< Allow reads even if a shard is down. */
+  MONGO_TAILABLE = ( 1<<1 ),        /**< Create a tailable cursor. */
+  MONGO_SLAVE_OK = ( 1<<2 ),        /**< Allow queries on a non-primary node. */
+  MONGO_NO_CURSOR_TIMEOUT = ( 1<<4 ), /**< Disable cursor timeouts. */
+  MONGO_AWAIT_DATA = ( 1<<5 ),      /**< Momentarily block for more data. */
+  MONGO_EXHAUST = ( 1<<6 ),         /**< Stream in multiple 'more' packages. */
+  MONGO_PARTIAL = ( 1<<7 )          /**< Allow reads even if a shard is down. */
 };
 
 enum mongo_operations {
-    MONGO_OP_MSG = 1000,
-    MONGO_OP_UPDATE = 2001,
-    MONGO_OP_INSERT = 2002,
-    MONGO_OP_QUERY = 2004,
-    MONGO_OP_GET_MORE = 2005,
-    MONGO_OP_DELETE = 2006,
-    MONGO_OP_KILL_CURSORS = 2007
+  MONGO_OP_MSG = 1000,
+  MONGO_OP_UPDATE = 2001,
+  MONGO_OP_INSERT = 2002,
+  MONGO_OP_QUERY = 2004,
+  MONGO_OP_GET_MORE = 2005,
+  MONGO_OP_DELETE = 2006,
+  MONGO_OP_KILL_CURSORS = 2007
 };
 
 #pragma pack(1)
 typedef struct {
-    int len;
-    int id;
-    int responseTo;
-    int op;
+  int len;
+  int id;
+  int responseTo;
+  int op;
 } mongo_header;
 
 typedef struct {
-    mongo_header head;
-    char data;
+  mongo_header head;
+  char data;
 } mongo_message;
 
 typedef struct {
-    int flag; /* FIX THIS COMMENT non-zero on failure */
-    int64_t cursorID;
-    int start;
-    int num;
+  int flag; /* FIX THIS COMMENT non-zero on failure */
+  int64_t cursorID;
+  int start;
+  int num;
 } mongo_reply_fields;
 
 typedef struct {
-    mongo_header head;
-    mongo_reply_fields fields;
-    char objs;
+  mongo_header head;
+  mongo_reply_fields fields;
+  char objs;
 } mongo_reply;
 #pragma pack()
 
 typedef struct mongo_host_port {
-    char host[255];
-    int port;
-    struct mongo_host_port *next;
+  char host[255];
+  int port;
+  struct mongo_host_port *next;
 } mongo_host_port;
 
 typedef struct mongo_write_concern {
-    int w;            /**< Number of total replica write copies to complete including the primary. */
-    int wtimeout;     /**< Number of milliseconds before replication timeout. */
-    int j;            /**< If non-zero, block until the journal sync. */
-    int fsync;        /**< Same a j with journaling enabled; otherwise, call fsync. */
-    const char *mode; /**< Either "majority" or a getlasterrormode. Overrides w value. */
+  int w;            /**< Number of total replica write copies to complete including the primary. */
+  int wtimeout;     /**< Number of milliseconds before replication timeout. */
+  int j;            /**< If non-zero, block until the journal sync. */
+  int fsync;        /**< Same a j with journaling enabled; otherwise, call fsync. */
+  const char *mode; /**< Either "majority" or a getlasterrormode. Overrides w value. */
 
-    bson *cmd; /**< The BSON object representing the getlasterror command. */
+  bson *cmd; /**< The BSON object representing the getlasterror command. */
 } mongo_write_concern;
 
 typedef struct {
-    mongo_host_port *seeds;        /**< List of seeds provided by the user. */
-    mongo_host_port *hosts;        /**< List of host/ports given by the replica set */
-    char *name;                    /**< Name of the replica set. */
-    bson_bool_t primary_connected; /**< Primary node connection status. */
+  mongo_host_port *seeds;        /**< List of seeds provided by the user. */
+  mongo_host_port *hosts;        /**< List of host/ports given by the replica set */
+  char *name;                    /**< Name of the replica set. */
+  bson_bool_t primary_connected; /**< Primary node connection status. */
 } mongo_replica_set;
 
 typedef struct mongo {
-    mongo_host_port *primary;  /**< Primary connection info. */
-    mongo_replica_set *replica_set;    /**< replica_set object if connected to a replica set. */
-    int sock;                  /**< Socket file descriptor. */
-    int flags;                 /**< Flags on this connection object. */
-    int conn_timeout_ms;       /**< Connection timeout in milliseconds. */
-    int op_timeout_ms;         /**< Read and write timeout in milliseconds. */
-    int max_bson_size;         /**< Largest BSON object allowed on this connection. */
-    bson_bool_t connected;     /**< Connection status. */
-    mongo_write_concern *write_concern; /**< The default write concern. */
+  mongo_host_port *primary;  /**< Primary connection info. */
+  mongo_replica_set *replica_set;    /**< replica_set object if connected to a replica set. */
+  int sock;                  /**< Socket file descriptor. */
+  int flags;                 /**< Flags on this connection object. */
+  int conn_timeout_ms;       /**< Connection timeout in milliseconds. */
+  int op_timeout_ms;         /**< Read and write timeout in milliseconds. */
+  int max_bson_size;         /**< Largest BSON object allowed on this connection. */
+  bson_bool_t connected;     /**< Connection status. */
+  mongo_write_concern *write_concern; /**< The default write concern. */
 
-    mongo_error_t err;          /**< Most recent driver error code. */
-    int errcode;                /**< Most recent errno or WSAGetLastError(). */
-    char errstr[MONGO_ERR_LEN]; /**< String version of error. */
-    int lasterrcode;            /**< getlasterror code from the server. */
-    char lasterrstr[MONGO_ERR_LEN]; /**< getlasterror string from the server. */
+  mongo_error_t err;          /**< Most recent driver error code. */
+  int errcode;                /**< Most recent errno or WSAGetLastError(). */
+  char errstr[MONGO_ERR_LEN]; /**< String version of error. */
+  int lasterrcode;            /**< getlasterror code from the server. */
+  char lasterrstr[MONGO_ERR_LEN]; /**< getlasterror string from the server. */
 } mongo;
 
 typedef struct {
-    mongo_reply *reply;  /**< reply is owned by cursor */
-    mongo *conn;       /**< connection is *not* owned by cursor */
-    const char *ns;    /**< owned by cursor */
-    int flags;         /**< Flags used internally by this drivers. */
-    int seen;          /**< Number returned so far. */
-    bson current;      /**< This cursor's current bson object. */
-    mongo_cursor_error_t err; /**< Errors on this cursor. */
-    const bson *query; /**< Bitfield containing cursor options. */
-    const bson *fields;/**< Bitfield containing cursor options. */
-    int options;       /**< Bitfield containing cursor options. */
-    int limit;         /**< Bitfield containing cursor options. */
-    int skip;          /**< Bitfield containing cursor options. */
+  mongo_reply *reply;  /**< reply is owned by cursor */
+  mongo *conn;       /**< connection is *not* owned by cursor */
+  const char *ns;    /**< owned by cursor */
+  int flags;         /**< Flags used internally by this drivers. */
+  int seen;          /**< Number returned so far. */
+  bson current;      /**< This cursor's current bson object. */
+  mongo_cursor_error_t err; /**< Errors on this cursor. */
+  const bson *query; /**< Bitfield containing cursor options. */
+  const bson *fields;/**< Bitfield containing cursor options. */
+  int options;       /**< Bitfield containing cursor options. */
+  int limit;         /**< Bitfield containing cursor options. */
+  int skip;          /**< Bitfield containing cursor options. */
 } mongo_cursor;
 
 /*********************************************************************
@@ -428,7 +428,7 @@ CRUD API
  *     on the bson struct for the reason.
  */
 MONGO_EXPORT int mongo_insert( mongo *conn, const char *ns, const bson *data,
-    mongo_write_concern *custom_write_concern );
+                               mongo_write_concern *custom_write_concern );
 
 /**
  * Insert a batch of BSON documents into a MongoDB server. This function
@@ -450,8 +450,8 @@ MONGO_EXPORT int mongo_insert( mongo *conn, const char *ns, const bson *data,
  *
  */
 MONGO_EXPORT int mongo_insert_batch( mongo *conn, const char *ns,
-    const bson **data, int num, mongo_write_concern *custom_write_concern,
-    int flags );
+                                     const bson **data, int num, mongo_write_concern *custom_write_concern,
+                                     int flags );
 
 /**
  * Update a document in a MongoDB server.
@@ -470,7 +470,7 @@ MONGO_EXPORT int mongo_insert_batch( mongo *conn, const char *ns,
  *
  */
 MONGO_EXPORT int mongo_update( mongo *conn, const char *ns, const bson *cond,
-    const bson *op, int flags, mongo_write_concern *custom_write_concern );
+                               const bson *op, int flags, mongo_write_concern *custom_write_concern );
 
 /**
  * Remove a document from a MongoDB server.
@@ -486,7 +486,7 @@ MONGO_EXPORT int mongo_update( mongo *conn, const char *ns, const bson *cond,
  * @return MONGO_OK or MONGO_ERROR with error stored in conn object.
  */
 MONGO_EXPORT int mongo_remove( mongo *conn, const char *ns, const bson *cond,
-    mongo_write_concern *custom_write_concern );
+                               mongo_write_concern *custom_write_concern );
 
 
 /*********************************************************************
@@ -534,7 +534,7 @@ Cursor API
  *     use the cursor builder API instead.
  */
 MONGO_EXPORT mongo_cursor *mongo_find( mongo *conn, const char *ns, const bson *query,
-                          const bson *fields, int limit, int skip, int options );
+                                       const bson *fields, int limit, int skip, int options );
 
 /**
  * Initalize a new cursor object.
@@ -643,7 +643,7 @@ MONGO_EXPORT int mongo_cursor_destroy( mongo_cursor *cursor );
  */
 /* out can be NULL if you don't care about results. useful for commands */
 MONGO_EXPORT int mongo_find_one( mongo *conn, const char *ns, const bson *query,
-                            const bson *fields, bson *out );
+                                 const bson *fields, bson *out );
 
 
 /*********************************************************************
@@ -662,7 +662,7 @@ Command API and Helpers
  *     MONGO_ERROR is returned.
  */
 MONGO_EXPORT double mongo_count( mongo *conn, const char *db, const char *coll,
-                     const bson *query );
+                                 const bson *query );
 
 /**
  * Create a compound index.
@@ -678,7 +678,7 @@ MONGO_EXPORT double mongo_count( mongo *conn, const char *db, const char *coll,
  * @return MONGO_OK if index is created successfully; otherwise, MONGO_ERROR.
  */
 MONGO_EXPORT int mongo_create_index( mongo *conn, const char *ns,
-    const bson *key, int options, bson *out );
+                                     const bson *key, int options, bson *out );
 
 /**
  * Create a capped collection.
@@ -720,7 +720,7 @@ MONGO_EXPORT bson_bool_t mongo_create_simple_index( mongo *conn, const char *ns,
  * @return MONGO_OK if the command ran without error.
  */
 MONGO_EXPORT int mongo_run_command( mongo *conn, const char *db,
-    const bson *command, bson *out );
+                                    const bson *command, bson *out );
 
 /**
  * Run a command that accepts a simple string key and integer value.
@@ -735,7 +735,7 @@ MONGO_EXPORT int mongo_run_command( mongo *conn, const char *db,
  *
  */
 MONGO_EXPORT int mongo_simple_int_command( mongo *conn, const char *db,
-                              const char *cmd, int arg, bson *out );
+    const char *cmd, int arg, bson *out );
 
 /**
  * Run a command that accepts a simple string key and value.
@@ -786,7 +786,7 @@ MONGO_EXPORT int mongo_cmd_drop_collection( mongo *conn, const char *db,
  * @return MONGO_OK or MONGO_ERROR.
   */
 MONGO_EXPORT int mongo_cmd_add_user( mongo *conn, const char *db,
-    const char *user, const char *pass );
+                                     const char *user, const char *pass );
 
 /**
  * Authenticate a user.

@@ -74,33 +74,32 @@
 static int n_unix_sockets;
 
 static int
-unix_open(const char *name, char *suffix, struct vconn **vconnp)
-{
-    const char *connect_path = suffix;
-    char bind_path[128];
-    int fd;
+unix_open(const char *name, char *suffix, struct vconn **vconnp) {
+  const char *connect_path = suffix;
+  char bind_path[128];
+  int fd;
 
-    sprintf(bind_path, "/tmp/vconn-unix.%ld.%d",
-            (long int) getpid(), n_unix_sockets++);
-    fd = make_unix_socket(SOCK_STREAM, true, false, bind_path, connect_path);
-    if (fd < 0) {
-        VLOG_ERR("%s: connection to %s failed: %s",
-                 bind_path, connect_path, strerror(-fd));
-        return -fd;
-    }
+  sprintf(bind_path, "/tmp/vconn-unix.%ld.%d",
+          (long int) getpid(), n_unix_sockets++);
+  fd = make_unix_socket(SOCK_STREAM, true, false, bind_path, connect_path);
+  if (fd < 0) {
+    VLOG_ERR("%s: connection to %s failed: %s",
+             bind_path, connect_path, strerror(-fd));
+    return -fd;
+  }
 
-    return new_stream_vconn(name, fd, check_connection_completion(fd),
-                            0, true, vconnp);
+  return new_stream_vconn(name, fd, check_connection_completion(fd),
+                          0, true, vconnp);
 }
 
 struct vconn_class unix_vconn_class = {
-    "unix",                     /* name */
-    unix_open,                  /* open */
-    NULL,                       /* close */
-    NULL,                       /* connect */
-    NULL,                       /* recv */
-    NULL,                       /* send */
-    NULL,                       /* wait */
+  "unix",                     /* name */
+  unix_open,                  /* open */
+  NULL,                       /* close */
+  NULL,                       /* connect */
+  NULL,                       /* recv */
+  NULL,                       /* send */
+  NULL,                       /* wait */
 };
 
 /* Passive UNIX socket. */
@@ -109,40 +108,39 @@ static int punix_accept(int fd, const struct sockaddr *sa, size_t sa_len,
                         struct vconn **vconnp);
 
 static int
-punix_open(const char *name UNUSED, char *suffix, struct pvconn **pvconnp)
-{
-    int fd;
+punix_open(const char *name UNUSED, char *suffix, struct pvconn **pvconnp) {
+  int fd;
 
-    fd = make_unix_socket(SOCK_STREAM, true, true, suffix, NULL);
-    if (fd < 0) {
-        VLOG_ERR("%s: binding failed: %s", suffix, strerror(errno));
-        return errno;
-    }
+  fd = make_unix_socket(SOCK_STREAM, true, true, suffix, NULL);
+  if (fd < 0) {
+    VLOG_ERR("%s: binding failed: %s", suffix, strerror(errno));
+    return errno;
+  }
 
-    return new_pstream_pvconn("punix", fd, punix_accept, pvconnp);
+  return new_pstream_pvconn("punix", fd, punix_accept, pvconnp);
 }
 
 static int
 punix_accept(int fd, const struct sockaddr *sa, size_t sa_len,
-             struct vconn **vconnp)
-{
-    const struct sockaddr_un *sun = (const struct sockaddr_un *) sa;
-    int name_len = get_unix_name_len(sa_len);
-    char name[128];
+             struct vconn **vconnp) {
+  const struct sockaddr_un *sun = (const struct sockaddr_un *) sa;
+  int name_len = get_unix_name_len(sa_len);
+  char name[128];
 
-    if (name_len > 0) {
-        snprintf(name, sizeof name, "unix:%.*s", name_len, sun->sun_path);
-    } else {
-        strcpy(name, "unix");
-    }
-    return new_stream_vconn(name, fd, 0, 0, true, vconnp);
+  if (name_len > 0) {
+    snprintf(name, sizeof name, "unix:%.*s", name_len, sun->sun_path);
+  }
+  else {
+    strcpy(name, "unix");
+  }
+  return new_stream_vconn(name, fd, 0, 0, true, vconnp);
 }
 
 struct pvconn_class punix_pvconn_class = {
-    "punix",
-    punix_open,
-    NULL,
-    NULL,
-    NULL
+  "punix",
+  punix_open,
+  NULL,
+  NULL,
+  NULL
 };
 

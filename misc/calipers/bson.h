@@ -37,52 +37,52 @@
 MONGO_EXTERN_C_START
 
 typedef enum {
-    bson_eoo=0 ,
-    bson_double=1,
-    bson_string=2,
-    bson_object=3,
-    bson_array=4,
-    bson_bindata=5,
-    bson_undefined=6,
-    bson_oid=7,
-    bson_bool=8,
-    bson_date=9,
-    bson_null=10,
-    bson_regex=11,
-    bson_dbref=12, /* deprecated */
-    bson_code=13,
-    bson_symbol=14,
-    bson_codewscope=15,
-    bson_int = 16,
-    bson_timestamp = 17,
-    bson_long = 18
+  bson_eoo=0 ,
+  bson_double=1,
+  bson_string=2,
+  bson_object=3,
+  bson_array=4,
+  bson_bindata=5,
+  bson_undefined=6,
+  bson_oid=7,
+  bson_bool=8,
+  bson_date=9,
+  bson_null=10,
+  bson_regex=11,
+  bson_dbref=12, /* deprecated */
+  bson_code=13,
+  bson_symbol=14,
+  bson_codewscope=15,
+  bson_int = 16,
+  bson_timestamp = 17,
+  bson_long = 18
 } bson_type;
 
 typedef int bson_bool_t;
 
 typedef struct {
-    char * data;
-    bson_bool_t owned;
+  char * data;
+  bson_bool_t owned;
 } bson;
 
 typedef struct {
-    const char * cur;
-    bson_bool_t first;
+  const char * cur;
+  bson_bool_t first;
 } bson_iterator;
 
 typedef struct {
-    char * buf;
-    char * cur;
-    int bufSize;
-    bson_bool_t finished;
-    int stack[32];
-    int stackPos;
+  char * buf;
+  char * cur;
+  int bufSize;
+  bson_bool_t finished;
+  int stack[32];
+  int stackPos;
 } bson_buffer;
 
 #pragma pack(1)
-typedef union{
-    char bytes[12];
-    int ints[3];
+typedef union {
+  char bytes[12];
+  int ints[3];
 } bson_oid_t;
 #pragma pack()
 

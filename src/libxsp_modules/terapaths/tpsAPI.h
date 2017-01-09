@@ -151,366 +151,329 @@ enum xsd__boolean { xsd__boolean__false_, xsd__boolean__true_ };
 
 
 /// "urn:tpsAPI/types":getAllReservationsForClass is a complexType.
-struct ns2__getAllReservationsForClass
-{
+struct ns2__getAllReservationsForClass {
 /// Element ReservationData_1 of type "urn:tpsAPI/types":ReservationData.
-    struct ns2__ReservationData*         ReservationData_USCORE1       ;	///< Nullable pointer.
+  struct ns2__ReservationData*         ReservationData_USCORE1       ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":ReservationData is a complexType.
-struct ns2__ReservationData
-{
+struct ns2__ReservationData {
 /// Element DTMinus of type xs:long.
-    LONG64                               DTMinus                        1;	///< Required element.
+  LONG64                               DTMinus                        1;	///< Required element.
 /// Element DTPlus of type xs:long.
-    LONG64                               DTPlus                         1;	///< Required element.
+  LONG64                               DTPlus                         1;	///< Required element.
 /// Element bandwidth of type "urn:tpsAPI/types":Bandwidth.
-    struct ns2__Bandwidth*               bandwidth                     ;	///< Nullable pointer.
+  struct ns2__Bandwidth*               bandwidth                     ;	///< Nullable pointer.
 /// Element destIp of type xs:string.
-    char*                                destIp                        ;	///< Nullable pointer.
+  char*                                destIp                        ;	///< Nullable pointer.
 /// Element destMapping of type xs:string.
-    char*                                destMapping                   ;	///< Nullable pointer.
+  char*                                destMapping                   ;	///< Nullable pointer.
 /// Element destName of type xs:string.
-    char*                                destName                      ;	///< Nullable pointer.
+  char*                                destName                      ;	///< Nullable pointer.
 /// Element destPortMax of type xs:string.
-    char*                                destPortMax                   ;	///< Nullable pointer.
+  char*                                destPortMax                   ;	///< Nullable pointer.
 /// Element destPortMin of type xs:string.
-    char*                                destPortMin                   ;	///< Nullable pointer.
+  char*                                destPortMin                   ;	///< Nullable pointer.
 /// Element destPorts of type xs:string.
-    char*                                destPorts                     ;	///< Nullable pointer.
+  char*                                destPorts                     ;	///< Nullable pointer.
 /// Element direction of type xs:string.
-    char*                                direction                     ;	///< Nullable pointer.
+  char*                                direction                     ;	///< Nullable pointer.
 /// Element duration of type xs:long.
-    LONG64                               duration                       1;	///< Required element.
+  LONG64                               duration                       1;	///< Required element.
 /// Element id of type xs:string.
-    char*                                id                            ;	///< Nullable pointer.
+  char*                                id                            ;	///< Nullable pointer.
 /// Element mapping of type xs:string.
-    char*                                mapping                       ;	///< Nullable pointer.
+  char*                                mapping                       ;	///< Nullable pointer.
 /// Element modifyReservation of type xs:int.
-    int                                  modifyReservation              1;	///< Required element.
+  int                                  modifyReservation              1;	///< Required element.
 /// Element protocol of type xs:string.
-    char*                                protocol                      ;	///< Nullable pointer.
+  char*                                protocol                      ;	///< Nullable pointer.
 /// Element relatedReservationIds of type xs:string.
-    char*                                relatedReservationIds         ;	///< Nullable pointer.
+  char*                                relatedReservationIds         ;	///< Nullable pointer.
 /// Element srcIp of type xs:string.
-    char*                                srcIp                         ;	///< Nullable pointer.
+  char*                                srcIp                         ;	///< Nullable pointer.
 /// Element srcMapping of type xs:string.
-    char*                                srcMapping                    ;	///< Nullable pointer.
+  char*                                srcMapping                    ;	///< Nullable pointer.
 /// Element srcName of type xs:string.
-    char*                                srcName                       ;	///< Nullable pointer.
+  char*                                srcName                       ;	///< Nullable pointer.
 /// Element srcPortMax of type xs:string.
-    char*                                srcPortMax                    ;	///< Nullable pointer.
+  char*                                srcPortMax                    ;	///< Nullable pointer.
 /// Element srcPortMin of type xs:string.
-    char*                                srcPortMin                    ;	///< Nullable pointer.
+  char*                                srcPortMin                    ;	///< Nullable pointer.
 /// Element srcPorts of type xs:string.
-    char*                                srcPorts                      ;	///< Nullable pointer.
+  char*                                srcPorts                      ;	///< Nullable pointer.
 /// Element startTime of type xs:long.
-    LONG64                               startTime                      1;	///< Required element.
+  LONG64                               startTime                      1;	///< Required element.
 /// Element startTimeMax of type xs:long.
-    LONG64                               startTimeMax                   1;	///< Required element.
+  LONG64                               startTimeMax                   1;	///< Required element.
 /// Element startTimeMin of type xs:long.
-    LONG64                               startTimeMin                   1;	///< Required element.
+  LONG64                               startTimeMin                   1;	///< Required element.
 /// Element status of type xs:string.
-    char*                                status                        ;	///< Nullable pointer.
+  char*                                status                        ;	///< Nullable pointer.
 /// Element timeout of type xs:long.
-    LONG64                               timeout                        1;	///< Required element.
+  LONG64                               timeout                        1;	///< Required element.
 /// Element userName of type xs:string.
-    char*                                userName                      ;	///< Nullable pointer.
+  char*                                userName                      ;	///< Nullable pointer.
 /// Element who of type "urn:tpsAPI/types":Who.
-    struct ns2__Who*                     who                           ;	///< Nullable pointer.
+  struct ns2__Who*                     who                           ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":Bandwidth is a complexType.
-struct ns2__Bandwidth
-{
+struct ns2__Bandwidth {
 /// Element bandwidth of type xs:long.
-    LONG64                               bandwidth                      1;	///< Required element.
+  LONG64                               bandwidth                      1;	///< Required element.
 /// Element className of type xs:string.
-    char*                                className                     ;	///< Nullable pointer.
+  char*                                className                     ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":Who is a complexType.
-struct ns2__Who
-{
+struct ns2__Who {
 /// Element CA of type xs:string.
-    char*                                CA                            ;	///< Nullable pointer.
+  char*                                CA                            ;	///< Nullable pointer.
 /// Element DN of type xs:string.
-    char*                                DN                            ;	///< Nullable pointer.
+  char*                                DN                            ;	///< Nullable pointer.
 /// Element name of type xs:string.
-    char*                                name                          ;	///< Nullable pointer.
+  char*                                name                          ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":getAllReservationsForClassResponse is a complexType.
-struct ns2__getAllReservationsForClassResponse
-{
+struct ns2__getAllReservationsForClassResponse {
 /// Size of array of struct ns2__ReservationData* is 0..unbounded
-   $int                                  __sizeresult                   0;
+  $int                                  __sizeresult                   0;
 /// Pointer to array struct ns2__ReservationData* of length 0..unbounded
-    struct ns2__ReservationData*        *result                         0;	///< Nullable pointer.
+  struct ns2__ReservationData**result                         0;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_LocalCancel is a complexType.
-struct ns2__tpsAPI_USCORELocalCancel
-{
+struct ns2__tpsAPI_USCORELocalCancel {
 /// Element String_1 of type xs:string.
-    char*                                String_USCORE1                ;	///< Nullable pointer.
+  char*                                String_USCORE1                ;	///< Nullable pointer.
 /// Element String_2 of type xs:string.
-    char*                                String_USCORE2                ;	///< Nullable pointer.
+  char*                                String_USCORE2                ;	///< Nullable pointer.
 /// Element String_3 of type xs:string.
-    char*                                String_USCORE3                ;	///< Nullable pointer.
+  char*                                String_USCORE3                ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_LocalCancelResponse is a complexType.
-struct ns2__tpsAPI_USCORELocalCancelResponse
-{
+struct ns2__tpsAPI_USCORELocalCancelResponse {
 /// Element result of type xs:boolean.
-    enum xsd__boolean                    result                         1;	///< Required element.
+  enum xsd__boolean                    result                         1;	///< Required element.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_LocalCommit is a complexType.
-struct ns2__tpsAPI_USCORELocalCommit
-{
+struct ns2__tpsAPI_USCORELocalCommit {
 /// Element String_1 of type xs:string.
-    char*                                String_USCORE1                ;	///< Nullable pointer.
+  char*                                String_USCORE1                ;	///< Nullable pointer.
 /// Element String_2 of type xs:string.
-    char*                                String_USCORE2                ;	///< Nullable pointer.
+  char*                                String_USCORE2                ;	///< Nullable pointer.
 /// Element String_3 of type xs:string.
-    char*                                String_USCORE3                ;	///< Nullable pointer.
+  char*                                String_USCORE3                ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_LocalCommitResponse is a complexType.
-struct ns2__tpsAPI_USCORELocalCommitResponse
-{
+struct ns2__tpsAPI_USCORELocalCommitResponse {
 /// Element result of type xs:boolean.
-    enum xsd__boolean                    result                         1;	///< Required element.
+  enum xsd__boolean                    result                         1;	///< Required element.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_LocalRemove is a complexType.
-struct ns2__tpsAPI_USCORELocalRemove
-{
+struct ns2__tpsAPI_USCORELocalRemove {
 /// Element String_1 of type xs:string.
-    char*                                String_USCORE1                ;	///< Nullable pointer.
+  char*                                String_USCORE1                ;	///< Nullable pointer.
 /// Element String_2 of type xs:string.
-    char*                                String_USCORE2                ;	///< Nullable pointer.
+  char*                                String_USCORE2                ;	///< Nullable pointer.
 /// Element String_3 of type xs:string.
-    char*                                String_USCORE3                ;	///< Nullable pointer.
+  char*                                String_USCORE3                ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_LocalRemoveResponse is a complexType.
-struct ns2__tpsAPI_USCORELocalRemoveResponse
-{
+struct ns2__tpsAPI_USCORELocalRemoveResponse {
 /// Element result of type xs:boolean.
-    enum xsd__boolean                    result                         1;	///< Required element.
+  enum xsd__boolean                    result                         1;	///< Required element.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_LocalReserve is a complexType.
-struct ns2__tpsAPI_USCORELocalReserve
-{
+struct ns2__tpsAPI_USCORELocalReserve {
 /// Element ReservationData_1 of type "urn:tpsAPI/types":ReservationData.
-    struct ns2__ReservationData*         ReservationData_USCORE1       ;	///< Nullable pointer.
+  struct ns2__ReservationData*         ReservationData_USCORE1       ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_LocalReserveResponse is a complexType.
-struct ns2__tpsAPI_USCORELocalReserveResponse
-{
+struct ns2__tpsAPI_USCORELocalReserveResponse {
 /// Element result of type "urn:tpsAPI/types":ReservationData.
-    struct ns2__ReservationData*         result                        ;	///< Nullable pointer.
+  struct ns2__ReservationData*         result                        ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_LocalStart is a complexType.
-struct ns2__tpsAPI_USCORELocalStart
-{
+struct ns2__tpsAPI_USCORELocalStart {
 /// Element String_1 of type xs:string.
-    char*                                String_USCORE1                ;	///< Nullable pointer.
+  char*                                String_USCORE1                ;	///< Nullable pointer.
 /// Element String_2 of type xs:string.
-    char*                                String_USCORE2                ;	///< Nullable pointer.
+  char*                                String_USCORE2                ;	///< Nullable pointer.
 /// Element String_3 of type xs:string.
-    char*                                String_USCORE3                ;	///< Nullable pointer.
+  char*                                String_USCORE3                ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_LocalStartResponse is a complexType.
-struct ns2__tpsAPI_USCORELocalStartResponse
-{
+struct ns2__tpsAPI_USCORELocalStartResponse {
 /// Element result of type xs:boolean.
-    enum xsd__boolean                    result                         1;	///< Required element.
+  enum xsd__boolean                    result                         1;	///< Required element.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_addRelatedReservationId is a complexType.
-struct ns2__tpsAPI_USCOREaddRelatedReservationId
-{
+struct ns2__tpsAPI_USCOREaddRelatedReservationId {
 /// Element String_1 of type xs:string.
-    char*                                String_USCORE1                ;	///< Nullable pointer.
+  char*                                String_USCORE1                ;	///< Nullable pointer.
 /// Element String_2 of type xs:string.
-    char*                                String_USCORE2                ;	///< Nullable pointer.
+  char*                                String_USCORE2                ;	///< Nullable pointer.
 /// Element boolean_3 of type xs:boolean.
-    enum xsd__boolean                    boolean_USCORE3                1;	///< Required element.
+  enum xsd__boolean                    boolean_USCORE3                1;	///< Required element.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_addRelatedReservationIdResponse is a complexType.
-struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse
-{
+struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse {
 /// Element result of type xs:boolean.
-    enum xsd__boolean                    result                         1;	///< Required element.
+  enum xsd__boolean                    result                         1;	///< Required element.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_cancel is a complexType.
-struct ns2__tpsAPI_USCOREcancel
-{
+struct ns2__tpsAPI_USCOREcancel {
 /// Element ReservationData_1 of type "urn:tpsAPI/types":ReservationData.
-    struct ns2__ReservationData*         ReservationData_USCORE1       ;	///< Nullable pointer.
+  struct ns2__ReservationData*         ReservationData_USCORE1       ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_cancelResponse is a complexType.
-struct ns2__tpsAPI_USCOREcancelResponse
-{
+struct ns2__tpsAPI_USCOREcancelResponse {
 /// Element result of type xs:boolean.
-    enum xsd__boolean                    result                         1;	///< Required element.
+  enum xsd__boolean                    result                         1;	///< Required element.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_commit is a complexType.
-struct ns2__tpsAPI_USCOREcommit
-{
+struct ns2__tpsAPI_USCOREcommit {
 /// Element ReservationData_1 of type "urn:tpsAPI/types":ReservationData.
-    struct ns2__ReservationData*         ReservationData_USCORE1       ;	///< Nullable pointer.
+  struct ns2__ReservationData*         ReservationData_USCORE1       ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_commitResponse is a complexType.
-struct ns2__tpsAPI_USCOREcommitResponse
-{
+struct ns2__tpsAPI_USCOREcommitResponse {
 /// Element result of type xs:boolean.
-    enum xsd__boolean                    result                         1;	///< Required element.
+  enum xsd__boolean                    result                         1;	///< Required element.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_getBandwidths is a complexType.
-struct ns2__tpsAPI_USCOREgetBandwidths
-{
+struct ns2__tpsAPI_USCOREgetBandwidths {
 /// Element String_1 of type xs:string.
-    char*                                String_USCORE1                ;	///< Nullable pointer.
+  char*                                String_USCORE1                ;	///< Nullable pointer.
 /// Element String_2 of type xs:string.
-    char*                                String_USCORE2                ;	///< Nullable pointer.
+  char*                                String_USCORE2                ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_getBandwidthsResponse is a complexType.
-struct ns2__tpsAPI_USCOREgetBandwidthsResponse
-{
+struct ns2__tpsAPI_USCOREgetBandwidthsResponse {
 /// Size of array of struct ns2__Bandwidths* is 0..unbounded
-   $int                                  __sizeresult                   0;
+  $int                                  __sizeresult                   0;
 /// Pointer to array struct ns2__Bandwidths* of length 0..unbounded
-    struct ns2__Bandwidths*             *result                         0;	///< Nullable pointer.
+  struct ns2__Bandwidths**result                         0;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":Bandwidths is a complexType.
-struct ns2__Bandwidths
-{
+struct ns2__Bandwidths {
 /// Size of array of struct ns2__Bandwidth* is 0..unbounded
-   $int                                  __sizebw                       0;
+  $int                                  __sizebw                       0;
 /// Pointer to array struct ns2__Bandwidth* of length 0..unbounded
-    struct ns2__Bandwidth*              *bw                             0;	///< Nullable pointer.
+  struct ns2__Bandwidth**bw                             0;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_getLocalBandwidths is a complexType.
-struct ns2__tpsAPI_USCOREgetLocalBandwidths
-{
+struct ns2__tpsAPI_USCOREgetLocalBandwidths {
 };
 
 /// "urn:tpsAPI/types":tpsAPI_getLocalBandwidthsResponse is a complexType.
-struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse
-{
+struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse {
 /// Size of array of struct ns2__Bandwidth* is 0..unbounded
-   $int                                  __sizeresult                   0;
+  $int                                  __sizeresult                   0;
 /// Pointer to array struct ns2__Bandwidth* of length 0..unbounded
-    struct ns2__Bandwidth*              *result                         0;	///< Nullable pointer.
+  struct ns2__Bandwidth**result                         0;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_getPath is a complexType.
-struct ns2__tpsAPI_USCOREgetPath
-{
+struct ns2__tpsAPI_USCOREgetPath {
 /// Element String_1 of type xs:string.
-    char*                                String_USCORE1                ;	///< Nullable pointer.
+  char*                                String_USCORE1                ;	///< Nullable pointer.
 /// Element String_2 of type xs:string.
-    char*                                String_USCORE2                ;	///< Nullable pointer.
+  char*                                String_USCORE2                ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_getPathResponse is a complexType.
-struct ns2__tpsAPI_USCOREgetPathResponse
-{
+struct ns2__tpsAPI_USCOREgetPathResponse {
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeresult                   0;
+  $int                                  __sizeresult                   0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *result                         0;	///< Nullable pointer.
+  char**result                         0;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_getRelatedReservationIds is a complexType.
-struct ns2__tpsAPI_USCOREgetRelatedReservationIds
-{
+struct ns2__tpsAPI_USCOREgetRelatedReservationIds {
 /// Element String_1 of type xs:string.
-    char*                                String_USCORE1                ;	///< Nullable pointer.
+  char*                                String_USCORE1                ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_getRelatedReservationIdsResponse is a complexType.
-struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse
-{
+struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse {
 /// Element result of type xs:string.
-    char*                                result                        ;	///< Nullable pointer.
+  char*                                result                        ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_getReservationData is a complexType.
-struct ns2__tpsAPI_USCOREgetReservationData
-{
+struct ns2__tpsAPI_USCOREgetReservationData {
 /// Element String_1 of type xs:string.
-    char*                                String_USCORE1                ;	///< Nullable pointer.
+  char*                                String_USCORE1                ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_getReservationDataResponse is a complexType.
-struct ns2__tpsAPI_USCOREgetReservationDataResponse
-{
+struct ns2__tpsAPI_USCOREgetReservationDataResponse {
 /// Element result of type "urn:tpsAPI/types":ReservationData.
-    struct ns2__ReservationData*         result                        ;	///< Nullable pointer.
+  struct ns2__ReservationData*         result                        ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_lookupUser is a complexType.
-struct ns2__tpsAPI_USCORElookupUser
-{
+struct ns2__tpsAPI_USCORElookupUser {
 /// Element String_1 of type xs:string.
-    char*                                String_USCORE1                ;	///< Nullable pointer.
+  char*                                String_USCORE1                ;	///< Nullable pointer.
 /// Element String_2 of type xs:string.
-    char*                                String_USCORE2                ;	///< Nullable pointer.
+  char*                                String_USCORE2                ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_lookupUserResponse is a complexType.
-struct ns2__tpsAPI_USCORElookupUserResponse
-{
+struct ns2__tpsAPI_USCORElookupUserResponse {
 /// Element result of type "urn:tpsAPI/types":UserData.
-    struct ns2__UserData*                result                        ;	///< Nullable pointer.
+  struct ns2__UserData*                result                        ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":UserData is a complexType.
-struct ns2__UserData
-{
+struct ns2__UserData {
 /// Element id of type xs:long.
-    LONG64                               id                             1;	///< Required element.
+  LONG64                               id                             1;	///< Required element.
 /// Element info of type xs:string.
-    char*                                info                          ;	///< Nullable pointer.
+  char*                                info                          ;	///< Nullable pointer.
 /// Element passWord of type xs:string.
-    char*                                passWord                      ;	///< Nullable pointer.
+  char*                                passWord                      ;	///< Nullable pointer.
 /// Element type of type xs:string.
-    char*                                type                          ;	///< Nullable pointer.
+  char*                                type                          ;	///< Nullable pointer.
 /// Element userName of type xs:string.
-    char*                                userName                      ;	///< Nullable pointer.
+  char*                                userName                      ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_reserve is a complexType.
-struct ns2__tpsAPI_USCOREreserve
-{
+struct ns2__tpsAPI_USCOREreserve {
 /// Element ReservationData_1 of type "urn:tpsAPI/types":ReservationData.
-    struct ns2__ReservationData*         ReservationData_USCORE1       ;	///< Nullable pointer.
+  struct ns2__ReservationData*         ReservationData_USCORE1       ;	///< Nullable pointer.
 };
 
 /// "urn:tpsAPI/types":tpsAPI_reserveResponse is a complexType.
-struct ns2__tpsAPI_USCOREreserveResponse
-{
+struct ns2__tpsAPI_USCOREreserveResponse {
 /// Element result of type "urn:tpsAPI/types":ReservationData.
-    struct ns2__ReservationData*         result                        ;	///< Nullable pointer.
+  struct ns2__ReservationData*         result                        ;	///< Nullable pointer.
 };
 
 /******************************************************************************\
@@ -632,11 +595,11 @@ struct ns2__tpsAPI_USCOREreserveResponse
 \******************************************************************************/
 
 
-//gsoap ns1  service name:	tpsAPISEIBinding 
-//gsoap ns1  service type:	tpsAPISEI 
-//gsoap ns1  service port:	http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI 
-//gsoap ns1  service namespace:	urn:tpsAPI/wsdl 
-//gsoap ns1  service transport:	http://schemas.xmlsoap.org/soap/http 
+//gsoap ns1  service name:	tpsAPISEIBinding
+//gsoap ns1  service type:	tpsAPISEI
+//gsoap ns1  service port:	http://tera01.ultralight.org:40863/terapathsAPI/tpsAPI
+//gsoap ns1  service namespace:	urn:tpsAPI/wsdl
+//gsoap ns1  service transport:	http://schemas.xmlsoap.org/soap/http
 
 /** @mainpage tpsAPI Definitions
 
@@ -758,8 +721,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-encoding:	getAllReservationsForClass literal
 //gsoap ns1  service method-action:	getAllReservationsForClass ""
 int __ns1__getAllReservationsForClass(
-    struct ns2__getAllReservationsForClass* ns2__getAllReservationsForClass,	///< Request parameter
-    struct ns2__getAllReservationsForClassResponse* ns2__getAllReservationsForClassResponse	///< Response parameter
+  struct ns2__getAllReservationsForClass* ns2__getAllReservationsForClass,	///< Request parameter
+  struct ns2__getAllReservationsForClassResponse* ns2__getAllReservationsForClassResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -809,8 +772,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-encoding:	tpsAPI_USCORELocalCancel literal
 //gsoap ns1  service method-action:	tpsAPI_USCORELocalCancel ""
 int __ns1__tpsAPI_USCORELocalCancel(
-    struct ns2__tpsAPI_USCORELocalCancel* ns2__tpsAPI_USCORELocalCancel,	///< Request parameter
-    struct ns2__tpsAPI_USCORELocalCancelResponse* ns2__tpsAPI_USCORELocalCancelResponse	///< Response parameter
+  struct ns2__tpsAPI_USCORELocalCancel* ns2__tpsAPI_USCORELocalCancel,	///< Request parameter
+  struct ns2__tpsAPI_USCORELocalCancelResponse* ns2__tpsAPI_USCORELocalCancelResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -860,8 +823,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-encoding:	tpsAPI_USCORELocalCommit literal
 //gsoap ns1  service method-action:	tpsAPI_USCORELocalCommit ""
 int __ns1__tpsAPI_USCORELocalCommit(
-    struct ns2__tpsAPI_USCORELocalCommit* ns2__tpsAPI_USCORELocalCommit,	///< Request parameter
-    struct ns2__tpsAPI_USCORELocalCommitResponse* ns2__tpsAPI_USCORELocalCommitResponse	///< Response parameter
+  struct ns2__tpsAPI_USCORELocalCommit* ns2__tpsAPI_USCORELocalCommit,	///< Request parameter
+  struct ns2__tpsAPI_USCORELocalCommitResponse* ns2__tpsAPI_USCORELocalCommitResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -911,8 +874,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-encoding:	tpsAPI_USCORELocalRemove literal
 //gsoap ns1  service method-action:	tpsAPI_USCORELocalRemove ""
 int __ns1__tpsAPI_USCORELocalRemove(
-    struct ns2__tpsAPI_USCORELocalRemove* ns2__tpsAPI_USCORELocalRemove,	///< Request parameter
-    struct ns2__tpsAPI_USCORELocalRemoveResponse* ns2__tpsAPI_USCORELocalRemoveResponse	///< Response parameter
+  struct ns2__tpsAPI_USCORELocalRemove* ns2__tpsAPI_USCORELocalRemove,	///< Request parameter
+  struct ns2__tpsAPI_USCORELocalRemoveResponse* ns2__tpsAPI_USCORELocalRemoveResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -962,8 +925,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-encoding:	tpsAPI_USCORELocalReserve literal
 //gsoap ns1  service method-action:	tpsAPI_USCORELocalReserve ""
 int __ns1__tpsAPI_USCORELocalReserve(
-    struct ns2__tpsAPI_USCORELocalReserve* ns2__tpsAPI_USCORELocalReserve,	///< Request parameter
-    struct ns2__tpsAPI_USCORELocalReserveResponse* ns2__tpsAPI_USCORELocalReserveResponse	///< Response parameter
+  struct ns2__tpsAPI_USCORELocalReserve* ns2__tpsAPI_USCORELocalReserve,	///< Request parameter
+  struct ns2__tpsAPI_USCORELocalReserveResponse* ns2__tpsAPI_USCORELocalReserveResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -1013,8 +976,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-encoding:	tpsAPI_USCORELocalStart literal
 //gsoap ns1  service method-action:	tpsAPI_USCORELocalStart ""
 int __ns1__tpsAPI_USCORELocalStart(
-    struct ns2__tpsAPI_USCORELocalStart* ns2__tpsAPI_USCORELocalStart,	///< Request parameter
-    struct ns2__tpsAPI_USCORELocalStartResponse* ns2__tpsAPI_USCORELocalStartResponse	///< Response parameter
+  struct ns2__tpsAPI_USCORELocalStart* ns2__tpsAPI_USCORELocalStart,	///< Request parameter
+  struct ns2__tpsAPI_USCORELocalStartResponse* ns2__tpsAPI_USCORELocalStartResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -1064,8 +1027,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-encoding:	tpsAPI_USCOREaddRelatedReservationId literal
 //gsoap ns1  service method-action:	tpsAPI_USCOREaddRelatedReservationId ""
 int __ns1__tpsAPI_USCOREaddRelatedReservationId(
-    struct ns2__tpsAPI_USCOREaddRelatedReservationId* ns2__tpsAPI_USCOREaddRelatedReservationId,	///< Request parameter
-    struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse* ns2__tpsAPI_USCOREaddRelatedReservationIdResponse	///< Response parameter
+  struct ns2__tpsAPI_USCOREaddRelatedReservationId* ns2__tpsAPI_USCOREaddRelatedReservationId,	///< Request parameter
+  struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse* ns2__tpsAPI_USCOREaddRelatedReservationIdResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -1115,8 +1078,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-encoding:	tpsAPI_USCOREcancel literal
 //gsoap ns1  service method-action:	tpsAPI_USCOREcancel ""
 int __ns1__tpsAPI_USCOREcancel(
-    struct ns2__tpsAPI_USCOREcancel*    ns2__tpsAPI_USCOREcancel,	///< Request parameter
-    struct ns2__tpsAPI_USCOREcancelResponse* ns2__tpsAPI_USCOREcancelResponse	///< Response parameter
+  struct ns2__tpsAPI_USCOREcancel*    ns2__tpsAPI_USCOREcancel,	///< Request parameter
+  struct ns2__tpsAPI_USCOREcancelResponse* ns2__tpsAPI_USCOREcancelResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -1166,8 +1129,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-encoding:	tpsAPI_USCOREcommit literal
 //gsoap ns1  service method-action:	tpsAPI_USCOREcommit ""
 int __ns1__tpsAPI_USCOREcommit(
-    struct ns2__tpsAPI_USCOREcommit*    ns2__tpsAPI_USCOREcommit,	///< Request parameter
-    struct ns2__tpsAPI_USCOREcommitResponse* ns2__tpsAPI_USCOREcommitResponse	///< Response parameter
+  struct ns2__tpsAPI_USCOREcommit*    ns2__tpsAPI_USCOREcommit,	///< Request parameter
+  struct ns2__tpsAPI_USCOREcommitResponse* ns2__tpsAPI_USCOREcommitResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -1217,8 +1180,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-encoding:	tpsAPI_USCOREgetBandwidths literal
 //gsoap ns1  service method-action:	tpsAPI_USCOREgetBandwidths ""
 int __ns1__tpsAPI_USCOREgetBandwidths(
-    struct ns2__tpsAPI_USCOREgetBandwidths* ns2__tpsAPI_USCOREgetBandwidths,	///< Request parameter
-    struct ns2__tpsAPI_USCOREgetBandwidthsResponse* ns2__tpsAPI_USCOREgetBandwidthsResponse	///< Response parameter
+  struct ns2__tpsAPI_USCOREgetBandwidths* ns2__tpsAPI_USCOREgetBandwidths,	///< Request parameter
+  struct ns2__tpsAPI_USCOREgetBandwidthsResponse* ns2__tpsAPI_USCOREgetBandwidthsResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -1268,8 +1231,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-encoding:	tpsAPI_USCOREgetLocalBandwidths literal
 //gsoap ns1  service method-action:	tpsAPI_USCOREgetLocalBandwidths ""
 int __ns1__tpsAPI_USCOREgetLocalBandwidths(
-    struct ns2__tpsAPI_USCOREgetLocalBandwidths* ns2__tpsAPI_USCOREgetLocalBandwidths,	///< Request parameter
-    struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse* ns2__tpsAPI_USCOREgetLocalBandwidthsResponse	///< Response parameter
+  struct ns2__tpsAPI_USCOREgetLocalBandwidths* ns2__tpsAPI_USCOREgetLocalBandwidths,	///< Request parameter
+  struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse* ns2__tpsAPI_USCOREgetLocalBandwidthsResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -1319,8 +1282,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-encoding:	tpsAPI_USCOREgetPath literal
 //gsoap ns1  service method-action:	tpsAPI_USCOREgetPath ""
 int __ns1__tpsAPI_USCOREgetPath(
-    struct ns2__tpsAPI_USCOREgetPath*   ns2__tpsAPI_USCOREgetPath,	///< Request parameter
-    struct ns2__tpsAPI_USCOREgetPathResponse* ns2__tpsAPI_USCOREgetPathResponse	///< Response parameter
+  struct ns2__tpsAPI_USCOREgetPath*   ns2__tpsAPI_USCOREgetPath,	///< Request parameter
+  struct ns2__tpsAPI_USCOREgetPathResponse* ns2__tpsAPI_USCOREgetPathResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -1370,8 +1333,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-encoding:	tpsAPI_USCOREgetRelatedReservationIds literal
 //gsoap ns1  service method-action:	tpsAPI_USCOREgetRelatedReservationIds ""
 int __ns1__tpsAPI_USCOREgetRelatedReservationIds(
-    struct ns2__tpsAPI_USCOREgetRelatedReservationIds* ns2__tpsAPI_USCOREgetRelatedReservationIds,	///< Request parameter
-    struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse* ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse	///< Response parameter
+  struct ns2__tpsAPI_USCOREgetRelatedReservationIds* ns2__tpsAPI_USCOREgetRelatedReservationIds,	///< Request parameter
+  struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse* ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -1421,8 +1384,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-encoding:	tpsAPI_USCOREgetReservationData literal
 //gsoap ns1  service method-action:	tpsAPI_USCOREgetReservationData ""
 int __ns1__tpsAPI_USCOREgetReservationData(
-    struct ns2__tpsAPI_USCOREgetReservationData* ns2__tpsAPI_USCOREgetReservationData,	///< Request parameter
-    struct ns2__tpsAPI_USCOREgetReservationDataResponse* ns2__tpsAPI_USCOREgetReservationDataResponse	///< Response parameter
+  struct ns2__tpsAPI_USCOREgetReservationData* ns2__tpsAPI_USCOREgetReservationData,	///< Request parameter
+  struct ns2__tpsAPI_USCOREgetReservationDataResponse* ns2__tpsAPI_USCOREgetReservationDataResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -1472,8 +1435,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-encoding:	tpsAPI_USCORElookupUser literal
 //gsoap ns1  service method-action:	tpsAPI_USCORElookupUser ""
 int __ns1__tpsAPI_USCORElookupUser(
-    struct ns2__tpsAPI_USCORElookupUser* ns2__tpsAPI_USCORElookupUser,	///< Request parameter
-    struct ns2__tpsAPI_USCORElookupUserResponse* ns2__tpsAPI_USCORElookupUserResponse	///< Response parameter
+  struct ns2__tpsAPI_USCORElookupUser* ns2__tpsAPI_USCORElookupUser,	///< Request parameter
+  struct ns2__tpsAPI_USCORElookupUserResponse* ns2__tpsAPI_USCORElookupUserResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -1523,8 +1486,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-encoding:	tpsAPI_USCOREreserve literal
 //gsoap ns1  service method-action:	tpsAPI_USCOREreserve ""
 int __ns1__tpsAPI_USCOREreserve(
-    struct ns2__tpsAPI_USCOREreserve*   ns2__tpsAPI_USCOREreserve,	///< Request parameter
-    struct ns2__tpsAPI_USCOREreserveResponse* ns2__tpsAPI_USCOREreserveResponse	///< Response parameter
+  struct ns2__tpsAPI_USCOREreserve*   ns2__tpsAPI_USCOREreserve,	///< Request parameter
+  struct ns2__tpsAPI_USCOREreserveResponse* ns2__tpsAPI_USCOREreserveResponse	///< Response parameter
 );
 
 /******************************************************************************\

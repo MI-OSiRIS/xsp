@@ -30,15 +30,15 @@ extern int stream_ids[MAX_ID];
 enum xsp_event_types { XSP_INVALID = 0, XSP_INFO, XSP_MEAS, XSP_ERR, XSP_WARN, XSP_DEBUG };
 
 typedef struct xsp_event {
-	enum xsp_event_types type;
-	unsigned int level;
-	char *value;
-	int length;
+  enum xsp_event_types type;
+  unsigned int level;
+  char *value;
+  int length;
 } xspEvent;
 
 typedef struct xsp_logger_backend_t {
-	char *name;
-	int (*log_event) (xspEvent *event);
+  char *name;
+  int (*log_event) (xspEvent *event);
 } xspLoggerBackend;
 
 int xsp_logger_init(int threshold);

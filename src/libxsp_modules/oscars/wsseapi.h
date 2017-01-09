@@ -91,8 +91,8 @@ extern const char soap_wsse_id[];
 The signature key (private) and verification key (public) are kept in the
 plugin data, together with other info.
 */
-struct soap_wsse_data
-{ char *sigid;			/**< string with wsu:Id names to sign */
+struct soap_wsse_data {
+  char *sigid;			/**< string with wsu:Id names to sign */
   char *encid;			/**< string with wsu:Id names to encrypt */
   int sign_alg;			/**< The digest or signature algorithm used */
   const void *sign_key;		/**< EVP_PKEY or key string for HMAC */
@@ -126,8 +126,8 @@ during the preprocessing of a message transmission. The 'level' field is used
 to determine when the end of an element is reached by handling inner wsu:Id
 attributed elements, so that the outer wsu:Id attributed element can be hashed.
 */
-struct soap_wsse_digest
-{ struct soap_wsse_digest *next;	/**< Next in list */
+struct soap_wsse_digest {
+  struct soap_wsse_digest *next;	/**< Next in list */
   unsigned int level;			/**< XML parser depth level */
   struct soap_smd_data smd;		/**< smdevp engine context */
   unsigned char hash[SOAP_SMD_MAX_SIZE];/**< Digest hash value */

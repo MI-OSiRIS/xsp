@@ -67,21 +67,21 @@ struct ofpbuf;
 
 #define DHCP_HEADER_LEN 236
 struct dhcp_header {
-    uint8_t op;                 /* DHCP_BOOTREQUEST or DHCP_BOOTREPLY. */
-    uint8_t htype;              /* ARP_HRD_ETHERNET (typically). */
-    uint8_t hlen;               /* ETH_ADDR_LEN (typically). */
-    uint8_t hops;               /* Hop count; set to 0 by client. */
-    uint32_t xid;               /* Transaction ID. */
-    uint16_t secs;              /* Since client started address acquisition. */
-    uint16_t flags;             /* DHCP_FLAGS_*. */
-    uint32_t ciaddr;            /* Client IP, if it has a lease for one. */
-    uint32_t yiaddr;            /* Client ("your") IP address. */
-    uint32_t siaddr;            /* Next server IP address. */
-    uint32_t giaddr;            /* Relay agent IP address. */
-    uint8_t chaddr[16];         /* Client hardware address. */
-    char sname[64];             /* Optional server host name. */
-    char file[128];             /* Boot file name. */
-    /* Followed by variable-length options field. */
+  uint8_t op;                 /* DHCP_BOOTREQUEST or DHCP_BOOTREPLY. */
+  uint8_t htype;              /* ARP_HRD_ETHERNET (typically). */
+  uint8_t hlen;               /* ETH_ADDR_LEN (typically). */
+  uint8_t hops;               /* Hop count; set to 0 by client. */
+  uint32_t xid;               /* Transaction ID. */
+  uint16_t secs;              /* Since client started address acquisition. */
+  uint16_t flags;             /* DHCP_FLAGS_*. */
+  uint32_t ciaddr;            /* Client IP, if it has a lease for one. */
+  uint32_t yiaddr;            /* Client ("your") IP address. */
+  uint32_t siaddr;            /* Next server IP address. */
+  uint32_t giaddr;            /* Relay agent IP address. */
+  uint8_t chaddr[16];         /* Client hardware address. */
+  char sname[64];             /* Optional server host name. */
+  char file[128];             /* Boot file name. */
+  /* Followed by variable-length options field. */
 };
 BUILD_ASSERT_DECL(DHCP_HEADER_LEN == sizeof(struct dhcp_header));
 
@@ -98,7 +98,7 @@ BUILD_ASSERT_DECL(DHCP_HEADER_LEN == sizeof(struct dhcp_header));
 /* DHCP option argument types. */
 enum dhcp_arg_type {
 #define DHCP_ARG(NAME, SIZE) DHCP_ARG_##NAME,
-    DHCP_ARGS
+  DHCP_ARGS
 #undef DHCP_ARG
 };
 
@@ -115,7 +115,7 @@ enum dhcp_arg_type {
 /* DHCP message type (this is the argument for the DHCP_MSG_TYPE option). */
 enum dhcp_msg_type {
 #define DHCP_MSG(NAME, VALUE) NAME = VALUE,
-    DHCP_MSGS
+  DHCP_MSGS
 #undef DHCP_MSG
 };
 const char *dhcp_type_name(enum dhcp_msg_type);
@@ -217,7 +217,7 @@ const char *dhcp_type_name(enum dhcp_msg_type);
 enum {
 #define DHCP_OPT(NAME, VALUE, ARGTYPE, MIN_ARGS, MAX_ARGS) \
     DHCP_CODE_##NAME = VALUE,
-DHCP_OPTS
+  DHCP_OPTS
 #undef DHCP_OPT
 };
 
@@ -227,8 +227,8 @@ DHCP_OPTS
  * option, 'n' is 0 and 'data' is non-null (but does not point to anything
  * useful).  */
 struct dhcp_option {
-    size_t n;                   /* Number of bytes of data. */
-    void *data;                 /* Data. */
+  size_t n;                   /* Number of bytes of data. */
+  void *data;                 /* Data. */
 };
 
 const char *dhcp_option_to_string(const struct dhcp_option *, int code,
@@ -239,22 +239,22 @@ bool dhcp_option_equals(const struct dhcp_option *,
 /* Abstracted DHCP protocol message, to make them easier to manipulate than
  * through raw protocol buffers. */
 struct dhcp_msg {
-    /* For use by calling code. */
-    uint8_t op;                 /* DHCP_BOOTREQUEST or DHCP_BOOTREPLY. */
-    uint32_t xid;               /* Transaction ID. */
-    uint16_t secs;              /* Since client started address acquisition. */
-    uint16_t flags;             /* DHCP_FLAGS_*. */
-    uint32_t ciaddr;            /* Client IP, if it has a lease for one. */
-    uint32_t yiaddr;            /* Client ("your") IP address. */
-    uint32_t siaddr;            /* Next server IP address. */
-    uint32_t giaddr;            /* Relay agent IP address. */
-    uint8_t chaddr[ETH_ADDR_LEN]; /* Client hardware address. */
-    enum dhcp_msg_type type;    /* DHCP_CODE_DHCP_MSG_TYPE option argument. */
-    struct dhcp_option options[DHCP_N_OPTIONS]; /* Indexed by option code. */
+  /* For use by calling code. */
+  uint8_t op;                 /* DHCP_BOOTREQUEST or DHCP_BOOTREPLY. */
+  uint32_t xid;               /* Transaction ID. */
+  uint16_t secs;              /* Since client started address acquisition. */
+  uint16_t flags;             /* DHCP_FLAGS_*. */
+  uint32_t ciaddr;            /* Client IP, if it has a lease for one. */
+  uint32_t yiaddr;            /* Client ("your") IP address. */
+  uint32_t siaddr;            /* Next server IP address. */
+  uint32_t giaddr;            /* Relay agent IP address. */
+  uint8_t chaddr[ETH_ADDR_LEN]; /* Client hardware address. */
+  enum dhcp_msg_type type;    /* DHCP_CODE_DHCP_MSG_TYPE option argument. */
+  struct dhcp_option options[DHCP_N_OPTIONS]; /* Indexed by option code. */
 
-    /* For direct use only by dhcp_msg_*() functions. */
-    uint8_t *data;
-    size_t data_used, data_allocated;
+  /* For direct use only by dhcp_msg_*() functions. */
+  uint8_t *data;
+  size_t data_used, data_allocated;
 };
 
 void dhcp_msg_init(struct dhcp_msg *);

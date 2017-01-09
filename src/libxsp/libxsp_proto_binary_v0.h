@@ -40,52 +40,52 @@ static int xsp_writeout_slab_info(void *arg, char *buf, int remainder);
 static int xsp_writeout_slab_record(xspSlabRec *rec, char *buf, int remainder);
 
 typedef struct xsp_hop_hdr_t {
-	char id[XSP_HOPID_LEN];
-	char protocol[XSP_PROTO_NAME_LEN];
-    	uint32_t flags;
-	uint16_t child_count;
+  char id[XSP_HOPID_LEN];
+  char protocol[XSP_PROTO_NAME_LEN];
+  uint32_t flags;
+  uint16_t child_count;
 } xspHop_HDR;
 
 typedef struct xsp_sess_hdr_t {
-	char sess_id[XSP_SESSIONID_LEN];
-	char src_id[XSP_HOPID_LEN];
-	uint32_t sess_flags;
-	uint32_t hop_flags;
+  char sess_id[XSP_SESSIONID_LEN];
+  char src_id[XSP_HOPID_LEN];
+  uint32_t sess_flags;
+  uint32_t hop_flags;
 } xspSess_HDR;
 
 typedef struct xsp_msg_auth_token_hdr_t {
-	uint32_t token_length;
+  uint32_t token_length;
 } xspAuthToken_HDR;
 
 typedef struct xsp_msg_auth_info_hdr_t {
-	char name[XSP_AUTH_NAME_LEN];
+  char name[XSP_AUTH_NAME_LEN];
 } xspAuthType_HDR;
 
 typedef struct xsp_block_hdr_t {
-	uint16_t type;
-	uint16_t sport;
-	uint32_t length;
+  uint16_t type;
+  uint16_t sport;
+  uint32_t length;
 } xspBlock_HDR;
 
 typedef struct xsp_msg_sess_nack_hdr_t {
-	uint32_t length;
+  uint32_t length;
 } xspSessNack_HDR;
 
 typedef struct slab_record_hdr_t {
-        char sess_id[XSP_SESSIONID_LEN];
-	uint16_t flags;
-        uint32_t offset;
-        uint32_t length;
-        uint32_t crc;
-	union {
-		struct xsp_rdma_mr_t mr;
-	} rdma;
+  char sess_id[XSP_SESSIONID_LEN];
+  uint16_t flags;
+  uint32_t offset;
+  uint32_t length;
+  uint32_t crc;
+  union {
+    struct xsp_rdma_mr_t mr;
+  } rdma;
 } xspSlabRec_HDR;
 
 typedef struct slabs_info_hdr_t {
-	uint32_t seq;
-        uint32_t length;
-        uint32_t rec_count;
+  uint32_t seq;
+  uint32_t length;
+  uint32_t rec_count;
 } xspSlabInfo_HDR;
 
 #endif

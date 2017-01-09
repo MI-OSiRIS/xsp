@@ -11,9 +11,9 @@
 //  Extreme Scale Technologies (CREST).
 // =============================================================================
 
-/* 
-Copyright (c) 2012, The Regents of the University of California, through 
-Lawrence Berkeley National Laboratory (subject to receipt of any required 
+/*
+Copyright (c) 2012, The Regents of the University of California, through
+Lawrence Berkeley National Laboratory (subject to receipt of any required
 approvals from the U.S. Dept. of Energy).  All rights reserved.
 */
 /** \file nl_calipers.h
@@ -57,33 +57,33 @@ extern "C" {
 #define NL_MAX_HIST_BINS 100
 
 struct netlogger_wvar_t {
-	double m;
-	double t;
-	unsigned count;
-	unsigned min_items;
+  double m;
+  double t;
+  unsigned count;
+  unsigned min_items;
 };
 
 struct netlogger_ksum_t {
-	double s, c, y, t;
+  double s, c, y, t;
 };
 
-typedef enum { 
-     NL_HIST_OFF=0,
-     NL_HIST_AUTO_PRE=1, /* past this point, add data */
-     NL_HIST_MANUAL=2,
-     NL_HIST_AUTO_READY=3,
-     NL_HIST_AUTO_FULL=4
+typedef enum {
+  NL_HIST_OFF=0,
+  NL_HIST_AUTO_PRE=1, /* past this point, add data */
+  NL_HIST_MANUAL=2,
+  NL_HIST_AUTO_READY=3,
+  NL_HIST_AUTO_FULL=4
 } netlogger_hstate_t;
-     
+
 
 #define T netlogger_calipers_T
 
 /** \struct netlogger_calipers_t
  * \brief Hold current values for a single "caliper".
- * 
+ *
  * Each "caliper" tracks statistics for a univariate time-series.
  *
- * Summary statistics tracked: 
+ * Summary statistics tracked:
  * - count
  * - sum
  * - mean
@@ -97,25 +97,25 @@ typedef enum {
  *   - the ratio of the value/duration(ns) (prefix=r for rate)
  */
 struct netlogger_calipers_t {
-    /* summary variables */
-    double sum, rsum, gsum;
-    double sd, rsd, gsd;
-    double min, max, mean;
-    double rmin, rmax, rmean;
-    double gmin, gmax, gmean;
-    long long count, rcount, gcount;
-    double dur_sum, dur;
-    /* internal variables */
-    struct netlogger_wvar_t var, rvar, gvar;
-    struct netlogger_ksum_t ksum, krsum, kgsum;
-    unsigned is_begun, dirty;
-    struct timeval begin, end, first;
-    /* histogram */
-    netlogger_hstate_t h_state;
-    int h_auto_pre; /* pre-init phases left */
-    unsigned int h_num; /* #bins, 0=none */
-    double h_gmin, h_gmax, h_gwidth;
-    unsigned *h_gdata;
+  /* summary variables */
+  double sum, rsum, gsum;
+  double sd, rsd, gsd;
+  double min, max, mean;
+  double rmin, rmax, rmean;
+  double gmin, gmax, gmean;
+  long long count, rcount, gcount;
+  double dur_sum, dur;
+  /* internal variables */
+  struct netlogger_wvar_t var, rvar, gvar;
+  struct netlogger_ksum_t ksum, krsum, kgsum;
+  unsigned is_begun, dirty;
+  struct timeval begin, end, first;
+  /* histogram */
+  netlogger_hstate_t h_state;
+  int h_auto_pre; /* pre-init phases left */
+  unsigned int h_num; /* #bins, 0=none */
+  double h_gmin, h_gmax, h_gwidth;
+  unsigned *h_gdata;
 };
 
 typedef struct netlogger_calipers_t *T;
@@ -160,7 +160,7 @@ typedef struct netlogger_calipers_t *T;
         (V).s = (V).t;                          \
 } while(0)
 
-/** 
+/**
  * Constructor.
  * Allocates memory and clears values.
  *
@@ -199,12 +199,12 @@ void netlogger_calipers_hist_manual(T self, unsigned n, double min, double max);
  */
 void netlogger_calipers_hist_auto(T self, unsigned n, unsigned pre);
 
-/* Check if histogram has data to show */ 
+/* Check if histogram has data to show */
 #define NL_HIST_HAS_DATA(X) (\
  (X)->h_state == NL_HIST_MANUAL || \
  (X)->h_state == NL_HIST_AUTO_FULL)
 
-/** 
+/**
  * Begin a timed event.
  * Defined as a macro for performance.
  *
@@ -219,7 +219,7 @@ void netlogger_calipers_hist_auto(T self, unsigned n, unsigned pre);
         (S)->is_begun = 1;                                              \
     } while(0)
 
-/** 
+/**
  * End a timed event.
  * Defined as a macro for performance.
  *
@@ -314,13 +314,13 @@ char *netlogger_calipers_log(T self, const char *event);
  * \param self Calipers
  * \param event perfSONAR event type
  * \param m_id Metadata ID
- * \param sample_num Sample number 
+ * \param sample_num Sample number
  * \return BSON buffer
  */
 bson *netlogger_calipers_psdata(T self, const char *event, const char *m_id,
-                            int32_t sample_num);
+                                int32_t sample_num);
 
-/** 
+/**
  * Clear all values in bucket.
  * Do this before restarting a new time-series.
  *
@@ -329,7 +329,7 @@ bson *netlogger_calipers_psdata(T self, const char *event, const char *m_id,
  */
 void netlogger_calipers_clear(T self);
 
-/** 
+/**
  * Free memory for bucket.
  *
  * \param self Calipers

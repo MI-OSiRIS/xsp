@@ -13,7 +13,7 @@
 
 /* Copyright (c) 2008, 2009 The Board of Trustees of The Leland Stanford
  * Junior University
- * 
+ *
  * We are making the OpenFlow specification and associated documentation
  * (Software) available for public use and benefit with the expectation
  * that others will use, modify and enhance the Software and contribute
@@ -26,10 +26,10 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -38,7 +38,7 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  * The name and trademarks of copyright holder(s) may NOT be used in
  * advertising or publicity pertaining to the Software or any
  * derivatives without specific, written prior permission.
@@ -62,9 +62,9 @@
     VLOG_LEVEL(DBG, LOG_DEBUG)
 enum vlog_level {
 #define VLOG_LEVEL(NAME, SYSLOG_LEVEL) VLL_##NAME,
-    VLOG_LEVELS
+  VLOG_LEVELS
 #undef VLOG_LEVEL
-    VLL_N_LEVELS
+  VLL_N_LEVELS
 };
 
 const char *vlog_get_level_name(enum vlog_level);
@@ -77,10 +77,10 @@ enum vlog_level vlog_get_level_val(const char *name);
     VLOG_FACILITY(FILE, "%d{%b %d %H:%M:%S}|%05N|%c|%p|%m")
 enum vlog_facility {
 #define VLOG_FACILITY(NAME, PATTERN) VLF_##NAME,
-    VLOG_FACILITIES
+  VLOG_FACILITIES
 #undef VLOG_FACILITY
-    VLF_N_FACILITIES,
-    VLF_ANY_FACILITY = -1
+  VLF_N_FACILITIES,
+  VLF_ANY_FACILITY = -1
 };
 
 const char *vlog_get_facility_name(enum vlog_facility);
@@ -90,8 +90,8 @@ enum vlog_facility vlog_get_facility_val(const char *name);
 enum vlog_module {
 #define VLOG_MODULE(NAME) VLM_##NAME,
 #include "vlog-modules.def"
-    VLM_N_MODULES,
-    VLM_ANY_MODULE = -1
+  VLM_N_MODULES,
+  VLM_ANY_MODULE = -1
 };
 
 const char *vlog_get_module_name(enum vlog_module);
@@ -99,15 +99,15 @@ enum vlog_module vlog_get_module_val(const char *name);
 
 /* Rate-limiter for log messages. */
 struct vlog_rate_limit {
-    /* Configuration settings. */
-    unsigned int rate;          /* Tokens per second. */
-    unsigned int burst;         /* Max cumulative tokens credit. */
+  /* Configuration settings. */
+  unsigned int rate;          /* Tokens per second. */
+  unsigned int burst;         /* Max cumulative tokens credit. */
 
-    /* Current status. */
-    unsigned int tokens;        /* Current number of tokens. */
-    time_t last_fill;           /* Last time tokens added. */
-    time_t first_dropped;       /* Time first message was dropped. */
-    unsigned int n_dropped;     /* Number of messages dropped. */
+  /* Current status. */
+  unsigned int tokens;        /* Current number of tokens. */
+  time_t last_fill;           /* Last time tokens added. */
+  time_t first_dropped;       /* Time first message was dropped. */
+  unsigned int n_dropped;     /* Number of messages dropped. */
 };
 
 /* Number of tokens to emit a message.  We add 'rate' tokens per second, which
@@ -146,12 +146,12 @@ int vlog_reopen_log_file(void);
 void vlog_init(void);
 void vlog_exit(void);
 void vlog(enum vlog_module, enum vlog_level, const char *format, ...)
-    __attribute__((format(printf, 3, 4)));
+__attribute__((format(printf, 3, 4)));
 void vlog_valist(enum vlog_module, enum vlog_level, const char *, va_list)
-    __attribute__((format(printf, 3, 0)));
+__attribute__((format(printf, 3, 0)));
 void vlog_rate_limit(enum vlog_module, enum vlog_level,
                      struct vlog_rate_limit *, const char *, ...)
-    __attribute__((format(printf, 4, 5)));
+__attribute__((format(printf, 4, 5)));
 
 /* Convenience macros.  To use these, define THIS_MODULE as a macro that
  * expands to the module used by the current source file, e.g.

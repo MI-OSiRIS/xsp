@@ -29,10 +29,10 @@ int xsp_protocol_init();
  *          returns a connection structure for the connection created.
  */
 typedef struct xsp_protocol_handler_t {
-	char *name;
-	xspConn *(*connect)(const char *hostname, xspSettings *settings);
-	xspListener *(*setup_listener) (const char *listener_id, xspSettings *settings, int one_shot, listener_cb callback, void *arg);
-	const xspSettingDesc *(*get_settings) (int *desc_count);
+  char *name;
+  xspConn *(*connect)(const char *hostname, xspSettings *settings);
+  xspListener *(*setup_listener) (const char *listener_id, xspSettings *settings, int one_shot, listener_cb callback, void *arg);
+  const xspSettingDesc *(*get_settings) (int *desc_count);
 } xspProtocolHandler;
 
 /*

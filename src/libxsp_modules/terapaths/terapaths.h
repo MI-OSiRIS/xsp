@@ -34,9 +34,9 @@ typedef struct terapaths_path_t {
 } tpsPath;
 
 int terapaths_reserve(xspSoapContext *tsc, const char *src, const char *dst,
-		      const char *src_ports, const char *dst_ports,
-		      const char *direction, const char *bw_class, uint64_t bw,
-		      uint64_t start_time, uint64_t duration, char **res_id);
+                      const char *src_ports, const char *dst_ports,
+                      const char *direction, const char *bw_class, uint64_t bw,
+                      uint64_t start_time, uint64_t duration, char **res_id);
 
 int terapaths_commit(xspSoapContext *tsc, const char *res_id);
 

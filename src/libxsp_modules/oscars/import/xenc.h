@@ -169,9 +169,9 @@ typedef struct xenc__ReferenceType xenc__ReferenceType;
 typedef struct xenc__EncryptionPropertiesType xenc__EncryptionPropertiesType;
 
 /// Imported complexType "http://www.w3.org/2001/04/xmlenc#":EncryptionPropertyType from typemap WS/WS-typemap.dat.
-typedef struct xenc__EncryptionPropertyType
-{	@char*					Target;
-	@char*					Id;
+typedef struct xenc__EncryptionPropertyType {
+  @char*					Target;
+  @char*					Id;
 } xenc__EncryptionPropertyType;
 
 /// Typedef synonym for struct _xenc__ReferenceList.
@@ -197,190 +197,178 @@ typedef struct _xenc__ReferenceList _xenc__ReferenceList;
 
 
 /// "http://www.w3.org/2001/04/xmlenc#":EncryptedType is an abstract complexType.
-struct xenc__EncryptedType
-{
+struct xenc__EncryptedType {
 /// Element EncryptionMethod of type "http://www.w3.org/2001/04/xmlenc#":EncryptionMethodType.
-    struct xenc__EncryptionMethodType*   EncryptionMethod               0;	///< Optional element.
+  struct xenc__EncryptionMethodType*   EncryptionMethod               0;	///< Optional element.
 /// Imported element reference "http://www.w3.org/2000/09/xmldsig#":KeyInfo.
-    _ds__KeyInfo*                        ds__KeyInfo                    0;	///< Optional element.
+  _ds__KeyInfo*                        ds__KeyInfo                    0;	///< Optional element.
 /// Element reference "http://www.w3.org/2001/04/xmlenc#":CipherData.
-    struct xenc__CipherDataType*         CipherData                     1;	///< Required element.
+  struct xenc__CipherDataType*         CipherData                     1;	///< Required element.
 /// Element reference "http://www.w3.org/2001/04/xmlenc#":EncryptionProperties.
-    struct xenc__EncryptionPropertiesType*  EncryptionProperties           0;	///< Optional element.
+  struct xenc__EncryptionPropertiesType*  EncryptionProperties           0;	///< Optional element.
 /// Attribute Id of type xs:ID.
-   @char*                                Id                             0;	///< Optional attribute.
+  @char*                                Id                             0;	///< Optional attribute.
 /// Attribute Type of type xs:anyURI.
-   @char*                                Type                           0;	///< Optional attribute.
+  @char*                                Type                           0;	///< Optional attribute.
 /// Attribute MimeType of type xs:string.
-   @char*                                MimeType                       0;	///< Optional attribute.
+  @char*                                MimeType                       0;	///< Optional attribute.
 /// Attribute Encoding of type xs:anyURI.
-   @char*                                Encoding                       0;	///< Optional attribute.
+  @char*                                Encoding                       0;	///< Optional attribute.
 };
 
 /// "http://www.w3.org/2001/04/xmlenc#":EncryptionMethodType is a complexType.
-struct xenc__EncryptionMethodType
-{
+struct xenc__EncryptionMethodType {
 /// Element KeySize of type "http://www.w3.org/2001/04/xmlenc#":KeySizeType.
-    int*                                 KeySize                        0;	///< Optional element.
+  int*                                 KeySize                        0;	///< Optional element.
 /// Element OAEPparams of type xs:base64Binary.
-    char*                                OAEPparams                     0;	///< Optional element.
+  char*                                OAEPparams                     0;	///< Optional element.
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Attribute Algorithm of type xs:anyURI.
-   @char*                                Algorithm                      1;	///< Required attribute.
+  @char*                                Algorithm                      1;	///< Required attribute.
 /// TODO: this mixed complexType is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
-    _XML                                 __mixed                       0;	///< Catch mixed content in XML string
+  _XML                                 __mixed                       0;	///< Catch mixed content in XML string
 };
 
 /// "http://www.w3.org/2001/04/xmlenc#":CipherDataType is a complexType.
-struct xenc__CipherDataType
-{
+struct xenc__CipherDataType {
 /// CHOICE OF ELEMENTS <xs:choice>
 /// Element CipherValue of type xs:base64Binary.
-    char*                                CipherValue                   ;
+  char*                                CipherValue                   ;
 /// Element reference "http://www.w3.org/2001/04/xmlenc#":CipherReference.
-    struct xenc__CipherReferenceType*    CipherReference               ;
-;
+  struct xenc__CipherReferenceType*    CipherReference               ;
+  ;
 //  END OF CHOICE
 };
 
 /// "http://www.w3.org/2001/04/xmlenc#":CipherReferenceType is a complexType.
-struct xenc__CipherReferenceType
-{
+struct xenc__CipherReferenceType {
 /// CHOICE OF ELEMENTS <xs:choice>
 /// Element Transforms of type "http://www.w3.org/2001/04/xmlenc#":TransformsType.
-    struct xenc__TransformsType*         Transforms                    ;
-;
+  struct xenc__TransformsType*         Transforms                    ;
+  ;
 //  END OF CHOICE
 /// Attribute URI of type xs:anyURI.
-   @char*                                URI                            1;	///< Required attribute.
+  @char*                                URI                            1;	///< Required attribute.
 };
 
 /// "http://www.w3.org/2001/04/xmlenc#":TransformsType is a complexType.
-struct xenc__TransformsType
-{
+struct xenc__TransformsType {
 /// Imported element reference "http://www.w3.org/2000/09/xmldsig#":Transform.
-    _ds__Transform                       ds__Transform                  1;
+  _ds__Transform                       ds__Transform                  1;
 };
 
 /// "http://www.w3.org/2001/04/xmlenc#":AgreementMethodType is a complexType.
-struct xenc__AgreementMethodType
-{
+struct xenc__AgreementMethodType {
 /// Element KA-Nonce of type xs:base64Binary.
-    char*                                KA_Nonce                       0;	///< Optional element.
+  char*                                KA_Nonce                       0;	///< Optional element.
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Element OriginatorKeyInfo of type "http://www.w3.org/2000/09/xmldsig#":KeyInfoType.
-    ds__KeyInfoType*                     OriginatorKeyInfo              0;	///< Optional element.
+  ds__KeyInfoType*                     OriginatorKeyInfo              0;	///< Optional element.
 /// Element RecipientKeyInfo of type "http://www.w3.org/2000/09/xmldsig#":KeyInfoType.
-    ds__KeyInfoType*                     RecipientKeyInfo               0;	///< Optional element.
+  ds__KeyInfoType*                     RecipientKeyInfo               0;	///< Optional element.
 /// Attribute Algorithm of type xs:anyURI.
-   @char*                                Algorithm                      1;	///< Required attribute.
+  @char*                                Algorithm                      1;	///< Required attribute.
 /// TODO: this mixed complexType is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
-    _XML                                 __mixed                       0;	///< Catch mixed content in XML string
+  _XML                                 __mixed                       0;	///< Catch mixed content in XML string
 };
 
 /// "http://www.w3.org/2001/04/xmlenc#":ReferenceType is a complexType.
-struct xenc__ReferenceType
-{
+struct xenc__ReferenceType {
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Attribute URI of type xs:anyURI.
-   @char*                                URI                            1;	///< Required attribute.
+  @char*                                URI                            1;	///< Required attribute.
 };
 
 /// "http://www.w3.org/2001/04/xmlenc#":EncryptionPropertiesType is a complexType.
-struct xenc__EncryptionPropertiesType
-{
+struct xenc__EncryptionPropertiesType {
 /// Size of the dynamic array of xenc__EncryptionPropertyType* is 1..unbounded
-   $int                                  __sizeEncryptionProperty       1;
+  $int                                  __sizeEncryptionProperty       1;
 /// Array xenc__EncryptionPropertyType* of length 1..unbounded
-    xenc__EncryptionPropertyType*        EncryptionProperty             1;
+  xenc__EncryptionPropertyType*        EncryptionProperty             1;
 /// Attribute Id of type xs:ID.
-   @char*                                Id                             0;	///< Optional attribute.
+  @char*                                Id                             0;	///< Optional attribute.
 };
 
 
 /// Top-level root element "http://www.w3.org/2001/04/xmlenc#":ReferenceList
 
 /// "http://www.w3.org/2001/04/xmlenc#":ReferenceList is a complexType.
-struct _xenc__ReferenceList
-{
+struct _xenc__ReferenceList {
 /// CHOICE OF ELEMENTS <xs:choice minOccurs="1" maxOccurs="unbounded">
-   $int                                  __size_ReferenceList           1;
-    struct __xenc__union_ReferenceList
-    {
+  $int                                  __size_ReferenceList           1;
+  struct __xenc__union_ReferenceList {
 /// Element DataReference of type "http://www.w3.org/2001/04/xmlenc#":ReferenceType.
     struct xenc__ReferenceType*          DataReference                 ;
 /// Element KeyReference of type "http://www.w3.org/2001/04/xmlenc#":ReferenceType.
     struct xenc__ReferenceType*          KeyReference                  ;
-    }                                   *__union_ReferenceList         ;
+  }                                   *__union_ReferenceList         ;
 //  END OF CHOICE
 };
 
 /// "http://www.w3.org/2001/04/xmlenc#":EncryptedDataType is a complexType with complexContent extension of "http://www.w3.org/2001/04/xmlenc#":EncryptedType.
-struct xenc__EncryptedDataType
-{
+struct xenc__EncryptedDataType {
 /// INHERITED FROM xenc__EncryptedType:
 /// Element EncryptionMethod of type "http://www.w3.org/2001/04/xmlenc#":EncryptionMethodType.
-    struct xenc__EncryptionMethodType*   EncryptionMethod               0;	///< Optional element.
+  struct xenc__EncryptionMethodType*   EncryptionMethod               0;	///< Optional element.
 /// Imported element reference "http://www.w3.org/2000/09/xmldsig#":KeyInfo.
-    _ds__KeyInfo*                        ds__KeyInfo                    0;	///< Optional element.
+  _ds__KeyInfo*                        ds__KeyInfo                    0;	///< Optional element.
 /// Element reference "http://www.w3.org/2001/04/xmlenc#":CipherData.
-    struct xenc__CipherDataType*         CipherData                     1;	///< Required element.
+  struct xenc__CipherDataType*         CipherData                     1;	///< Required element.
 /// Element reference "http://www.w3.org/2001/04/xmlenc#":EncryptionProperties.
-    struct xenc__EncryptionPropertiesType*  EncryptionProperties           0;	///< Optional element.
+  struct xenc__EncryptionPropertiesType*  EncryptionProperties           0;	///< Optional element.
 /// Attribute Id of type xs:ID.
-   @char*                                Id                             0;	///< Optional attribute.
+  @char*                                Id                             0;	///< Optional attribute.
 /// Attribute Type of type xs:anyURI.
-   @char*                                Type                           0;	///< Optional attribute.
+  @char*                                Type                           0;	///< Optional attribute.
 /// Attribute MimeType of type xs:string.
-   @char*                                MimeType                       0;	///< Optional attribute.
+  @char*                                MimeType                       0;	///< Optional attribute.
 /// Attribute Encoding of type xs:anyURI.
-   @char*                                Encoding                       0;	///< Optional attribute.
+  @char*                                Encoding                       0;	///< Optional attribute.
 //  END OF INHERITED FROM xenc__EncryptedType
 };
 
 /// "http://www.w3.org/2001/04/xmlenc#":EncryptedKeyType is a complexType with complexContent extension of "http://www.w3.org/2001/04/xmlenc#":EncryptedType.
-struct xenc__EncryptedKeyType
-{
+struct xenc__EncryptedKeyType {
 /// INHERITED FROM xenc__EncryptedType:
 /// Element EncryptionMethod of type "http://www.w3.org/2001/04/xmlenc#":EncryptionMethodType.
-    struct xenc__EncryptionMethodType*   EncryptionMethod               0;	///< Optional element.
+  struct xenc__EncryptionMethodType*   EncryptionMethod               0;	///< Optional element.
 /// Imported element reference "http://www.w3.org/2000/09/xmldsig#":KeyInfo.
-    _ds__KeyInfo*                        ds__KeyInfo                    0;	///< Optional element.
+  _ds__KeyInfo*                        ds__KeyInfo                    0;	///< Optional element.
 /// Element reference "http://www.w3.org/2001/04/xmlenc#":CipherData.
-    struct xenc__CipherDataType*         CipherData                     1;	///< Required element.
+  struct xenc__CipherDataType*         CipherData                     1;	///< Required element.
 /// Element reference "http://www.w3.org/2001/04/xmlenc#":EncryptionProperties.
-    struct xenc__EncryptionPropertiesType*  EncryptionProperties           0;	///< Optional element.
+  struct xenc__EncryptionPropertiesType*  EncryptionProperties           0;	///< Optional element.
 /// Attribute Id of type xs:ID.
-   @char*                                Id                             0;	///< Optional attribute.
+  @char*                                Id                             0;	///< Optional attribute.
 /// Attribute Type of type xs:anyURI.
-   @char*                                Type                           0;	///< Optional attribute.
+  @char*                                Type                           0;	///< Optional attribute.
 /// Attribute MimeType of type xs:string.
-   @char*                                MimeType                       0;	///< Optional attribute.
+  @char*                                MimeType                       0;	///< Optional attribute.
 /// Attribute Encoding of type xs:anyURI.
-   @char*                                Encoding                       0;	///< Optional attribute.
+  @char*                                Encoding                       0;	///< Optional attribute.
 //  END OF INHERITED FROM xenc__EncryptedType
 /// Element reference "http://www.w3.org/2001/04/xmlenc#":ReferenceList.
-    struct _xenc__ReferenceList*         ReferenceList                  0;	///< Optional element.
+  struct _xenc__ReferenceList*         ReferenceList                  0;	///< Optional element.
 /// Element CarriedKeyName of type xs:string.
-    char*                                CarriedKeyName                 0;	///< Optional element.
+  char*                                CarriedKeyName                 0;	///< Optional element.
 /// Attribute Recipient of type xs:string.
-   @char*                                Recipient                      0;	///< Optional attribute.
+  @char*                                Recipient                      0;	///< Optional attribute.
 };
 
 /******************************************************************************\

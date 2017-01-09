@@ -26,56 +26,56 @@ enum xsp_connection_status_t { STATUS_UNCONNECTED, STATUS_CONNECTED, STATUS_FROZ
 enum xsp_peer_type_t { EDGE_PEER = 0, STREAM_PEER, SLABS_PEER };
 
 typedef struct xsp_connection_t {
-	pthread_mutex_t lock;
-	pthread_cond_t cond;
-	enum xsp_connection_status_t status;
-	LIST_ENTRY(xsp_connection_t) channel_entries;
-	LIST_ENTRY(xsp_connection_t) sess_entries;
-	struct common_session_t *session;
-	char *id;
-	char *hostname;
-	char *addr;
-	char *description;
-	char *description_local;
-	char *protocol;
-	int xsp_peer;
-	
-	struct xsp_path_t *path;
-	struct xsp_channel_t *channel;
-	
-	xspSettings *settings;
-	struct timeval start_time, end_time;
-	
-	int (*splice2) (struct xsp_connection_t *src, struct xsp_connection_t *sink, size_t len, int flags);
-	int (*src_splice2) (struct xsp_connection_t *conn, int fd, size_t len, int flags);
-	int (*sink_splice2) (struct xsp_connection_t *conn, int fd, size_t len, int flags);
-	int (*read2) (struct xsp_connection_t *src, void *buf, size_t len, int flags);
-	int (*write2) (struct xsp_connection_t *sink, const void *buf, size_t len, int flags);
-	int (*set_session_status2) (struct xsp_connection_t *sink, int status);
-	int (*shutdown2) (struct xsp_connection_t *conn, uint8_t direction);
-	int (*setbufsize2) (struct xsp_connection_t *conn, uint8_t direction, int size);
-	int (*settimeout2) (struct xsp_connection_t *conn, uint8_t direction, int seconds);
-	void (*free_conn_private2) (struct xsp_connection_t *conn);
-	void (*free_stats2) (struct xsp_connection_t *conn);
-	
-	xspMsg *(*get_msg2) (struct xsp_connection_t *conn, unsigned int flags);
-	uint64_t (*send_msg2) (struct xsp_connection_t *conn, struct xsp_message_t *msg, struct xsp_block_list_t *bl);
-	
-	int (*get_stat2) (struct xsp_connection_t *conn, uint16_t type, void *optval, size_t *optlen);
+  pthread_mutex_t lock;
+  pthread_cond_t cond;
+  enum xsp_connection_status_t status;
+  LIST_ENTRY(xsp_connection_t) channel_entries;
+  LIST_ENTRY(xsp_connection_t) sess_entries;
+  struct common_session_t *session;
+  char *id;
+  char *hostname;
+  char *addr;
+  char *description;
+  char *description_local;
+  char *protocol;
+  int xsp_peer;
 
-	void *auth_info;
+  struct xsp_path_t *path;
+  struct xsp_channel_t *channel;
 
-	void *conn_private;
+  xspSettings *settings;
+  struct timeval start_time, end_time;
 
-	void *stats_private;
+  int (*splice2) (struct xsp_connection_t *src, struct xsp_connection_t *sink, size_t len, int flags);
+  int (*src_splice2) (struct xsp_connection_t *conn, int fd, size_t len, int flags);
+  int (*sink_splice2) (struct xsp_connection_t *conn, int fd, size_t len, int flags);
+  int (*read2) (struct xsp_connection_t *src, void *buf, size_t len, int flags);
+  int (*write2) (struct xsp_connection_t *sink, const void *buf, size_t len, int flags);
+  int (*set_session_status2) (struct xsp_connection_t *sink, int status);
+  int (*shutdown2) (struct xsp_connection_t *conn, uint8_t direction);
+  int (*setbufsize2) (struct xsp_connection_t *conn, uint8_t direction, int size);
+  int (*settimeout2) (struct xsp_connection_t *conn, uint8_t direction, int seconds);
+  void (*free_conn_private2) (struct xsp_connection_t *conn);
+  void (*free_stats2) (struct xsp_connection_t *conn);
+
+  xspMsg *(*get_msg2) (struct xsp_connection_t *conn, unsigned int flags);
+  uint64_t (*send_msg2) (struct xsp_connection_t *conn, struct xsp_message_t *msg, struct xsp_block_list_t *bl);
+
+  int (*get_stat2) (struct xsp_connection_t *conn, uint16_t type, void *optval, size_t *optlen);
+
+  void *auth_info;
+
+  void *conn_private;
+
+  void *stats_private;
 } xspConn;
 
 typedef struct xsp_conn_stats_default_t {
-	struct timeval connect_time;
-	struct timeval shutdown_read_time;
-	struct timeval shutdown_write_time;
-	uint64_t bytes_read;
-	uint64_t bytes_written;
+  struct timeval connect_time;
+  struct timeval shutdown_read_time;
+  struct timeval shutdown_write_time;
+  uint64_t bytes_read;
+  uint64_t bytes_written;
 } xspConn_defStats;
 
 #define XSP_SEND_SIDE	0x01

@@ -25,42 +25,42 @@
 #define PATH_PRIVATE	            0x01
 
 typedef struct xsp_oscars_path_t {
-	xspSoapContext osc;
+  xspSoapContext osc;
 
-	int status;
+  int status;
 
-	char *src;
-	int src_tagged;
+  char *src;
+  int src_tagged;
 
-	char *dst;
-	int dst_tagged;
+  char *dst;
+  int dst_tagged;
 
-	char *reservation_id;
+  char *reservation_id;
 
-	int duration;
+  int duration;
 
-	char *src_vlan_id;
-	char *dst_vlan_id;
+  char *src_vlan_id;
+  char *dst_vlan_id;
 
-	int clock_offset;
+  int clock_offset;
 
-	int sleep_time;
+  int sleep_time;
 
-	int teardown_timeout;
+  int teardown_timeout;
 
-	int reservation_timeout;
+  int reservation_timeout;
 
-	int intercircuit_pause_time;
+  int intercircuit_pause_time;
 
-	uint16_t bandwidth, bandwidth_used;
+  uint16_t bandwidth, bandwidth_used;
 
-	time_t shutdown_time;
+  time_t shutdown_time;
 
-	int type;
-	
-	int bw;
+  int type;
 
-	pthread_cond_t setup_cond;
+  int bw;
+
+  pthread_cond_t setup_cond;
 } xspOSCARSPath;
 
 #endif

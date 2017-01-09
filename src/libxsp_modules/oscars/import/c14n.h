@@ -32,6 +32,6 @@
  *                                                                            *
 \******************************************************************************/
 
-typedef struct _c14n__InclusiveNamespaces
-{	@char*				PrefixList;
+typedef struct _c14n__InclusiveNamespaces {
+  @char*				PrefixList;
 } _c14n__InclusiveNamespaces;

@@ -18,17 +18,17 @@
 #include <pthread.h>
 
 typedef struct xsp_connection_web100_stats {
-	web100_agent *agent;
-	web100_connection *conn;
+  web100_agent *agent;
+  web100_connection *conn;
 
-	uint8_t closed;
-	pthread_mutex_t lock;
+  uint8_t closed;
+  pthread_mutex_t lock;
 
-	int saved_state;
-	float rtt;
-	uint64_t bytes_in;
-	uint64_t bytes_out;
-	uint32_t bytes_retr;
+  int saved_state;
+  float rtt;
+  uint64_t bytes_in;
+  uint64_t bytes_out;
+  uint32_t bytes_retr;
 } xspConn_web100Stats;
 
 int xsp_web100_init();

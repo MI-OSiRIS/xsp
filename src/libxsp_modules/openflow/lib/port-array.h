@@ -13,7 +13,7 @@
 
 /* Copyright (c) 2008 The Board of Trustees of The Leland Stanford
  * Junior University
- * 
+ *
  * We are making the OpenFlow specification and associated documentation
  * (Software) available for public use and benefit with the expectation
  * that others will use, modify and enhance the Software and contribute
@@ -26,10 +26,10 @@
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -38,7 +38,7 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  * The name and trademarks of copyright holder(s) may NOT be used in
  * advertising or publicity pertaining to the Software or any
  * derivatives without specific, written prior permission.
@@ -52,9 +52,8 @@
 #include "util.h"
 
 static inline uint16_t
-port_array_extract_bits__(uint16_t data, int start, int count)
-{
-    return (data >> start) & ((1u << count) - 1);
+port_array_extract_bits__(uint16_t data, int start, int count) {
+  return (data >> start) & ((1u << count) - 1);
 }
 
 /* Level 1: most-significant bits. */
@@ -88,26 +87,25 @@ BUILD_ASSERT_DECL(PORT_ARRAY_SIZE > 0xffff);
  * as a 3-level trie.  Most efficient when the elements are clustered
  * together. */
 struct port_array {
-    struct port_array_l2 *l1[1u << PORT_ARRAY_L1_BITS];
+  struct port_array_l2 *l1[1u << PORT_ARRAY_L1_BITS];
 };
 
 struct port_array_l2 {
-    struct port_array_l3 *l2[1u << PORT_ARRAY_L2_BITS];
+  struct port_array_l3 *l2[1u << PORT_ARRAY_L2_BITS];
 };
 
 struct port_array_l3 {
-    void *l3[1u << PORT_ARRAY_L3_BITS];
+  void *l3[1u << PORT_ARRAY_L3_BITS];
 };
 
 /* Returns the value of the element numbered 'idx' in 'pa', or a null pointer
  * if no element numbered 'idx' has been set. */
 static inline void *
-port_array_get(const struct port_array *pa, uint16_t idx)
-{
-    unsigned int l1_idx = PORT_ARRAY_L1(idx);
-    unsigned int l2_idx = PORT_ARRAY_L2(idx);
-    unsigned int l3_idx = PORT_ARRAY_L3(idx);
-    return pa->l1[l1_idx]->l2[l2_idx]->l3[l3_idx];
+port_array_get(const struct port_array *pa, uint16_t idx) {
+  unsigned int l1_idx = PORT_ARRAY_L1(idx);
+  unsigned int l2_idx = PORT_ARRAY_L2(idx);
+  unsigned int l3_idx = PORT_ARRAY_L3(idx);
+  return pa->l1[l1_idx]->l2[l2_idx]->l3[l3_idx];
 }
 
 void port_array_init(struct port_array *);

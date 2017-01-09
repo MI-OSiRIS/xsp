@@ -50,13 +50,13 @@
 #include "hmap.h"
 
 struct shash_node {
-    struct hmap_node node;
-    char *name;
-    void *data;
+  struct hmap_node node;
+  char *name;
+  void *data;
 };
 
 struct shash {
-    struct hmap map;
+  struct hmap map;
 };
 
 #define SHASH_INITIALIZER(SHASH) { HMAP_INITIALIZER(&(SHASH)->map) }

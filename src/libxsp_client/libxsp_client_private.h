@@ -33,73 +33,73 @@
 
 /* Objects */
 typedef struct libxsp_sess_info_t {
-        char sess_id[2*XSP_SESSIONID_LEN + 1];
+  char sess_id[2*XSP_SESSIONID_LEN + 1];
 
-        struct xsp_addr src_eid;
-        struct xsp_addr dst_eid;
+  struct xsp_addr src_eid;
+  struct xsp_addr dst_eid;
 
-        uint32_t sess_flags;
-        uint32_t hop_flags;
+  uint32_t sess_flags;
+  uint32_t hop_flags;
 
-        xspHop **child;
-        int child_count;	
+  xspHop **child;
+  int child_count;
 
-	// the above is "inherited" from xspSess
+  // the above is "inherited" from xspSess
 
-        uint8_t version;
-        uint8_t flags;
-        uint16_t type;
+  uint8_t version;
+  uint8_t flags;
+  uint16_t type;
 
-	int sock;
-	int data_sock;
-	int connected;
-	int data_connected;
-	int sock_desc;
+  int sock;
+  int data_sock;
+  int connected;
+  int data_connected;
+  int sock_desc;
 
-	char data_hop[XSP_HOPID_LEN];
+  char data_hop[XSP_HOPID_LEN];
 
-	LIST_ENTRY(libxsp_sess_info_t) sessions;
-	
-	ssize_t (*sendfn) (struct libxsp_sess_info_t *sess, const void *buf, size_t len, int flags);
-	ssize_t (*recvfn) (struct libxsp_sess_info_t *sess, void *buf, size_t len, int flags);
-			
-	enum xsp_sec security;
-	xspSecInfo *sec_info;
-	
+  LIST_ENTRY(libxsp_sess_info_t) sessions;
+
+  ssize_t (*sendfn) (struct libxsp_sess_info_t *sess, const void *buf, size_t len, int flags);
+  ssize_t (*recvfn) (struct libxsp_sess_info_t *sess, void *buf, size_t len, int flags);
+
+  enum xsp_sec security;
+  xspSecInfo *sec_info;
+
 #ifdef HAVE_SSH
-	LIBSSH2_SESSION *ssh_sess;
-	LIBSSH2_CHANNEL *ssh_chan;
-	LIBSSH2_AGENT *agent;
+  LIBSSH2_SESSION *ssh_sess;
+  LIBSSH2_CHANNEL *ssh_chan;
+  LIBSSH2_AGENT *agent;
 #endif
 
 #ifdef HAVE_OPENSSL
-	SSL_CTX *ctx;
-	BIO *sbio;
-	SSL *ssl;
+  SSL_CTX *ctx;
+  BIO *sbio;
+  SSL *ssl;
 #endif
 
 #ifdef HAVE_GLOBUS
-	gss_ctx_id_t ctx_handle;
+  gss_ctx_id_t ctx_handle;
 #endif
 
 #ifdef NETLOGGER
-	unsigned long long block_id;
-	int nl_id;
+  unsigned long long block_id;
+  int nl_id;
 #endif
 
-	int mtu;
-	int debug;
-	int nodelay;
-	int reuseaddr;
-	int recv_bufsize;
-	int send_bufsize;
-	int recv_timeout;
-	int send_timeout;
+  int mtu;
+  int debug;
+  int nodelay;
+  int reuseaddr;
+  int recv_bufsize;
+  int send_bufsize;
+  int recv_timeout;
+  int send_timeout;
 
-	struct sockaddr end_host_addr;
-	SOCKLEN_T end_host_addrlen;
+  struct sockaddr end_host_addr;
+  SOCKLEN_T end_host_addrlen;
 
-	xspHop *prev_added_child;
+  xspHop *prev_added_child;
 } libxspSess;
 
 int libxsp_init(void);

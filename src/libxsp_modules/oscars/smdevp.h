@@ -113,8 +113,8 @@ extern "C" {
 @struct soap_smd_data
 @brief The smdevp engine context data, which is hooked up to soap->data[0]
 */
-struct soap_smd_data
-{ int alg;		/**< The digest or signature algorithm used */
+struct soap_smd_data {
+  int alg;		/**< The digest or signature algorithm used */
   void *ctx;		/**< EVP_MD_CTX or HMAC_CTX */
   const void *key;	/**< EVP_PKEY */
   int (*fsend)(struct soap*, const char*, size_t);

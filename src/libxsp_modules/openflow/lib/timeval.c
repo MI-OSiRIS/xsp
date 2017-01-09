@@ -75,74 +75,69 @@ static void unblock_sigalrm(const sigset_t *);
 
 /* Initializes the timetracking module. */
 void
-time_init(void)
-{
-    struct sigaction sa;
-    struct itimerval itimer;
+time_init(void) {
+  struct sigaction sa;
+  struct itimerval itimer;
 
-    if (inited) {
-        return;
-    }
+  if (inited) {
+    return;
+  }
 
-    inited = true;
-    gettimeofday(&now, NULL);
-    tick = false;
+  inited = true;
+  gettimeofday(&now, NULL);
+  tick = false;
 
-    /* Set up signal handler. */
-    memset(&sa, 0, sizeof sa);
-    sa.sa_handler = sigalrm_handler;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = SA_RESTART;
-    if (sigaction(SIGALRM, &sa, NULL)) {
-        ofp_fatal(errno, "sigaction(SIGALRM) failed");
-    }
+  /* Set up signal handler. */
+  memset(&sa, 0, sizeof sa);
+  sa.sa_handler = sigalrm_handler;
+  sigemptyset(&sa.sa_mask);
+  sa.sa_flags = SA_RESTART;
+  if (sigaction(SIGALRM, &sa, NULL)) {
+    ofp_fatal(errno, "sigaction(SIGALRM) failed");
+  }
 
-    /* Set up periodic timer. */
-    itimer.it_interval.tv_sec = 0;
-    itimer.it_interval.tv_usec = TIME_UPDATE_INTERVAL * 1000;
-    itimer.it_value = itimer.it_interval;
-    if (setitimer(ITIMER_REAL, &itimer, NULL)) {
-        ofp_fatal(errno, "setitimer failed");
-    }
+  /* Set up periodic timer. */
+  itimer.it_interval.tv_sec = 0;
+  itimer.it_interval.tv_usec = TIME_UPDATE_INTERVAL * 1000;
+  itimer.it_value = itimer.it_interval;
+  if (setitimer(ITIMER_REAL, &itimer, NULL)) {
+    ofp_fatal(errno, "setitimer failed");
+  }
 }
 
 /* Forces a refresh of the current time from the kernel.  It is not usually
  * necessary to call this function, since the time will be refreshed
  * automatically at least every TIME_UPDATE_INTERVAL milliseconds. */
 void
-time_refresh(void)
-{
-    gettimeofday(&now, NULL);
-    tick = false;
+time_refresh(void) {
+  gettimeofday(&now, NULL);
+  tick = false;
 }
 
 /* Returns the current time, in seconds. */
 time_t
-time_now(void)
-{
-    refresh_if_ticked();
-    return now.tv_sec;
+time_now(void) {
+  refresh_if_ticked();
+  return now.tv_sec;
 }
 
 /* Returns the current time, in ms (within TIME_UPDATE_INTERVAL ms). */
 long long int
-time_msec(void)
-{
-    refresh_if_ticked();
-    return (long long int) now.tv_sec * 1000 + now.tv_usec / 1000;
+time_msec(void) {
+  refresh_if_ticked();
+  return (long long int) now.tv_sec * 1000 + now.tv_usec / 1000;
 }
 
 /* Configures the program to die with SIGALRM 'secs' seconds from now, if
  * 'secs' is nonzero, or disables the feature if 'secs' is zero. */
 void
-time_alarm(unsigned int secs)
-{
-    sigset_t oldsigs;
+time_alarm(unsigned int secs) {
+  sigset_t oldsigs;
 
-    time_init();
-    block_sigalrm(&oldsigs);
-    deadline = secs ? time_add(time_now(), secs) : TIME_MIN;
-    unblock_sigalrm(&oldsigs);
+  time_init();
+  block_sigalrm(&oldsigs);
+  deadline = secs ? time_add(time_now(), secs) : TIME_MIN;
+  unblock_sigalrm(&oldsigs);
 }
 
 /* Like poll(), except:
@@ -156,87 +151,82 @@ time_alarm(unsigned int secs)
  *      - As a side effect, refreshes the current time (like time_refresh()).
  */
 int
-time_poll(struct pollfd *pollfds, int n_pollfds, int timeout)
-{
-    long long int start;
-    sigset_t oldsigs;
-    bool blocked;
-    int retval;
+time_poll(struct pollfd *pollfds, int n_pollfds, int timeout) {
+  long long int start;
+  sigset_t oldsigs;
+  bool blocked;
+  int retval;
 
+  time_refresh();
+  start = time_msec();
+  blocked = false;
+  for (;;) {
+    int time_left;
+    if (timeout > 0) {
+      long long int elapsed = time_msec() - start;
+      time_left = timeout >= elapsed ? timeout - elapsed : 0;
+    }
+    else {
+      time_left = timeout;
+    }
+
+    retval = poll(pollfds, n_pollfds, time_left);
+    if (retval < 0) {
+      retval = -errno;
+    }
+    if (retval != -EINTR) {
+      break;
+    }
+
+    if (!blocked && deadline == TIME_MIN) {
+      block_sigalrm(&oldsigs);
+      blocked = true;
+    }
     time_refresh();
-    start = time_msec();
-    blocked = false;
-    for (;;) {
-        int time_left;
-        if (timeout > 0) {
-            long long int elapsed = time_msec() - start;
-            time_left = timeout >= elapsed ? timeout - elapsed : 0;
-        } else {
-            time_left = timeout;
-        }
-
-        retval = poll(pollfds, n_pollfds, time_left);
-        if (retval < 0) {
-            retval = -errno;
-        }
-        if (retval != -EINTR) {
-            break;
-        }
-
-        if (!blocked && deadline == TIME_MIN) {
-            block_sigalrm(&oldsigs);
-            blocked = true;
-        }
-        time_refresh();
-    }
-    if (blocked) {
-        unblock_sigalrm(&oldsigs);
-    }
-    return retval;
+  }
+  if (blocked) {
+    unblock_sigalrm(&oldsigs);
+  }
+  return retval;
 }
 
 /* Returns the sum of 'a' and 'b', with saturation on overflow or underflow. */
 static time_t
-time_add(time_t a, time_t b)
-{
-    return (a >= 0
-            ? (b > TIME_MAX - a ? TIME_MAX : a + b)
-            : (b < TIME_MIN - a ? TIME_MIN : a + b));
+time_add(time_t a, time_t b) {
+  return (a >= 0
+          ? (b > TIME_MAX - a ? TIME_MAX : a + b)
+          : (b < TIME_MIN - a ? TIME_MIN : a + b));
 }
 
 static void
-sigalrm_handler(int sig_nr)
-{
-    tick = true;
-    if (deadline != TIME_MIN && time(0) > deadline) {
-        fatal_signal_handler(sig_nr);
-    }
+sigalrm_handler(int sig_nr) {
+  tick = true;
+  if (deadline != TIME_MIN && time(0) > deadline) {
+    fatal_signal_handler(sig_nr);
+  }
 }
 
 static void
-refresh_if_ticked(void)
-{
-    assert(inited);
-    if (tick) {
-        time_refresh();
-    }
+refresh_if_ticked(void) {
+  assert(inited);
+  if (tick) {
+    time_refresh();
+  }
 }
 
 static void
-block_sigalrm(sigset_t *oldsigs)
-{
-    sigset_t sigalrm;
-    sigemptyset(&sigalrm);
-    sigaddset(&sigalrm, SIGALRM);
-    if (sigprocmask(SIG_BLOCK, &sigalrm, oldsigs)) {
-        ofp_fatal(errno, "sigprocmask");
-    }
+block_sigalrm(sigset_t *oldsigs) {
+  sigset_t sigalrm;
+  sigemptyset(&sigalrm);
+  sigaddset(&sigalrm, SIGALRM);
+  if (sigprocmask(SIG_BLOCK, &sigalrm, oldsigs)) {
+    ofp_fatal(errno, "sigprocmask");
+  }
 }
 
 static void
-unblock_sigalrm(const sigset_t *oldsigs)
-{
-    if (sigprocmask(SIG_SETMASK, oldsigs, NULL)) {
-        ofp_fatal(errno, "sigprocmask");
-    }
+unblock_sigalrm(const sigset_t *oldsigs) {
+  if (sigprocmask(SIG_SETMASK, oldsigs, NULL)) {
+    ofp_fatal(errno, "sigprocmask");
+  }
 }

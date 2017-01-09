@@ -33,8388 +33,7844 @@ SOAP_SOURCE_STAMP("@(#) tpsC.c ver 2.8.1 2011-02-15 02:46:10 GMT")
 
 #ifndef WITH_NOGLOBAL
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serializeheader(struct soap *soap)
-{
-	if (soap->header)
-		soap_serialize_SOAP_ENV__Header(soap, soap->header);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serializeheader(struct soap *soap) {
+  if (soap->header)
+    soap_serialize_SOAP_ENV__Header(soap, soap->header);
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_putheader(struct soap *soap)
-{
-	if (soap->header)
-	{	soap->part = SOAP_IN_HEADER;
-		if (soap_out_SOAP_ENV__Header(soap, "SOAP-ENV:Header", 0, soap->header, NULL))
-			return soap->error;
-		soap->part = SOAP_END_HEADER;
-	}
-	return SOAP_OK;
+SOAP_FMAC3 int SOAP_FMAC4 soap_putheader(struct soap *soap) {
+  if (soap->header) {
+    soap->part = SOAP_IN_HEADER;
+    if (soap_out_SOAP_ENV__Header(soap, "SOAP-ENV:Header", 0, soap->header, NULL))
+      return soap->error;
+    soap->part = SOAP_END_HEADER;
+  }
+  return SOAP_OK;
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_getheader(struct soap *soap)
-{
-	soap->part = SOAP_IN_HEADER;
-	soap->header = soap_in_SOAP_ENV__Header(soap, "SOAP-ENV:Header", NULL, NULL);
-	soap->part = SOAP_END_HEADER;
-	return soap->header == NULL;
+SOAP_FMAC3 int SOAP_FMAC4 soap_getheader(struct soap *soap) {
+  soap->part = SOAP_IN_HEADER;
+  soap->header = soap_in_SOAP_ENV__Header(soap, "SOAP-ENV:Header", NULL, NULL);
+  soap->part = SOAP_END_HEADER;
+  return soap->header == NULL;
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_header(struct soap *soap)
-{
-	if (!soap->header)
-	{	if ((soap->header = (struct SOAP_ENV__Header*)soap_malloc(soap, sizeof(struct SOAP_ENV__Header))))
-			soap_default_SOAP_ENV__Header(soap, soap->header);
-	}
+SOAP_FMAC3 void SOAP_FMAC4 soap_header(struct soap *soap) {
+  if (!soap->header) {
+    if ((soap->header = (struct SOAP_ENV__Header*)soap_malloc(soap, sizeof(struct SOAP_ENV__Header))))
+      soap_default_SOAP_ENV__Header(soap, soap->header);
+  }
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_fault(struct soap *soap)
-{
-	if (!soap->fault)
-	{	soap->fault = (struct SOAP_ENV__Fault*)soap_malloc(soap, sizeof(struct SOAP_ENV__Fault));
-		if (!soap->fault)
-			return;
-		soap_default_SOAP_ENV__Fault(soap, soap->fault);
-	}
-	if (soap->version == 2 && !soap->fault->SOAP_ENV__Code)
-	{	soap->fault->SOAP_ENV__Code = (struct SOAP_ENV__Code*)soap_malloc(soap, sizeof(struct SOAP_ENV__Code));
-		soap_default_SOAP_ENV__Code(soap, soap->fault->SOAP_ENV__Code);
-	}
-	if (soap->version == 2 && !soap->fault->SOAP_ENV__Reason)
-	{	soap->fault->SOAP_ENV__Reason = (struct SOAP_ENV__Reason*)soap_malloc(soap, sizeof(struct SOAP_ENV__Reason));
-		soap_default_SOAP_ENV__Reason(soap, soap->fault->SOAP_ENV__Reason);
-	}
+SOAP_FMAC3 void SOAP_FMAC4 soap_fault(struct soap *soap) {
+  if (!soap->fault) {
+    soap->fault = (struct SOAP_ENV__Fault*)soap_malloc(soap, sizeof(struct SOAP_ENV__Fault));
+    if (!soap->fault)
+      return;
+    soap_default_SOAP_ENV__Fault(soap, soap->fault);
+  }
+  if (soap->version == 2 && !soap->fault->SOAP_ENV__Code) {
+    soap->fault->SOAP_ENV__Code = (struct SOAP_ENV__Code*)soap_malloc(soap, sizeof(struct SOAP_ENV__Code));
+    soap_default_SOAP_ENV__Code(soap, soap->fault->SOAP_ENV__Code);
+  }
+  if (soap->version == 2 && !soap->fault->SOAP_ENV__Reason) {
+    soap->fault->SOAP_ENV__Reason = (struct SOAP_ENV__Reason*)soap_malloc(soap, sizeof(struct SOAP_ENV__Reason));
+    soap_default_SOAP_ENV__Reason(soap, soap->fault->SOAP_ENV__Reason);
+  }
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serializefault(struct soap *soap)
-{
-	if (soap->fault)
-		soap_serialize_SOAP_ENV__Fault(soap, soap->fault);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serializefault(struct soap *soap) {
+  if (soap->fault)
+    soap_serialize_SOAP_ENV__Fault(soap, soap->fault);
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_putfault(struct soap *soap)
-{
-	if (soap->fault)
-		return soap_put_SOAP_ENV__Fault(soap, soap->fault, "SOAP-ENV:Fault", NULL);
-	return SOAP_OK;
+SOAP_FMAC3 int SOAP_FMAC4 soap_putfault(struct soap *soap) {
+  if (soap->fault)
+    return soap_put_SOAP_ENV__Fault(soap, soap->fault, "SOAP-ENV:Fault", NULL);
+  return SOAP_OK;
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_getfault(struct soap *soap)
-{
-	return (soap->fault = soap_get_SOAP_ENV__Fault(soap, NULL, "SOAP-ENV:Fault", NULL)) == NULL;
+SOAP_FMAC3 int SOAP_FMAC4 soap_getfault(struct soap *soap) {
+  return (soap->fault = soap_get_SOAP_ENV__Fault(soap, NULL, "SOAP-ENV:Fault", NULL)) == NULL;
 }
 
-SOAP_FMAC3 const char ** SOAP_FMAC4 soap_faultcode(struct soap *soap)
-{
-	soap_fault(soap);
-	if (soap->version == 2)
-		return (const char**)&soap->fault->SOAP_ENV__Code->SOAP_ENV__Value;
-	return (const char**)&soap->fault->faultcode;
+SOAP_FMAC3 const char ** SOAP_FMAC4 soap_faultcode(struct soap *soap) {
+  soap_fault(soap);
+  if (soap->version == 2)
+    return (const char**)&soap->fault->SOAP_ENV__Code->SOAP_ENV__Value;
+  return (const char**)&soap->fault->faultcode;
 }
 
-SOAP_FMAC3 const char ** SOAP_FMAC4 soap_faultsubcode(struct soap *soap)
-{
-	soap_fault(soap);
-	if (soap->version == 2)
-	{	if (!soap->fault->SOAP_ENV__Code->SOAP_ENV__Subcode)
-		{	soap->fault->SOAP_ENV__Code->SOAP_ENV__Subcode = (struct SOAP_ENV__Code*)soap_malloc(soap, sizeof(struct SOAP_ENV__Code));
-			soap_default_SOAP_ENV__Code(soap, soap->fault->SOAP_ENV__Code->SOAP_ENV__Subcode);
-		}
-		return (const char**)&soap->fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Value;
-	}
-	return (const char**)&soap->fault->faultcode;
+SOAP_FMAC3 const char ** SOAP_FMAC4 soap_faultsubcode(struct soap *soap) {
+  soap_fault(soap);
+  if (soap->version == 2) {
+    if (!soap->fault->SOAP_ENV__Code->SOAP_ENV__Subcode) {
+      soap->fault->SOAP_ENV__Code->SOAP_ENV__Subcode = (struct SOAP_ENV__Code*)soap_malloc(soap, sizeof(struct SOAP_ENV__Code));
+      soap_default_SOAP_ENV__Code(soap, soap->fault->SOAP_ENV__Code->SOAP_ENV__Subcode);
+    }
+    return (const char**)&soap->fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Value;
+  }
+  return (const char**)&soap->fault->faultcode;
 }
 
-SOAP_FMAC3 const char ** SOAP_FMAC4 soap_faultstring(struct soap *soap)
-{
-	soap_fault(soap);
-	if (soap->version == 2)
-		return (const char**)&soap->fault->SOAP_ENV__Reason->SOAP_ENV__Text;
-	return (const char**)&soap->fault->faultstring;
+SOAP_FMAC3 const char ** SOAP_FMAC4 soap_faultstring(struct soap *soap) {
+  soap_fault(soap);
+  if (soap->version == 2)
+    return (const char**)&soap->fault->SOAP_ENV__Reason->SOAP_ENV__Text;
+  return (const char**)&soap->fault->faultstring;
 }
 
-SOAP_FMAC3 const char ** SOAP_FMAC4 soap_faultdetail(struct soap *soap)
-{
-	soap_fault(soap);
-	if (soap->version == 1)
-	{	if (!soap->fault->detail)
-		{	soap->fault->detail = (struct SOAP_ENV__Detail*)soap_malloc(soap, sizeof(struct SOAP_ENV__Detail));
-			soap_default_SOAP_ENV__Detail(soap, soap->fault->detail);
-		}
-		return (const char**)&soap->fault->detail->__any;
-	}
-	if (!soap->fault->SOAP_ENV__Detail)
-	{	soap->fault->SOAP_ENV__Detail = (struct SOAP_ENV__Detail*)soap_malloc(soap, sizeof(struct SOAP_ENV__Detail));
-		soap_default_SOAP_ENV__Detail(soap, soap->fault->SOAP_ENV__Detail);
-	}
-	return (const char**)&soap->fault->SOAP_ENV__Detail->__any;
+SOAP_FMAC3 const char ** SOAP_FMAC4 soap_faultdetail(struct soap *soap) {
+  soap_fault(soap);
+  if (soap->version == 1) {
+    if (!soap->fault->detail) {
+      soap->fault->detail = (struct SOAP_ENV__Detail*)soap_malloc(soap, sizeof(struct SOAP_ENV__Detail));
+      soap_default_SOAP_ENV__Detail(soap, soap->fault->detail);
+    }
+    return (const char**)&soap->fault->detail->__any;
+  }
+  if (!soap->fault->SOAP_ENV__Detail) {
+    soap->fault->SOAP_ENV__Detail = (struct SOAP_ENV__Detail*)soap_malloc(soap, sizeof(struct SOAP_ENV__Detail));
+    soap_default_SOAP_ENV__Detail(soap, soap->fault->SOAP_ENV__Detail);
+  }
+  return (const char**)&soap->fault->SOAP_ENV__Detail->__any;
 }
 
 #endif
 
 #ifndef WITH_NOIDREF
-SOAP_FMAC3 int SOAP_FMAC4 soap_getindependent(struct soap *soap)
-{
-	int t;
-	if (soap->version == 1)
-	{	for (;;)
-		{	if (!soap_getelement(soap, &t))
-				if (soap->error || soap_ignore_element(soap))
-					break;
-		}
-	}
-	if (soap->error == SOAP_NO_TAG || soap->error == SOAP_EOF)
-		soap->error = SOAP_OK;
-	return soap->error;
+SOAP_FMAC3 int SOAP_FMAC4 soap_getindependent(struct soap *soap) {
+  int t;
+  if (soap->version == 1) {
+    for (;;) {
+      if (!soap_getelement(soap, &t))
+        if (soap->error || soap_ignore_element(soap))
+          break;
+    }
+  }
+  if (soap->error == SOAP_NO_TAG || soap->error == SOAP_EOF)
+    soap->error = SOAP_OK;
+  return soap->error;
 }
 #endif
 
 #ifndef WITH_NOIDREF
-SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
-{
-	if (soap_peek_element(soap))
-		return NULL;
-	if (!*soap->id || !(*type = soap_lookup_type(soap, soap->id)))
-		*type = soap_lookup_type(soap, soap->href);
-	switch (*type)
-	{
-	case SOAP_TYPE_byte:
-		return soap_in_byte(soap, NULL, NULL, "xsd:byte");
-	case SOAP_TYPE_int:
-		return soap_in_int(soap, NULL, NULL, "xsd:int");
-	case SOAP_TYPE_LONG64:
-		return soap_in_LONG64(soap, NULL, NULL, "xsd:long");
-	case SOAP_TYPE_xsd__boolean:
-		return soap_in_xsd__boolean(soap, NULL, NULL, "xsd:boolean");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse:
-		return soap_in_ns2__tpsAPI_USCOREreserveResponse(soap, NULL, NULL, "ns2:tpsAPI_reserveResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREreserve:
-		return soap_in_ns2__tpsAPI_USCOREreserve(soap, NULL, NULL, "ns2:tpsAPI_reserve");
-	case SOAP_TYPE_ns2__UserData:
-		return soap_in_ns2__UserData(soap, NULL, NULL, "ns2:UserData");
-	case SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse:
-		return soap_in_ns2__tpsAPI_USCORElookupUserResponse(soap, NULL, NULL, "ns2:tpsAPI_lookupUserResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCORElookupUser:
-		return soap_in_ns2__tpsAPI_USCORElookupUser(soap, NULL, NULL, "ns2:tpsAPI_lookupUser");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse:
-		return soap_in_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, NULL, NULL, "ns2:tpsAPI_getReservationDataResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData:
-		return soap_in_ns2__tpsAPI_USCOREgetReservationData(soap, NULL, NULL, "ns2:tpsAPI_getReservationData");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse:
-		return soap_in_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, NULL, NULL, "ns2:tpsAPI_getRelatedReservationIdsResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds:
-		return soap_in_ns2__tpsAPI_USCOREgetRelatedReservationIds(soap, NULL, NULL, "ns2:tpsAPI_getRelatedReservationIds");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse:
-		return soap_in_ns2__tpsAPI_USCOREgetPathResponse(soap, NULL, NULL, "ns2:tpsAPI_getPathResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetPath:
-		return soap_in_ns2__tpsAPI_USCOREgetPath(soap, NULL, NULL, "ns2:tpsAPI_getPath");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse:
-		return soap_in_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, NULL, NULL, "ns2:tpsAPI_getLocalBandwidthsResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths:
-		return soap_in_ns2__tpsAPI_USCOREgetLocalBandwidths(soap, NULL, NULL, "ns2:tpsAPI_getLocalBandwidths");
-	case SOAP_TYPE_ns2__Bandwidths:
-		return soap_in_ns2__Bandwidths(soap, NULL, NULL, "ns2:Bandwidths");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse:
-		return soap_in_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, NULL, NULL, "ns2:tpsAPI_getBandwidthsResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths:
-		return soap_in_ns2__tpsAPI_USCOREgetBandwidths(soap, NULL, NULL, "ns2:tpsAPI_getBandwidths");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse:
-		return soap_in_ns2__tpsAPI_USCOREcommitResponse(soap, NULL, NULL, "ns2:tpsAPI_commitResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREcommit:
-		return soap_in_ns2__tpsAPI_USCOREcommit(soap, NULL, NULL, "ns2:tpsAPI_commit");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse:
-		return soap_in_ns2__tpsAPI_USCOREcancelResponse(soap, NULL, NULL, "ns2:tpsAPI_cancelResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREcancel:
-		return soap_in_ns2__tpsAPI_USCOREcancel(soap, NULL, NULL, "ns2:tpsAPI_cancel");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse:
-		return soap_in_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, NULL, NULL, "ns2:tpsAPI_addRelatedReservationIdResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId:
-		return soap_in_ns2__tpsAPI_USCOREaddRelatedReservationId(soap, NULL, NULL, "ns2:tpsAPI_addRelatedReservationId");
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse:
-		return soap_in_ns2__tpsAPI_USCORELocalStartResponse(soap, NULL, NULL, "ns2:tpsAPI_LocalStartResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalStart:
-		return soap_in_ns2__tpsAPI_USCORELocalStart(soap, NULL, NULL, "ns2:tpsAPI_LocalStart");
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse:
-		return soap_in_ns2__tpsAPI_USCORELocalReserveResponse(soap, NULL, NULL, "ns2:tpsAPI_LocalReserveResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve:
-		return soap_in_ns2__tpsAPI_USCORELocalReserve(soap, NULL, NULL, "ns2:tpsAPI_LocalReserve");
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse:
-		return soap_in_ns2__tpsAPI_USCORELocalRemoveResponse(soap, NULL, NULL, "ns2:tpsAPI_LocalRemoveResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove:
-		return soap_in_ns2__tpsAPI_USCORELocalRemove(soap, NULL, NULL, "ns2:tpsAPI_LocalRemove");
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse:
-		return soap_in_ns2__tpsAPI_USCORELocalCommitResponse(soap, NULL, NULL, "ns2:tpsAPI_LocalCommitResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit:
-		return soap_in_ns2__tpsAPI_USCORELocalCommit(soap, NULL, NULL, "ns2:tpsAPI_LocalCommit");
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse:
-		return soap_in_ns2__tpsAPI_USCORELocalCancelResponse(soap, NULL, NULL, "ns2:tpsAPI_LocalCancelResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel:
-		return soap_in_ns2__tpsAPI_USCORELocalCancel(soap, NULL, NULL, "ns2:tpsAPI_LocalCancel");
-	case SOAP_TYPE_ns2__getAllReservationsForClassResponse:
-		return soap_in_ns2__getAllReservationsForClassResponse(soap, NULL, NULL, "ns2:getAllReservationsForClassResponse");
-	case SOAP_TYPE_ns2__Who:
-		return soap_in_ns2__Who(soap, NULL, NULL, "ns2:Who");
-	case SOAP_TYPE_ns2__Bandwidth:
-		return soap_in_ns2__Bandwidth(soap, NULL, NULL, "ns2:Bandwidth");
-	case SOAP_TYPE_ns2__ReservationData:
-		return soap_in_ns2__ReservationData(soap, NULL, NULL, "ns2:ReservationData");
-	case SOAP_TYPE_ns2__getAllReservationsForClass:
-		return soap_in_ns2__getAllReservationsForClass(soap, NULL, NULL, "ns2:getAllReservationsForClass");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREreserveResponse:
-		return soap_in_PointerTons2__tpsAPI_USCOREreserveResponse(soap, NULL, NULL, "ns2:tpsAPI_reserveResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREreserve:
-		return soap_in_PointerTons2__tpsAPI_USCOREreserve(soap, NULL, NULL, "ns2:tpsAPI_reserve");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORElookupUserResponse:
-		return soap_in_PointerTons2__tpsAPI_USCORElookupUserResponse(soap, NULL, NULL, "ns2:tpsAPI_lookupUserResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORElookupUser:
-		return soap_in_PointerTons2__tpsAPI_USCORElookupUser(soap, NULL, NULL, "ns2:tpsAPI_lookupUser");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetReservationDataResponse:
-		return soap_in_PointerTons2__tpsAPI_USCOREgetReservationDataResponse(soap, NULL, NULL, "ns2:tpsAPI_getReservationDataResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetReservationData:
-		return soap_in_PointerTons2__tpsAPI_USCOREgetReservationData(soap, NULL, NULL, "ns2:tpsAPI_getReservationData");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse:
-		return soap_in_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, NULL, NULL, "ns2:tpsAPI_getRelatedReservationIdsResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds:
-		return soap_in_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(soap, NULL, NULL, "ns2:tpsAPI_getRelatedReservationIds");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetPathResponse:
-		return soap_in_PointerTons2__tpsAPI_USCOREgetPathResponse(soap, NULL, NULL, "ns2:tpsAPI_getPathResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetPath:
-		return soap_in_PointerTons2__tpsAPI_USCOREgetPath(soap, NULL, NULL, "ns2:tpsAPI_getPath");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse:
-		return soap_in_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, NULL, NULL, "ns2:tpsAPI_getLocalBandwidthsResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetLocalBandwidths:
-		return soap_in_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(soap, NULL, NULL, "ns2:tpsAPI_getLocalBandwidths");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse:
-		return soap_in_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse(soap, NULL, NULL, "ns2:tpsAPI_getBandwidthsResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetBandwidths:
-		return soap_in_PointerTons2__tpsAPI_USCOREgetBandwidths(soap, NULL, NULL, "ns2:tpsAPI_getBandwidths");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcommitResponse:
-		return soap_in_PointerTons2__tpsAPI_USCOREcommitResponse(soap, NULL, NULL, "ns2:tpsAPI_commitResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcommit:
-		return soap_in_PointerTons2__tpsAPI_USCOREcommit(soap, NULL, NULL, "ns2:tpsAPI_commit");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcancelResponse:
-		return soap_in_PointerTons2__tpsAPI_USCOREcancelResponse(soap, NULL, NULL, "ns2:tpsAPI_cancelResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcancel:
-		return soap_in_PointerTons2__tpsAPI_USCOREcancel(soap, NULL, NULL, "ns2:tpsAPI_cancel");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse:
-		return soap_in_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, NULL, NULL, "ns2:tpsAPI_addRelatedReservationIdResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREaddRelatedReservationId:
-		return soap_in_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(soap, NULL, NULL, "ns2:tpsAPI_addRelatedReservationId");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalStartResponse:
-		return soap_in_PointerTons2__tpsAPI_USCORELocalStartResponse(soap, NULL, NULL, "ns2:tpsAPI_LocalStartResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalStart:
-		return soap_in_PointerTons2__tpsAPI_USCORELocalStart(soap, NULL, NULL, "ns2:tpsAPI_LocalStart");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalReserveResponse:
-		return soap_in_PointerTons2__tpsAPI_USCORELocalReserveResponse(soap, NULL, NULL, "ns2:tpsAPI_LocalReserveResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalReserve:
-		return soap_in_PointerTons2__tpsAPI_USCORELocalReserve(soap, NULL, NULL, "ns2:tpsAPI_LocalReserve");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalRemoveResponse:
-		return soap_in_PointerTons2__tpsAPI_USCORELocalRemoveResponse(soap, NULL, NULL, "ns2:tpsAPI_LocalRemoveResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalRemove:
-		return soap_in_PointerTons2__tpsAPI_USCORELocalRemove(soap, NULL, NULL, "ns2:tpsAPI_LocalRemove");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCommitResponse:
-		return soap_in_PointerTons2__tpsAPI_USCORELocalCommitResponse(soap, NULL, NULL, "ns2:tpsAPI_LocalCommitResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCommit:
-		return soap_in_PointerTons2__tpsAPI_USCORELocalCommit(soap, NULL, NULL, "ns2:tpsAPI_LocalCommit");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCancelResponse:
-		return soap_in_PointerTons2__tpsAPI_USCORELocalCancelResponse(soap, NULL, NULL, "ns2:tpsAPI_LocalCancelResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCancel:
-		return soap_in_PointerTons2__tpsAPI_USCORELocalCancel(soap, NULL, NULL, "ns2:tpsAPI_LocalCancel");
-	case SOAP_TYPE_PointerTons2__getAllReservationsForClassResponse:
-		return soap_in_PointerTons2__getAllReservationsForClassResponse(soap, NULL, NULL, "ns2:getAllReservationsForClassResponse");
-	case SOAP_TYPE_PointerTons2__getAllReservationsForClass:
-		return soap_in_PointerTons2__getAllReservationsForClass(soap, NULL, NULL, "ns2:getAllReservationsForClass");
-	case SOAP_TYPE_PointerTons2__UserData:
-		return soap_in_PointerTons2__UserData(soap, NULL, NULL, "ns2:UserData");
-	case SOAP_TYPE_PointerTostring:
-		return soap_in_PointerTostring(soap, NULL, NULL, "xsd:string");
-	case SOAP_TYPE_PointerToPointerTons2__Bandwidth:
-		return soap_in_PointerToPointerTons2__Bandwidth(soap, NULL, NULL, "ns2:Bandwidth");
-	case SOAP_TYPE_PointerToPointerTons2__Bandwidths:
-		return soap_in_PointerToPointerTons2__Bandwidths(soap, NULL, NULL, "ns2:Bandwidths");
-	case SOAP_TYPE_PointerTons2__Bandwidths:
-		return soap_in_PointerTons2__Bandwidths(soap, NULL, NULL, "ns2:Bandwidths");
-	case SOAP_TYPE_PointerToPointerTons2__ReservationData:
-		return soap_in_PointerToPointerTons2__ReservationData(soap, NULL, NULL, "ns2:ReservationData");
-	case SOAP_TYPE_PointerTons2__Who:
-		return soap_in_PointerTons2__Who(soap, NULL, NULL, "ns2:Who");
-	case SOAP_TYPE_PointerTons2__Bandwidth:
-		return soap_in_PointerTons2__Bandwidth(soap, NULL, NULL, "ns2:Bandwidth");
-	case SOAP_TYPE_PointerTons2__ReservationData:
-		return soap_in_PointerTons2__ReservationData(soap, NULL, NULL, "ns2:ReservationData");
-	case SOAP_TYPE__QName:
-	{	char **s;
-		s = soap_in__QName(soap, NULL, NULL, "xsd:QName");
-		return s ? *s : NULL;
-	}
-	case SOAP_TYPE_string:
-	{	char **s;
-		s = soap_in_string(soap, NULL, NULL, "xsd:string");
-		return s ? *s : NULL;
-	}
-	default:
-	{	const char *t = soap->type;
-		if (!*t)
-			t = soap->tag;
-		if (!soap_match_tag(soap, t, "xsd:byte"))
-		{	*type = SOAP_TYPE_byte;
-			return soap_in_byte(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "xsd:int"))
-		{	*type = SOAP_TYPE_int;
-			return soap_in_int(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "xsd:long"))
-		{	*type = SOAP_TYPE_LONG64;
-			return soap_in_LONG64(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "xsd:boolean"))
-		{	*type = SOAP_TYPE_xsd__boolean;
-			return soap_in_xsd__boolean(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_reserveResponse"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse;
-			return soap_in_ns2__tpsAPI_USCOREreserveResponse(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_reserve"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCOREreserve;
-			return soap_in_ns2__tpsAPI_USCOREreserve(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:UserData"))
-		{	*type = SOAP_TYPE_ns2__UserData;
-			return soap_in_ns2__UserData(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_lookupUserResponse"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse;
-			return soap_in_ns2__tpsAPI_USCORElookupUserResponse(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_lookupUser"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCORElookupUser;
-			return soap_in_ns2__tpsAPI_USCORElookupUser(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_getReservationDataResponse"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse;
-			return soap_in_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_getReservationData"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData;
-			return soap_in_ns2__tpsAPI_USCOREgetReservationData(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_getRelatedReservationIdsResponse"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse;
-			return soap_in_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_getRelatedReservationIds"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds;
-			return soap_in_ns2__tpsAPI_USCOREgetRelatedReservationIds(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_getPathResponse"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse;
-			return soap_in_ns2__tpsAPI_USCOREgetPathResponse(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_getPath"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCOREgetPath;
-			return soap_in_ns2__tpsAPI_USCOREgetPath(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_getLocalBandwidthsResponse"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse;
-			return soap_in_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_getLocalBandwidths"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths;
-			return soap_in_ns2__tpsAPI_USCOREgetLocalBandwidths(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:Bandwidths"))
-		{	*type = SOAP_TYPE_ns2__Bandwidths;
-			return soap_in_ns2__Bandwidths(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_getBandwidthsResponse"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse;
-			return soap_in_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_getBandwidths"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths;
-			return soap_in_ns2__tpsAPI_USCOREgetBandwidths(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_commitResponse"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse;
-			return soap_in_ns2__tpsAPI_USCOREcommitResponse(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_commit"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCOREcommit;
-			return soap_in_ns2__tpsAPI_USCOREcommit(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_cancelResponse"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse;
-			return soap_in_ns2__tpsAPI_USCOREcancelResponse(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_cancel"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCOREcancel;
-			return soap_in_ns2__tpsAPI_USCOREcancel(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_addRelatedReservationIdResponse"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse;
-			return soap_in_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_addRelatedReservationId"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId;
-			return soap_in_ns2__tpsAPI_USCOREaddRelatedReservationId(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_LocalStartResponse"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse;
-			return soap_in_ns2__tpsAPI_USCORELocalStartResponse(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_LocalStart"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCORELocalStart;
-			return soap_in_ns2__tpsAPI_USCORELocalStart(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_LocalReserveResponse"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse;
-			return soap_in_ns2__tpsAPI_USCORELocalReserveResponse(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_LocalReserve"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve;
-			return soap_in_ns2__tpsAPI_USCORELocalReserve(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_LocalRemoveResponse"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse;
-			return soap_in_ns2__tpsAPI_USCORELocalRemoveResponse(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_LocalRemove"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove;
-			return soap_in_ns2__tpsAPI_USCORELocalRemove(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_LocalCommitResponse"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse;
-			return soap_in_ns2__tpsAPI_USCORELocalCommitResponse(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_LocalCommit"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit;
-			return soap_in_ns2__tpsAPI_USCORELocalCommit(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_LocalCancelResponse"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse;
-			return soap_in_ns2__tpsAPI_USCORELocalCancelResponse(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:tpsAPI_LocalCancel"))
-		{	*type = SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel;
-			return soap_in_ns2__tpsAPI_USCORELocalCancel(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:getAllReservationsForClassResponse"))
-		{	*type = SOAP_TYPE_ns2__getAllReservationsForClassResponse;
-			return soap_in_ns2__getAllReservationsForClassResponse(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:Who"))
-		{	*type = SOAP_TYPE_ns2__Who;
-			return soap_in_ns2__Who(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:Bandwidth"))
-		{	*type = SOAP_TYPE_ns2__Bandwidth;
-			return soap_in_ns2__Bandwidth(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:ReservationData"))
-		{	*type = SOAP_TYPE_ns2__ReservationData;
-			return soap_in_ns2__ReservationData(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ns2:getAllReservationsForClass"))
-		{	*type = SOAP_TYPE_ns2__getAllReservationsForClass;
-			return soap_in_ns2__getAllReservationsForClass(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "xsd:QName"))
-		{	char **s;
-			*type = SOAP_TYPE__QName;
-			s = soap_in__QName(soap, NULL, NULL, NULL);
-			return s ? *s : NULL;
-		}
-		if (!soap_match_tag(soap, t, "xsd:string"))
-		{	char **s;
-			*type = SOAP_TYPE_string;
-			s = soap_in_string(soap, NULL, NULL, NULL);
-			return s ? *s : NULL;
-		}
-		t = soap->tag;
-	}
-	}
-	soap->error = SOAP_TAG_MISMATCH;
-	return NULL;
+SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type) {
+  if (soap_peek_element(soap))
+    return NULL;
+  if (!*soap->id || !(*type = soap_lookup_type(soap, soap->id)))
+    *type = soap_lookup_type(soap, soap->href);
+  switch (*type) {
+  case SOAP_TYPE_byte:
+    return soap_in_byte(soap, NULL, NULL, "xsd:byte");
+  case SOAP_TYPE_int:
+    return soap_in_int(soap, NULL, NULL, "xsd:int");
+  case SOAP_TYPE_LONG64:
+    return soap_in_LONG64(soap, NULL, NULL, "xsd:long");
+  case SOAP_TYPE_xsd__boolean:
+    return soap_in_xsd__boolean(soap, NULL, NULL, "xsd:boolean");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse:
+    return soap_in_ns2__tpsAPI_USCOREreserveResponse(soap, NULL, NULL, "ns2:tpsAPI_reserveResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREreserve:
+    return soap_in_ns2__tpsAPI_USCOREreserve(soap, NULL, NULL, "ns2:tpsAPI_reserve");
+  case SOAP_TYPE_ns2__UserData:
+    return soap_in_ns2__UserData(soap, NULL, NULL, "ns2:UserData");
+  case SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse:
+    return soap_in_ns2__tpsAPI_USCORElookupUserResponse(soap, NULL, NULL, "ns2:tpsAPI_lookupUserResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCORElookupUser:
+    return soap_in_ns2__tpsAPI_USCORElookupUser(soap, NULL, NULL, "ns2:tpsAPI_lookupUser");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse:
+    return soap_in_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, NULL, NULL, "ns2:tpsAPI_getReservationDataResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData:
+    return soap_in_ns2__tpsAPI_USCOREgetReservationData(soap, NULL, NULL, "ns2:tpsAPI_getReservationData");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse:
+    return soap_in_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, NULL, NULL, "ns2:tpsAPI_getRelatedReservationIdsResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds:
+    return soap_in_ns2__tpsAPI_USCOREgetRelatedReservationIds(soap, NULL, NULL, "ns2:tpsAPI_getRelatedReservationIds");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse:
+    return soap_in_ns2__tpsAPI_USCOREgetPathResponse(soap, NULL, NULL, "ns2:tpsAPI_getPathResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetPath:
+    return soap_in_ns2__tpsAPI_USCOREgetPath(soap, NULL, NULL, "ns2:tpsAPI_getPath");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse:
+    return soap_in_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, NULL, NULL, "ns2:tpsAPI_getLocalBandwidthsResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths:
+    return soap_in_ns2__tpsAPI_USCOREgetLocalBandwidths(soap, NULL, NULL, "ns2:tpsAPI_getLocalBandwidths");
+  case SOAP_TYPE_ns2__Bandwidths:
+    return soap_in_ns2__Bandwidths(soap, NULL, NULL, "ns2:Bandwidths");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse:
+    return soap_in_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, NULL, NULL, "ns2:tpsAPI_getBandwidthsResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths:
+    return soap_in_ns2__tpsAPI_USCOREgetBandwidths(soap, NULL, NULL, "ns2:tpsAPI_getBandwidths");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse:
+    return soap_in_ns2__tpsAPI_USCOREcommitResponse(soap, NULL, NULL, "ns2:tpsAPI_commitResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREcommit:
+    return soap_in_ns2__tpsAPI_USCOREcommit(soap, NULL, NULL, "ns2:tpsAPI_commit");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse:
+    return soap_in_ns2__tpsAPI_USCOREcancelResponse(soap, NULL, NULL, "ns2:tpsAPI_cancelResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREcancel:
+    return soap_in_ns2__tpsAPI_USCOREcancel(soap, NULL, NULL, "ns2:tpsAPI_cancel");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse:
+    return soap_in_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, NULL, NULL, "ns2:tpsAPI_addRelatedReservationIdResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId:
+    return soap_in_ns2__tpsAPI_USCOREaddRelatedReservationId(soap, NULL, NULL, "ns2:tpsAPI_addRelatedReservationId");
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse:
+    return soap_in_ns2__tpsAPI_USCORELocalStartResponse(soap, NULL, NULL, "ns2:tpsAPI_LocalStartResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalStart:
+    return soap_in_ns2__tpsAPI_USCORELocalStart(soap, NULL, NULL, "ns2:tpsAPI_LocalStart");
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse:
+    return soap_in_ns2__tpsAPI_USCORELocalReserveResponse(soap, NULL, NULL, "ns2:tpsAPI_LocalReserveResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve:
+    return soap_in_ns2__tpsAPI_USCORELocalReserve(soap, NULL, NULL, "ns2:tpsAPI_LocalReserve");
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse:
+    return soap_in_ns2__tpsAPI_USCORELocalRemoveResponse(soap, NULL, NULL, "ns2:tpsAPI_LocalRemoveResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove:
+    return soap_in_ns2__tpsAPI_USCORELocalRemove(soap, NULL, NULL, "ns2:tpsAPI_LocalRemove");
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse:
+    return soap_in_ns2__tpsAPI_USCORELocalCommitResponse(soap, NULL, NULL, "ns2:tpsAPI_LocalCommitResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit:
+    return soap_in_ns2__tpsAPI_USCORELocalCommit(soap, NULL, NULL, "ns2:tpsAPI_LocalCommit");
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse:
+    return soap_in_ns2__tpsAPI_USCORELocalCancelResponse(soap, NULL, NULL, "ns2:tpsAPI_LocalCancelResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel:
+    return soap_in_ns2__tpsAPI_USCORELocalCancel(soap, NULL, NULL, "ns2:tpsAPI_LocalCancel");
+  case SOAP_TYPE_ns2__getAllReservationsForClassResponse:
+    return soap_in_ns2__getAllReservationsForClassResponse(soap, NULL, NULL, "ns2:getAllReservationsForClassResponse");
+  case SOAP_TYPE_ns2__Who:
+    return soap_in_ns2__Who(soap, NULL, NULL, "ns2:Who");
+  case SOAP_TYPE_ns2__Bandwidth:
+    return soap_in_ns2__Bandwidth(soap, NULL, NULL, "ns2:Bandwidth");
+  case SOAP_TYPE_ns2__ReservationData:
+    return soap_in_ns2__ReservationData(soap, NULL, NULL, "ns2:ReservationData");
+  case SOAP_TYPE_ns2__getAllReservationsForClass:
+    return soap_in_ns2__getAllReservationsForClass(soap, NULL, NULL, "ns2:getAllReservationsForClass");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREreserveResponse:
+    return soap_in_PointerTons2__tpsAPI_USCOREreserveResponse(soap, NULL, NULL, "ns2:tpsAPI_reserveResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREreserve:
+    return soap_in_PointerTons2__tpsAPI_USCOREreserve(soap, NULL, NULL, "ns2:tpsAPI_reserve");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORElookupUserResponse:
+    return soap_in_PointerTons2__tpsAPI_USCORElookupUserResponse(soap, NULL, NULL, "ns2:tpsAPI_lookupUserResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORElookupUser:
+    return soap_in_PointerTons2__tpsAPI_USCORElookupUser(soap, NULL, NULL, "ns2:tpsAPI_lookupUser");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetReservationDataResponse:
+    return soap_in_PointerTons2__tpsAPI_USCOREgetReservationDataResponse(soap, NULL, NULL, "ns2:tpsAPI_getReservationDataResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetReservationData:
+    return soap_in_PointerTons2__tpsAPI_USCOREgetReservationData(soap, NULL, NULL, "ns2:tpsAPI_getReservationData");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse:
+    return soap_in_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, NULL, NULL, "ns2:tpsAPI_getRelatedReservationIdsResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds:
+    return soap_in_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(soap, NULL, NULL, "ns2:tpsAPI_getRelatedReservationIds");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetPathResponse:
+    return soap_in_PointerTons2__tpsAPI_USCOREgetPathResponse(soap, NULL, NULL, "ns2:tpsAPI_getPathResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetPath:
+    return soap_in_PointerTons2__tpsAPI_USCOREgetPath(soap, NULL, NULL, "ns2:tpsAPI_getPath");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse:
+    return soap_in_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, NULL, NULL, "ns2:tpsAPI_getLocalBandwidthsResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetLocalBandwidths:
+    return soap_in_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(soap, NULL, NULL, "ns2:tpsAPI_getLocalBandwidths");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse:
+    return soap_in_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse(soap, NULL, NULL, "ns2:tpsAPI_getBandwidthsResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetBandwidths:
+    return soap_in_PointerTons2__tpsAPI_USCOREgetBandwidths(soap, NULL, NULL, "ns2:tpsAPI_getBandwidths");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcommitResponse:
+    return soap_in_PointerTons2__tpsAPI_USCOREcommitResponse(soap, NULL, NULL, "ns2:tpsAPI_commitResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcommit:
+    return soap_in_PointerTons2__tpsAPI_USCOREcommit(soap, NULL, NULL, "ns2:tpsAPI_commit");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcancelResponse:
+    return soap_in_PointerTons2__tpsAPI_USCOREcancelResponse(soap, NULL, NULL, "ns2:tpsAPI_cancelResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcancel:
+    return soap_in_PointerTons2__tpsAPI_USCOREcancel(soap, NULL, NULL, "ns2:tpsAPI_cancel");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse:
+    return soap_in_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, NULL, NULL, "ns2:tpsAPI_addRelatedReservationIdResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREaddRelatedReservationId:
+    return soap_in_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(soap, NULL, NULL, "ns2:tpsAPI_addRelatedReservationId");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalStartResponse:
+    return soap_in_PointerTons2__tpsAPI_USCORELocalStartResponse(soap, NULL, NULL, "ns2:tpsAPI_LocalStartResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalStart:
+    return soap_in_PointerTons2__tpsAPI_USCORELocalStart(soap, NULL, NULL, "ns2:tpsAPI_LocalStart");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalReserveResponse:
+    return soap_in_PointerTons2__tpsAPI_USCORELocalReserveResponse(soap, NULL, NULL, "ns2:tpsAPI_LocalReserveResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalReserve:
+    return soap_in_PointerTons2__tpsAPI_USCORELocalReserve(soap, NULL, NULL, "ns2:tpsAPI_LocalReserve");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalRemoveResponse:
+    return soap_in_PointerTons2__tpsAPI_USCORELocalRemoveResponse(soap, NULL, NULL, "ns2:tpsAPI_LocalRemoveResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalRemove:
+    return soap_in_PointerTons2__tpsAPI_USCORELocalRemove(soap, NULL, NULL, "ns2:tpsAPI_LocalRemove");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCommitResponse:
+    return soap_in_PointerTons2__tpsAPI_USCORELocalCommitResponse(soap, NULL, NULL, "ns2:tpsAPI_LocalCommitResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCommit:
+    return soap_in_PointerTons2__tpsAPI_USCORELocalCommit(soap, NULL, NULL, "ns2:tpsAPI_LocalCommit");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCancelResponse:
+    return soap_in_PointerTons2__tpsAPI_USCORELocalCancelResponse(soap, NULL, NULL, "ns2:tpsAPI_LocalCancelResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCancel:
+    return soap_in_PointerTons2__tpsAPI_USCORELocalCancel(soap, NULL, NULL, "ns2:tpsAPI_LocalCancel");
+  case SOAP_TYPE_PointerTons2__getAllReservationsForClassResponse:
+    return soap_in_PointerTons2__getAllReservationsForClassResponse(soap, NULL, NULL, "ns2:getAllReservationsForClassResponse");
+  case SOAP_TYPE_PointerTons2__getAllReservationsForClass:
+    return soap_in_PointerTons2__getAllReservationsForClass(soap, NULL, NULL, "ns2:getAllReservationsForClass");
+  case SOAP_TYPE_PointerTons2__UserData:
+    return soap_in_PointerTons2__UserData(soap, NULL, NULL, "ns2:UserData");
+  case SOAP_TYPE_PointerTostring:
+    return soap_in_PointerTostring(soap, NULL, NULL, "xsd:string");
+  case SOAP_TYPE_PointerToPointerTons2__Bandwidth:
+    return soap_in_PointerToPointerTons2__Bandwidth(soap, NULL, NULL, "ns2:Bandwidth");
+  case SOAP_TYPE_PointerToPointerTons2__Bandwidths:
+    return soap_in_PointerToPointerTons2__Bandwidths(soap, NULL, NULL, "ns2:Bandwidths");
+  case SOAP_TYPE_PointerTons2__Bandwidths:
+    return soap_in_PointerTons2__Bandwidths(soap, NULL, NULL, "ns2:Bandwidths");
+  case SOAP_TYPE_PointerToPointerTons2__ReservationData:
+    return soap_in_PointerToPointerTons2__ReservationData(soap, NULL, NULL, "ns2:ReservationData");
+  case SOAP_TYPE_PointerTons2__Who:
+    return soap_in_PointerTons2__Who(soap, NULL, NULL, "ns2:Who");
+  case SOAP_TYPE_PointerTons2__Bandwidth:
+    return soap_in_PointerTons2__Bandwidth(soap, NULL, NULL, "ns2:Bandwidth");
+  case SOAP_TYPE_PointerTons2__ReservationData:
+    return soap_in_PointerTons2__ReservationData(soap, NULL, NULL, "ns2:ReservationData");
+  case SOAP_TYPE__QName: {
+    char **s;
+    s = soap_in__QName(soap, NULL, NULL, "xsd:QName");
+    return s ? *s : NULL;
+  }
+  case SOAP_TYPE_string: {
+    char **s;
+    s = soap_in_string(soap, NULL, NULL, "xsd:string");
+    return s ? *s : NULL;
+  }
+  default: {
+    const char *t = soap->type;
+    if (!*t)
+      t = soap->tag;
+    if (!soap_match_tag(soap, t, "xsd:byte")) {
+      *type = SOAP_TYPE_byte;
+      return soap_in_byte(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "xsd:int")) {
+      *type = SOAP_TYPE_int;
+      return soap_in_int(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "xsd:long")) {
+      *type = SOAP_TYPE_LONG64;
+      return soap_in_LONG64(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "xsd:boolean")) {
+      *type = SOAP_TYPE_xsd__boolean;
+      return soap_in_xsd__boolean(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_reserveResponse")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse;
+      return soap_in_ns2__tpsAPI_USCOREreserveResponse(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_reserve")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCOREreserve;
+      return soap_in_ns2__tpsAPI_USCOREreserve(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:UserData")) {
+      *type = SOAP_TYPE_ns2__UserData;
+      return soap_in_ns2__UserData(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_lookupUserResponse")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse;
+      return soap_in_ns2__tpsAPI_USCORElookupUserResponse(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_lookupUser")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCORElookupUser;
+      return soap_in_ns2__tpsAPI_USCORElookupUser(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_getReservationDataResponse")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse;
+      return soap_in_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_getReservationData")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData;
+      return soap_in_ns2__tpsAPI_USCOREgetReservationData(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_getRelatedReservationIdsResponse")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse;
+      return soap_in_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_getRelatedReservationIds")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds;
+      return soap_in_ns2__tpsAPI_USCOREgetRelatedReservationIds(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_getPathResponse")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse;
+      return soap_in_ns2__tpsAPI_USCOREgetPathResponse(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_getPath")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCOREgetPath;
+      return soap_in_ns2__tpsAPI_USCOREgetPath(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_getLocalBandwidthsResponse")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse;
+      return soap_in_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_getLocalBandwidths")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths;
+      return soap_in_ns2__tpsAPI_USCOREgetLocalBandwidths(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:Bandwidths")) {
+      *type = SOAP_TYPE_ns2__Bandwidths;
+      return soap_in_ns2__Bandwidths(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_getBandwidthsResponse")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse;
+      return soap_in_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_getBandwidths")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths;
+      return soap_in_ns2__tpsAPI_USCOREgetBandwidths(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_commitResponse")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse;
+      return soap_in_ns2__tpsAPI_USCOREcommitResponse(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_commit")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCOREcommit;
+      return soap_in_ns2__tpsAPI_USCOREcommit(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_cancelResponse")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse;
+      return soap_in_ns2__tpsAPI_USCOREcancelResponse(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_cancel")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCOREcancel;
+      return soap_in_ns2__tpsAPI_USCOREcancel(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_addRelatedReservationIdResponse")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse;
+      return soap_in_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_addRelatedReservationId")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId;
+      return soap_in_ns2__tpsAPI_USCOREaddRelatedReservationId(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_LocalStartResponse")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse;
+      return soap_in_ns2__tpsAPI_USCORELocalStartResponse(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_LocalStart")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCORELocalStart;
+      return soap_in_ns2__tpsAPI_USCORELocalStart(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_LocalReserveResponse")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse;
+      return soap_in_ns2__tpsAPI_USCORELocalReserveResponse(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_LocalReserve")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve;
+      return soap_in_ns2__tpsAPI_USCORELocalReserve(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_LocalRemoveResponse")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse;
+      return soap_in_ns2__tpsAPI_USCORELocalRemoveResponse(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_LocalRemove")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove;
+      return soap_in_ns2__tpsAPI_USCORELocalRemove(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_LocalCommitResponse")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse;
+      return soap_in_ns2__tpsAPI_USCORELocalCommitResponse(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_LocalCommit")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit;
+      return soap_in_ns2__tpsAPI_USCORELocalCommit(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_LocalCancelResponse")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse;
+      return soap_in_ns2__tpsAPI_USCORELocalCancelResponse(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:tpsAPI_LocalCancel")) {
+      *type = SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel;
+      return soap_in_ns2__tpsAPI_USCORELocalCancel(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:getAllReservationsForClassResponse")) {
+      *type = SOAP_TYPE_ns2__getAllReservationsForClassResponse;
+      return soap_in_ns2__getAllReservationsForClassResponse(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:Who")) {
+      *type = SOAP_TYPE_ns2__Who;
+      return soap_in_ns2__Who(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:Bandwidth")) {
+      *type = SOAP_TYPE_ns2__Bandwidth;
+      return soap_in_ns2__Bandwidth(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:ReservationData")) {
+      *type = SOAP_TYPE_ns2__ReservationData;
+      return soap_in_ns2__ReservationData(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "ns2:getAllReservationsForClass")) {
+      *type = SOAP_TYPE_ns2__getAllReservationsForClass;
+      return soap_in_ns2__getAllReservationsForClass(soap, NULL, NULL, NULL);
+    }
+    if (!soap_match_tag(soap, t, "xsd:QName")) {
+      char **s;
+      *type = SOAP_TYPE__QName;
+      s = soap_in__QName(soap, NULL, NULL, NULL);
+      return s ? *s : NULL;
+    }
+    if (!soap_match_tag(soap, t, "xsd:string")) {
+      char **s;
+      *type = SOAP_TYPE_string;
+      s = soap_in_string(soap, NULL, NULL, NULL);
+      return s ? *s : NULL;
+    }
+    t = soap->tag;
+  }
+  }
+  soap->error = SOAP_TAG_MISMATCH;
+  return NULL;
 }
 #endif
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_ignore_element(struct soap *soap)
-{
-	if (!soap_peek_element(soap))
-	{	int t;
-		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Unexpected element '%s' in input (level=%u, %d)\n", soap->tag, soap->level, soap->body));
-		if (soap->mustUnderstand && !soap->other)
-			return soap->error = SOAP_MUSTUNDERSTAND;
-		if (((soap->mode & SOAP_XML_STRICT) && soap->part != SOAP_IN_HEADER) || !soap_match_tag(soap, soap->tag, "SOAP-ENV:"))
-		{	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "REJECTING element '%s'\n", soap->tag));
-			return soap->error = SOAP_TAG_MISMATCH;
-		}
-		if (!*soap->id || !soap_getelement(soap, &t))
-		{	soap->peeked = 0;
-			if (soap->fignore)
-				soap->error = soap->fignore(soap, soap->tag);
-			else
-				soap->error = SOAP_OK;
-			DBGLOG(TEST, if (!soap->error) SOAP_MESSAGE(fdebug, "IGNORING element '%s'\n", soap->tag));
-			if (!soap->error && soap->body)
-			{	soap->level++;
-				while (!soap_ignore_element(soap))
-					;
-				if (soap->error == SOAP_NO_TAG)
-					soap->error = soap_element_end_in(soap, NULL);
-			}
-		}
-	}
-	return soap->error;
+SOAP_FMAC3 int SOAP_FMAC4 soap_ignore_element(struct soap *soap) {
+  if (!soap_peek_element(soap)) {
+    int t;
+    DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Unexpected element '%s' in input (level=%u, %d)\n", soap->tag, soap->level, soap->body));
+    if (soap->mustUnderstand && !soap->other)
+      return soap->error = SOAP_MUSTUNDERSTAND;
+    if (((soap->mode & SOAP_XML_STRICT) && soap->part != SOAP_IN_HEADER) || !soap_match_tag(soap, soap->tag, "SOAP-ENV:")) {
+      DBGLOG(TEST, SOAP_MESSAGE(fdebug, "REJECTING element '%s'\n", soap->tag));
+      return soap->error = SOAP_TAG_MISMATCH;
+    }
+    if (!*soap->id || !soap_getelement(soap, &t)) {
+      soap->peeked = 0;
+      if (soap->fignore)
+        soap->error = soap->fignore(soap, soap->tag);
+      else
+        soap->error = SOAP_OK;
+      DBGLOG(TEST, if (!soap->error) SOAP_MESSAGE(fdebug, "IGNORING element '%s'\n", soap->tag));
+      if (!soap->error && soap->body) {
+        soap->level++;
+        while (!soap_ignore_element(soap))
+          ;
+        if (soap->error == SOAP_NO_TAG)
+          soap->error = soap_element_end_in(soap, NULL);
+      }
+    }
+  }
+  return soap->error;
 }
 
 #ifndef WITH_NOIDREF
-SOAP_FMAC3 int SOAP_FMAC4 soap_putindependent(struct soap *soap)
-{
-	int i;
-	struct soap_plist *pp;
-	if (soap->version == 1 && soap->encodingStyle && !(soap->mode & (SOAP_XML_TREE | SOAP_XML_GRAPH)))
-		for (i = 0; i < SOAP_PTRHASH; i++)
-			for (pp = soap->pht[i]; pp; pp = pp->next)
-				if (pp->mark1 == 2 || pp->mark2 == 2)
-					if (soap_putelement(soap, pp->ptr, "id", pp->id, pp->type))
-						return soap->error;
-	return SOAP_OK;
+SOAP_FMAC3 int SOAP_FMAC4 soap_putindependent(struct soap *soap) {
+  int i;
+  struct soap_plist *pp;
+  if (soap->version == 1 && soap->encodingStyle && !(soap->mode & (SOAP_XML_TREE | SOAP_XML_GRAPH)))
+    for (i = 0; i < SOAP_PTRHASH; i++)
+      for (pp = soap->pht[i]; pp; pp = pp->next)
+        if (pp->mark1 == 2 || pp->mark2 == 2)
+          if (soap_putelement(soap, pp->ptr, "id", pp->id, pp->type))
+            return soap->error;
+  return SOAP_OK;
 }
 #endif
 
 #ifndef WITH_NOIDREF
-SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, const char *tag, int id, int type)
-{
-	switch (type)
-	{
-	case SOAP_TYPE_byte:
-		return soap_out_byte(soap, tag, id, (const char *)ptr, "xsd:byte");
-	case SOAP_TYPE_int:
-		return soap_out_int(soap, tag, id, (const int *)ptr, "xsd:int");
-	case SOAP_TYPE_LONG64:
-		return soap_out_LONG64(soap, tag, id, (const LONG64 *)ptr, "xsd:long");
-	case SOAP_TYPE_xsd__boolean:
-		return soap_out_xsd__boolean(soap, tag, id, (const enum xsd__boolean *)ptr, "xsd:boolean");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse:
-		return soap_out_ns2__tpsAPI_USCOREreserveResponse(soap, tag, id, (const struct ns2__tpsAPI_USCOREreserveResponse *)ptr, "ns2:tpsAPI_reserveResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREreserve:
-		return soap_out_ns2__tpsAPI_USCOREreserve(soap, tag, id, (const struct ns2__tpsAPI_USCOREreserve *)ptr, "ns2:tpsAPI_reserve");
-	case SOAP_TYPE_ns2__UserData:
-		return soap_out_ns2__UserData(soap, tag, id, (const struct ns2__UserData *)ptr, "ns2:UserData");
-	case SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse:
-		return soap_out_ns2__tpsAPI_USCORElookupUserResponse(soap, tag, id, (const struct ns2__tpsAPI_USCORElookupUserResponse *)ptr, "ns2:tpsAPI_lookupUserResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCORElookupUser:
-		return soap_out_ns2__tpsAPI_USCORElookupUser(soap, tag, id, (const struct ns2__tpsAPI_USCORElookupUser *)ptr, "ns2:tpsAPI_lookupUser");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse:
-		return soap_out_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, tag, id, (const struct ns2__tpsAPI_USCOREgetReservationDataResponse *)ptr, "ns2:tpsAPI_getReservationDataResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData:
-		return soap_out_ns2__tpsAPI_USCOREgetReservationData(soap, tag, id, (const struct ns2__tpsAPI_USCOREgetReservationData *)ptr, "ns2:tpsAPI_getReservationData");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse:
-		return soap_out_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, tag, id, (const struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *)ptr, "ns2:tpsAPI_getRelatedReservationIdsResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds:
-		return soap_out_ns2__tpsAPI_USCOREgetRelatedReservationIds(soap, tag, id, (const struct ns2__tpsAPI_USCOREgetRelatedReservationIds *)ptr, "ns2:tpsAPI_getRelatedReservationIds");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse:
-		return soap_out_ns2__tpsAPI_USCOREgetPathResponse(soap, tag, id, (const struct ns2__tpsAPI_USCOREgetPathResponse *)ptr, "ns2:tpsAPI_getPathResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetPath:
-		return soap_out_ns2__tpsAPI_USCOREgetPath(soap, tag, id, (const struct ns2__tpsAPI_USCOREgetPath *)ptr, "ns2:tpsAPI_getPath");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse:
-		return soap_out_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, tag, id, (const struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *)ptr, "ns2:tpsAPI_getLocalBandwidthsResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths:
-		return soap_out_ns2__tpsAPI_USCOREgetLocalBandwidths(soap, tag, id, (const struct ns2__tpsAPI_USCOREgetLocalBandwidths *)ptr, "ns2:tpsAPI_getLocalBandwidths");
-	case SOAP_TYPE_ns2__Bandwidths:
-		return soap_out_ns2__Bandwidths(soap, tag, id, (const struct ns2__Bandwidths *)ptr, "ns2:Bandwidths");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse:
-		return soap_out_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, tag, id, (const struct ns2__tpsAPI_USCOREgetBandwidthsResponse *)ptr, "ns2:tpsAPI_getBandwidthsResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths:
-		return soap_out_ns2__tpsAPI_USCOREgetBandwidths(soap, tag, id, (const struct ns2__tpsAPI_USCOREgetBandwidths *)ptr, "ns2:tpsAPI_getBandwidths");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse:
-		return soap_out_ns2__tpsAPI_USCOREcommitResponse(soap, tag, id, (const struct ns2__tpsAPI_USCOREcommitResponse *)ptr, "ns2:tpsAPI_commitResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREcommit:
-		return soap_out_ns2__tpsAPI_USCOREcommit(soap, tag, id, (const struct ns2__tpsAPI_USCOREcommit *)ptr, "ns2:tpsAPI_commit");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse:
-		return soap_out_ns2__tpsAPI_USCOREcancelResponse(soap, tag, id, (const struct ns2__tpsAPI_USCOREcancelResponse *)ptr, "ns2:tpsAPI_cancelResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREcancel:
-		return soap_out_ns2__tpsAPI_USCOREcancel(soap, tag, id, (const struct ns2__tpsAPI_USCOREcancel *)ptr, "ns2:tpsAPI_cancel");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse:
-		return soap_out_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, tag, id, (const struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *)ptr, "ns2:tpsAPI_addRelatedReservationIdResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId:
-		return soap_out_ns2__tpsAPI_USCOREaddRelatedReservationId(soap, tag, id, (const struct ns2__tpsAPI_USCOREaddRelatedReservationId *)ptr, "ns2:tpsAPI_addRelatedReservationId");
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse:
-		return soap_out_ns2__tpsAPI_USCORELocalStartResponse(soap, tag, id, (const struct ns2__tpsAPI_USCORELocalStartResponse *)ptr, "ns2:tpsAPI_LocalStartResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalStart:
-		return soap_out_ns2__tpsAPI_USCORELocalStart(soap, tag, id, (const struct ns2__tpsAPI_USCORELocalStart *)ptr, "ns2:tpsAPI_LocalStart");
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse:
-		return soap_out_ns2__tpsAPI_USCORELocalReserveResponse(soap, tag, id, (const struct ns2__tpsAPI_USCORELocalReserveResponse *)ptr, "ns2:tpsAPI_LocalReserveResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve:
-		return soap_out_ns2__tpsAPI_USCORELocalReserve(soap, tag, id, (const struct ns2__tpsAPI_USCORELocalReserve *)ptr, "ns2:tpsAPI_LocalReserve");
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse:
-		return soap_out_ns2__tpsAPI_USCORELocalRemoveResponse(soap, tag, id, (const struct ns2__tpsAPI_USCORELocalRemoveResponse *)ptr, "ns2:tpsAPI_LocalRemoveResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove:
-		return soap_out_ns2__tpsAPI_USCORELocalRemove(soap, tag, id, (const struct ns2__tpsAPI_USCORELocalRemove *)ptr, "ns2:tpsAPI_LocalRemove");
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse:
-		return soap_out_ns2__tpsAPI_USCORELocalCommitResponse(soap, tag, id, (const struct ns2__tpsAPI_USCORELocalCommitResponse *)ptr, "ns2:tpsAPI_LocalCommitResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit:
-		return soap_out_ns2__tpsAPI_USCORELocalCommit(soap, tag, id, (const struct ns2__tpsAPI_USCORELocalCommit *)ptr, "ns2:tpsAPI_LocalCommit");
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse:
-		return soap_out_ns2__tpsAPI_USCORELocalCancelResponse(soap, tag, id, (const struct ns2__tpsAPI_USCORELocalCancelResponse *)ptr, "ns2:tpsAPI_LocalCancelResponse");
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel:
-		return soap_out_ns2__tpsAPI_USCORELocalCancel(soap, tag, id, (const struct ns2__tpsAPI_USCORELocalCancel *)ptr, "ns2:tpsAPI_LocalCancel");
-	case SOAP_TYPE_ns2__getAllReservationsForClassResponse:
-		return soap_out_ns2__getAllReservationsForClassResponse(soap, tag, id, (const struct ns2__getAllReservationsForClassResponse *)ptr, "ns2:getAllReservationsForClassResponse");
-	case SOAP_TYPE_ns2__Who:
-		return soap_out_ns2__Who(soap, tag, id, (const struct ns2__Who *)ptr, "ns2:Who");
-	case SOAP_TYPE_ns2__Bandwidth:
-		return soap_out_ns2__Bandwidth(soap, tag, id, (const struct ns2__Bandwidth *)ptr, "ns2:Bandwidth");
-	case SOAP_TYPE_ns2__ReservationData:
-		return soap_out_ns2__ReservationData(soap, tag, id, (const struct ns2__ReservationData *)ptr, "ns2:ReservationData");
-	case SOAP_TYPE_ns2__getAllReservationsForClass:
-		return soap_out_ns2__getAllReservationsForClass(soap, tag, id, (const struct ns2__getAllReservationsForClass *)ptr, "ns2:getAllReservationsForClass");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREreserveResponse:
-		return soap_out_PointerTons2__tpsAPI_USCOREreserveResponse(soap, tag, id, (struct ns2__tpsAPI_USCOREreserveResponse *const*)ptr, "ns2:tpsAPI_reserveResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREreserve:
-		return soap_out_PointerTons2__tpsAPI_USCOREreserve(soap, tag, id, (struct ns2__tpsAPI_USCOREreserve *const*)ptr, "ns2:tpsAPI_reserve");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORElookupUserResponse:
-		return soap_out_PointerTons2__tpsAPI_USCORElookupUserResponse(soap, tag, id, (struct ns2__tpsAPI_USCORElookupUserResponse *const*)ptr, "ns2:tpsAPI_lookupUserResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORElookupUser:
-		return soap_out_PointerTons2__tpsAPI_USCORElookupUser(soap, tag, id, (struct ns2__tpsAPI_USCORElookupUser *const*)ptr, "ns2:tpsAPI_lookupUser");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetReservationDataResponse:
-		return soap_out_PointerTons2__tpsAPI_USCOREgetReservationDataResponse(soap, tag, id, (struct ns2__tpsAPI_USCOREgetReservationDataResponse *const*)ptr, "ns2:tpsAPI_getReservationDataResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetReservationData:
-		return soap_out_PointerTons2__tpsAPI_USCOREgetReservationData(soap, tag, id, (struct ns2__tpsAPI_USCOREgetReservationData *const*)ptr, "ns2:tpsAPI_getReservationData");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse:
-		return soap_out_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, tag, id, (struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *const*)ptr, "ns2:tpsAPI_getRelatedReservationIdsResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds:
-		return soap_out_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(soap, tag, id, (struct ns2__tpsAPI_USCOREgetRelatedReservationIds *const*)ptr, "ns2:tpsAPI_getRelatedReservationIds");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetPathResponse:
-		return soap_out_PointerTons2__tpsAPI_USCOREgetPathResponse(soap, tag, id, (struct ns2__tpsAPI_USCOREgetPathResponse *const*)ptr, "ns2:tpsAPI_getPathResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetPath:
-		return soap_out_PointerTons2__tpsAPI_USCOREgetPath(soap, tag, id, (struct ns2__tpsAPI_USCOREgetPath *const*)ptr, "ns2:tpsAPI_getPath");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse:
-		return soap_out_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, tag, id, (struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *const*)ptr, "ns2:tpsAPI_getLocalBandwidthsResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetLocalBandwidths:
-		return soap_out_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(soap, tag, id, (struct ns2__tpsAPI_USCOREgetLocalBandwidths *const*)ptr, "ns2:tpsAPI_getLocalBandwidths");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse:
-		return soap_out_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse(soap, tag, id, (struct ns2__tpsAPI_USCOREgetBandwidthsResponse *const*)ptr, "ns2:tpsAPI_getBandwidthsResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetBandwidths:
-		return soap_out_PointerTons2__tpsAPI_USCOREgetBandwidths(soap, tag, id, (struct ns2__tpsAPI_USCOREgetBandwidths *const*)ptr, "ns2:tpsAPI_getBandwidths");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcommitResponse:
-		return soap_out_PointerTons2__tpsAPI_USCOREcommitResponse(soap, tag, id, (struct ns2__tpsAPI_USCOREcommitResponse *const*)ptr, "ns2:tpsAPI_commitResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcommit:
-		return soap_out_PointerTons2__tpsAPI_USCOREcommit(soap, tag, id, (struct ns2__tpsAPI_USCOREcommit *const*)ptr, "ns2:tpsAPI_commit");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcancelResponse:
-		return soap_out_PointerTons2__tpsAPI_USCOREcancelResponse(soap, tag, id, (struct ns2__tpsAPI_USCOREcancelResponse *const*)ptr, "ns2:tpsAPI_cancelResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcancel:
-		return soap_out_PointerTons2__tpsAPI_USCOREcancel(soap, tag, id, (struct ns2__tpsAPI_USCOREcancel *const*)ptr, "ns2:tpsAPI_cancel");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse:
-		return soap_out_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, tag, id, (struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *const*)ptr, "ns2:tpsAPI_addRelatedReservationIdResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREaddRelatedReservationId:
-		return soap_out_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(soap, tag, id, (struct ns2__tpsAPI_USCOREaddRelatedReservationId *const*)ptr, "ns2:tpsAPI_addRelatedReservationId");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalStartResponse:
-		return soap_out_PointerTons2__tpsAPI_USCORELocalStartResponse(soap, tag, id, (struct ns2__tpsAPI_USCORELocalStartResponse *const*)ptr, "ns2:tpsAPI_LocalStartResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalStart:
-		return soap_out_PointerTons2__tpsAPI_USCORELocalStart(soap, tag, id, (struct ns2__tpsAPI_USCORELocalStart *const*)ptr, "ns2:tpsAPI_LocalStart");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalReserveResponse:
-		return soap_out_PointerTons2__tpsAPI_USCORELocalReserveResponse(soap, tag, id, (struct ns2__tpsAPI_USCORELocalReserveResponse *const*)ptr, "ns2:tpsAPI_LocalReserveResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalReserve:
-		return soap_out_PointerTons2__tpsAPI_USCORELocalReserve(soap, tag, id, (struct ns2__tpsAPI_USCORELocalReserve *const*)ptr, "ns2:tpsAPI_LocalReserve");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalRemoveResponse:
-		return soap_out_PointerTons2__tpsAPI_USCORELocalRemoveResponse(soap, tag, id, (struct ns2__tpsAPI_USCORELocalRemoveResponse *const*)ptr, "ns2:tpsAPI_LocalRemoveResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalRemove:
-		return soap_out_PointerTons2__tpsAPI_USCORELocalRemove(soap, tag, id, (struct ns2__tpsAPI_USCORELocalRemove *const*)ptr, "ns2:tpsAPI_LocalRemove");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCommitResponse:
-		return soap_out_PointerTons2__tpsAPI_USCORELocalCommitResponse(soap, tag, id, (struct ns2__tpsAPI_USCORELocalCommitResponse *const*)ptr, "ns2:tpsAPI_LocalCommitResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCommit:
-		return soap_out_PointerTons2__tpsAPI_USCORELocalCommit(soap, tag, id, (struct ns2__tpsAPI_USCORELocalCommit *const*)ptr, "ns2:tpsAPI_LocalCommit");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCancelResponse:
-		return soap_out_PointerTons2__tpsAPI_USCORELocalCancelResponse(soap, tag, id, (struct ns2__tpsAPI_USCORELocalCancelResponse *const*)ptr, "ns2:tpsAPI_LocalCancelResponse");
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCancel:
-		return soap_out_PointerTons2__tpsAPI_USCORELocalCancel(soap, tag, id, (struct ns2__tpsAPI_USCORELocalCancel *const*)ptr, "ns2:tpsAPI_LocalCancel");
-	case SOAP_TYPE_PointerTons2__getAllReservationsForClassResponse:
-		return soap_out_PointerTons2__getAllReservationsForClassResponse(soap, tag, id, (struct ns2__getAllReservationsForClassResponse *const*)ptr, "ns2:getAllReservationsForClassResponse");
-	case SOAP_TYPE_PointerTons2__getAllReservationsForClass:
-		return soap_out_PointerTons2__getAllReservationsForClass(soap, tag, id, (struct ns2__getAllReservationsForClass *const*)ptr, "ns2:getAllReservationsForClass");
-	case SOAP_TYPE_PointerTons2__UserData:
-		return soap_out_PointerTons2__UserData(soap, tag, id, (struct ns2__UserData *const*)ptr, "ns2:UserData");
-	case SOAP_TYPE_PointerTostring:
-		return soap_out_PointerTostring(soap, tag, id, (char **const*)ptr, "xsd:string");
-	case SOAP_TYPE_PointerToPointerTons2__Bandwidth:
-		return soap_out_PointerToPointerTons2__Bandwidth(soap, tag, id, (struct ns2__Bandwidth **const*)ptr, "ns2:Bandwidth");
-	case SOAP_TYPE_PointerToPointerTons2__Bandwidths:
-		return soap_out_PointerToPointerTons2__Bandwidths(soap, tag, id, (struct ns2__Bandwidths **const*)ptr, "ns2:Bandwidths");
-	case SOAP_TYPE_PointerTons2__Bandwidths:
-		return soap_out_PointerTons2__Bandwidths(soap, tag, id, (struct ns2__Bandwidths *const*)ptr, "ns2:Bandwidths");
-	case SOAP_TYPE_PointerToPointerTons2__ReservationData:
-		return soap_out_PointerToPointerTons2__ReservationData(soap, tag, id, (struct ns2__ReservationData **const*)ptr, "ns2:ReservationData");
-	case SOAP_TYPE_PointerTons2__Who:
-		return soap_out_PointerTons2__Who(soap, tag, id, (struct ns2__Who *const*)ptr, "ns2:Who");
-	case SOAP_TYPE_PointerTons2__Bandwidth:
-		return soap_out_PointerTons2__Bandwidth(soap, tag, id, (struct ns2__Bandwidth *const*)ptr, "ns2:Bandwidth");
-	case SOAP_TYPE_PointerTons2__ReservationData:
-		return soap_out_PointerTons2__ReservationData(soap, tag, id, (struct ns2__ReservationData *const*)ptr, "ns2:ReservationData");
-	case SOAP_TYPE__QName:
-		return soap_out_string(soap, tag, id, (char*const*)&ptr, "xsd:QName");
-	case SOAP_TYPE_string:
-		return soap_out_string(soap, tag, id, (char*const*)&ptr, "xsd:string");
-	}
-	return SOAP_OK;
+SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, const char *tag, int id, int type) {
+  switch (type) {
+  case SOAP_TYPE_byte:
+    return soap_out_byte(soap, tag, id, (const char *)ptr, "xsd:byte");
+  case SOAP_TYPE_int:
+    return soap_out_int(soap, tag, id, (const int *)ptr, "xsd:int");
+  case SOAP_TYPE_LONG64:
+    return soap_out_LONG64(soap, tag, id, (const LONG64 *)ptr, "xsd:long");
+  case SOAP_TYPE_xsd__boolean:
+    return soap_out_xsd__boolean(soap, tag, id, (const enum xsd__boolean *)ptr, "xsd:boolean");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse:
+    return soap_out_ns2__tpsAPI_USCOREreserveResponse(soap, tag, id, (const struct ns2__tpsAPI_USCOREreserveResponse *)ptr, "ns2:tpsAPI_reserveResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREreserve:
+    return soap_out_ns2__tpsAPI_USCOREreserve(soap, tag, id, (const struct ns2__tpsAPI_USCOREreserve *)ptr, "ns2:tpsAPI_reserve");
+  case SOAP_TYPE_ns2__UserData:
+    return soap_out_ns2__UserData(soap, tag, id, (const struct ns2__UserData *)ptr, "ns2:UserData");
+  case SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse:
+    return soap_out_ns2__tpsAPI_USCORElookupUserResponse(soap, tag, id, (const struct ns2__tpsAPI_USCORElookupUserResponse *)ptr, "ns2:tpsAPI_lookupUserResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCORElookupUser:
+    return soap_out_ns2__tpsAPI_USCORElookupUser(soap, tag, id, (const struct ns2__tpsAPI_USCORElookupUser *)ptr, "ns2:tpsAPI_lookupUser");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse:
+    return soap_out_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, tag, id, (const struct ns2__tpsAPI_USCOREgetReservationDataResponse *)ptr, "ns2:tpsAPI_getReservationDataResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData:
+    return soap_out_ns2__tpsAPI_USCOREgetReservationData(soap, tag, id, (const struct ns2__tpsAPI_USCOREgetReservationData *)ptr, "ns2:tpsAPI_getReservationData");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse:
+    return soap_out_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, tag, id, (const struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *)ptr, "ns2:tpsAPI_getRelatedReservationIdsResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds:
+    return soap_out_ns2__tpsAPI_USCOREgetRelatedReservationIds(soap, tag, id, (const struct ns2__tpsAPI_USCOREgetRelatedReservationIds *)ptr, "ns2:tpsAPI_getRelatedReservationIds");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse:
+    return soap_out_ns2__tpsAPI_USCOREgetPathResponse(soap, tag, id, (const struct ns2__tpsAPI_USCOREgetPathResponse *)ptr, "ns2:tpsAPI_getPathResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetPath:
+    return soap_out_ns2__tpsAPI_USCOREgetPath(soap, tag, id, (const struct ns2__tpsAPI_USCOREgetPath *)ptr, "ns2:tpsAPI_getPath");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse:
+    return soap_out_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, tag, id, (const struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *)ptr, "ns2:tpsAPI_getLocalBandwidthsResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths:
+    return soap_out_ns2__tpsAPI_USCOREgetLocalBandwidths(soap, tag, id, (const struct ns2__tpsAPI_USCOREgetLocalBandwidths *)ptr, "ns2:tpsAPI_getLocalBandwidths");
+  case SOAP_TYPE_ns2__Bandwidths:
+    return soap_out_ns2__Bandwidths(soap, tag, id, (const struct ns2__Bandwidths *)ptr, "ns2:Bandwidths");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse:
+    return soap_out_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, tag, id, (const struct ns2__tpsAPI_USCOREgetBandwidthsResponse *)ptr, "ns2:tpsAPI_getBandwidthsResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths:
+    return soap_out_ns2__tpsAPI_USCOREgetBandwidths(soap, tag, id, (const struct ns2__tpsAPI_USCOREgetBandwidths *)ptr, "ns2:tpsAPI_getBandwidths");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse:
+    return soap_out_ns2__tpsAPI_USCOREcommitResponse(soap, tag, id, (const struct ns2__tpsAPI_USCOREcommitResponse *)ptr, "ns2:tpsAPI_commitResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREcommit:
+    return soap_out_ns2__tpsAPI_USCOREcommit(soap, tag, id, (const struct ns2__tpsAPI_USCOREcommit *)ptr, "ns2:tpsAPI_commit");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse:
+    return soap_out_ns2__tpsAPI_USCOREcancelResponse(soap, tag, id, (const struct ns2__tpsAPI_USCOREcancelResponse *)ptr, "ns2:tpsAPI_cancelResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREcancel:
+    return soap_out_ns2__tpsAPI_USCOREcancel(soap, tag, id, (const struct ns2__tpsAPI_USCOREcancel *)ptr, "ns2:tpsAPI_cancel");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse:
+    return soap_out_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, tag, id, (const struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *)ptr, "ns2:tpsAPI_addRelatedReservationIdResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId:
+    return soap_out_ns2__tpsAPI_USCOREaddRelatedReservationId(soap, tag, id, (const struct ns2__tpsAPI_USCOREaddRelatedReservationId *)ptr, "ns2:tpsAPI_addRelatedReservationId");
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse:
+    return soap_out_ns2__tpsAPI_USCORELocalStartResponse(soap, tag, id, (const struct ns2__tpsAPI_USCORELocalStartResponse *)ptr, "ns2:tpsAPI_LocalStartResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalStart:
+    return soap_out_ns2__tpsAPI_USCORELocalStart(soap, tag, id, (const struct ns2__tpsAPI_USCORELocalStart *)ptr, "ns2:tpsAPI_LocalStart");
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse:
+    return soap_out_ns2__tpsAPI_USCORELocalReserveResponse(soap, tag, id, (const struct ns2__tpsAPI_USCORELocalReserveResponse *)ptr, "ns2:tpsAPI_LocalReserveResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve:
+    return soap_out_ns2__tpsAPI_USCORELocalReserve(soap, tag, id, (const struct ns2__tpsAPI_USCORELocalReserve *)ptr, "ns2:tpsAPI_LocalReserve");
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse:
+    return soap_out_ns2__tpsAPI_USCORELocalRemoveResponse(soap, tag, id, (const struct ns2__tpsAPI_USCORELocalRemoveResponse *)ptr, "ns2:tpsAPI_LocalRemoveResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove:
+    return soap_out_ns2__tpsAPI_USCORELocalRemove(soap, tag, id, (const struct ns2__tpsAPI_USCORELocalRemove *)ptr, "ns2:tpsAPI_LocalRemove");
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse:
+    return soap_out_ns2__tpsAPI_USCORELocalCommitResponse(soap, tag, id, (const struct ns2__tpsAPI_USCORELocalCommitResponse *)ptr, "ns2:tpsAPI_LocalCommitResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit:
+    return soap_out_ns2__tpsAPI_USCORELocalCommit(soap, tag, id, (const struct ns2__tpsAPI_USCORELocalCommit *)ptr, "ns2:tpsAPI_LocalCommit");
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse:
+    return soap_out_ns2__tpsAPI_USCORELocalCancelResponse(soap, tag, id, (const struct ns2__tpsAPI_USCORELocalCancelResponse *)ptr, "ns2:tpsAPI_LocalCancelResponse");
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel:
+    return soap_out_ns2__tpsAPI_USCORELocalCancel(soap, tag, id, (const struct ns2__tpsAPI_USCORELocalCancel *)ptr, "ns2:tpsAPI_LocalCancel");
+  case SOAP_TYPE_ns2__getAllReservationsForClassResponse:
+    return soap_out_ns2__getAllReservationsForClassResponse(soap, tag, id, (const struct ns2__getAllReservationsForClassResponse *)ptr, "ns2:getAllReservationsForClassResponse");
+  case SOAP_TYPE_ns2__Who:
+    return soap_out_ns2__Who(soap, tag, id, (const struct ns2__Who *)ptr, "ns2:Who");
+  case SOAP_TYPE_ns2__Bandwidth:
+    return soap_out_ns2__Bandwidth(soap, tag, id, (const struct ns2__Bandwidth *)ptr, "ns2:Bandwidth");
+  case SOAP_TYPE_ns2__ReservationData:
+    return soap_out_ns2__ReservationData(soap, tag, id, (const struct ns2__ReservationData *)ptr, "ns2:ReservationData");
+  case SOAP_TYPE_ns2__getAllReservationsForClass:
+    return soap_out_ns2__getAllReservationsForClass(soap, tag, id, (const struct ns2__getAllReservationsForClass *)ptr, "ns2:getAllReservationsForClass");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREreserveResponse:
+    return soap_out_PointerTons2__tpsAPI_USCOREreserveResponse(soap, tag, id, (struct ns2__tpsAPI_USCOREreserveResponse *const*)ptr, "ns2:tpsAPI_reserveResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREreserve:
+    return soap_out_PointerTons2__tpsAPI_USCOREreserve(soap, tag, id, (struct ns2__tpsAPI_USCOREreserve *const*)ptr, "ns2:tpsAPI_reserve");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORElookupUserResponse:
+    return soap_out_PointerTons2__tpsAPI_USCORElookupUserResponse(soap, tag, id, (struct ns2__tpsAPI_USCORElookupUserResponse *const*)ptr, "ns2:tpsAPI_lookupUserResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORElookupUser:
+    return soap_out_PointerTons2__tpsAPI_USCORElookupUser(soap, tag, id, (struct ns2__tpsAPI_USCORElookupUser *const*)ptr, "ns2:tpsAPI_lookupUser");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetReservationDataResponse:
+    return soap_out_PointerTons2__tpsAPI_USCOREgetReservationDataResponse(soap, tag, id, (struct ns2__tpsAPI_USCOREgetReservationDataResponse *const*)ptr, "ns2:tpsAPI_getReservationDataResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetReservationData:
+    return soap_out_PointerTons2__tpsAPI_USCOREgetReservationData(soap, tag, id, (struct ns2__tpsAPI_USCOREgetReservationData *const*)ptr, "ns2:tpsAPI_getReservationData");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse:
+    return soap_out_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, tag, id, (struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *const*)ptr, "ns2:tpsAPI_getRelatedReservationIdsResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds:
+    return soap_out_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(soap, tag, id, (struct ns2__tpsAPI_USCOREgetRelatedReservationIds *const*)ptr, "ns2:tpsAPI_getRelatedReservationIds");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetPathResponse:
+    return soap_out_PointerTons2__tpsAPI_USCOREgetPathResponse(soap, tag, id, (struct ns2__tpsAPI_USCOREgetPathResponse *const*)ptr, "ns2:tpsAPI_getPathResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetPath:
+    return soap_out_PointerTons2__tpsAPI_USCOREgetPath(soap, tag, id, (struct ns2__tpsAPI_USCOREgetPath *const*)ptr, "ns2:tpsAPI_getPath");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse:
+    return soap_out_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, tag, id, (struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *const*)ptr, "ns2:tpsAPI_getLocalBandwidthsResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetLocalBandwidths:
+    return soap_out_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(soap, tag, id, (struct ns2__tpsAPI_USCOREgetLocalBandwidths *const*)ptr, "ns2:tpsAPI_getLocalBandwidths");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse:
+    return soap_out_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse(soap, tag, id, (struct ns2__tpsAPI_USCOREgetBandwidthsResponse *const*)ptr, "ns2:tpsAPI_getBandwidthsResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetBandwidths:
+    return soap_out_PointerTons2__tpsAPI_USCOREgetBandwidths(soap, tag, id, (struct ns2__tpsAPI_USCOREgetBandwidths *const*)ptr, "ns2:tpsAPI_getBandwidths");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcommitResponse:
+    return soap_out_PointerTons2__tpsAPI_USCOREcommitResponse(soap, tag, id, (struct ns2__tpsAPI_USCOREcommitResponse *const*)ptr, "ns2:tpsAPI_commitResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcommit:
+    return soap_out_PointerTons2__tpsAPI_USCOREcommit(soap, tag, id, (struct ns2__tpsAPI_USCOREcommit *const*)ptr, "ns2:tpsAPI_commit");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcancelResponse:
+    return soap_out_PointerTons2__tpsAPI_USCOREcancelResponse(soap, tag, id, (struct ns2__tpsAPI_USCOREcancelResponse *const*)ptr, "ns2:tpsAPI_cancelResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcancel:
+    return soap_out_PointerTons2__tpsAPI_USCOREcancel(soap, tag, id, (struct ns2__tpsAPI_USCOREcancel *const*)ptr, "ns2:tpsAPI_cancel");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse:
+    return soap_out_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, tag, id, (struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *const*)ptr, "ns2:tpsAPI_addRelatedReservationIdResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREaddRelatedReservationId:
+    return soap_out_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(soap, tag, id, (struct ns2__tpsAPI_USCOREaddRelatedReservationId *const*)ptr, "ns2:tpsAPI_addRelatedReservationId");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalStartResponse:
+    return soap_out_PointerTons2__tpsAPI_USCORELocalStartResponse(soap, tag, id, (struct ns2__tpsAPI_USCORELocalStartResponse *const*)ptr, "ns2:tpsAPI_LocalStartResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalStart:
+    return soap_out_PointerTons2__tpsAPI_USCORELocalStart(soap, tag, id, (struct ns2__tpsAPI_USCORELocalStart *const*)ptr, "ns2:tpsAPI_LocalStart");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalReserveResponse:
+    return soap_out_PointerTons2__tpsAPI_USCORELocalReserveResponse(soap, tag, id, (struct ns2__tpsAPI_USCORELocalReserveResponse *const*)ptr, "ns2:tpsAPI_LocalReserveResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalReserve:
+    return soap_out_PointerTons2__tpsAPI_USCORELocalReserve(soap, tag, id, (struct ns2__tpsAPI_USCORELocalReserve *const*)ptr, "ns2:tpsAPI_LocalReserve");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalRemoveResponse:
+    return soap_out_PointerTons2__tpsAPI_USCORELocalRemoveResponse(soap, tag, id, (struct ns2__tpsAPI_USCORELocalRemoveResponse *const*)ptr, "ns2:tpsAPI_LocalRemoveResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalRemove:
+    return soap_out_PointerTons2__tpsAPI_USCORELocalRemove(soap, tag, id, (struct ns2__tpsAPI_USCORELocalRemove *const*)ptr, "ns2:tpsAPI_LocalRemove");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCommitResponse:
+    return soap_out_PointerTons2__tpsAPI_USCORELocalCommitResponse(soap, tag, id, (struct ns2__tpsAPI_USCORELocalCommitResponse *const*)ptr, "ns2:tpsAPI_LocalCommitResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCommit:
+    return soap_out_PointerTons2__tpsAPI_USCORELocalCommit(soap, tag, id, (struct ns2__tpsAPI_USCORELocalCommit *const*)ptr, "ns2:tpsAPI_LocalCommit");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCancelResponse:
+    return soap_out_PointerTons2__tpsAPI_USCORELocalCancelResponse(soap, tag, id, (struct ns2__tpsAPI_USCORELocalCancelResponse *const*)ptr, "ns2:tpsAPI_LocalCancelResponse");
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCancel:
+    return soap_out_PointerTons2__tpsAPI_USCORELocalCancel(soap, tag, id, (struct ns2__tpsAPI_USCORELocalCancel *const*)ptr, "ns2:tpsAPI_LocalCancel");
+  case SOAP_TYPE_PointerTons2__getAllReservationsForClassResponse:
+    return soap_out_PointerTons2__getAllReservationsForClassResponse(soap, tag, id, (struct ns2__getAllReservationsForClassResponse *const*)ptr, "ns2:getAllReservationsForClassResponse");
+  case SOAP_TYPE_PointerTons2__getAllReservationsForClass:
+    return soap_out_PointerTons2__getAllReservationsForClass(soap, tag, id, (struct ns2__getAllReservationsForClass *const*)ptr, "ns2:getAllReservationsForClass");
+  case SOAP_TYPE_PointerTons2__UserData:
+    return soap_out_PointerTons2__UserData(soap, tag, id, (struct ns2__UserData *const*)ptr, "ns2:UserData");
+  case SOAP_TYPE_PointerTostring:
+    return soap_out_PointerTostring(soap, tag, id, (char **const*)ptr, "xsd:string");
+  case SOAP_TYPE_PointerToPointerTons2__Bandwidth:
+    return soap_out_PointerToPointerTons2__Bandwidth(soap, tag, id, (struct ns2__Bandwidth **const*)ptr, "ns2:Bandwidth");
+  case SOAP_TYPE_PointerToPointerTons2__Bandwidths:
+    return soap_out_PointerToPointerTons2__Bandwidths(soap, tag, id, (struct ns2__Bandwidths **const*)ptr, "ns2:Bandwidths");
+  case SOAP_TYPE_PointerTons2__Bandwidths:
+    return soap_out_PointerTons2__Bandwidths(soap, tag, id, (struct ns2__Bandwidths *const*)ptr, "ns2:Bandwidths");
+  case SOAP_TYPE_PointerToPointerTons2__ReservationData:
+    return soap_out_PointerToPointerTons2__ReservationData(soap, tag, id, (struct ns2__ReservationData **const*)ptr, "ns2:ReservationData");
+  case SOAP_TYPE_PointerTons2__Who:
+    return soap_out_PointerTons2__Who(soap, tag, id, (struct ns2__Who *const*)ptr, "ns2:Who");
+  case SOAP_TYPE_PointerTons2__Bandwidth:
+    return soap_out_PointerTons2__Bandwidth(soap, tag, id, (struct ns2__Bandwidth *const*)ptr, "ns2:Bandwidth");
+  case SOAP_TYPE_PointerTons2__ReservationData:
+    return soap_out_PointerTons2__ReservationData(soap, tag, id, (struct ns2__ReservationData *const*)ptr, "ns2:ReservationData");
+  case SOAP_TYPE__QName:
+    return soap_out_string(soap, tag, id, (char*const*)&ptr, "xsd:QName");
+  case SOAP_TYPE_string:
+    return soap_out_string(soap, tag, id, (char*const*)&ptr, "xsd:string");
+  }
+  return SOAP_OK;
 }
 #endif
 
 #ifndef WITH_NOIDREF
-SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, int type)
-{
-	(void)soap; (void)ptr; (void)type; /* appease -Wall -Werror */
-	switch (type)
-	{
-	case SOAP_TYPE___ns1__tpsAPI_USCOREreserve:
-		soap_serialize___ns1__tpsAPI_USCOREreserve(soap, (const struct __ns1__tpsAPI_USCOREreserve *)ptr);
-		break;
-	case SOAP_TYPE___ns1__tpsAPI_USCORElookupUser:
-		soap_serialize___ns1__tpsAPI_USCORElookupUser(soap, (const struct __ns1__tpsAPI_USCORElookupUser *)ptr);
-		break;
-	case SOAP_TYPE___ns1__tpsAPI_USCOREgetReservationData:
-		soap_serialize___ns1__tpsAPI_USCOREgetReservationData(soap, (const struct __ns1__tpsAPI_USCOREgetReservationData *)ptr);
-		break;
-	case SOAP_TYPE___ns1__tpsAPI_USCOREgetRelatedReservationIds:
-		soap_serialize___ns1__tpsAPI_USCOREgetRelatedReservationIds(soap, (const struct __ns1__tpsAPI_USCOREgetRelatedReservationIds *)ptr);
-		break;
-	case SOAP_TYPE___ns1__tpsAPI_USCOREgetPath:
-		soap_serialize___ns1__tpsAPI_USCOREgetPath(soap, (const struct __ns1__tpsAPI_USCOREgetPath *)ptr);
-		break;
-	case SOAP_TYPE___ns1__tpsAPI_USCOREgetLocalBandwidths:
-		soap_serialize___ns1__tpsAPI_USCOREgetLocalBandwidths(soap, (const struct __ns1__tpsAPI_USCOREgetLocalBandwidths *)ptr);
-		break;
-	case SOAP_TYPE___ns1__tpsAPI_USCOREgetBandwidths:
-		soap_serialize___ns1__tpsAPI_USCOREgetBandwidths(soap, (const struct __ns1__tpsAPI_USCOREgetBandwidths *)ptr);
-		break;
-	case SOAP_TYPE___ns1__tpsAPI_USCOREcommit:
-		soap_serialize___ns1__tpsAPI_USCOREcommit(soap, (const struct __ns1__tpsAPI_USCOREcommit *)ptr);
-		break;
-	case SOAP_TYPE___ns1__tpsAPI_USCOREcancel:
-		soap_serialize___ns1__tpsAPI_USCOREcancel(soap, (const struct __ns1__tpsAPI_USCOREcancel *)ptr);
-		break;
-	case SOAP_TYPE___ns1__tpsAPI_USCOREaddRelatedReservationId:
-		soap_serialize___ns1__tpsAPI_USCOREaddRelatedReservationId(soap, (const struct __ns1__tpsAPI_USCOREaddRelatedReservationId *)ptr);
-		break;
-	case SOAP_TYPE___ns1__tpsAPI_USCORELocalStart:
-		soap_serialize___ns1__tpsAPI_USCORELocalStart(soap, (const struct __ns1__tpsAPI_USCORELocalStart *)ptr);
-		break;
-	case SOAP_TYPE___ns1__tpsAPI_USCORELocalReserve:
-		soap_serialize___ns1__tpsAPI_USCORELocalReserve(soap, (const struct __ns1__tpsAPI_USCORELocalReserve *)ptr);
-		break;
-	case SOAP_TYPE___ns1__tpsAPI_USCORELocalRemove:
-		soap_serialize___ns1__tpsAPI_USCORELocalRemove(soap, (const struct __ns1__tpsAPI_USCORELocalRemove *)ptr);
-		break;
-	case SOAP_TYPE___ns1__tpsAPI_USCORELocalCommit:
-		soap_serialize___ns1__tpsAPI_USCORELocalCommit(soap, (const struct __ns1__tpsAPI_USCORELocalCommit *)ptr);
-		break;
-	case SOAP_TYPE___ns1__tpsAPI_USCORELocalCancel:
-		soap_serialize___ns1__tpsAPI_USCORELocalCancel(soap, (const struct __ns1__tpsAPI_USCORELocalCancel *)ptr);
-		break;
-	case SOAP_TYPE___ns1__getAllReservationsForClass:
-		soap_serialize___ns1__getAllReservationsForClass(soap, (const struct __ns1__getAllReservationsForClass *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse:
-		soap_serialize_ns2__tpsAPI_USCOREreserveResponse(soap, (const struct ns2__tpsAPI_USCOREreserveResponse *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCOREreserve:
-		soap_serialize_ns2__tpsAPI_USCOREreserve(soap, (const struct ns2__tpsAPI_USCOREreserve *)ptr);
-		break;
-	case SOAP_TYPE_ns2__UserData:
-		soap_serialize_ns2__UserData(soap, (const struct ns2__UserData *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse:
-		soap_serialize_ns2__tpsAPI_USCORElookupUserResponse(soap, (const struct ns2__tpsAPI_USCORElookupUserResponse *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCORElookupUser:
-		soap_serialize_ns2__tpsAPI_USCORElookupUser(soap, (const struct ns2__tpsAPI_USCORElookupUser *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse:
-		soap_serialize_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, (const struct ns2__tpsAPI_USCOREgetReservationDataResponse *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData:
-		soap_serialize_ns2__tpsAPI_USCOREgetReservationData(soap, (const struct ns2__tpsAPI_USCOREgetReservationData *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse:
-		soap_serialize_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, (const struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds:
-		soap_serialize_ns2__tpsAPI_USCOREgetRelatedReservationIds(soap, (const struct ns2__tpsAPI_USCOREgetRelatedReservationIds *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse:
-		soap_serialize_ns2__tpsAPI_USCOREgetPathResponse(soap, (const struct ns2__tpsAPI_USCOREgetPathResponse *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetPath:
-		soap_serialize_ns2__tpsAPI_USCOREgetPath(soap, (const struct ns2__tpsAPI_USCOREgetPath *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse:
-		soap_serialize_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, (const struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths:
-		soap_serialize_ns2__tpsAPI_USCOREgetLocalBandwidths(soap, (const struct ns2__tpsAPI_USCOREgetLocalBandwidths *)ptr);
-		break;
-	case SOAP_TYPE_ns2__Bandwidths:
-		soap_serialize_ns2__Bandwidths(soap, (const struct ns2__Bandwidths *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse:
-		soap_serialize_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, (const struct ns2__tpsAPI_USCOREgetBandwidthsResponse *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths:
-		soap_serialize_ns2__tpsAPI_USCOREgetBandwidths(soap, (const struct ns2__tpsAPI_USCOREgetBandwidths *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse:
-		soap_serialize_ns2__tpsAPI_USCOREcommitResponse(soap, (const struct ns2__tpsAPI_USCOREcommitResponse *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCOREcommit:
-		soap_serialize_ns2__tpsAPI_USCOREcommit(soap, (const struct ns2__tpsAPI_USCOREcommit *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse:
-		soap_serialize_ns2__tpsAPI_USCOREcancelResponse(soap, (const struct ns2__tpsAPI_USCOREcancelResponse *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCOREcancel:
-		soap_serialize_ns2__tpsAPI_USCOREcancel(soap, (const struct ns2__tpsAPI_USCOREcancel *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse:
-		soap_serialize_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, (const struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId:
-		soap_serialize_ns2__tpsAPI_USCOREaddRelatedReservationId(soap, (const struct ns2__tpsAPI_USCOREaddRelatedReservationId *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse:
-		soap_serialize_ns2__tpsAPI_USCORELocalStartResponse(soap, (const struct ns2__tpsAPI_USCORELocalStartResponse *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalStart:
-		soap_serialize_ns2__tpsAPI_USCORELocalStart(soap, (const struct ns2__tpsAPI_USCORELocalStart *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse:
-		soap_serialize_ns2__tpsAPI_USCORELocalReserveResponse(soap, (const struct ns2__tpsAPI_USCORELocalReserveResponse *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve:
-		soap_serialize_ns2__tpsAPI_USCORELocalReserve(soap, (const struct ns2__tpsAPI_USCORELocalReserve *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse:
-		soap_serialize_ns2__tpsAPI_USCORELocalRemoveResponse(soap, (const struct ns2__tpsAPI_USCORELocalRemoveResponse *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove:
-		soap_serialize_ns2__tpsAPI_USCORELocalRemove(soap, (const struct ns2__tpsAPI_USCORELocalRemove *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse:
-		soap_serialize_ns2__tpsAPI_USCORELocalCommitResponse(soap, (const struct ns2__tpsAPI_USCORELocalCommitResponse *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit:
-		soap_serialize_ns2__tpsAPI_USCORELocalCommit(soap, (const struct ns2__tpsAPI_USCORELocalCommit *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse:
-		soap_serialize_ns2__tpsAPI_USCORELocalCancelResponse(soap, (const struct ns2__tpsAPI_USCORELocalCancelResponse *)ptr);
-		break;
-	case SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel:
-		soap_serialize_ns2__tpsAPI_USCORELocalCancel(soap, (const struct ns2__tpsAPI_USCORELocalCancel *)ptr);
-		break;
-	case SOAP_TYPE_ns2__getAllReservationsForClassResponse:
-		soap_serialize_ns2__getAllReservationsForClassResponse(soap, (const struct ns2__getAllReservationsForClassResponse *)ptr);
-		break;
-	case SOAP_TYPE_ns2__Who:
-		soap_serialize_ns2__Who(soap, (const struct ns2__Who *)ptr);
-		break;
-	case SOAP_TYPE_ns2__Bandwidth:
-		soap_serialize_ns2__Bandwidth(soap, (const struct ns2__Bandwidth *)ptr);
-		break;
-	case SOAP_TYPE_ns2__ReservationData:
-		soap_serialize_ns2__ReservationData(soap, (const struct ns2__ReservationData *)ptr);
-		break;
-	case SOAP_TYPE_ns2__getAllReservationsForClass:
-		soap_serialize_ns2__getAllReservationsForClass(soap, (const struct ns2__getAllReservationsForClass *)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREreserveResponse:
-		soap_serialize_PointerTons2__tpsAPI_USCOREreserveResponse(soap, (struct ns2__tpsAPI_USCOREreserveResponse *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREreserve:
-		soap_serialize_PointerTons2__tpsAPI_USCOREreserve(soap, (struct ns2__tpsAPI_USCOREreserve *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORElookupUserResponse:
-		soap_serialize_PointerTons2__tpsAPI_USCORElookupUserResponse(soap, (struct ns2__tpsAPI_USCORElookupUserResponse *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORElookupUser:
-		soap_serialize_PointerTons2__tpsAPI_USCORElookupUser(soap, (struct ns2__tpsAPI_USCORElookupUser *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetReservationDataResponse:
-		soap_serialize_PointerTons2__tpsAPI_USCOREgetReservationDataResponse(soap, (struct ns2__tpsAPI_USCOREgetReservationDataResponse *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetReservationData:
-		soap_serialize_PointerTons2__tpsAPI_USCOREgetReservationData(soap, (struct ns2__tpsAPI_USCOREgetReservationData *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse:
-		soap_serialize_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, (struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds:
-		soap_serialize_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(soap, (struct ns2__tpsAPI_USCOREgetRelatedReservationIds *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetPathResponse:
-		soap_serialize_PointerTons2__tpsAPI_USCOREgetPathResponse(soap, (struct ns2__tpsAPI_USCOREgetPathResponse *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetPath:
-		soap_serialize_PointerTons2__tpsAPI_USCOREgetPath(soap, (struct ns2__tpsAPI_USCOREgetPath *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse:
-		soap_serialize_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, (struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetLocalBandwidths:
-		soap_serialize_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(soap, (struct ns2__tpsAPI_USCOREgetLocalBandwidths *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse:
-		soap_serialize_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse(soap, (struct ns2__tpsAPI_USCOREgetBandwidthsResponse *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetBandwidths:
-		soap_serialize_PointerTons2__tpsAPI_USCOREgetBandwidths(soap, (struct ns2__tpsAPI_USCOREgetBandwidths *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcommitResponse:
-		soap_serialize_PointerTons2__tpsAPI_USCOREcommitResponse(soap, (struct ns2__tpsAPI_USCOREcommitResponse *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcommit:
-		soap_serialize_PointerTons2__tpsAPI_USCOREcommit(soap, (struct ns2__tpsAPI_USCOREcommit *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcancelResponse:
-		soap_serialize_PointerTons2__tpsAPI_USCOREcancelResponse(soap, (struct ns2__tpsAPI_USCOREcancelResponse *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcancel:
-		soap_serialize_PointerTons2__tpsAPI_USCOREcancel(soap, (struct ns2__tpsAPI_USCOREcancel *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse:
-		soap_serialize_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, (struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCOREaddRelatedReservationId:
-		soap_serialize_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(soap, (struct ns2__tpsAPI_USCOREaddRelatedReservationId *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalStartResponse:
-		soap_serialize_PointerTons2__tpsAPI_USCORELocalStartResponse(soap, (struct ns2__tpsAPI_USCORELocalStartResponse *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalStart:
-		soap_serialize_PointerTons2__tpsAPI_USCORELocalStart(soap, (struct ns2__tpsAPI_USCORELocalStart *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalReserveResponse:
-		soap_serialize_PointerTons2__tpsAPI_USCORELocalReserveResponse(soap, (struct ns2__tpsAPI_USCORELocalReserveResponse *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalReserve:
-		soap_serialize_PointerTons2__tpsAPI_USCORELocalReserve(soap, (struct ns2__tpsAPI_USCORELocalReserve *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalRemoveResponse:
-		soap_serialize_PointerTons2__tpsAPI_USCORELocalRemoveResponse(soap, (struct ns2__tpsAPI_USCORELocalRemoveResponse *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalRemove:
-		soap_serialize_PointerTons2__tpsAPI_USCORELocalRemove(soap, (struct ns2__tpsAPI_USCORELocalRemove *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCommitResponse:
-		soap_serialize_PointerTons2__tpsAPI_USCORELocalCommitResponse(soap, (struct ns2__tpsAPI_USCORELocalCommitResponse *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCommit:
-		soap_serialize_PointerTons2__tpsAPI_USCORELocalCommit(soap, (struct ns2__tpsAPI_USCORELocalCommit *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCancelResponse:
-		soap_serialize_PointerTons2__tpsAPI_USCORELocalCancelResponse(soap, (struct ns2__tpsAPI_USCORELocalCancelResponse *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCancel:
-		soap_serialize_PointerTons2__tpsAPI_USCORELocalCancel(soap, (struct ns2__tpsAPI_USCORELocalCancel *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__getAllReservationsForClassResponse:
-		soap_serialize_PointerTons2__getAllReservationsForClassResponse(soap, (struct ns2__getAllReservationsForClassResponse *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__getAllReservationsForClass:
-		soap_serialize_PointerTons2__getAllReservationsForClass(soap, (struct ns2__getAllReservationsForClass *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__UserData:
-		soap_serialize_PointerTons2__UserData(soap, (struct ns2__UserData *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTostring:
-		soap_serialize_PointerTostring(soap, (char **const*)ptr);
-		break;
-	case SOAP_TYPE_PointerToPointerTons2__Bandwidth:
-		soap_serialize_PointerToPointerTons2__Bandwidth(soap, (struct ns2__Bandwidth **const*)ptr);
-		break;
-	case SOAP_TYPE_PointerToPointerTons2__Bandwidths:
-		soap_serialize_PointerToPointerTons2__Bandwidths(soap, (struct ns2__Bandwidths **const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__Bandwidths:
-		soap_serialize_PointerTons2__Bandwidths(soap, (struct ns2__Bandwidths *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerToPointerTons2__ReservationData:
-		soap_serialize_PointerToPointerTons2__ReservationData(soap, (struct ns2__ReservationData **const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__Who:
-		soap_serialize_PointerTons2__Who(soap, (struct ns2__Who *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__Bandwidth:
-		soap_serialize_PointerTons2__Bandwidth(soap, (struct ns2__Bandwidth *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTons2__ReservationData:
-		soap_serialize_PointerTons2__ReservationData(soap, (struct ns2__ReservationData *const*)ptr);
-		break;
-	case SOAP_TYPE__QName:
-		soap_serialize_string(soap, (char*const*)&ptr);
-		break;
-	case SOAP_TYPE_string:
-		soap_serialize_string(soap, (char*const*)&ptr);
-		break;
-	}
+SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, int type) {
+  (void)soap;
+  (void)ptr;
+  (void)type; /* appease -Wall -Werror */
+  switch (type) {
+  case SOAP_TYPE___ns1__tpsAPI_USCOREreserve:
+    soap_serialize___ns1__tpsAPI_USCOREreserve(soap, (const struct __ns1__tpsAPI_USCOREreserve *)ptr);
+    break;
+  case SOAP_TYPE___ns1__tpsAPI_USCORElookupUser:
+    soap_serialize___ns1__tpsAPI_USCORElookupUser(soap, (const struct __ns1__tpsAPI_USCORElookupUser *)ptr);
+    break;
+  case SOAP_TYPE___ns1__tpsAPI_USCOREgetReservationData:
+    soap_serialize___ns1__tpsAPI_USCOREgetReservationData(soap, (const struct __ns1__tpsAPI_USCOREgetReservationData *)ptr);
+    break;
+  case SOAP_TYPE___ns1__tpsAPI_USCOREgetRelatedReservationIds:
+    soap_serialize___ns1__tpsAPI_USCOREgetRelatedReservationIds(soap, (const struct __ns1__tpsAPI_USCOREgetRelatedReservationIds *)ptr);
+    break;
+  case SOAP_TYPE___ns1__tpsAPI_USCOREgetPath:
+    soap_serialize___ns1__tpsAPI_USCOREgetPath(soap, (const struct __ns1__tpsAPI_USCOREgetPath *)ptr);
+    break;
+  case SOAP_TYPE___ns1__tpsAPI_USCOREgetLocalBandwidths:
+    soap_serialize___ns1__tpsAPI_USCOREgetLocalBandwidths(soap, (const struct __ns1__tpsAPI_USCOREgetLocalBandwidths *)ptr);
+    break;
+  case SOAP_TYPE___ns1__tpsAPI_USCOREgetBandwidths:
+    soap_serialize___ns1__tpsAPI_USCOREgetBandwidths(soap, (const struct __ns1__tpsAPI_USCOREgetBandwidths *)ptr);
+    break;
+  case SOAP_TYPE___ns1__tpsAPI_USCOREcommit:
+    soap_serialize___ns1__tpsAPI_USCOREcommit(soap, (const struct __ns1__tpsAPI_USCOREcommit *)ptr);
+    break;
+  case SOAP_TYPE___ns1__tpsAPI_USCOREcancel:
+    soap_serialize___ns1__tpsAPI_USCOREcancel(soap, (const struct __ns1__tpsAPI_USCOREcancel *)ptr);
+    break;
+  case SOAP_TYPE___ns1__tpsAPI_USCOREaddRelatedReservationId:
+    soap_serialize___ns1__tpsAPI_USCOREaddRelatedReservationId(soap, (const struct __ns1__tpsAPI_USCOREaddRelatedReservationId *)ptr);
+    break;
+  case SOAP_TYPE___ns1__tpsAPI_USCORELocalStart:
+    soap_serialize___ns1__tpsAPI_USCORELocalStart(soap, (const struct __ns1__tpsAPI_USCORELocalStart *)ptr);
+    break;
+  case SOAP_TYPE___ns1__tpsAPI_USCORELocalReserve:
+    soap_serialize___ns1__tpsAPI_USCORELocalReserve(soap, (const struct __ns1__tpsAPI_USCORELocalReserve *)ptr);
+    break;
+  case SOAP_TYPE___ns1__tpsAPI_USCORELocalRemove:
+    soap_serialize___ns1__tpsAPI_USCORELocalRemove(soap, (const struct __ns1__tpsAPI_USCORELocalRemove *)ptr);
+    break;
+  case SOAP_TYPE___ns1__tpsAPI_USCORELocalCommit:
+    soap_serialize___ns1__tpsAPI_USCORELocalCommit(soap, (const struct __ns1__tpsAPI_USCORELocalCommit *)ptr);
+    break;
+  case SOAP_TYPE___ns1__tpsAPI_USCORELocalCancel:
+    soap_serialize___ns1__tpsAPI_USCORELocalCancel(soap, (const struct __ns1__tpsAPI_USCORELocalCancel *)ptr);
+    break;
+  case SOAP_TYPE___ns1__getAllReservationsForClass:
+    soap_serialize___ns1__getAllReservationsForClass(soap, (const struct __ns1__getAllReservationsForClass *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse:
+    soap_serialize_ns2__tpsAPI_USCOREreserveResponse(soap, (const struct ns2__tpsAPI_USCOREreserveResponse *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCOREreserve:
+    soap_serialize_ns2__tpsAPI_USCOREreserve(soap, (const struct ns2__tpsAPI_USCOREreserve *)ptr);
+    break;
+  case SOAP_TYPE_ns2__UserData:
+    soap_serialize_ns2__UserData(soap, (const struct ns2__UserData *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse:
+    soap_serialize_ns2__tpsAPI_USCORElookupUserResponse(soap, (const struct ns2__tpsAPI_USCORElookupUserResponse *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCORElookupUser:
+    soap_serialize_ns2__tpsAPI_USCORElookupUser(soap, (const struct ns2__tpsAPI_USCORElookupUser *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse:
+    soap_serialize_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, (const struct ns2__tpsAPI_USCOREgetReservationDataResponse *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData:
+    soap_serialize_ns2__tpsAPI_USCOREgetReservationData(soap, (const struct ns2__tpsAPI_USCOREgetReservationData *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse:
+    soap_serialize_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, (const struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds:
+    soap_serialize_ns2__tpsAPI_USCOREgetRelatedReservationIds(soap, (const struct ns2__tpsAPI_USCOREgetRelatedReservationIds *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse:
+    soap_serialize_ns2__tpsAPI_USCOREgetPathResponse(soap, (const struct ns2__tpsAPI_USCOREgetPathResponse *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetPath:
+    soap_serialize_ns2__tpsAPI_USCOREgetPath(soap, (const struct ns2__tpsAPI_USCOREgetPath *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse:
+    soap_serialize_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, (const struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths:
+    soap_serialize_ns2__tpsAPI_USCOREgetLocalBandwidths(soap, (const struct ns2__tpsAPI_USCOREgetLocalBandwidths *)ptr);
+    break;
+  case SOAP_TYPE_ns2__Bandwidths:
+    soap_serialize_ns2__Bandwidths(soap, (const struct ns2__Bandwidths *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse:
+    soap_serialize_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, (const struct ns2__tpsAPI_USCOREgetBandwidthsResponse *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths:
+    soap_serialize_ns2__tpsAPI_USCOREgetBandwidths(soap, (const struct ns2__tpsAPI_USCOREgetBandwidths *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse:
+    soap_serialize_ns2__tpsAPI_USCOREcommitResponse(soap, (const struct ns2__tpsAPI_USCOREcommitResponse *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCOREcommit:
+    soap_serialize_ns2__tpsAPI_USCOREcommit(soap, (const struct ns2__tpsAPI_USCOREcommit *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse:
+    soap_serialize_ns2__tpsAPI_USCOREcancelResponse(soap, (const struct ns2__tpsAPI_USCOREcancelResponse *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCOREcancel:
+    soap_serialize_ns2__tpsAPI_USCOREcancel(soap, (const struct ns2__tpsAPI_USCOREcancel *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse:
+    soap_serialize_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, (const struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId:
+    soap_serialize_ns2__tpsAPI_USCOREaddRelatedReservationId(soap, (const struct ns2__tpsAPI_USCOREaddRelatedReservationId *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse:
+    soap_serialize_ns2__tpsAPI_USCORELocalStartResponse(soap, (const struct ns2__tpsAPI_USCORELocalStartResponse *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalStart:
+    soap_serialize_ns2__tpsAPI_USCORELocalStart(soap, (const struct ns2__tpsAPI_USCORELocalStart *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse:
+    soap_serialize_ns2__tpsAPI_USCORELocalReserveResponse(soap, (const struct ns2__tpsAPI_USCORELocalReserveResponse *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve:
+    soap_serialize_ns2__tpsAPI_USCORELocalReserve(soap, (const struct ns2__tpsAPI_USCORELocalReserve *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse:
+    soap_serialize_ns2__tpsAPI_USCORELocalRemoveResponse(soap, (const struct ns2__tpsAPI_USCORELocalRemoveResponse *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove:
+    soap_serialize_ns2__tpsAPI_USCORELocalRemove(soap, (const struct ns2__tpsAPI_USCORELocalRemove *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse:
+    soap_serialize_ns2__tpsAPI_USCORELocalCommitResponse(soap, (const struct ns2__tpsAPI_USCORELocalCommitResponse *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit:
+    soap_serialize_ns2__tpsAPI_USCORELocalCommit(soap, (const struct ns2__tpsAPI_USCORELocalCommit *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse:
+    soap_serialize_ns2__tpsAPI_USCORELocalCancelResponse(soap, (const struct ns2__tpsAPI_USCORELocalCancelResponse *)ptr);
+    break;
+  case SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel:
+    soap_serialize_ns2__tpsAPI_USCORELocalCancel(soap, (const struct ns2__tpsAPI_USCORELocalCancel *)ptr);
+    break;
+  case SOAP_TYPE_ns2__getAllReservationsForClassResponse:
+    soap_serialize_ns2__getAllReservationsForClassResponse(soap, (const struct ns2__getAllReservationsForClassResponse *)ptr);
+    break;
+  case SOAP_TYPE_ns2__Who:
+    soap_serialize_ns2__Who(soap, (const struct ns2__Who *)ptr);
+    break;
+  case SOAP_TYPE_ns2__Bandwidth:
+    soap_serialize_ns2__Bandwidth(soap, (const struct ns2__Bandwidth *)ptr);
+    break;
+  case SOAP_TYPE_ns2__ReservationData:
+    soap_serialize_ns2__ReservationData(soap, (const struct ns2__ReservationData *)ptr);
+    break;
+  case SOAP_TYPE_ns2__getAllReservationsForClass:
+    soap_serialize_ns2__getAllReservationsForClass(soap, (const struct ns2__getAllReservationsForClass *)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREreserveResponse:
+    soap_serialize_PointerTons2__tpsAPI_USCOREreserveResponse(soap, (struct ns2__tpsAPI_USCOREreserveResponse *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREreserve:
+    soap_serialize_PointerTons2__tpsAPI_USCOREreserve(soap, (struct ns2__tpsAPI_USCOREreserve *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORElookupUserResponse:
+    soap_serialize_PointerTons2__tpsAPI_USCORElookupUserResponse(soap, (struct ns2__tpsAPI_USCORElookupUserResponse *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORElookupUser:
+    soap_serialize_PointerTons2__tpsAPI_USCORElookupUser(soap, (struct ns2__tpsAPI_USCORElookupUser *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetReservationDataResponse:
+    soap_serialize_PointerTons2__tpsAPI_USCOREgetReservationDataResponse(soap, (struct ns2__tpsAPI_USCOREgetReservationDataResponse *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetReservationData:
+    soap_serialize_PointerTons2__tpsAPI_USCOREgetReservationData(soap, (struct ns2__tpsAPI_USCOREgetReservationData *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse:
+    soap_serialize_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, (struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds:
+    soap_serialize_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(soap, (struct ns2__tpsAPI_USCOREgetRelatedReservationIds *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetPathResponse:
+    soap_serialize_PointerTons2__tpsAPI_USCOREgetPathResponse(soap, (struct ns2__tpsAPI_USCOREgetPathResponse *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetPath:
+    soap_serialize_PointerTons2__tpsAPI_USCOREgetPath(soap, (struct ns2__tpsAPI_USCOREgetPath *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse:
+    soap_serialize_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, (struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetLocalBandwidths:
+    soap_serialize_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(soap, (struct ns2__tpsAPI_USCOREgetLocalBandwidths *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse:
+    soap_serialize_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse(soap, (struct ns2__tpsAPI_USCOREgetBandwidthsResponse *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetBandwidths:
+    soap_serialize_PointerTons2__tpsAPI_USCOREgetBandwidths(soap, (struct ns2__tpsAPI_USCOREgetBandwidths *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcommitResponse:
+    soap_serialize_PointerTons2__tpsAPI_USCOREcommitResponse(soap, (struct ns2__tpsAPI_USCOREcommitResponse *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcommit:
+    soap_serialize_PointerTons2__tpsAPI_USCOREcommit(soap, (struct ns2__tpsAPI_USCOREcommit *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcancelResponse:
+    soap_serialize_PointerTons2__tpsAPI_USCOREcancelResponse(soap, (struct ns2__tpsAPI_USCOREcancelResponse *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREcancel:
+    soap_serialize_PointerTons2__tpsAPI_USCOREcancel(soap, (struct ns2__tpsAPI_USCOREcancel *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse:
+    soap_serialize_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, (struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCOREaddRelatedReservationId:
+    soap_serialize_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(soap, (struct ns2__tpsAPI_USCOREaddRelatedReservationId *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalStartResponse:
+    soap_serialize_PointerTons2__tpsAPI_USCORELocalStartResponse(soap, (struct ns2__tpsAPI_USCORELocalStartResponse *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalStart:
+    soap_serialize_PointerTons2__tpsAPI_USCORELocalStart(soap, (struct ns2__tpsAPI_USCORELocalStart *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalReserveResponse:
+    soap_serialize_PointerTons2__tpsAPI_USCORELocalReserveResponse(soap, (struct ns2__tpsAPI_USCORELocalReserveResponse *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalReserve:
+    soap_serialize_PointerTons2__tpsAPI_USCORELocalReserve(soap, (struct ns2__tpsAPI_USCORELocalReserve *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalRemoveResponse:
+    soap_serialize_PointerTons2__tpsAPI_USCORELocalRemoveResponse(soap, (struct ns2__tpsAPI_USCORELocalRemoveResponse *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalRemove:
+    soap_serialize_PointerTons2__tpsAPI_USCORELocalRemove(soap, (struct ns2__tpsAPI_USCORELocalRemove *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCommitResponse:
+    soap_serialize_PointerTons2__tpsAPI_USCORELocalCommitResponse(soap, (struct ns2__tpsAPI_USCORELocalCommitResponse *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCommit:
+    soap_serialize_PointerTons2__tpsAPI_USCORELocalCommit(soap, (struct ns2__tpsAPI_USCORELocalCommit *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCancelResponse:
+    soap_serialize_PointerTons2__tpsAPI_USCORELocalCancelResponse(soap, (struct ns2__tpsAPI_USCORELocalCancelResponse *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCancel:
+    soap_serialize_PointerTons2__tpsAPI_USCORELocalCancel(soap, (struct ns2__tpsAPI_USCORELocalCancel *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__getAllReservationsForClassResponse:
+    soap_serialize_PointerTons2__getAllReservationsForClassResponse(soap, (struct ns2__getAllReservationsForClassResponse *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__getAllReservationsForClass:
+    soap_serialize_PointerTons2__getAllReservationsForClass(soap, (struct ns2__getAllReservationsForClass *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__UserData:
+    soap_serialize_PointerTons2__UserData(soap, (struct ns2__UserData *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTostring:
+    soap_serialize_PointerTostring(soap, (char **const*)ptr);
+    break;
+  case SOAP_TYPE_PointerToPointerTons2__Bandwidth:
+    soap_serialize_PointerToPointerTons2__Bandwidth(soap, (struct ns2__Bandwidth **const*)ptr);
+    break;
+  case SOAP_TYPE_PointerToPointerTons2__Bandwidths:
+    soap_serialize_PointerToPointerTons2__Bandwidths(soap, (struct ns2__Bandwidths **const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__Bandwidths:
+    soap_serialize_PointerTons2__Bandwidths(soap, (struct ns2__Bandwidths *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerToPointerTons2__ReservationData:
+    soap_serialize_PointerToPointerTons2__ReservationData(soap, (struct ns2__ReservationData **const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__Who:
+    soap_serialize_PointerTons2__Who(soap, (struct ns2__Who *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__Bandwidth:
+    soap_serialize_PointerTons2__Bandwidth(soap, (struct ns2__Bandwidth *const*)ptr);
+    break;
+  case SOAP_TYPE_PointerTons2__ReservationData:
+    soap_serialize_PointerTons2__ReservationData(soap, (struct ns2__ReservationData *const*)ptr);
+    break;
+  case SOAP_TYPE__QName:
+    soap_serialize_string(soap, (char*const*)&ptr);
+    break;
+  case SOAP_TYPE_string:
+    soap_serialize_string(soap, (char*const*)&ptr);
+    break;
+  }
 }
 #endif
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_byte(struct soap *soap, char *a)
-{
-	(void)soap; /* appease -Wall -Werror */
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_byte(struct soap *soap, char *a) {
+  (void)soap; /* appease -Wall -Werror */
 #ifdef SOAP_DEFAULT_byte
-	*a = SOAP_DEFAULT_byte;
+  *a = SOAP_DEFAULT_byte;
 #else
-	*a = (char)0;
+  *a = (char)0;
 #endif
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_byte(struct soap *soap, const char *tag, int id, const char *a, const char *type)
-{
-	return soap_outbyte(soap, tag, id, a, type, SOAP_TYPE_byte);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_byte(struct soap *soap, const char *tag, int id, const char *a, const char *type) {
+  return soap_outbyte(soap, tag, id, a, type, SOAP_TYPE_byte);
 }
 
-SOAP_FMAC3 char * SOAP_FMAC4 soap_in_byte(struct soap *soap, const char *tag, char *a, const char *type)
-{	char *p;
-	p = soap_inbyte(soap, tag, a, type, SOAP_TYPE_byte);
-	return p;
+SOAP_FMAC3 char * SOAP_FMAC4 soap_in_byte(struct soap *soap, const char *tag, char *a, const char *type) {
+  char *p;
+  p = soap_inbyte(soap, tag, a, type, SOAP_TYPE_byte);
+  return p;
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_byte(struct soap *soap, const char *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_byte);
-	if (soap_out_byte(soap, tag?tag:"byte", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_byte(struct soap *soap, const char *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_byte);
+  if (soap_out_byte(soap, tag?tag:"byte", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
 }
 
-SOAP_FMAC3 char * SOAP_FMAC4 soap_get_byte(struct soap *soap, char *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_byte(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
+SOAP_FMAC3 char * SOAP_FMAC4 soap_get_byte(struct soap *soap, char *p, const char *tag, const char *type) {
+  if ((p = soap_in_byte(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_int(struct soap *soap, int *a)
-{
-	(void)soap; /* appease -Wall -Werror */
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_int(struct soap *soap, int *a) {
+  (void)soap; /* appease -Wall -Werror */
 #ifdef SOAP_DEFAULT_int
-	*a = SOAP_DEFAULT_int;
+  *a = SOAP_DEFAULT_int;
 #else
-	*a = (int)0;
+  *a = (int)0;
 #endif
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_int(struct soap *soap, const char *tag, int id, const int *a, const char *type)
-{
-	return soap_outint(soap, tag, id, a, type, SOAP_TYPE_int);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_int(struct soap *soap, const char *tag, int id, const int *a, const char *type) {
+  return soap_outint(soap, tag, id, a, type, SOAP_TYPE_int);
 }
 
-SOAP_FMAC3 int * SOAP_FMAC4 soap_in_int(struct soap *soap, const char *tag, int *a, const char *type)
-{	int *p;
-	p = soap_inint(soap, tag, a, type, SOAP_TYPE_int);
-	return p;
+SOAP_FMAC3 int * SOAP_FMAC4 soap_in_int(struct soap *soap, const char *tag, int *a, const char *type) {
+  int *p;
+  p = soap_inint(soap, tag, a, type, SOAP_TYPE_int);
+  return p;
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_int(struct soap *soap, const int *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_int);
-	if (soap_out_int(soap, tag?tag:"int", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_int(struct soap *soap, const int *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_int);
+  if (soap_out_int(soap, tag?tag:"int", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
 }
 
-SOAP_FMAC3 int * SOAP_FMAC4 soap_get_int(struct soap *soap, int *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_int(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
+SOAP_FMAC3 int * SOAP_FMAC4 soap_get_int(struct soap *soap, int *p, const char *tag, const char *type) {
+  if ((p = soap_in_int(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_LONG64(struct soap *soap, LONG64 *a)
-{
-	(void)soap; /* appease -Wall -Werror */
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_LONG64(struct soap *soap, LONG64 *a) {
+  (void)soap; /* appease -Wall -Werror */
 #ifdef SOAP_DEFAULT_LONG64
-	*a = SOAP_DEFAULT_LONG64;
+  *a = SOAP_DEFAULT_LONG64;
 #else
-	*a = (LONG64)0;
+  *a = (LONG64)0;
 #endif
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_LONG64(struct soap *soap, const char *tag, int id, const LONG64 *a, const char *type)
-{
-	return soap_outLONG64(soap, tag, id, a, type, SOAP_TYPE_LONG64);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_LONG64(struct soap *soap, const char *tag, int id, const LONG64 *a, const char *type) {
+  return soap_outLONG64(soap, tag, id, a, type, SOAP_TYPE_LONG64);
 }
 
-SOAP_FMAC3 LONG64 * SOAP_FMAC4 soap_in_LONG64(struct soap *soap, const char *tag, LONG64 *a, const char *type)
-{	LONG64 *p;
-	p = soap_inLONG64(soap, tag, a, type, SOAP_TYPE_LONG64);
-	return p;
+SOAP_FMAC3 LONG64 * SOAP_FMAC4 soap_in_LONG64(struct soap *soap, const char *tag, LONG64 *a, const char *type) {
+  LONG64 *p;
+  p = soap_inLONG64(soap, tag, a, type, SOAP_TYPE_LONG64);
+  return p;
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_LONG64(struct soap *soap, const LONG64 *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_LONG64);
-	if (soap_out_LONG64(soap, tag?tag:"long", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_LONG64(struct soap *soap, const LONG64 *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_LONG64);
+  if (soap_out_LONG64(soap, tag?tag:"long", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
 }
 
-SOAP_FMAC3 LONG64 * SOAP_FMAC4 soap_get_LONG64(struct soap *soap, LONG64 *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_LONG64(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
+SOAP_FMAC3 LONG64 * SOAP_FMAC4 soap_get_LONG64(struct soap *soap, LONG64 *p, const char *tag, const char *type) {
+  if ((p = soap_in_LONG64(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_xsd__boolean(struct soap *soap, enum xsd__boolean *a)
-{
-	(void)soap; /* appease -Wall -Werror */
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_xsd__boolean(struct soap *soap, enum xsd__boolean *a) {
+  (void)soap; /* appease -Wall -Werror */
 #ifdef SOAP_DEFAULT_xsd__boolean
-	*a = SOAP_DEFAULT_xsd__boolean;
+  *a = SOAP_DEFAULT_xsd__boolean;
 #else
-	*a = (enum xsd__boolean)0;
+  *a = (enum xsd__boolean)0;
 #endif
 }
 
-static const struct soap_code_map soap_codes_xsd__boolean[] =
-{	{ (long)xsd__boolean__false_, "false" },
-	{ (long)xsd__boolean__true_, "true" },
-	{ 0, NULL }
+static const struct soap_code_map soap_codes_xsd__boolean[] = {
+  { (long)xsd__boolean__false_, "false" },
+  { (long)xsd__boolean__true_, "true" },
+  { 0, NULL }
 };
 
-SOAP_FMAC3S const char* SOAP_FMAC4S soap_xsd__boolean2s(struct soap *soap, enum xsd__boolean n)
-{
-	(void)soap; /* appease -Wall -Werror */
-return soap_code_str(soap_codes_xsd__boolean, n!=0);
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_xsd__boolean2s(struct soap *soap, enum xsd__boolean n) {
+  (void)soap; /* appease -Wall -Werror */
+  return soap_code_str(soap_codes_xsd__boolean, n!=0);
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_xsd__boolean(struct soap *soap, const char *tag, int id, const enum xsd__boolean *a, const char *type)
-{	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_xsd__boolean), type) || soap_send(soap, soap_xsd__boolean2s(soap, *a)))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xsd__boolean(struct soap *soap, const char *tag, int id, const enum xsd__boolean *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_xsd__boolean), type) || soap_send(soap, soap_xsd__boolean2s(soap, *a)))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
 }
 
-SOAP_FMAC3S int SOAP_FMAC4S soap_s2xsd__boolean(struct soap *soap, const char *s, enum xsd__boolean *a)
-{
-	const struct soap_code_map *map;
-	if (!s)
-		return soap->error;
-	map = soap_code(soap_codes_xsd__boolean, s);
-	if (map)
-		*a = (enum xsd__boolean)(map->code != 0);
-	else
-	{	long n;
-		if (soap_s2long(soap, s, &n) || n < 0 || n > 1)
-			return soap->error = SOAP_TYPE;
-		*a = (enum xsd__boolean)(n != 0);
-	}
-	return SOAP_OK;
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2xsd__boolean(struct soap *soap, const char *s, enum xsd__boolean *a) {
+  const struct soap_code_map *map;
+  if (!s)
+    return soap->error;
+  map = soap_code(soap_codes_xsd__boolean, s);
+  if (map)
+    *a = (enum xsd__boolean)(map->code != 0);
+  else {
+    long n;
+    if (soap_s2long(soap, s, &n) || n < 0 || n > 1)
+      return soap->error = SOAP_TYPE;
+    *a = (enum xsd__boolean)(n != 0);
+  }
+  return SOAP_OK;
 }
 
-SOAP_FMAC3 enum xsd__boolean * SOAP_FMAC4 soap_in_xsd__boolean(struct soap *soap, const char *tag, enum xsd__boolean *a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 0, NULL))
-		return NULL;
-	if (*soap->type && soap_match_tag(soap, soap->type, type) && soap_match_tag(soap, soap->type, ":boolean"))
-	{	soap->error = SOAP_TYPE;
-		return NULL;
-	}
-	a = (enum xsd__boolean *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_xsd__boolean, sizeof(enum xsd__boolean), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	if (soap->body && !*soap->href)
-	{	if (!a || soap_s2xsd__boolean(soap, soap_value(soap), a) || soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (enum xsd__boolean *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_xsd__boolean, 0, sizeof(enum xsd__boolean), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
+SOAP_FMAC3 enum xsd__boolean * SOAP_FMAC4 soap_in_xsd__boolean(struct soap *soap, const char *tag, enum xsd__boolean *a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 0, NULL))
+    return NULL;
+  if (*soap->type && soap_match_tag(soap, soap->type, type) && soap_match_tag(soap, soap->type, ":boolean")) {
+    soap->error = SOAP_TYPE;
+    return NULL;
+  }
+  a = (enum xsd__boolean *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_xsd__boolean, sizeof(enum xsd__boolean), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  if (soap->body && !*soap->href) {
+    if (!a || soap_s2xsd__boolean(soap, soap_value(soap), a) || soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (enum xsd__boolean *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_xsd__boolean, 0, sizeof(enum xsd__boolean), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_xsd__boolean(struct soap *soap, const enum xsd__boolean *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_xsd__boolean);
-	if (soap_out_xsd__boolean(soap, tag?tag:"xsd:boolean", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_xsd__boolean(struct soap *soap, const enum xsd__boolean *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_xsd__boolean);
+  if (soap_out_xsd__boolean(soap, tag?tag:"xsd:boolean", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
 }
 
-SOAP_FMAC3 enum xsd__boolean * SOAP_FMAC4 soap_get_xsd__boolean(struct soap *soap, enum xsd__boolean *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_xsd__boolean(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
+SOAP_FMAC3 enum xsd__boolean * SOAP_FMAC4 soap_get_xsd__boolean(struct soap *soap, enum xsd__boolean *p, const char *tag, const char *type) {
+  if ((p = soap_in_xsd__boolean(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
 }
 
 #ifndef WITH_NOGLOBAL
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Fault(struct soap *soap, struct SOAP_ENV__Fault *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default__QName(soap, &a->faultcode);
-	soap_default_string(soap, &a->faultstring);
-	soap_default_string(soap, &a->faultactor);
-	a->detail = NULL;
-	a->SOAP_ENV__Code = NULL;
-	a->SOAP_ENV__Reason = NULL;
-	soap_default_string(soap, &a->SOAP_ENV__Node);
-	soap_default_string(soap, &a->SOAP_ENV__Role);
-	a->SOAP_ENV__Detail = NULL;
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Fault(struct soap *soap, struct SOAP_ENV__Fault *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default__QName(soap, &a->faultcode);
+  soap_default_string(soap, &a->faultstring);
+  soap_default_string(soap, &a->faultactor);
+  a->detail = NULL;
+  a->SOAP_ENV__Code = NULL;
+  a->SOAP_ENV__Reason = NULL;
+  soap_default_string(soap, &a->SOAP_ENV__Node);
+  soap_default_string(soap, &a->SOAP_ENV__Role);
+  a->SOAP_ENV__Detail = NULL;
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Fault(struct soap *soap, const struct SOAP_ENV__Fault *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize__QName(soap, &a->faultcode);
-	soap_serialize_string(soap, &a->faultstring);
-	soap_serialize_string(soap, &a->faultactor);
-	soap_serialize_PointerToSOAP_ENV__Detail(soap, &a->detail);
-	soap_serialize_PointerToSOAP_ENV__Code(soap, &a->SOAP_ENV__Code);
-	soap_serialize_PointerToSOAP_ENV__Reason(soap, &a->SOAP_ENV__Reason);
-	soap_serialize_string(soap, &a->SOAP_ENV__Node);
-	soap_serialize_string(soap, &a->SOAP_ENV__Role);
-	soap_serialize_PointerToSOAP_ENV__Detail(soap, &a->SOAP_ENV__Detail);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Fault(struct soap *soap, const struct SOAP_ENV__Fault *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize__QName(soap, &a->faultcode);
+  soap_serialize_string(soap, &a->faultstring);
+  soap_serialize_string(soap, &a->faultactor);
+  soap_serialize_PointerToSOAP_ENV__Detail(soap, &a->detail);
+  soap_serialize_PointerToSOAP_ENV__Code(soap, &a->SOAP_ENV__Code);
+  soap_serialize_PointerToSOAP_ENV__Reason(soap, &a->SOAP_ENV__Reason);
+  soap_serialize_string(soap, &a->SOAP_ENV__Node);
+  soap_serialize_string(soap, &a->SOAP_ENV__Role);
+  soap_serialize_PointerToSOAP_ENV__Detail(soap, &a->SOAP_ENV__Detail);
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_SOAP_ENV__Fault(struct soap *soap, const char *tag, int id, const struct SOAP_ENV__Fault *a, const char *type)
-{
-	const char *soap_tmp_faultcode = soap_QName2s(soap, a->faultcode);
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_SOAP_ENV__Fault), type))
-		return soap->error;
-	if (soap_out__QName(soap, "faultcode", -1, (char*const*)&soap_tmp_faultcode, ""))
-		return soap->error;
-	if (soap_out_string(soap, "faultstring", -1, &a->faultstring, ""))
-		return soap->error;
-	if (soap_out_string(soap, "faultactor", -1, &a->faultactor, ""))
-		return soap->error;
-	if (soap_out_PointerToSOAP_ENV__Detail(soap, "detail", -1, &a->detail, ""))
-		return soap->error;
-	if (soap_out_PointerToSOAP_ENV__Code(soap, "SOAP-ENV:Code", -1, &a->SOAP_ENV__Code, ""))
-		return soap->error;
-	if (soap_out_PointerToSOAP_ENV__Reason(soap, "SOAP-ENV:Reason", -1, &a->SOAP_ENV__Reason, ""))
-		return soap->error;
-	if (soap_out_string(soap, "SOAP-ENV:Node", -1, &a->SOAP_ENV__Node, ""))
-		return soap->error;
-	if (soap_out_string(soap, "SOAP-ENV:Role", -1, &a->SOAP_ENV__Role, ""))
-		return soap->error;
-	if (soap_out_PointerToSOAP_ENV__Detail(soap, "SOAP-ENV:Detail", -1, &a->SOAP_ENV__Detail, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_SOAP_ENV__Fault(struct soap *soap, const char *tag, int id, const struct SOAP_ENV__Fault *a, const char *type) {
+  const char *soap_tmp_faultcode = soap_QName2s(soap, a->faultcode);
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_SOAP_ENV__Fault), type))
+    return soap->error;
+  if (soap_out__QName(soap, "faultcode", -1, (char*const*)&soap_tmp_faultcode, ""))
+    return soap->error;
+  if (soap_out_string(soap, "faultstring", -1, &a->faultstring, ""))
+    return soap->error;
+  if (soap_out_string(soap, "faultactor", -1, &a->faultactor, ""))
+    return soap->error;
+  if (soap_out_PointerToSOAP_ENV__Detail(soap, "detail", -1, &a->detail, ""))
+    return soap->error;
+  if (soap_out_PointerToSOAP_ENV__Code(soap, "SOAP-ENV:Code", -1, &a->SOAP_ENV__Code, ""))
+    return soap->error;
+  if (soap_out_PointerToSOAP_ENV__Reason(soap, "SOAP-ENV:Reason", -1, &a->SOAP_ENV__Reason, ""))
+    return soap->error;
+  if (soap_out_string(soap, "SOAP-ENV:Node", -1, &a->SOAP_ENV__Node, ""))
+    return soap->error;
+  if (soap_out_string(soap, "SOAP-ENV:Role", -1, &a->SOAP_ENV__Role, ""))
+    return soap->error;
+  if (soap_out_PointerToSOAP_ENV__Detail(soap, "SOAP-ENV:Detail", -1, &a->SOAP_ENV__Detail, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
 }
 
-SOAP_FMAC3 struct SOAP_ENV__Fault * SOAP_FMAC4 soap_in_SOAP_ENV__Fault(struct soap *soap, const char *tag, struct SOAP_ENV__Fault *a, const char *type)
-{
-	size_t soap_flag_faultcode = 1;
-	size_t soap_flag_faultstring = 1;
-	size_t soap_flag_faultactor = 1;
-	size_t soap_flag_detail = 1;
-	size_t soap_flag_SOAP_ENV__Code = 1;
-	size_t soap_flag_SOAP_ENV__Reason = 1;
-	size_t soap_flag_SOAP_ENV__Node = 1;
-	size_t soap_flag_SOAP_ENV__Role = 1;
-	size_t soap_flag_SOAP_ENV__Detail = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct SOAP_ENV__Fault *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_SOAP_ENV__Fault, sizeof(struct SOAP_ENV__Fault), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_SOAP_ENV__Fault(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_faultcode && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in__QName(soap, "faultcode", &a->faultcode, ""))
-				{	soap_flag_faultcode--;
-					continue;
-				}
-			if (soap_flag_faultstring && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "faultstring", &a->faultstring, "xsd:string"))
-				{	soap_flag_faultstring--;
-					continue;
-				}
-			if (soap_flag_faultactor && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "faultactor", &a->faultactor, "xsd:string"))
-				{	soap_flag_faultactor--;
-					continue;
-				}
-			if (soap_flag_detail && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerToSOAP_ENV__Detail(soap, "detail", &a->detail, ""))
-				{	soap_flag_detail--;
-					continue;
-				}
-			if (soap_flag_SOAP_ENV__Code && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerToSOAP_ENV__Code(soap, "SOAP-ENV:Code", &a->SOAP_ENV__Code, ""))
-				{	soap_flag_SOAP_ENV__Code--;
-					continue;
-				}
-			if (soap_flag_SOAP_ENV__Reason && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerToSOAP_ENV__Reason(soap, "SOAP-ENV:Reason", &a->SOAP_ENV__Reason, ""))
-				{	soap_flag_SOAP_ENV__Reason--;
-					continue;
-				}
-			if (soap_flag_SOAP_ENV__Node && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "SOAP-ENV:Node", &a->SOAP_ENV__Node, "xsd:string"))
-				{	soap_flag_SOAP_ENV__Node--;
-					continue;
-				}
-			if (soap_flag_SOAP_ENV__Role && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "SOAP-ENV:Role", &a->SOAP_ENV__Role, "xsd:string"))
-				{	soap_flag_SOAP_ENV__Role--;
-					continue;
-				}
-			if (soap_flag_SOAP_ENV__Detail && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerToSOAP_ENV__Detail(soap, "SOAP-ENV:Detail", &a->SOAP_ENV__Detail, ""))
-				{	soap_flag_SOAP_ENV__Detail--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct SOAP_ENV__Fault *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_SOAP_ENV__Fault, 0, sizeof(struct SOAP_ENV__Fault), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
+SOAP_FMAC3 struct SOAP_ENV__Fault * SOAP_FMAC4 soap_in_SOAP_ENV__Fault(struct soap *soap, const char *tag, struct SOAP_ENV__Fault *a, const char *type) {
+  size_t soap_flag_faultcode = 1;
+  size_t soap_flag_faultstring = 1;
+  size_t soap_flag_faultactor = 1;
+  size_t soap_flag_detail = 1;
+  size_t soap_flag_SOAP_ENV__Code = 1;
+  size_t soap_flag_SOAP_ENV__Reason = 1;
+  size_t soap_flag_SOAP_ENV__Node = 1;
+  size_t soap_flag_SOAP_ENV__Role = 1;
+  size_t soap_flag_SOAP_ENV__Detail = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct SOAP_ENV__Fault *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_SOAP_ENV__Fault, sizeof(struct SOAP_ENV__Fault), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_SOAP_ENV__Fault(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_faultcode && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in__QName(soap, "faultcode", &a->faultcode, "")) {
+          soap_flag_faultcode--;
+          continue;
+        }
+      if (soap_flag_faultstring && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "faultstring", &a->faultstring, "xsd:string")) {
+          soap_flag_faultstring--;
+          continue;
+        }
+      if (soap_flag_faultactor && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "faultactor", &a->faultactor, "xsd:string")) {
+          soap_flag_faultactor--;
+          continue;
+        }
+      if (soap_flag_detail && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_PointerToSOAP_ENV__Detail(soap, "detail", &a->detail, "")) {
+          soap_flag_detail--;
+          continue;
+        }
+      if (soap_flag_SOAP_ENV__Code && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_PointerToSOAP_ENV__Code(soap, "SOAP-ENV:Code", &a->SOAP_ENV__Code, "")) {
+          soap_flag_SOAP_ENV__Code--;
+          continue;
+        }
+      if (soap_flag_SOAP_ENV__Reason && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_PointerToSOAP_ENV__Reason(soap, "SOAP-ENV:Reason", &a->SOAP_ENV__Reason, "")) {
+          soap_flag_SOAP_ENV__Reason--;
+          continue;
+        }
+      if (soap_flag_SOAP_ENV__Node && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "SOAP-ENV:Node", &a->SOAP_ENV__Node, "xsd:string")) {
+          soap_flag_SOAP_ENV__Node--;
+          continue;
+        }
+      if (soap_flag_SOAP_ENV__Role && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "SOAP-ENV:Role", &a->SOAP_ENV__Role, "xsd:string")) {
+          soap_flag_SOAP_ENV__Role--;
+          continue;
+        }
+      if (soap_flag_SOAP_ENV__Detail && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_PointerToSOAP_ENV__Detail(soap, "SOAP-ENV:Detail", &a->SOAP_ENV__Detail, "")) {
+          soap_flag_SOAP_ENV__Detail--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct SOAP_ENV__Fault *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_SOAP_ENV__Fault, 0, sizeof(struct SOAP_ENV__Fault), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_SOAP_ENV__Fault(struct soap *soap, const struct SOAP_ENV__Fault *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_SOAP_ENV__Fault);
-	if (soap_out_SOAP_ENV__Fault(soap, tag?tag:"SOAP-ENV:Fault", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_SOAP_ENV__Fault(struct soap *soap, const struct SOAP_ENV__Fault *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_SOAP_ENV__Fault);
+  if (soap_out_SOAP_ENV__Fault(soap, tag?tag:"SOAP-ENV:Fault", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
 }
 
-SOAP_FMAC3 struct SOAP_ENV__Fault * SOAP_FMAC4 soap_get_SOAP_ENV__Fault(struct soap *soap, struct SOAP_ENV__Fault *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_SOAP_ENV__Fault(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
+SOAP_FMAC3 struct SOAP_ENV__Fault * SOAP_FMAC4 soap_get_SOAP_ENV__Fault(struct soap *soap, struct SOAP_ENV__Fault *p, const char *tag, const char *type) {
+  if ((p = soap_in_SOAP_ENV__Fault(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
 }
 
 #endif
 
 #ifndef WITH_NOGLOBAL
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Reason(struct soap *soap, struct SOAP_ENV__Reason *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_string(soap, &a->SOAP_ENV__Text);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Reason(struct soap *soap, struct SOAP_ENV__Reason *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_string(soap, &a->SOAP_ENV__Text);
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Reason(struct soap *soap, const struct SOAP_ENV__Reason *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_string(soap, &a->SOAP_ENV__Text);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Reason(struct soap *soap, const struct SOAP_ENV__Reason *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_string(soap, &a->SOAP_ENV__Text);
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_SOAP_ENV__Reason(struct soap *soap, const char *tag, int id, const struct SOAP_ENV__Reason *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_SOAP_ENV__Reason), type))
-		return soap->error;
-	if (soap->lang)
-		soap_set_attr(soap, "xml:lang", soap->lang, 1);
-	if (soap_out_string(soap, "SOAP-ENV:Text", -1, &a->SOAP_ENV__Text, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_SOAP_ENV__Reason(struct soap *soap, const char *tag, int id, const struct SOAP_ENV__Reason *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_SOAP_ENV__Reason), type))
+    return soap->error;
+  if (soap->lang)
+    soap_set_attr(soap, "xml:lang", soap->lang, 1);
+  if (soap_out_string(soap, "SOAP-ENV:Text", -1, &a->SOAP_ENV__Text, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
 }
 
-SOAP_FMAC3 struct SOAP_ENV__Reason * SOAP_FMAC4 soap_in_SOAP_ENV__Reason(struct soap *soap, const char *tag, struct SOAP_ENV__Reason *a, const char *type)
-{
-	size_t soap_flag_SOAP_ENV__Text = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct SOAP_ENV__Reason *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_SOAP_ENV__Reason, sizeof(struct SOAP_ENV__Reason), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_SOAP_ENV__Reason(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_SOAP_ENV__Text && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "SOAP-ENV:Text", &a->SOAP_ENV__Text, "xsd:string"))
-				{	soap_flag_SOAP_ENV__Text--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct SOAP_ENV__Reason *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_SOAP_ENV__Reason, 0, sizeof(struct SOAP_ENV__Reason), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
+SOAP_FMAC3 struct SOAP_ENV__Reason * SOAP_FMAC4 soap_in_SOAP_ENV__Reason(struct soap *soap, const char *tag, struct SOAP_ENV__Reason *a, const char *type) {
+  size_t soap_flag_SOAP_ENV__Text = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct SOAP_ENV__Reason *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_SOAP_ENV__Reason, sizeof(struct SOAP_ENV__Reason), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_SOAP_ENV__Reason(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_SOAP_ENV__Text && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "SOAP-ENV:Text", &a->SOAP_ENV__Text, "xsd:string")) {
+          soap_flag_SOAP_ENV__Text--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct SOAP_ENV__Reason *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_SOAP_ENV__Reason, 0, sizeof(struct SOAP_ENV__Reason), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_SOAP_ENV__Reason(struct soap *soap, const struct SOAP_ENV__Reason *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_SOAP_ENV__Reason);
-	if (soap_out_SOAP_ENV__Reason(soap, tag?tag:"SOAP-ENV:Reason", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_SOAP_ENV__Reason(struct soap *soap, const struct SOAP_ENV__Reason *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_SOAP_ENV__Reason);
+  if (soap_out_SOAP_ENV__Reason(soap, tag?tag:"SOAP-ENV:Reason", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
 }
 
-SOAP_FMAC3 struct SOAP_ENV__Reason * SOAP_FMAC4 soap_get_SOAP_ENV__Reason(struct soap *soap, struct SOAP_ENV__Reason *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_SOAP_ENV__Reason(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
+SOAP_FMAC3 struct SOAP_ENV__Reason * SOAP_FMAC4 soap_get_SOAP_ENV__Reason(struct soap *soap, struct SOAP_ENV__Reason *p, const char *tag, const char *type) {
+  if ((p = soap_in_SOAP_ENV__Reason(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
 }
 
 #endif
 
 #ifndef WITH_NOGLOBAL
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Detail(struct soap *soap, struct SOAP_ENV__Detail *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->__any = NULL;
-	a->__type = 0;
-	a->fault = NULL;
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Detail(struct soap *soap, struct SOAP_ENV__Detail *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->__any = NULL;
+  a->__type = 0;
+  a->fault = NULL;
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Detail(struct soap *soap, const struct SOAP_ENV__Detail *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_markelement(soap, a->fault, a->__type);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Detail(struct soap *soap, const struct SOAP_ENV__Detail *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_markelement(soap, a->fault, a->__type);
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_SOAP_ENV__Detail(struct soap *soap, const char *tag, int id, const struct SOAP_ENV__Detail *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_SOAP_ENV__Detail), type))
-		return soap->error;
-	soap_outliteral(soap, "-any", &a->__any, NULL);
-	if (soap_putelement(soap, a->fault, "fault", -1, a->__type))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_SOAP_ENV__Detail(struct soap *soap, const char *tag, int id, const struct SOAP_ENV__Detail *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_SOAP_ENV__Detail), type))
+    return soap->error;
+  soap_outliteral(soap, "-any", &a->__any, NULL);
+  if (soap_putelement(soap, a->fault, "fault", -1, a->__type))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
 }
 
-SOAP_FMAC3 struct SOAP_ENV__Detail * SOAP_FMAC4 soap_in_SOAP_ENV__Detail(struct soap *soap, const char *tag, struct SOAP_ENV__Detail *a, const char *type)
-{
-	size_t soap_flag___any = 1;
-	size_t soap_flag_fault = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct SOAP_ENV__Detail *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_SOAP_ENV__Detail, sizeof(struct SOAP_ENV__Detail), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_SOAP_ENV__Detail(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_fault && soap->error == SOAP_TAG_MISMATCH)
-				if ((a->fault = soap_getelement(soap, &a->__type)))
-				{	soap_flag_fault = 0;
-					continue;
-				}
-			if (soap_flag___any && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_inliteral(soap, "-any", &a->__any))
-				{	soap_flag___any--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct SOAP_ENV__Detail *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_SOAP_ENV__Detail, 0, sizeof(struct SOAP_ENV__Detail), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
+SOAP_FMAC3 struct SOAP_ENV__Detail * SOAP_FMAC4 soap_in_SOAP_ENV__Detail(struct soap *soap, const char *tag, struct SOAP_ENV__Detail *a, const char *type) {
+  size_t soap_flag___any = 1;
+  size_t soap_flag_fault = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct SOAP_ENV__Detail *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_SOAP_ENV__Detail, sizeof(struct SOAP_ENV__Detail), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_SOAP_ENV__Detail(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_fault && soap->error == SOAP_TAG_MISMATCH)
+        if ((a->fault = soap_getelement(soap, &a->__type))) {
+          soap_flag_fault = 0;
+          continue;
+        }
+      if (soap_flag___any && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_inliteral(soap, "-any", &a->__any)) {
+          soap_flag___any--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct SOAP_ENV__Detail *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_SOAP_ENV__Detail, 0, sizeof(struct SOAP_ENV__Detail), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_SOAP_ENV__Detail(struct soap *soap, const struct SOAP_ENV__Detail *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_SOAP_ENV__Detail);
-	if (soap_out_SOAP_ENV__Detail(soap, tag?tag:"SOAP-ENV:Detail", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_SOAP_ENV__Detail(struct soap *soap, const struct SOAP_ENV__Detail *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_SOAP_ENV__Detail);
+  if (soap_out_SOAP_ENV__Detail(soap, tag?tag:"SOAP-ENV:Detail", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
 }
 
-SOAP_FMAC3 struct SOAP_ENV__Detail * SOAP_FMAC4 soap_get_SOAP_ENV__Detail(struct soap *soap, struct SOAP_ENV__Detail *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_SOAP_ENV__Detail(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
+SOAP_FMAC3 struct SOAP_ENV__Detail * SOAP_FMAC4 soap_get_SOAP_ENV__Detail(struct soap *soap, struct SOAP_ENV__Detail *p, const char *tag, const char *type) {
+  if ((p = soap_in_SOAP_ENV__Detail(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
 }
 
 #endif
 
 #ifndef WITH_NOGLOBAL
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Code(struct soap *soap, struct SOAP_ENV__Code *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default__QName(soap, &a->SOAP_ENV__Value);
-	a->SOAP_ENV__Subcode = NULL;
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Code(struct soap *soap, struct SOAP_ENV__Code *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default__QName(soap, &a->SOAP_ENV__Value);
+  a->SOAP_ENV__Subcode = NULL;
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Code(struct soap *soap, const struct SOAP_ENV__Code *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize__QName(soap, &a->SOAP_ENV__Value);
-	soap_serialize_PointerToSOAP_ENV__Code(soap, &a->SOAP_ENV__Subcode);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Code(struct soap *soap, const struct SOAP_ENV__Code *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize__QName(soap, &a->SOAP_ENV__Value);
+  soap_serialize_PointerToSOAP_ENV__Code(soap, &a->SOAP_ENV__Subcode);
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_SOAP_ENV__Code(struct soap *soap, const char *tag, int id, const struct SOAP_ENV__Code *a, const char *type)
-{
-	const char *soap_tmp_SOAP_ENV__Value = soap_QName2s(soap, a->SOAP_ENV__Value);
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_SOAP_ENV__Code), type))
-		return soap->error;
-	if (soap_out__QName(soap, "SOAP-ENV:Value", -1, (char*const*)&soap_tmp_SOAP_ENV__Value, ""))
-		return soap->error;
-	if (soap_out_PointerToSOAP_ENV__Code(soap, "SOAP-ENV:Subcode", -1, &a->SOAP_ENV__Subcode, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_SOAP_ENV__Code(struct soap *soap, const char *tag, int id, const struct SOAP_ENV__Code *a, const char *type) {
+  const char *soap_tmp_SOAP_ENV__Value = soap_QName2s(soap, a->SOAP_ENV__Value);
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_SOAP_ENV__Code), type))
+    return soap->error;
+  if (soap_out__QName(soap, "SOAP-ENV:Value", -1, (char*const*)&soap_tmp_SOAP_ENV__Value, ""))
+    return soap->error;
+  if (soap_out_PointerToSOAP_ENV__Code(soap, "SOAP-ENV:Subcode", -1, &a->SOAP_ENV__Subcode, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
 }
 
-SOAP_FMAC3 struct SOAP_ENV__Code * SOAP_FMAC4 soap_in_SOAP_ENV__Code(struct soap *soap, const char *tag, struct SOAP_ENV__Code *a, const char *type)
-{
-	size_t soap_flag_SOAP_ENV__Value = 1;
-	size_t soap_flag_SOAP_ENV__Subcode = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct SOAP_ENV__Code *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_SOAP_ENV__Code, sizeof(struct SOAP_ENV__Code), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_SOAP_ENV__Code(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_SOAP_ENV__Value && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in__QName(soap, "SOAP-ENV:Value", &a->SOAP_ENV__Value, ""))
-				{	soap_flag_SOAP_ENV__Value--;
-					continue;
-				}
-			if (soap_flag_SOAP_ENV__Subcode && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerToSOAP_ENV__Code(soap, "SOAP-ENV:Subcode", &a->SOAP_ENV__Subcode, ""))
-				{	soap_flag_SOAP_ENV__Subcode--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct SOAP_ENV__Code *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_SOAP_ENV__Code, 0, sizeof(struct SOAP_ENV__Code), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
+SOAP_FMAC3 struct SOAP_ENV__Code * SOAP_FMAC4 soap_in_SOAP_ENV__Code(struct soap *soap, const char *tag, struct SOAP_ENV__Code *a, const char *type) {
+  size_t soap_flag_SOAP_ENV__Value = 1;
+  size_t soap_flag_SOAP_ENV__Subcode = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct SOAP_ENV__Code *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_SOAP_ENV__Code, sizeof(struct SOAP_ENV__Code), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_SOAP_ENV__Code(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_SOAP_ENV__Value && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in__QName(soap, "SOAP-ENV:Value", &a->SOAP_ENV__Value, "")) {
+          soap_flag_SOAP_ENV__Value--;
+          continue;
+        }
+      if (soap_flag_SOAP_ENV__Subcode && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_PointerToSOAP_ENV__Code(soap, "SOAP-ENV:Subcode", &a->SOAP_ENV__Subcode, "")) {
+          soap_flag_SOAP_ENV__Subcode--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct SOAP_ENV__Code *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_SOAP_ENV__Code, 0, sizeof(struct SOAP_ENV__Code), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_SOAP_ENV__Code(struct soap *soap, const struct SOAP_ENV__Code *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_SOAP_ENV__Code);
-	if (soap_out_SOAP_ENV__Code(soap, tag?tag:"SOAP-ENV:Code", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_SOAP_ENV__Code(struct soap *soap, const struct SOAP_ENV__Code *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_SOAP_ENV__Code);
+  if (soap_out_SOAP_ENV__Code(soap, tag?tag:"SOAP-ENV:Code", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
 }
 
-SOAP_FMAC3 struct SOAP_ENV__Code * SOAP_FMAC4 soap_get_SOAP_ENV__Code(struct soap *soap, struct SOAP_ENV__Code *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_SOAP_ENV__Code(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
+SOAP_FMAC3 struct SOAP_ENV__Code * SOAP_FMAC4 soap_get_SOAP_ENV__Code(struct soap *soap, struct SOAP_ENV__Code *p, const char *tag, const char *type) {
+  if ((p = soap_in_SOAP_ENV__Code(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
 }
 
 #endif
 
 #ifndef WITH_NOGLOBAL
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Header(struct soap *soap, struct SOAP_ENV__Header *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Header(struct soap *soap, struct SOAP_ENV__Header *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Header(struct soap *soap, const struct SOAP_ENV__Header *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Header(struct soap *soap, const struct SOAP_ENV__Header *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_SOAP_ENV__Header(struct soap *soap, const char *tag, int id, const struct SOAP_ENV__Header *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_SOAP_ENV__Header), type))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_SOAP_ENV__Header(struct soap *soap, const char *tag, int id, const struct SOAP_ENV__Header *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_SOAP_ENV__Header), type))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
 }
 
-SOAP_FMAC3 struct SOAP_ENV__Header * SOAP_FMAC4 soap_in_SOAP_ENV__Header(struct soap *soap, const char *tag, struct SOAP_ENV__Header *a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct SOAP_ENV__Header *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_SOAP_ENV__Header, sizeof(struct SOAP_ENV__Header), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_SOAP_ENV__Header(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct SOAP_ENV__Header *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_SOAP_ENV__Header, 0, sizeof(struct SOAP_ENV__Header), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
+SOAP_FMAC3 struct SOAP_ENV__Header * SOAP_FMAC4 soap_in_SOAP_ENV__Header(struct soap *soap, const char *tag, struct SOAP_ENV__Header *a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct SOAP_ENV__Header *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_SOAP_ENV__Header, sizeof(struct SOAP_ENV__Header), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_SOAP_ENV__Header(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct SOAP_ENV__Header *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_SOAP_ENV__Header, 0, sizeof(struct SOAP_ENV__Header), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_SOAP_ENV__Header(struct soap *soap, const struct SOAP_ENV__Header *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_SOAP_ENV__Header);
-	if (soap_out_SOAP_ENV__Header(soap, tag?tag:"SOAP-ENV:Header", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_SOAP_ENV__Header(struct soap *soap, const struct SOAP_ENV__Header *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_SOAP_ENV__Header);
+  if (soap_out_SOAP_ENV__Header(soap, tag?tag:"SOAP-ENV:Header", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
 }
 
-SOAP_FMAC3 struct SOAP_ENV__Header * SOAP_FMAC4 soap_get_SOAP_ENV__Header(struct soap *soap, struct SOAP_ENV__Header *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_SOAP_ENV__Header(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
+SOAP_FMAC3 struct SOAP_ENV__Header * SOAP_FMAC4 soap_get_SOAP_ENV__Header(struct soap *soap, struct SOAP_ENV__Header *p, const char *tag, const char *type) {
+  if ((p = soap_in_SOAP_ENV__Header(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
 }
 
 #endif
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCOREreserve(struct soap *soap, struct __ns1__tpsAPI_USCOREreserve *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ns2__tpsAPI_USCOREreserve = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCOREreserve(struct soap *soap, const struct __ns1__tpsAPI_USCOREreserve *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__tpsAPI_USCOREreserve(soap, &a->ns2__tpsAPI_USCOREreserve);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCOREreserve(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCOREreserve *a, const char *type)
-{
-	if (soap_out_PointerTons2__tpsAPI_USCOREreserve(soap, "ns2:tpsAPI_reserve", -1, &a->ns2__tpsAPI_USCOREreserve, ""))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCOREreserve * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCOREreserve(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCOREreserve *a, const char *type)
-{
-	size_t soap_flag_ns2__tpsAPI_USCOREreserve = 1;
-	short soap_flag;
-	a = (struct __ns1__tpsAPI_USCOREreserve *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCOREreserve, sizeof(struct __ns1__tpsAPI_USCOREreserve), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default___ns1__tpsAPI_USCOREreserve(soap, a);
-		for (soap_flag = 0;; soap_flag = 1)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ns2__tpsAPI_USCOREreserve && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__tpsAPI_USCOREreserve(soap, "ns2:tpsAPI_reserve", &a->ns2__tpsAPI_USCOREreserve, "ns2:tpsAPI_reserve"))
-				{	soap_flag_ns2__tpsAPI_USCOREreserve--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				if (soap_flag)
-				{	soap->error = SOAP_OK;
-					break;
-				}
-			if (soap_flag && soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCOREreserve(struct soap *soap, const struct __ns1__tpsAPI_USCOREreserve *a, const char *tag, const char *type)
-{
-	register int id = 0;
-	if (soap_out___ns1__tpsAPI_USCOREreserve(soap, tag?tag:"-ns1:tpsAPI_reserve", id, a, type))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCOREreserve * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCOREreserve(struct soap *soap, struct __ns1__tpsAPI_USCOREreserve *p, const char *tag, const char *type)
-{
-	if ((p = soap_in___ns1__tpsAPI_USCOREreserve(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCORElookupUser(struct soap *soap, struct __ns1__tpsAPI_USCORElookupUser *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ns2__tpsAPI_USCORElookupUser = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCORElookupUser(struct soap *soap, const struct __ns1__tpsAPI_USCORElookupUser *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__tpsAPI_USCORElookupUser(soap, &a->ns2__tpsAPI_USCORElookupUser);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCORElookupUser(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCORElookupUser *a, const char *type)
-{
-	if (soap_out_PointerTons2__tpsAPI_USCORElookupUser(soap, "ns2:tpsAPI_lookupUser", -1, &a->ns2__tpsAPI_USCORElookupUser, ""))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCORElookupUser * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCORElookupUser(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCORElookupUser *a, const char *type)
-{
-	size_t soap_flag_ns2__tpsAPI_USCORElookupUser = 1;
-	short soap_flag;
-	a = (struct __ns1__tpsAPI_USCORElookupUser *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCORElookupUser, sizeof(struct __ns1__tpsAPI_USCORElookupUser), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default___ns1__tpsAPI_USCORElookupUser(soap, a);
-		for (soap_flag = 0;; soap_flag = 1)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ns2__tpsAPI_USCORElookupUser && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__tpsAPI_USCORElookupUser(soap, "ns2:tpsAPI_lookupUser", &a->ns2__tpsAPI_USCORElookupUser, "ns2:tpsAPI_lookupUser"))
-				{	soap_flag_ns2__tpsAPI_USCORElookupUser--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				if (soap_flag)
-				{	soap->error = SOAP_OK;
-					break;
-				}
-			if (soap_flag && soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCORElookupUser(struct soap *soap, const struct __ns1__tpsAPI_USCORElookupUser *a, const char *tag, const char *type)
-{
-	register int id = 0;
-	if (soap_out___ns1__tpsAPI_USCORElookupUser(soap, tag?tag:"-ns1:tpsAPI_lookupUser", id, a, type))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCORElookupUser * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCORElookupUser(struct soap *soap, struct __ns1__tpsAPI_USCORElookupUser *p, const char *tag, const char *type)
-{
-	if ((p = soap_in___ns1__tpsAPI_USCORElookupUser(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCOREgetReservationData(struct soap *soap, struct __ns1__tpsAPI_USCOREgetReservationData *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ns2__tpsAPI_USCOREgetReservationData = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCOREgetReservationData(struct soap *soap, const struct __ns1__tpsAPI_USCOREgetReservationData *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__tpsAPI_USCOREgetReservationData(soap, &a->ns2__tpsAPI_USCOREgetReservationData);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCOREgetReservationData(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCOREgetReservationData *a, const char *type)
-{
-	if (soap_out_PointerTons2__tpsAPI_USCOREgetReservationData(soap, "ns2:tpsAPI_getReservationData", -1, &a->ns2__tpsAPI_USCOREgetReservationData, ""))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCOREgetReservationData * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCOREgetReservationData(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCOREgetReservationData *a, const char *type)
-{
-	size_t soap_flag_ns2__tpsAPI_USCOREgetReservationData = 1;
-	short soap_flag;
-	a = (struct __ns1__tpsAPI_USCOREgetReservationData *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCOREgetReservationData, sizeof(struct __ns1__tpsAPI_USCOREgetReservationData), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default___ns1__tpsAPI_USCOREgetReservationData(soap, a);
-		for (soap_flag = 0;; soap_flag = 1)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ns2__tpsAPI_USCOREgetReservationData && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__tpsAPI_USCOREgetReservationData(soap, "ns2:tpsAPI_getReservationData", &a->ns2__tpsAPI_USCOREgetReservationData, "ns2:tpsAPI_getReservationData"))
-				{	soap_flag_ns2__tpsAPI_USCOREgetReservationData--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				if (soap_flag)
-				{	soap->error = SOAP_OK;
-					break;
-				}
-			if (soap_flag && soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCOREgetReservationData(struct soap *soap, const struct __ns1__tpsAPI_USCOREgetReservationData *a, const char *tag, const char *type)
-{
-	register int id = 0;
-	if (soap_out___ns1__tpsAPI_USCOREgetReservationData(soap, tag?tag:"-ns1:tpsAPI_getReservationData", id, a, type))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCOREgetReservationData * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCOREgetReservationData(struct soap *soap, struct __ns1__tpsAPI_USCOREgetReservationData *p, const char *tag, const char *type)
-{
-	if ((p = soap_in___ns1__tpsAPI_USCOREgetReservationData(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, struct __ns1__tpsAPI_USCOREgetRelatedReservationIds *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ns2__tpsAPI_USCOREgetRelatedReservationIds = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const struct __ns1__tpsAPI_USCOREgetRelatedReservationIds *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(soap, &a->ns2__tpsAPI_USCOREgetRelatedReservationIds);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCOREgetRelatedReservationIds *a, const char *type)
-{
-	if (soap_out_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(soap, "ns2:tpsAPI_getRelatedReservationIds", -1, &a->ns2__tpsAPI_USCOREgetRelatedReservationIds, ""))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCOREgetRelatedReservationIds * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCOREgetRelatedReservationIds *a, const char *type)
-{
-	size_t soap_flag_ns2__tpsAPI_USCOREgetRelatedReservationIds = 1;
-	short soap_flag;
-	a = (struct __ns1__tpsAPI_USCOREgetRelatedReservationIds *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCOREgetRelatedReservationIds, sizeof(struct __ns1__tpsAPI_USCOREgetRelatedReservationIds), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default___ns1__tpsAPI_USCOREgetRelatedReservationIds(soap, a);
-		for (soap_flag = 0;; soap_flag = 1)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ns2__tpsAPI_USCOREgetRelatedReservationIds && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(soap, "ns2:tpsAPI_getRelatedReservationIds", &a->ns2__tpsAPI_USCOREgetRelatedReservationIds, "ns2:tpsAPI_getRelatedReservationIds"))
-				{	soap_flag_ns2__tpsAPI_USCOREgetRelatedReservationIds--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				if (soap_flag)
-				{	soap->error = SOAP_OK;
-					break;
-				}
-			if (soap_flag && soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const struct __ns1__tpsAPI_USCOREgetRelatedReservationIds *a, const char *tag, const char *type)
-{
-	register int id = 0;
-	if (soap_out___ns1__tpsAPI_USCOREgetRelatedReservationIds(soap, tag?tag:"-ns1:tpsAPI_getRelatedReservationIds", id, a, type))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCOREgetRelatedReservationIds * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, struct __ns1__tpsAPI_USCOREgetRelatedReservationIds *p, const char *tag, const char *type)
-{
-	if ((p = soap_in___ns1__tpsAPI_USCOREgetRelatedReservationIds(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCOREgetPath(struct soap *soap, struct __ns1__tpsAPI_USCOREgetPath *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ns2__tpsAPI_USCOREgetPath = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCOREgetPath(struct soap *soap, const struct __ns1__tpsAPI_USCOREgetPath *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__tpsAPI_USCOREgetPath(soap, &a->ns2__tpsAPI_USCOREgetPath);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCOREgetPath(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCOREgetPath *a, const char *type)
-{
-	if (soap_out_PointerTons2__tpsAPI_USCOREgetPath(soap, "ns2:tpsAPI_getPath", -1, &a->ns2__tpsAPI_USCOREgetPath, ""))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCOREgetPath * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCOREgetPath(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCOREgetPath *a, const char *type)
-{
-	size_t soap_flag_ns2__tpsAPI_USCOREgetPath = 1;
-	short soap_flag;
-	a = (struct __ns1__tpsAPI_USCOREgetPath *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCOREgetPath, sizeof(struct __ns1__tpsAPI_USCOREgetPath), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default___ns1__tpsAPI_USCOREgetPath(soap, a);
-		for (soap_flag = 0;; soap_flag = 1)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ns2__tpsAPI_USCOREgetPath && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__tpsAPI_USCOREgetPath(soap, "ns2:tpsAPI_getPath", &a->ns2__tpsAPI_USCOREgetPath, "ns2:tpsAPI_getPath"))
-				{	soap_flag_ns2__tpsAPI_USCOREgetPath--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				if (soap_flag)
-				{	soap->error = SOAP_OK;
-					break;
-				}
-			if (soap_flag && soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCOREgetPath(struct soap *soap, const struct __ns1__tpsAPI_USCOREgetPath *a, const char *tag, const char *type)
-{
-	register int id = 0;
-	if (soap_out___ns1__tpsAPI_USCOREgetPath(soap, tag?tag:"-ns1:tpsAPI_getPath", id, a, type))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCOREgetPath * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCOREgetPath(struct soap *soap, struct __ns1__tpsAPI_USCOREgetPath *p, const char *tag, const char *type)
-{
-	if ((p = soap_in___ns1__tpsAPI_USCOREgetPath(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, struct __ns1__tpsAPI_USCOREgetLocalBandwidths *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ns2__tpsAPI_USCOREgetLocalBandwidths = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const struct __ns1__tpsAPI_USCOREgetLocalBandwidths *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(soap, &a->ns2__tpsAPI_USCOREgetLocalBandwidths);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCOREgetLocalBandwidths *a, const char *type)
-{
-	if (soap_out_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(soap, "ns2:tpsAPI_getLocalBandwidths", -1, &a->ns2__tpsAPI_USCOREgetLocalBandwidths, ""))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCOREgetLocalBandwidths * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCOREgetLocalBandwidths *a, const char *type)
-{
-	size_t soap_flag_ns2__tpsAPI_USCOREgetLocalBandwidths = 1;
-	short soap_flag;
-	a = (struct __ns1__tpsAPI_USCOREgetLocalBandwidths *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCOREgetLocalBandwidths, sizeof(struct __ns1__tpsAPI_USCOREgetLocalBandwidths), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default___ns1__tpsAPI_USCOREgetLocalBandwidths(soap, a);
-		for (soap_flag = 0;; soap_flag = 1)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ns2__tpsAPI_USCOREgetLocalBandwidths && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(soap, "ns2:tpsAPI_getLocalBandwidths", &a->ns2__tpsAPI_USCOREgetLocalBandwidths, "ns2:tpsAPI_getLocalBandwidths"))
-				{	soap_flag_ns2__tpsAPI_USCOREgetLocalBandwidths--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				if (soap_flag)
-				{	soap->error = SOAP_OK;
-					break;
-				}
-			if (soap_flag && soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const struct __ns1__tpsAPI_USCOREgetLocalBandwidths *a, const char *tag, const char *type)
-{
-	register int id = 0;
-	if (soap_out___ns1__tpsAPI_USCOREgetLocalBandwidths(soap, tag?tag:"-ns1:tpsAPI_getLocalBandwidths", id, a, type))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCOREgetLocalBandwidths * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, struct __ns1__tpsAPI_USCOREgetLocalBandwidths *p, const char *tag, const char *type)
-{
-	if ((p = soap_in___ns1__tpsAPI_USCOREgetLocalBandwidths(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCOREgetBandwidths(struct soap *soap, struct __ns1__tpsAPI_USCOREgetBandwidths *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ns2__tpsAPI_USCOREgetBandwidths = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCOREgetBandwidths(struct soap *soap, const struct __ns1__tpsAPI_USCOREgetBandwidths *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__tpsAPI_USCOREgetBandwidths(soap, &a->ns2__tpsAPI_USCOREgetBandwidths);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCOREgetBandwidths(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCOREgetBandwidths *a, const char *type)
-{
-	if (soap_out_PointerTons2__tpsAPI_USCOREgetBandwidths(soap, "ns2:tpsAPI_getBandwidths", -1, &a->ns2__tpsAPI_USCOREgetBandwidths, ""))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCOREgetBandwidths * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCOREgetBandwidths(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCOREgetBandwidths *a, const char *type)
-{
-	size_t soap_flag_ns2__tpsAPI_USCOREgetBandwidths = 1;
-	short soap_flag;
-	a = (struct __ns1__tpsAPI_USCOREgetBandwidths *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCOREgetBandwidths, sizeof(struct __ns1__tpsAPI_USCOREgetBandwidths), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default___ns1__tpsAPI_USCOREgetBandwidths(soap, a);
-		for (soap_flag = 0;; soap_flag = 1)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ns2__tpsAPI_USCOREgetBandwidths && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__tpsAPI_USCOREgetBandwidths(soap, "ns2:tpsAPI_getBandwidths", &a->ns2__tpsAPI_USCOREgetBandwidths, "ns2:tpsAPI_getBandwidths"))
-				{	soap_flag_ns2__tpsAPI_USCOREgetBandwidths--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				if (soap_flag)
-				{	soap->error = SOAP_OK;
-					break;
-				}
-			if (soap_flag && soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCOREgetBandwidths(struct soap *soap, const struct __ns1__tpsAPI_USCOREgetBandwidths *a, const char *tag, const char *type)
-{
-	register int id = 0;
-	if (soap_out___ns1__tpsAPI_USCOREgetBandwidths(soap, tag?tag:"-ns1:tpsAPI_getBandwidths", id, a, type))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCOREgetBandwidths * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCOREgetBandwidths(struct soap *soap, struct __ns1__tpsAPI_USCOREgetBandwidths *p, const char *tag, const char *type)
-{
-	if ((p = soap_in___ns1__tpsAPI_USCOREgetBandwidths(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCOREcommit(struct soap *soap, struct __ns1__tpsAPI_USCOREcommit *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ns2__tpsAPI_USCOREcommit = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCOREcommit(struct soap *soap, const struct __ns1__tpsAPI_USCOREcommit *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__tpsAPI_USCOREcommit(soap, &a->ns2__tpsAPI_USCOREcommit);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCOREcommit(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCOREcommit *a, const char *type)
-{
-	if (soap_out_PointerTons2__tpsAPI_USCOREcommit(soap, "ns2:tpsAPI_commit", -1, &a->ns2__tpsAPI_USCOREcommit, ""))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCOREcommit * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCOREcommit(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCOREcommit *a, const char *type)
-{
-	size_t soap_flag_ns2__tpsAPI_USCOREcommit = 1;
-	short soap_flag;
-	a = (struct __ns1__tpsAPI_USCOREcommit *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCOREcommit, sizeof(struct __ns1__tpsAPI_USCOREcommit), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default___ns1__tpsAPI_USCOREcommit(soap, a);
-		for (soap_flag = 0;; soap_flag = 1)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ns2__tpsAPI_USCOREcommit && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__tpsAPI_USCOREcommit(soap, "ns2:tpsAPI_commit", &a->ns2__tpsAPI_USCOREcommit, "ns2:tpsAPI_commit"))
-				{	soap_flag_ns2__tpsAPI_USCOREcommit--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				if (soap_flag)
-				{	soap->error = SOAP_OK;
-					break;
-				}
-			if (soap_flag && soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCOREcommit(struct soap *soap, const struct __ns1__tpsAPI_USCOREcommit *a, const char *tag, const char *type)
-{
-	register int id = 0;
-	if (soap_out___ns1__tpsAPI_USCOREcommit(soap, tag?tag:"-ns1:tpsAPI_commit", id, a, type))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCOREcommit * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCOREcommit(struct soap *soap, struct __ns1__tpsAPI_USCOREcommit *p, const char *tag, const char *type)
-{
-	if ((p = soap_in___ns1__tpsAPI_USCOREcommit(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCOREcancel(struct soap *soap, struct __ns1__tpsAPI_USCOREcancel *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ns2__tpsAPI_USCOREcancel = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCOREcancel(struct soap *soap, const struct __ns1__tpsAPI_USCOREcancel *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__tpsAPI_USCOREcancel(soap, &a->ns2__tpsAPI_USCOREcancel);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCOREcancel(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCOREcancel *a, const char *type)
-{
-	if (soap_out_PointerTons2__tpsAPI_USCOREcancel(soap, "ns2:tpsAPI_cancel", -1, &a->ns2__tpsAPI_USCOREcancel, ""))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCOREcancel * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCOREcancel(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCOREcancel *a, const char *type)
-{
-	size_t soap_flag_ns2__tpsAPI_USCOREcancel = 1;
-	short soap_flag;
-	a = (struct __ns1__tpsAPI_USCOREcancel *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCOREcancel, sizeof(struct __ns1__tpsAPI_USCOREcancel), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default___ns1__tpsAPI_USCOREcancel(soap, a);
-		for (soap_flag = 0;; soap_flag = 1)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ns2__tpsAPI_USCOREcancel && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__tpsAPI_USCOREcancel(soap, "ns2:tpsAPI_cancel", &a->ns2__tpsAPI_USCOREcancel, "ns2:tpsAPI_cancel"))
-				{	soap_flag_ns2__tpsAPI_USCOREcancel--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				if (soap_flag)
-				{	soap->error = SOAP_OK;
-					break;
-				}
-			if (soap_flag && soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCOREcancel(struct soap *soap, const struct __ns1__tpsAPI_USCOREcancel *a, const char *tag, const char *type)
-{
-	register int id = 0;
-	if (soap_out___ns1__tpsAPI_USCOREcancel(soap, tag?tag:"-ns1:tpsAPI_cancel", id, a, type))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCOREcancel * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCOREcancel(struct soap *soap, struct __ns1__tpsAPI_USCOREcancel *p, const char *tag, const char *type)
-{
-	if ((p = soap_in___ns1__tpsAPI_USCOREcancel(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, struct __ns1__tpsAPI_USCOREaddRelatedReservationId *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ns2__tpsAPI_USCOREaddRelatedReservationId = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const struct __ns1__tpsAPI_USCOREaddRelatedReservationId *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(soap, &a->ns2__tpsAPI_USCOREaddRelatedReservationId);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCOREaddRelatedReservationId *a, const char *type)
-{
-	if (soap_out_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(soap, "ns2:tpsAPI_addRelatedReservationId", -1, &a->ns2__tpsAPI_USCOREaddRelatedReservationId, ""))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCOREaddRelatedReservationId * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCOREaddRelatedReservationId *a, const char *type)
-{
-	size_t soap_flag_ns2__tpsAPI_USCOREaddRelatedReservationId = 1;
-	short soap_flag;
-	a = (struct __ns1__tpsAPI_USCOREaddRelatedReservationId *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCOREaddRelatedReservationId, sizeof(struct __ns1__tpsAPI_USCOREaddRelatedReservationId), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default___ns1__tpsAPI_USCOREaddRelatedReservationId(soap, a);
-		for (soap_flag = 0;; soap_flag = 1)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ns2__tpsAPI_USCOREaddRelatedReservationId && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(soap, "ns2:tpsAPI_addRelatedReservationId", &a->ns2__tpsAPI_USCOREaddRelatedReservationId, "ns2:tpsAPI_addRelatedReservationId"))
-				{	soap_flag_ns2__tpsAPI_USCOREaddRelatedReservationId--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				if (soap_flag)
-				{	soap->error = SOAP_OK;
-					break;
-				}
-			if (soap_flag && soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const struct __ns1__tpsAPI_USCOREaddRelatedReservationId *a, const char *tag, const char *type)
-{
-	register int id = 0;
-	if (soap_out___ns1__tpsAPI_USCOREaddRelatedReservationId(soap, tag?tag:"-ns1:tpsAPI_addRelatedReservationId", id, a, type))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCOREaddRelatedReservationId * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, struct __ns1__tpsAPI_USCOREaddRelatedReservationId *p, const char *tag, const char *type)
-{
-	if ((p = soap_in___ns1__tpsAPI_USCOREaddRelatedReservationId(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCORELocalStart(struct soap *soap, struct __ns1__tpsAPI_USCORELocalStart *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ns2__tpsAPI_USCORELocalStart = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCORELocalStart(struct soap *soap, const struct __ns1__tpsAPI_USCORELocalStart *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__tpsAPI_USCORELocalStart(soap, &a->ns2__tpsAPI_USCORELocalStart);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCORELocalStart(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCORELocalStart *a, const char *type)
-{
-	if (soap_out_PointerTons2__tpsAPI_USCORELocalStart(soap, "ns2:tpsAPI_LocalStart", -1, &a->ns2__tpsAPI_USCORELocalStart, ""))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCORELocalStart * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCORELocalStart(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCORELocalStart *a, const char *type)
-{
-	size_t soap_flag_ns2__tpsAPI_USCORELocalStart = 1;
-	short soap_flag;
-	a = (struct __ns1__tpsAPI_USCORELocalStart *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCORELocalStart, sizeof(struct __ns1__tpsAPI_USCORELocalStart), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default___ns1__tpsAPI_USCORELocalStart(soap, a);
-		for (soap_flag = 0;; soap_flag = 1)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ns2__tpsAPI_USCORELocalStart && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__tpsAPI_USCORELocalStart(soap, "ns2:tpsAPI_LocalStart", &a->ns2__tpsAPI_USCORELocalStart, "ns2:tpsAPI_LocalStart"))
-				{	soap_flag_ns2__tpsAPI_USCORELocalStart--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				if (soap_flag)
-				{	soap->error = SOAP_OK;
-					break;
-				}
-			if (soap_flag && soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCORELocalStart(struct soap *soap, const struct __ns1__tpsAPI_USCORELocalStart *a, const char *tag, const char *type)
-{
-	register int id = 0;
-	if (soap_out___ns1__tpsAPI_USCORELocalStart(soap, tag?tag:"-ns1:tpsAPI_LocalStart", id, a, type))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCORELocalStart * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCORELocalStart(struct soap *soap, struct __ns1__tpsAPI_USCORELocalStart *p, const char *tag, const char *type)
-{
-	if ((p = soap_in___ns1__tpsAPI_USCORELocalStart(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCORELocalReserve(struct soap *soap, struct __ns1__tpsAPI_USCORELocalReserve *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ns2__tpsAPI_USCORELocalReserve = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCORELocalReserve(struct soap *soap, const struct __ns1__tpsAPI_USCORELocalReserve *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__tpsAPI_USCORELocalReserve(soap, &a->ns2__tpsAPI_USCORELocalReserve);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCORELocalReserve(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCORELocalReserve *a, const char *type)
-{
-	if (soap_out_PointerTons2__tpsAPI_USCORELocalReserve(soap, "ns2:tpsAPI_LocalReserve", -1, &a->ns2__tpsAPI_USCORELocalReserve, ""))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCORELocalReserve * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCORELocalReserve(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCORELocalReserve *a, const char *type)
-{
-	size_t soap_flag_ns2__tpsAPI_USCORELocalReserve = 1;
-	short soap_flag;
-	a = (struct __ns1__tpsAPI_USCORELocalReserve *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCORELocalReserve, sizeof(struct __ns1__tpsAPI_USCORELocalReserve), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default___ns1__tpsAPI_USCORELocalReserve(soap, a);
-		for (soap_flag = 0;; soap_flag = 1)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ns2__tpsAPI_USCORELocalReserve && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__tpsAPI_USCORELocalReserve(soap, "ns2:tpsAPI_LocalReserve", &a->ns2__tpsAPI_USCORELocalReserve, "ns2:tpsAPI_LocalReserve"))
-				{	soap_flag_ns2__tpsAPI_USCORELocalReserve--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				if (soap_flag)
-				{	soap->error = SOAP_OK;
-					break;
-				}
-			if (soap_flag && soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCORELocalReserve(struct soap *soap, const struct __ns1__tpsAPI_USCORELocalReserve *a, const char *tag, const char *type)
-{
-	register int id = 0;
-	if (soap_out___ns1__tpsAPI_USCORELocalReserve(soap, tag?tag:"-ns1:tpsAPI_LocalReserve", id, a, type))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCORELocalReserve * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCORELocalReserve(struct soap *soap, struct __ns1__tpsAPI_USCORELocalReserve *p, const char *tag, const char *type)
-{
-	if ((p = soap_in___ns1__tpsAPI_USCORELocalReserve(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCORELocalRemove(struct soap *soap, struct __ns1__tpsAPI_USCORELocalRemove *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ns2__tpsAPI_USCORELocalRemove = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCORELocalRemove(struct soap *soap, const struct __ns1__tpsAPI_USCORELocalRemove *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__tpsAPI_USCORELocalRemove(soap, &a->ns2__tpsAPI_USCORELocalRemove);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCORELocalRemove(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCORELocalRemove *a, const char *type)
-{
-	if (soap_out_PointerTons2__tpsAPI_USCORELocalRemove(soap, "ns2:tpsAPI_LocalRemove", -1, &a->ns2__tpsAPI_USCORELocalRemove, ""))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCORELocalRemove * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCORELocalRemove(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCORELocalRemove *a, const char *type)
-{
-	size_t soap_flag_ns2__tpsAPI_USCORELocalRemove = 1;
-	short soap_flag;
-	a = (struct __ns1__tpsAPI_USCORELocalRemove *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCORELocalRemove, sizeof(struct __ns1__tpsAPI_USCORELocalRemove), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default___ns1__tpsAPI_USCORELocalRemove(soap, a);
-		for (soap_flag = 0;; soap_flag = 1)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ns2__tpsAPI_USCORELocalRemove && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__tpsAPI_USCORELocalRemove(soap, "ns2:tpsAPI_LocalRemove", &a->ns2__tpsAPI_USCORELocalRemove, "ns2:tpsAPI_LocalRemove"))
-				{	soap_flag_ns2__tpsAPI_USCORELocalRemove--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				if (soap_flag)
-				{	soap->error = SOAP_OK;
-					break;
-				}
-			if (soap_flag && soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCORELocalRemove(struct soap *soap, const struct __ns1__tpsAPI_USCORELocalRemove *a, const char *tag, const char *type)
-{
-	register int id = 0;
-	if (soap_out___ns1__tpsAPI_USCORELocalRemove(soap, tag?tag:"-ns1:tpsAPI_LocalRemove", id, a, type))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCORELocalRemove * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCORELocalRemove(struct soap *soap, struct __ns1__tpsAPI_USCORELocalRemove *p, const char *tag, const char *type)
-{
-	if ((p = soap_in___ns1__tpsAPI_USCORELocalRemove(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCORELocalCommit(struct soap *soap, struct __ns1__tpsAPI_USCORELocalCommit *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ns2__tpsAPI_USCORELocalCommit = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCORELocalCommit(struct soap *soap, const struct __ns1__tpsAPI_USCORELocalCommit *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__tpsAPI_USCORELocalCommit(soap, &a->ns2__tpsAPI_USCORELocalCommit);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCORELocalCommit(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCORELocalCommit *a, const char *type)
-{
-	if (soap_out_PointerTons2__tpsAPI_USCORELocalCommit(soap, "ns2:tpsAPI_LocalCommit", -1, &a->ns2__tpsAPI_USCORELocalCommit, ""))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCORELocalCommit * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCORELocalCommit(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCORELocalCommit *a, const char *type)
-{
-	size_t soap_flag_ns2__tpsAPI_USCORELocalCommit = 1;
-	short soap_flag;
-	a = (struct __ns1__tpsAPI_USCORELocalCommit *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCORELocalCommit, sizeof(struct __ns1__tpsAPI_USCORELocalCommit), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default___ns1__tpsAPI_USCORELocalCommit(soap, a);
-		for (soap_flag = 0;; soap_flag = 1)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ns2__tpsAPI_USCORELocalCommit && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__tpsAPI_USCORELocalCommit(soap, "ns2:tpsAPI_LocalCommit", &a->ns2__tpsAPI_USCORELocalCommit, "ns2:tpsAPI_LocalCommit"))
-				{	soap_flag_ns2__tpsAPI_USCORELocalCommit--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				if (soap_flag)
-				{	soap->error = SOAP_OK;
-					break;
-				}
-			if (soap_flag && soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCORELocalCommit(struct soap *soap, const struct __ns1__tpsAPI_USCORELocalCommit *a, const char *tag, const char *type)
-{
-	register int id = 0;
-	if (soap_out___ns1__tpsAPI_USCORELocalCommit(soap, tag?tag:"-ns1:tpsAPI_LocalCommit", id, a, type))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCORELocalCommit * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCORELocalCommit(struct soap *soap, struct __ns1__tpsAPI_USCORELocalCommit *p, const char *tag, const char *type)
-{
-	if ((p = soap_in___ns1__tpsAPI_USCORELocalCommit(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCORELocalCancel(struct soap *soap, struct __ns1__tpsAPI_USCORELocalCancel *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ns2__tpsAPI_USCORELocalCancel = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCORELocalCancel(struct soap *soap, const struct __ns1__tpsAPI_USCORELocalCancel *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__tpsAPI_USCORELocalCancel(soap, &a->ns2__tpsAPI_USCORELocalCancel);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCORELocalCancel(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCORELocalCancel *a, const char *type)
-{
-	if (soap_out_PointerTons2__tpsAPI_USCORELocalCancel(soap, "ns2:tpsAPI_LocalCancel", -1, &a->ns2__tpsAPI_USCORELocalCancel, ""))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCORELocalCancel * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCORELocalCancel(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCORELocalCancel *a, const char *type)
-{
-	size_t soap_flag_ns2__tpsAPI_USCORELocalCancel = 1;
-	short soap_flag;
-	a = (struct __ns1__tpsAPI_USCORELocalCancel *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCORELocalCancel, sizeof(struct __ns1__tpsAPI_USCORELocalCancel), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default___ns1__tpsAPI_USCORELocalCancel(soap, a);
-		for (soap_flag = 0;; soap_flag = 1)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ns2__tpsAPI_USCORELocalCancel && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__tpsAPI_USCORELocalCancel(soap, "ns2:tpsAPI_LocalCancel", &a->ns2__tpsAPI_USCORELocalCancel, "ns2:tpsAPI_LocalCancel"))
-				{	soap_flag_ns2__tpsAPI_USCORELocalCancel--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				if (soap_flag)
-				{	soap->error = SOAP_OK;
-					break;
-				}
-			if (soap_flag && soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCORELocalCancel(struct soap *soap, const struct __ns1__tpsAPI_USCORELocalCancel *a, const char *tag, const char *type)
-{
-	register int id = 0;
-	if (soap_out___ns1__tpsAPI_USCORELocalCancel(soap, tag?tag:"-ns1:tpsAPI_LocalCancel", id, a, type))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__tpsAPI_USCORELocalCancel * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCORELocalCancel(struct soap *soap, struct __ns1__tpsAPI_USCORELocalCancel *p, const char *tag, const char *type)
-{
-	if ((p = soap_in___ns1__tpsAPI_USCORELocalCancel(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__getAllReservationsForClass(struct soap *soap, struct __ns1__getAllReservationsForClass *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ns2__getAllReservationsForClass = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__getAllReservationsForClass(struct soap *soap, const struct __ns1__getAllReservationsForClass *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__getAllReservationsForClass(soap, &a->ns2__getAllReservationsForClass);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__getAllReservationsForClass(struct soap *soap, const char *tag, int id, const struct __ns1__getAllReservationsForClass *a, const char *type)
-{
-	if (soap_out_PointerTons2__getAllReservationsForClass(soap, "ns2:getAllReservationsForClass", -1, &a->ns2__getAllReservationsForClass, ""))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__getAllReservationsForClass * SOAP_FMAC4 soap_in___ns1__getAllReservationsForClass(struct soap *soap, const char *tag, struct __ns1__getAllReservationsForClass *a, const char *type)
-{
-	size_t soap_flag_ns2__getAllReservationsForClass = 1;
-	short soap_flag;
-	a = (struct __ns1__getAllReservationsForClass *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__getAllReservationsForClass, sizeof(struct __ns1__getAllReservationsForClass), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default___ns1__getAllReservationsForClass(soap, a);
-		for (soap_flag = 0;; soap_flag = 1)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ns2__getAllReservationsForClass && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__getAllReservationsForClass(soap, "ns2:getAllReservationsForClass", &a->ns2__getAllReservationsForClass, "ns2:getAllReservationsForClass"))
-				{	soap_flag_ns2__getAllReservationsForClass--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				if (soap_flag)
-				{	soap->error = SOAP_OK;
-					break;
-				}
-			if (soap_flag && soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__getAllReservationsForClass(struct soap *soap, const struct __ns1__getAllReservationsForClass *a, const char *tag, const char *type)
-{
-	register int id = 0;
-	if (soap_out___ns1__getAllReservationsForClass(soap, tag?tag:"-ns1:getAllReservationsForClass", id, a, type))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 struct __ns1__getAllReservationsForClass * SOAP_FMAC4 soap_get___ns1__getAllReservationsForClass(struct soap *soap, struct __ns1__getAllReservationsForClass *p, const char *tag, const char *type)
-{
-	if ((p = soap_in___ns1__getAllReservationsForClass(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREreserveResponse(struct soap *soap, struct ns2__tpsAPI_USCOREreserveResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->result = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREreserveResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREreserveResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__ReservationData(soap, &a->result);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREreserveResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREreserveResponse *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse), type))
-		return soap->error;
-	if (soap_out_PointerTons2__ReservationData(soap, "result", -1, &a->result, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREreserveResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREreserveResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREreserveResponse *a, const char *type)
-{
-	size_t soap_flag_result = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCOREreserveResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse, sizeof(struct ns2__tpsAPI_USCOREreserveResponse), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCOREreserveResponse(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__ReservationData(soap, "result", &a->result, "ns2:ReservationData"))
-				{	soap_flag_result--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREreserveResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse, 0, sizeof(struct ns2__tpsAPI_USCOREreserveResponse), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREreserveResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREreserveResponse *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse);
-	if (soap_out_ns2__tpsAPI_USCOREreserveResponse(soap, tag?tag:"ns2:tpsAPI_reserveResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREreserveResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREreserveResponse(struct soap *soap, struct ns2__tpsAPI_USCOREreserveResponse *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCOREreserveResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREreserve(struct soap *soap, struct ns2__tpsAPI_USCOREreserve *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ReservationData_USCORE1 = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREreserve(struct soap *soap, const struct ns2__tpsAPI_USCOREreserve *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__ReservationData(soap, &a->ReservationData_USCORE1);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREreserve(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREreserve *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREreserve), type))
-		return soap->error;
-	if (soap_out_PointerTons2__ReservationData(soap, "ReservationData_1", -1, &a->ReservationData_USCORE1, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREreserve * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREreserve(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREreserve *a, const char *type)
-{
-	size_t soap_flag_ReservationData_USCORE1 = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCOREreserve *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREreserve, sizeof(struct ns2__tpsAPI_USCOREreserve), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCOREreserve(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ReservationData_USCORE1 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__ReservationData(soap, "ReservationData_1", &a->ReservationData_USCORE1, "ns2:ReservationData"))
-				{	soap_flag_ReservationData_USCORE1--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREreserve *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREreserve, 0, sizeof(struct ns2__tpsAPI_USCOREreserve), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREreserve(struct soap *soap, const struct ns2__tpsAPI_USCOREreserve *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREreserve);
-	if (soap_out_ns2__tpsAPI_USCOREreserve(soap, tag?tag:"ns2:tpsAPI_reserve", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREreserve * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREreserve(struct soap *soap, struct ns2__tpsAPI_USCOREreserve *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCOREreserve(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__UserData(struct soap *soap, struct ns2__UserData *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_LONG64(soap, &a->id);
-	soap_default_string(soap, &a->info);
-	soap_default_string(soap, &a->passWord);
-	soap_default_string(soap, &a->type);
-	soap_default_string(soap, &a->userName);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__UserData(struct soap *soap, const struct ns2__UserData *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_string(soap, &a->info);
-	soap_serialize_string(soap, &a->passWord);
-	soap_serialize_string(soap, &a->type);
-	soap_serialize_string(soap, &a->userName);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__UserData(struct soap *soap, const char *tag, int id, const struct ns2__UserData *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__UserData), type))
-		return soap->error;
-	if (soap_out_LONG64(soap, "id", -1, &a->id, ""))
-		return soap->error;
-	if (soap_out_string(soap, "info", -1, &a->info, ""))
-		return soap->error;
-	if (soap_out_string(soap, "passWord", -1, &a->passWord, ""))
-		return soap->error;
-	if (soap_out_string(soap, "type", -1, &a->type, ""))
-		return soap->error;
-	if (soap_out_string(soap, "userName", -1, &a->userName, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__UserData * SOAP_FMAC4 soap_in_ns2__UserData(struct soap *soap, const char *tag, struct ns2__UserData *a, const char *type)
-{
-	size_t soap_flag_id = 1;
-	size_t soap_flag_info = 1;
-	size_t soap_flag_passWord = 1;
-	size_t soap_flag_type = 1;
-	size_t soap_flag_userName = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__UserData *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__UserData, sizeof(struct ns2__UserData), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__UserData(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_id && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_LONG64(soap, "id", &a->id, "xsd:long"))
-				{	soap_flag_id--;
-					continue;
-				}
-			if (soap_flag_info && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "info", &a->info, "xsd:string"))
-				{	soap_flag_info--;
-					continue;
-				}
-			if (soap_flag_passWord && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "passWord", &a->passWord, "xsd:string"))
-				{	soap_flag_passWord--;
-					continue;
-				}
-			if (soap_flag_type && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "type", &a->type, "xsd:string"))
-				{	soap_flag_type--;
-					continue;
-				}
-			if (soap_flag_userName && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "userName", &a->userName, "xsd:string"))
-				{	soap_flag_userName--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__UserData *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__UserData, 0, sizeof(struct ns2__UserData), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_id > 0))
-	{	soap->error = SOAP_OCCURS;
-		return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__UserData(struct soap *soap, const struct ns2__UserData *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__UserData);
-	if (soap_out_ns2__UserData(soap, tag?tag:"ns2:UserData", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__UserData * SOAP_FMAC4 soap_get_ns2__UserData(struct soap *soap, struct ns2__UserData *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__UserData(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORElookupUserResponse(struct soap *soap, struct ns2__tpsAPI_USCORElookupUserResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->result = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORElookupUserResponse(struct soap *soap, const struct ns2__tpsAPI_USCORElookupUserResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__UserData(soap, &a->result);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORElookupUserResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORElookupUserResponse *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse), type))
-		return soap->error;
-	if (soap_out_PointerTons2__UserData(soap, "result", -1, &a->result, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORElookupUserResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORElookupUserResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORElookupUserResponse *a, const char *type)
-{
-	size_t soap_flag_result = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCORElookupUserResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse, sizeof(struct ns2__tpsAPI_USCORElookupUserResponse), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCORElookupUserResponse(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__UserData(soap, "result", &a->result, "ns2:UserData"))
-				{	soap_flag_result--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORElookupUserResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse, 0, sizeof(struct ns2__tpsAPI_USCORElookupUserResponse), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORElookupUserResponse(struct soap *soap, const struct ns2__tpsAPI_USCORElookupUserResponse *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse);
-	if (soap_out_ns2__tpsAPI_USCORElookupUserResponse(soap, tag?tag:"ns2:tpsAPI_lookupUserResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORElookupUserResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORElookupUserResponse(struct soap *soap, struct ns2__tpsAPI_USCORElookupUserResponse *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCORElookupUserResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORElookupUser(struct soap *soap, struct ns2__tpsAPI_USCORElookupUser *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_string(soap, &a->String_USCORE1);
-	soap_default_string(soap, &a->String_USCORE2);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORElookupUser(struct soap *soap, const struct ns2__tpsAPI_USCORElookupUser *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_string(soap, &a->String_USCORE1);
-	soap_serialize_string(soap, &a->String_USCORE2);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORElookupUser(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORElookupUser *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORElookupUser), type))
-		return soap->error;
-	if (soap_out_string(soap, "String_1", -1, &a->String_USCORE1, ""))
-		return soap->error;
-	if (soap_out_string(soap, "String_2", -1, &a->String_USCORE2, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORElookupUser * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORElookupUser(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORElookupUser *a, const char *type)
-{
-	size_t soap_flag_String_USCORE1 = 1;
-	size_t soap_flag_String_USCORE2 = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCORElookupUser *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORElookupUser, sizeof(struct ns2__tpsAPI_USCORElookupUser), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCORElookupUser(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_String_USCORE1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_1", &a->String_USCORE1, "xsd:string"))
-				{	soap_flag_String_USCORE1--;
-					continue;
-				}
-			if (soap_flag_String_USCORE2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_2", &a->String_USCORE2, "xsd:string"))
-				{	soap_flag_String_USCORE2--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORElookupUser *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORElookupUser, 0, sizeof(struct ns2__tpsAPI_USCORElookupUser), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORElookupUser(struct soap *soap, const struct ns2__tpsAPI_USCORElookupUser *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORElookupUser);
-	if (soap_out_ns2__tpsAPI_USCORElookupUser(soap, tag?tag:"ns2:tpsAPI_lookupUser", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORElookupUser * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORElookupUser(struct soap *soap, struct ns2__tpsAPI_USCORElookupUser *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCORElookupUser(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetReservationDataResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->result = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREgetReservationDataResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__ReservationData(soap, &a->result);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREgetReservationDataResponse *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse), type))
-		return soap->error;
-	if (soap_out_PointerTons2__ReservationData(soap, "result", -1, &a->result, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetReservationDataResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetReservationDataResponse *a, const char *type)
-{
-	size_t soap_flag_result = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCOREgetReservationDataResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse, sizeof(struct ns2__tpsAPI_USCOREgetReservationDataResponse), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__ReservationData(soap, "result", &a->result, "ns2:ReservationData"))
-				{	soap_flag_result--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREgetReservationDataResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse, 0, sizeof(struct ns2__tpsAPI_USCOREgetReservationDataResponse), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREgetReservationDataResponse *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse);
-	if (soap_out_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, tag?tag:"ns2:tpsAPI_getReservationDataResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetReservationDataResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetReservationDataResponse *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREgetReservationData(struct soap *soap, struct ns2__tpsAPI_USCOREgetReservationData *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_string(soap, &a->String_USCORE1);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREgetReservationData(struct soap *soap, const struct ns2__tpsAPI_USCOREgetReservationData *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_string(soap, &a->String_USCORE1);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREgetReservationData(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREgetReservationData *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData), type))
-		return soap->error;
-	if (soap_out_string(soap, "String_1", -1, &a->String_USCORE1, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetReservationData * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREgetReservationData(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetReservationData *a, const char *type)
-{
-	size_t soap_flag_String_USCORE1 = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCOREgetReservationData *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData, sizeof(struct ns2__tpsAPI_USCOREgetReservationData), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCOREgetReservationData(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_String_USCORE1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_1", &a->String_USCORE1, "xsd:string"))
-				{	soap_flag_String_USCORE1--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREgetReservationData *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData, 0, sizeof(struct ns2__tpsAPI_USCOREgetReservationData), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREgetReservationData(struct soap *soap, const struct ns2__tpsAPI_USCOREgetReservationData *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData);
-	if (soap_out_ns2__tpsAPI_USCOREgetReservationData(soap, tag?tag:"ns2:tpsAPI_getReservationData", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetReservationData * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREgetReservationData(struct soap *soap, struct ns2__tpsAPI_USCOREgetReservationData *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCOREgetReservationData(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_string(soap, &a->result);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_string(soap, &a->result);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse), type))
-		return soap->error;
-	if (soap_out_string(soap, "result", -1, &a->result, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *a, const char *type)
-{
-	size_t soap_flag_result = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse, sizeof(struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_result && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "result", &a->result, "xsd:string"))
-				{	soap_flag_result--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse, 0, sizeof(struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse);
-	if (soap_out_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, tag?tag:"ns2:tpsAPI_getRelatedReservationIdsResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, struct ns2__tpsAPI_USCOREgetRelatedReservationIds *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_string(soap, &a->String_USCORE1);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const struct ns2__tpsAPI_USCOREgetRelatedReservationIds *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_string(soap, &a->String_USCORE1);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREgetRelatedReservationIds *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds), type))
-		return soap->error;
-	if (soap_out_string(soap, "String_1", -1, &a->String_USCORE1, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetRelatedReservationIds * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetRelatedReservationIds *a, const char *type)
-{
-	size_t soap_flag_String_USCORE1 = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCOREgetRelatedReservationIds *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds, sizeof(struct ns2__tpsAPI_USCOREgetRelatedReservationIds), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCOREgetRelatedReservationIds(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_String_USCORE1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_1", &a->String_USCORE1, "xsd:string"))
-				{	soap_flag_String_USCORE1--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREgetRelatedReservationIds *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds, 0, sizeof(struct ns2__tpsAPI_USCOREgetRelatedReservationIds), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const struct ns2__tpsAPI_USCOREgetRelatedReservationIds *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds);
-	if (soap_out_ns2__tpsAPI_USCOREgetRelatedReservationIds(soap, tag?tag:"ns2:tpsAPI_getRelatedReservationIds", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetRelatedReservationIds * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, struct ns2__tpsAPI_USCOREgetRelatedReservationIds *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCOREgetRelatedReservationIds(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREgetPathResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetPathResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->__sizeresult = 0;
-	a->result = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREgetPathResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREgetPathResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	if (a->result)
-	{	int i;
-		for (i = 0; i < a->__sizeresult; i++)
-		{
-			soap_serialize_string(soap, a->result + i);
-		}
-	}
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREgetPathResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREgetPathResponse *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse), type))
-		return soap->error;
-	if (a->result)
-	{	int i;
-		for (i = 0; i < a->__sizeresult; i++)
-			if (soap_out_string(soap, "result", -1, a->result + i, ""))
-				return soap->error;
-	}
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetPathResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREgetPathResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetPathResponse *a, const char *type)
-{
-	struct soap_blist *soap_blist_result = NULL;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCOREgetPathResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse, sizeof(struct ns2__tpsAPI_USCOREgetPathResponse), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCOREgetPathResponse(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap->error == SOAP_TAG_MISMATCH && !soap_element_begin_in(soap, "result", 1, NULL))
-			{	if (a->result == NULL)
-				{	if (soap_blist_result == NULL)
-						soap_blist_result = soap_new_block(soap);
-					a->result = (char **)soap_push_block(soap, soap_blist_result, sizeof(char *));
-					if (a->result == NULL)
-						return NULL;
-					*a->result = NULL;
-				}
-				soap_revert(soap);
-				if (soap_in_string(soap, "result", a->result, "xsd:string"))
-				{	a->__sizeresult++;
-					a->result = NULL;
-					continue;
-				}
-			}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (a->result)
-			soap_pop_block(soap, soap_blist_result);
-		if (a->__sizeresult)
-			a->result = (char **)soap_save_block(soap, soap_blist_result, NULL, 1);
-		else
-		{	a->result = NULL;
-			if (soap_blist_result)
-				soap_end_block(soap, soap_blist_result);
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREgetPathResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse, 0, sizeof(struct ns2__tpsAPI_USCOREgetPathResponse), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREgetPathResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREgetPathResponse *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse);
-	if (soap_out_ns2__tpsAPI_USCOREgetPathResponse(soap, tag?tag:"ns2:tpsAPI_getPathResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetPathResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREgetPathResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetPathResponse *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCOREgetPathResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREgetPath(struct soap *soap, struct ns2__tpsAPI_USCOREgetPath *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_string(soap, &a->String_USCORE1);
-	soap_default_string(soap, &a->String_USCORE2);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREgetPath(struct soap *soap, const struct ns2__tpsAPI_USCOREgetPath *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_string(soap, &a->String_USCORE1);
-	soap_serialize_string(soap, &a->String_USCORE2);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREgetPath(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREgetPath *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetPath), type))
-		return soap->error;
-	if (soap_out_string(soap, "String_1", -1, &a->String_USCORE1, ""))
-		return soap->error;
-	if (soap_out_string(soap, "String_2", -1, &a->String_USCORE2, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetPath * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREgetPath(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetPath *a, const char *type)
-{
-	size_t soap_flag_String_USCORE1 = 1;
-	size_t soap_flag_String_USCORE2 = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCOREgetPath *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetPath, sizeof(struct ns2__tpsAPI_USCOREgetPath), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCOREgetPath(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_String_USCORE1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_1", &a->String_USCORE1, "xsd:string"))
-				{	soap_flag_String_USCORE1--;
-					continue;
-				}
-			if (soap_flag_String_USCORE2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_2", &a->String_USCORE2, "xsd:string"))
-				{	soap_flag_String_USCORE2--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREgetPath *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREgetPath, 0, sizeof(struct ns2__tpsAPI_USCOREgetPath), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREgetPath(struct soap *soap, const struct ns2__tpsAPI_USCOREgetPath *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREgetPath);
-	if (soap_out_ns2__tpsAPI_USCOREgetPath(soap, tag?tag:"ns2:tpsAPI_getPath", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetPath * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREgetPath(struct soap *soap, struct ns2__tpsAPI_USCOREgetPath *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCOREgetPath(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->__sizeresult = 0;
-	a->result = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	if (a->result)
-	{	int i;
-		for (i = 0; i < a->__sizeresult; i++)
-		{
-			soap_serialize_PointerTons2__Bandwidth(soap, a->result + i);
-		}
-	}
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse), type))
-		return soap->error;
-	if (a->result)
-	{	int i;
-		for (i = 0; i < a->__sizeresult; i++)
-			if (soap_out_PointerTons2__Bandwidth(soap, "result", -1, a->result + i, ""))
-				return soap->error;
-	}
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *a, const char *type)
-{
-	struct soap_blist *soap_blist_result = NULL;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse, sizeof(struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap->error == SOAP_TAG_MISMATCH && !soap_element_begin_in(soap, "result", 1, NULL))
-			{	if (a->result == NULL)
-				{	if (soap_blist_result == NULL)
-						soap_blist_result = soap_new_block(soap);
-					a->result = (struct ns2__Bandwidth **)soap_push_block(soap, soap_blist_result, sizeof(struct ns2__Bandwidth *));
-					if (a->result == NULL)
-						return NULL;
-					*a->result = NULL;
-				}
-				soap_revert(soap);
-				if (soap_in_PointerTons2__Bandwidth(soap, "result", a->result, "ns2:Bandwidth"))
-				{	a->__sizeresult++;
-					a->result = NULL;
-					continue;
-				}
-			}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (a->result)
-			soap_pop_block(soap, soap_blist_result);
-		if (a->__sizeresult)
-			a->result = (struct ns2__Bandwidth **)soap_save_block(soap, soap_blist_result, NULL, 1);
-		else
-		{	a->result = NULL;
-			if (soap_blist_result)
-				soap_end_block(soap, soap_blist_result);
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse, 0, sizeof(struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse);
-	if (soap_out_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, tag?tag:"ns2:tpsAPI_getLocalBandwidthsResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, struct ns2__tpsAPI_USCOREgetLocalBandwidths *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const struct ns2__tpsAPI_USCOREgetLocalBandwidths *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREgetLocalBandwidths *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths), type))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetLocalBandwidths * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetLocalBandwidths *a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCOREgetLocalBandwidths *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths, sizeof(struct ns2__tpsAPI_USCOREgetLocalBandwidths), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCOREgetLocalBandwidths(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREgetLocalBandwidths *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths, 0, sizeof(struct ns2__tpsAPI_USCOREgetLocalBandwidths), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const struct ns2__tpsAPI_USCOREgetLocalBandwidths *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths);
-	if (soap_out_ns2__tpsAPI_USCOREgetLocalBandwidths(soap, tag?tag:"ns2:tpsAPI_getLocalBandwidths", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetLocalBandwidths * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, struct ns2__tpsAPI_USCOREgetLocalBandwidths *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCOREgetLocalBandwidths(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__Bandwidths(struct soap *soap, struct ns2__Bandwidths *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->__sizebw = 0;
-	a->bw = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__Bandwidths(struct soap *soap, const struct ns2__Bandwidths *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	if (a->bw)
-	{	int i;
-		for (i = 0; i < a->__sizebw; i++)
-		{
-			soap_serialize_PointerTons2__Bandwidth(soap, a->bw + i);
-		}
-	}
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__Bandwidths(struct soap *soap, const char *tag, int id, const struct ns2__Bandwidths *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__Bandwidths), type))
-		return soap->error;
-	if (a->bw)
-	{	int i;
-		for (i = 0; i < a->__sizebw; i++)
-			if (soap_out_PointerTons2__Bandwidth(soap, "bw", -1, a->bw + i, ""))
-				return soap->error;
-	}
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__Bandwidths * SOAP_FMAC4 soap_in_ns2__Bandwidths(struct soap *soap, const char *tag, struct ns2__Bandwidths *a, const char *type)
-{
-	struct soap_blist *soap_blist_bw = NULL;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__Bandwidths *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__Bandwidths, sizeof(struct ns2__Bandwidths), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__Bandwidths(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap->error == SOAP_TAG_MISMATCH && !soap_element_begin_in(soap, "bw", 1, NULL))
-			{	if (a->bw == NULL)
-				{	if (soap_blist_bw == NULL)
-						soap_blist_bw = soap_new_block(soap);
-					a->bw = (struct ns2__Bandwidth **)soap_push_block(soap, soap_blist_bw, sizeof(struct ns2__Bandwidth *));
-					if (a->bw == NULL)
-						return NULL;
-					*a->bw = NULL;
-				}
-				soap_revert(soap);
-				if (soap_in_PointerTons2__Bandwidth(soap, "bw", a->bw, "ns2:Bandwidth"))
-				{	a->__sizebw++;
-					a->bw = NULL;
-					continue;
-				}
-			}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (a->bw)
-			soap_pop_block(soap, soap_blist_bw);
-		if (a->__sizebw)
-			a->bw = (struct ns2__Bandwidth **)soap_save_block(soap, soap_blist_bw, NULL, 1);
-		else
-		{	a->bw = NULL;
-			if (soap_blist_bw)
-				soap_end_block(soap, soap_blist_bw);
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__Bandwidths *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__Bandwidths, 0, sizeof(struct ns2__Bandwidths), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__Bandwidths(struct soap *soap, const struct ns2__Bandwidths *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__Bandwidths);
-	if (soap_out_ns2__Bandwidths(soap, tag?tag:"ns2:Bandwidths", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__Bandwidths * SOAP_FMAC4 soap_get_ns2__Bandwidths(struct soap *soap, struct ns2__Bandwidths *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__Bandwidths(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetBandwidthsResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->__sizeresult = 0;
-	a->result = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREgetBandwidthsResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	if (a->result)
-	{	int i;
-		for (i = 0; i < a->__sizeresult; i++)
-		{
-			soap_serialize_PointerTons2__Bandwidths(soap, a->result + i);
-		}
-	}
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREgetBandwidthsResponse *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse), type))
-		return soap->error;
-	if (a->result)
-	{	int i;
-		for (i = 0; i < a->__sizeresult; i++)
-			if (soap_out_PointerTons2__Bandwidths(soap, "result", -1, a->result + i, ""))
-				return soap->error;
-	}
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetBandwidthsResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetBandwidthsResponse *a, const char *type)
-{
-	struct soap_blist *soap_blist_result = NULL;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCOREgetBandwidthsResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse, sizeof(struct ns2__tpsAPI_USCOREgetBandwidthsResponse), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap->error == SOAP_TAG_MISMATCH && !soap_element_begin_in(soap, "result", 1, NULL))
-			{	if (a->result == NULL)
-				{	if (soap_blist_result == NULL)
-						soap_blist_result = soap_new_block(soap);
-					a->result = (struct ns2__Bandwidths **)soap_push_block(soap, soap_blist_result, sizeof(struct ns2__Bandwidths *));
-					if (a->result == NULL)
-						return NULL;
-					*a->result = NULL;
-				}
-				soap_revert(soap);
-				if (soap_in_PointerTons2__Bandwidths(soap, "result", a->result, "ns2:Bandwidths"))
-				{	a->__sizeresult++;
-					a->result = NULL;
-					continue;
-				}
-			}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (a->result)
-			soap_pop_block(soap, soap_blist_result);
-		if (a->__sizeresult)
-			a->result = (struct ns2__Bandwidths **)soap_save_block(soap, soap_blist_result, NULL, 1);
-		else
-		{	a->result = NULL;
-			if (soap_blist_result)
-				soap_end_block(soap, soap_blist_result);
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREgetBandwidthsResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse, 0, sizeof(struct ns2__tpsAPI_USCOREgetBandwidthsResponse), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREgetBandwidthsResponse *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse);
-	if (soap_out_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, tag?tag:"ns2:tpsAPI_getBandwidthsResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetBandwidthsResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetBandwidthsResponse *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREgetBandwidths(struct soap *soap, struct ns2__tpsAPI_USCOREgetBandwidths *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_string(soap, &a->String_USCORE1);
-	soap_default_string(soap, &a->String_USCORE2);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREgetBandwidths(struct soap *soap, const struct ns2__tpsAPI_USCOREgetBandwidths *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_string(soap, &a->String_USCORE1);
-	soap_serialize_string(soap, &a->String_USCORE2);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREgetBandwidths(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREgetBandwidths *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths), type))
-		return soap->error;
-	if (soap_out_string(soap, "String_1", -1, &a->String_USCORE1, ""))
-		return soap->error;
-	if (soap_out_string(soap, "String_2", -1, &a->String_USCORE2, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetBandwidths * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREgetBandwidths(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetBandwidths *a, const char *type)
-{
-	size_t soap_flag_String_USCORE1 = 1;
-	size_t soap_flag_String_USCORE2 = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCOREgetBandwidths *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths, sizeof(struct ns2__tpsAPI_USCOREgetBandwidths), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCOREgetBandwidths(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_String_USCORE1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_1", &a->String_USCORE1, "xsd:string"))
-				{	soap_flag_String_USCORE1--;
-					continue;
-				}
-			if (soap_flag_String_USCORE2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_2", &a->String_USCORE2, "xsd:string"))
-				{	soap_flag_String_USCORE2--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREgetBandwidths *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths, 0, sizeof(struct ns2__tpsAPI_USCOREgetBandwidths), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREgetBandwidths(struct soap *soap, const struct ns2__tpsAPI_USCOREgetBandwidths *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths);
-	if (soap_out_ns2__tpsAPI_USCOREgetBandwidths(soap, tag?tag:"ns2:tpsAPI_getBandwidths", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetBandwidths * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREgetBandwidths(struct soap *soap, struct ns2__tpsAPI_USCOREgetBandwidths *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCOREgetBandwidths(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREcommitResponse(struct soap *soap, struct ns2__tpsAPI_USCOREcommitResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_xsd__boolean(soap, &a->result);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREcommitResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREcommitResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREcommitResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREcommitResponse *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse), type))
-		return soap->error;
-	if (soap_out_xsd__boolean(soap, "result", -1, &a->result, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREcommitResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREcommitResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREcommitResponse *a, const char *type)
-{
-	size_t soap_flag_result = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCOREcommitResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse, sizeof(struct ns2__tpsAPI_USCOREcommitResponse), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCOREcommitResponse(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_xsd__boolean(soap, "result", &a->result, "xsd:boolean"))
-				{	soap_flag_result--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREcommitResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse, 0, sizeof(struct ns2__tpsAPI_USCOREcommitResponse), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_result > 0))
-	{	soap->error = SOAP_OCCURS;
-		return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREcommitResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREcommitResponse *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse);
-	if (soap_out_ns2__tpsAPI_USCOREcommitResponse(soap, tag?tag:"ns2:tpsAPI_commitResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREcommitResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREcommitResponse(struct soap *soap, struct ns2__tpsAPI_USCOREcommitResponse *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCOREcommitResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREcommit(struct soap *soap, struct ns2__tpsAPI_USCOREcommit *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ReservationData_USCORE1 = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREcommit(struct soap *soap, const struct ns2__tpsAPI_USCOREcommit *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__ReservationData(soap, &a->ReservationData_USCORE1);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREcommit(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREcommit *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREcommit), type))
-		return soap->error;
-	if (soap_out_PointerTons2__ReservationData(soap, "ReservationData_1", -1, &a->ReservationData_USCORE1, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREcommit * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREcommit(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREcommit *a, const char *type)
-{
-	size_t soap_flag_ReservationData_USCORE1 = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCOREcommit *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREcommit, sizeof(struct ns2__tpsAPI_USCOREcommit), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCOREcommit(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ReservationData_USCORE1 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__ReservationData(soap, "ReservationData_1", &a->ReservationData_USCORE1, "ns2:ReservationData"))
-				{	soap_flag_ReservationData_USCORE1--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREcommit *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREcommit, 0, sizeof(struct ns2__tpsAPI_USCOREcommit), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREcommit(struct soap *soap, const struct ns2__tpsAPI_USCOREcommit *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREcommit);
-	if (soap_out_ns2__tpsAPI_USCOREcommit(soap, tag?tag:"ns2:tpsAPI_commit", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREcommit * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREcommit(struct soap *soap, struct ns2__tpsAPI_USCOREcommit *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCOREcommit(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREcancelResponse(struct soap *soap, struct ns2__tpsAPI_USCOREcancelResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_xsd__boolean(soap, &a->result);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREcancelResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREcancelResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREcancelResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREcancelResponse *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse), type))
-		return soap->error;
-	if (soap_out_xsd__boolean(soap, "result", -1, &a->result, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREcancelResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREcancelResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREcancelResponse *a, const char *type)
-{
-	size_t soap_flag_result = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCOREcancelResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse, sizeof(struct ns2__tpsAPI_USCOREcancelResponse), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCOREcancelResponse(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_xsd__boolean(soap, "result", &a->result, "xsd:boolean"))
-				{	soap_flag_result--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREcancelResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse, 0, sizeof(struct ns2__tpsAPI_USCOREcancelResponse), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_result > 0))
-	{	soap->error = SOAP_OCCURS;
-		return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREcancelResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREcancelResponse *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse);
-	if (soap_out_ns2__tpsAPI_USCOREcancelResponse(soap, tag?tag:"ns2:tpsAPI_cancelResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREcancelResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREcancelResponse(struct soap *soap, struct ns2__tpsAPI_USCOREcancelResponse *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCOREcancelResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREcancel(struct soap *soap, struct ns2__tpsAPI_USCOREcancel *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ReservationData_USCORE1 = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREcancel(struct soap *soap, const struct ns2__tpsAPI_USCOREcancel *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__ReservationData(soap, &a->ReservationData_USCORE1);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREcancel(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREcancel *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREcancel), type))
-		return soap->error;
-	if (soap_out_PointerTons2__ReservationData(soap, "ReservationData_1", -1, &a->ReservationData_USCORE1, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREcancel * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREcancel(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREcancel *a, const char *type)
-{
-	size_t soap_flag_ReservationData_USCORE1 = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCOREcancel *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREcancel, sizeof(struct ns2__tpsAPI_USCOREcancel), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCOREcancel(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ReservationData_USCORE1 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__ReservationData(soap, "ReservationData_1", &a->ReservationData_USCORE1, "ns2:ReservationData"))
-				{	soap_flag_ReservationData_USCORE1--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREcancel *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREcancel, 0, sizeof(struct ns2__tpsAPI_USCOREcancel), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREcancel(struct soap *soap, const struct ns2__tpsAPI_USCOREcancel *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREcancel);
-	if (soap_out_ns2__tpsAPI_USCOREcancel(soap, tag?tag:"ns2:tpsAPI_cancel", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREcancel * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREcancel(struct soap *soap, struct ns2__tpsAPI_USCOREcancel *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCOREcancel(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_xsd__boolean(soap, &a->result);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse), type))
-		return soap->error;
-	if (soap_out_xsd__boolean(soap, "result", -1, &a->result, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *a, const char *type)
-{
-	size_t soap_flag_result = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse, sizeof(struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_xsd__boolean(soap, "result", &a->result, "xsd:boolean"))
-				{	soap_flag_result--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse, 0, sizeof(struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_result > 0))
-	{	soap->error = SOAP_OCCURS;
-		return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse);
-	if (soap_out_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, tag?tag:"ns2:tpsAPI_addRelatedReservationIdResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, struct ns2__tpsAPI_USCOREaddRelatedReservationId *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_string(soap, &a->String_USCORE1);
-	soap_default_string(soap, &a->String_USCORE2);
-	soap_default_xsd__boolean(soap, &a->boolean_USCORE3);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const struct ns2__tpsAPI_USCOREaddRelatedReservationId *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_string(soap, &a->String_USCORE1);
-	soap_serialize_string(soap, &a->String_USCORE2);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREaddRelatedReservationId *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId), type))
-		return soap->error;
-	if (soap_out_string(soap, "String_1", -1, &a->String_USCORE1, ""))
-		return soap->error;
-	if (soap_out_string(soap, "String_2", -1, &a->String_USCORE2, ""))
-		return soap->error;
-	if (soap_out_xsd__boolean(soap, "boolean_3", -1, &a->boolean_USCORE3, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREaddRelatedReservationId * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREaddRelatedReservationId *a, const char *type)
-{
-	size_t soap_flag_String_USCORE1 = 1;
-	size_t soap_flag_String_USCORE2 = 1;
-	size_t soap_flag_boolean_USCORE3 = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCOREaddRelatedReservationId *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId, sizeof(struct ns2__tpsAPI_USCOREaddRelatedReservationId), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCOREaddRelatedReservationId(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_String_USCORE1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_1", &a->String_USCORE1, "xsd:string"))
-				{	soap_flag_String_USCORE1--;
-					continue;
-				}
-			if (soap_flag_String_USCORE2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_2", &a->String_USCORE2, "xsd:string"))
-				{	soap_flag_String_USCORE2--;
-					continue;
-				}
-			if (soap_flag_boolean_USCORE3 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_xsd__boolean(soap, "boolean_3", &a->boolean_USCORE3, "xsd:boolean"))
-				{	soap_flag_boolean_USCORE3--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREaddRelatedReservationId *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId, 0, sizeof(struct ns2__tpsAPI_USCOREaddRelatedReservationId), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_boolean_USCORE3 > 0))
-	{	soap->error = SOAP_OCCURS;
-		return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const struct ns2__tpsAPI_USCOREaddRelatedReservationId *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId);
-	if (soap_out_ns2__tpsAPI_USCOREaddRelatedReservationId(soap, tag?tag:"ns2:tpsAPI_addRelatedReservationId", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREaddRelatedReservationId * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, struct ns2__tpsAPI_USCOREaddRelatedReservationId *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCOREaddRelatedReservationId(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORELocalStartResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalStartResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_xsd__boolean(soap, &a->result);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORELocalStartResponse(struct soap *soap, const struct ns2__tpsAPI_USCORELocalStartResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORELocalStartResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORELocalStartResponse *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse), type))
-		return soap->error;
-	if (soap_out_xsd__boolean(soap, "result", -1, &a->result, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalStartResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORELocalStartResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalStartResponse *a, const char *type)
-{
-	size_t soap_flag_result = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCORELocalStartResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse, sizeof(struct ns2__tpsAPI_USCORELocalStartResponse), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCORELocalStartResponse(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_xsd__boolean(soap, "result", &a->result, "xsd:boolean"))
-				{	soap_flag_result--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORELocalStartResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse, 0, sizeof(struct ns2__tpsAPI_USCORELocalStartResponse), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_result > 0))
-	{	soap->error = SOAP_OCCURS;
-		return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORELocalStartResponse(struct soap *soap, const struct ns2__tpsAPI_USCORELocalStartResponse *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse);
-	if (soap_out_ns2__tpsAPI_USCORELocalStartResponse(soap, tag?tag:"ns2:tpsAPI_LocalStartResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalStartResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORELocalStartResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalStartResponse *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCORELocalStartResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORELocalStart(struct soap *soap, struct ns2__tpsAPI_USCORELocalStart *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_string(soap, &a->String_USCORE1);
-	soap_default_string(soap, &a->String_USCORE2);
-	soap_default_string(soap, &a->String_USCORE3);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORELocalStart(struct soap *soap, const struct ns2__tpsAPI_USCORELocalStart *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_string(soap, &a->String_USCORE1);
-	soap_serialize_string(soap, &a->String_USCORE2);
-	soap_serialize_string(soap, &a->String_USCORE3);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORELocalStart(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORELocalStart *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalStart), type))
-		return soap->error;
-	if (soap_out_string(soap, "String_1", -1, &a->String_USCORE1, ""))
-		return soap->error;
-	if (soap_out_string(soap, "String_2", -1, &a->String_USCORE2, ""))
-		return soap->error;
-	if (soap_out_string(soap, "String_3", -1, &a->String_USCORE3, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalStart * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORELocalStart(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalStart *a, const char *type)
-{
-	size_t soap_flag_String_USCORE1 = 1;
-	size_t soap_flag_String_USCORE2 = 1;
-	size_t soap_flag_String_USCORE3 = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCORELocalStart *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalStart, sizeof(struct ns2__tpsAPI_USCORELocalStart), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCORELocalStart(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_String_USCORE1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_1", &a->String_USCORE1, "xsd:string"))
-				{	soap_flag_String_USCORE1--;
-					continue;
-				}
-			if (soap_flag_String_USCORE2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_2", &a->String_USCORE2, "xsd:string"))
-				{	soap_flag_String_USCORE2--;
-					continue;
-				}
-			if (soap_flag_String_USCORE3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_3", &a->String_USCORE3, "xsd:string"))
-				{	soap_flag_String_USCORE3--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORELocalStart *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORELocalStart, 0, sizeof(struct ns2__tpsAPI_USCORELocalStart), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORELocalStart(struct soap *soap, const struct ns2__tpsAPI_USCORELocalStart *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORELocalStart);
-	if (soap_out_ns2__tpsAPI_USCORELocalStart(soap, tag?tag:"ns2:tpsAPI_LocalStart", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalStart * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORELocalStart(struct soap *soap, struct ns2__tpsAPI_USCORELocalStart *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCORELocalStart(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalReserveResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->result = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, const struct ns2__tpsAPI_USCORELocalReserveResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__ReservationData(soap, &a->result);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORELocalReserveResponse *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse), type))
-		return soap->error;
-	if (soap_out_PointerTons2__ReservationData(soap, "result", -1, &a->result, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalReserveResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalReserveResponse *a, const char *type)
-{
-	size_t soap_flag_result = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCORELocalReserveResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse, sizeof(struct ns2__tpsAPI_USCORELocalReserveResponse), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCORELocalReserveResponse(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__ReservationData(soap, "result", &a->result, "ns2:ReservationData"))
-				{	soap_flag_result--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORELocalReserveResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse, 0, sizeof(struct ns2__tpsAPI_USCORELocalReserveResponse), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, const struct ns2__tpsAPI_USCORELocalReserveResponse *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse);
-	if (soap_out_ns2__tpsAPI_USCORELocalReserveResponse(soap, tag?tag:"ns2:tpsAPI_LocalReserveResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalReserveResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalReserveResponse *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCORELocalReserveResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORELocalReserve(struct soap *soap, struct ns2__tpsAPI_USCORELocalReserve *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ReservationData_USCORE1 = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORELocalReserve(struct soap *soap, const struct ns2__tpsAPI_USCORELocalReserve *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__ReservationData(soap, &a->ReservationData_USCORE1);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORELocalReserve(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORELocalReserve *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve), type))
-		return soap->error;
-	if (soap_out_PointerTons2__ReservationData(soap, "ReservationData_1", -1, &a->ReservationData_USCORE1, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalReserve * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORELocalReserve(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalReserve *a, const char *type)
-{
-	size_t soap_flag_ReservationData_USCORE1 = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCORELocalReserve *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve, sizeof(struct ns2__tpsAPI_USCORELocalReserve), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCORELocalReserve(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ReservationData_USCORE1 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__ReservationData(soap, "ReservationData_1", &a->ReservationData_USCORE1, "ns2:ReservationData"))
-				{	soap_flag_ReservationData_USCORE1--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORELocalReserve *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve, 0, sizeof(struct ns2__tpsAPI_USCORELocalReserve), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORELocalReserve(struct soap *soap, const struct ns2__tpsAPI_USCORELocalReserve *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve);
-	if (soap_out_ns2__tpsAPI_USCORELocalReserve(soap, tag?tag:"ns2:tpsAPI_LocalReserve", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalReserve * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORELocalReserve(struct soap *soap, struct ns2__tpsAPI_USCORELocalReserve *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCORELocalReserve(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalRemoveResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_xsd__boolean(soap, &a->result);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, const struct ns2__tpsAPI_USCORELocalRemoveResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORELocalRemoveResponse *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse), type))
-		return soap->error;
-	if (soap_out_xsd__boolean(soap, "result", -1, &a->result, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalRemoveResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalRemoveResponse *a, const char *type)
-{
-	size_t soap_flag_result = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCORELocalRemoveResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse, sizeof(struct ns2__tpsAPI_USCORELocalRemoveResponse), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCORELocalRemoveResponse(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_xsd__boolean(soap, "result", &a->result, "xsd:boolean"))
-				{	soap_flag_result--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORELocalRemoveResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse, 0, sizeof(struct ns2__tpsAPI_USCORELocalRemoveResponse), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_result > 0))
-	{	soap->error = SOAP_OCCURS;
-		return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, const struct ns2__tpsAPI_USCORELocalRemoveResponse *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse);
-	if (soap_out_ns2__tpsAPI_USCORELocalRemoveResponse(soap, tag?tag:"ns2:tpsAPI_LocalRemoveResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalRemoveResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalRemoveResponse *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCORELocalRemoveResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORELocalRemove(struct soap *soap, struct ns2__tpsAPI_USCORELocalRemove *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_string(soap, &a->String_USCORE1);
-	soap_default_string(soap, &a->String_USCORE2);
-	soap_default_string(soap, &a->String_USCORE3);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORELocalRemove(struct soap *soap, const struct ns2__tpsAPI_USCORELocalRemove *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_string(soap, &a->String_USCORE1);
-	soap_serialize_string(soap, &a->String_USCORE2);
-	soap_serialize_string(soap, &a->String_USCORE3);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORELocalRemove(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORELocalRemove *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove), type))
-		return soap->error;
-	if (soap_out_string(soap, "String_1", -1, &a->String_USCORE1, ""))
-		return soap->error;
-	if (soap_out_string(soap, "String_2", -1, &a->String_USCORE2, ""))
-		return soap->error;
-	if (soap_out_string(soap, "String_3", -1, &a->String_USCORE3, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalRemove * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORELocalRemove(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalRemove *a, const char *type)
-{
-	size_t soap_flag_String_USCORE1 = 1;
-	size_t soap_flag_String_USCORE2 = 1;
-	size_t soap_flag_String_USCORE3 = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCORELocalRemove *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove, sizeof(struct ns2__tpsAPI_USCORELocalRemove), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCORELocalRemove(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_String_USCORE1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_1", &a->String_USCORE1, "xsd:string"))
-				{	soap_flag_String_USCORE1--;
-					continue;
-				}
-			if (soap_flag_String_USCORE2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_2", &a->String_USCORE2, "xsd:string"))
-				{	soap_flag_String_USCORE2--;
-					continue;
-				}
-			if (soap_flag_String_USCORE3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_3", &a->String_USCORE3, "xsd:string"))
-				{	soap_flag_String_USCORE3--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORELocalRemove *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove, 0, sizeof(struct ns2__tpsAPI_USCORELocalRemove), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORELocalRemove(struct soap *soap, const struct ns2__tpsAPI_USCORELocalRemove *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove);
-	if (soap_out_ns2__tpsAPI_USCORELocalRemove(soap, tag?tag:"ns2:tpsAPI_LocalRemove", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalRemove * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORELocalRemove(struct soap *soap, struct ns2__tpsAPI_USCORELocalRemove *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCORELocalRemove(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalCommitResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_xsd__boolean(soap, &a->result);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, const struct ns2__tpsAPI_USCORELocalCommitResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORELocalCommitResponse *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse), type))
-		return soap->error;
-	if (soap_out_xsd__boolean(soap, "result", -1, &a->result, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCommitResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalCommitResponse *a, const char *type)
-{
-	size_t soap_flag_result = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCORELocalCommitResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse, sizeof(struct ns2__tpsAPI_USCORELocalCommitResponse), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCORELocalCommitResponse(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_xsd__boolean(soap, "result", &a->result, "xsd:boolean"))
-				{	soap_flag_result--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORELocalCommitResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse, 0, sizeof(struct ns2__tpsAPI_USCORELocalCommitResponse), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_result > 0))
-	{	soap->error = SOAP_OCCURS;
-		return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, const struct ns2__tpsAPI_USCORELocalCommitResponse *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse);
-	if (soap_out_ns2__tpsAPI_USCORELocalCommitResponse(soap, tag?tag:"ns2:tpsAPI_LocalCommitResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCommitResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalCommitResponse *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCORELocalCommitResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORELocalCommit(struct soap *soap, struct ns2__tpsAPI_USCORELocalCommit *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_string(soap, &a->String_USCORE1);
-	soap_default_string(soap, &a->String_USCORE2);
-	soap_default_string(soap, &a->String_USCORE3);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORELocalCommit(struct soap *soap, const struct ns2__tpsAPI_USCORELocalCommit *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_string(soap, &a->String_USCORE1);
-	soap_serialize_string(soap, &a->String_USCORE2);
-	soap_serialize_string(soap, &a->String_USCORE3);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORELocalCommit(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORELocalCommit *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit), type))
-		return soap->error;
-	if (soap_out_string(soap, "String_1", -1, &a->String_USCORE1, ""))
-		return soap->error;
-	if (soap_out_string(soap, "String_2", -1, &a->String_USCORE2, ""))
-		return soap->error;
-	if (soap_out_string(soap, "String_3", -1, &a->String_USCORE3, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCommit * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORELocalCommit(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalCommit *a, const char *type)
-{
-	size_t soap_flag_String_USCORE1 = 1;
-	size_t soap_flag_String_USCORE2 = 1;
-	size_t soap_flag_String_USCORE3 = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCORELocalCommit *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit, sizeof(struct ns2__tpsAPI_USCORELocalCommit), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCORELocalCommit(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_String_USCORE1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_1", &a->String_USCORE1, "xsd:string"))
-				{	soap_flag_String_USCORE1--;
-					continue;
-				}
-			if (soap_flag_String_USCORE2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_2", &a->String_USCORE2, "xsd:string"))
-				{	soap_flag_String_USCORE2--;
-					continue;
-				}
-			if (soap_flag_String_USCORE3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_3", &a->String_USCORE3, "xsd:string"))
-				{	soap_flag_String_USCORE3--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORELocalCommit *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit, 0, sizeof(struct ns2__tpsAPI_USCORELocalCommit), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORELocalCommit(struct soap *soap, const struct ns2__tpsAPI_USCORELocalCommit *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit);
-	if (soap_out_ns2__tpsAPI_USCORELocalCommit(soap, tag?tag:"ns2:tpsAPI_LocalCommit", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCommit * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORELocalCommit(struct soap *soap, struct ns2__tpsAPI_USCORELocalCommit *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCORELocalCommit(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalCancelResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_xsd__boolean(soap, &a->result);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, const struct ns2__tpsAPI_USCORELocalCancelResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORELocalCancelResponse *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse), type))
-		return soap->error;
-	if (soap_out_xsd__boolean(soap, "result", -1, &a->result, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCancelResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalCancelResponse *a, const char *type)
-{
-	size_t soap_flag_result = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCORELocalCancelResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse, sizeof(struct ns2__tpsAPI_USCORELocalCancelResponse), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCORELocalCancelResponse(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_xsd__boolean(soap, "result", &a->result, "xsd:boolean"))
-				{	soap_flag_result--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORELocalCancelResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse, 0, sizeof(struct ns2__tpsAPI_USCORELocalCancelResponse), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_result > 0))
-	{	soap->error = SOAP_OCCURS;
-		return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, const struct ns2__tpsAPI_USCORELocalCancelResponse *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse);
-	if (soap_out_ns2__tpsAPI_USCORELocalCancelResponse(soap, tag?tag:"ns2:tpsAPI_LocalCancelResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCancelResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalCancelResponse *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCORELocalCancelResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORELocalCancel(struct soap *soap, struct ns2__tpsAPI_USCORELocalCancel *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_string(soap, &a->String_USCORE1);
-	soap_default_string(soap, &a->String_USCORE2);
-	soap_default_string(soap, &a->String_USCORE3);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORELocalCancel(struct soap *soap, const struct ns2__tpsAPI_USCORELocalCancel *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_string(soap, &a->String_USCORE1);
-	soap_serialize_string(soap, &a->String_USCORE2);
-	soap_serialize_string(soap, &a->String_USCORE3);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORELocalCancel(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORELocalCancel *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel), type))
-		return soap->error;
-	if (soap_out_string(soap, "String_1", -1, &a->String_USCORE1, ""))
-		return soap->error;
-	if (soap_out_string(soap, "String_2", -1, &a->String_USCORE2, ""))
-		return soap->error;
-	if (soap_out_string(soap, "String_3", -1, &a->String_USCORE3, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCancel * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORELocalCancel(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalCancel *a, const char *type)
-{
-	size_t soap_flag_String_USCORE1 = 1;
-	size_t soap_flag_String_USCORE2 = 1;
-	size_t soap_flag_String_USCORE3 = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__tpsAPI_USCORELocalCancel *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel, sizeof(struct ns2__tpsAPI_USCORELocalCancel), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__tpsAPI_USCORELocalCancel(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_String_USCORE1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_1", &a->String_USCORE1, "xsd:string"))
-				{	soap_flag_String_USCORE1--;
-					continue;
-				}
-			if (soap_flag_String_USCORE2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_2", &a->String_USCORE2, "xsd:string"))
-				{	soap_flag_String_USCORE2--;
-					continue;
-				}
-			if (soap_flag_String_USCORE3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "String_3", &a->String_USCORE3, "xsd:string"))
-				{	soap_flag_String_USCORE3--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORELocalCancel *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel, 0, sizeof(struct ns2__tpsAPI_USCORELocalCancel), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORELocalCancel(struct soap *soap, const struct ns2__tpsAPI_USCORELocalCancel *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel);
-	if (soap_out_ns2__tpsAPI_USCORELocalCancel(soap, tag?tag:"ns2:tpsAPI_LocalCancel", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCancel * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORELocalCancel(struct soap *soap, struct ns2__tpsAPI_USCORELocalCancel *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__tpsAPI_USCORELocalCancel(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__getAllReservationsForClassResponse(struct soap *soap, struct ns2__getAllReservationsForClassResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->__sizeresult = 0;
-	a->result = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__getAllReservationsForClassResponse(struct soap *soap, const struct ns2__getAllReservationsForClassResponse *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	if (a->result)
-	{	int i;
-		for (i = 0; i < a->__sizeresult; i++)
-		{
-			soap_serialize_PointerTons2__ReservationData(soap, a->result + i);
-		}
-	}
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__getAllReservationsForClassResponse(struct soap *soap, const char *tag, int id, const struct ns2__getAllReservationsForClassResponse *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__getAllReservationsForClassResponse), type))
-		return soap->error;
-	if (a->result)
-	{	int i;
-		for (i = 0; i < a->__sizeresult; i++)
-			if (soap_out_PointerTons2__ReservationData(soap, "result", -1, a->result + i, ""))
-				return soap->error;
-	}
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__getAllReservationsForClassResponse * SOAP_FMAC4 soap_in_ns2__getAllReservationsForClassResponse(struct soap *soap, const char *tag, struct ns2__getAllReservationsForClassResponse *a, const char *type)
-{
-	struct soap_blist *soap_blist_result = NULL;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__getAllReservationsForClassResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__getAllReservationsForClassResponse, sizeof(struct ns2__getAllReservationsForClassResponse), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__getAllReservationsForClassResponse(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap->error == SOAP_TAG_MISMATCH && !soap_element_begin_in(soap, "result", 1, NULL))
-			{	if (a->result == NULL)
-				{	if (soap_blist_result == NULL)
-						soap_blist_result = soap_new_block(soap);
-					a->result = (struct ns2__ReservationData **)soap_push_block(soap, soap_blist_result, sizeof(struct ns2__ReservationData *));
-					if (a->result == NULL)
-						return NULL;
-					*a->result = NULL;
-				}
-				soap_revert(soap);
-				if (soap_in_PointerTons2__ReservationData(soap, "result", a->result, "ns2:ReservationData"))
-				{	a->__sizeresult++;
-					a->result = NULL;
-					continue;
-				}
-			}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (a->result)
-			soap_pop_block(soap, soap_blist_result);
-		if (a->__sizeresult)
-			a->result = (struct ns2__ReservationData **)soap_save_block(soap, soap_blist_result, NULL, 1);
-		else
-		{	a->result = NULL;
-			if (soap_blist_result)
-				soap_end_block(soap, soap_blist_result);
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__getAllReservationsForClassResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__getAllReservationsForClassResponse, 0, sizeof(struct ns2__getAllReservationsForClassResponse), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__getAllReservationsForClassResponse(struct soap *soap, const struct ns2__getAllReservationsForClassResponse *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__getAllReservationsForClassResponse);
-	if (soap_out_ns2__getAllReservationsForClassResponse(soap, tag?tag:"ns2:getAllReservationsForClassResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__getAllReservationsForClassResponse * SOAP_FMAC4 soap_get_ns2__getAllReservationsForClassResponse(struct soap *soap, struct ns2__getAllReservationsForClassResponse *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__getAllReservationsForClassResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__Who(struct soap *soap, struct ns2__Who *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_string(soap, &a->CA);
-	soap_default_string(soap, &a->DN);
-	soap_default_string(soap, &a->name);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__Who(struct soap *soap, const struct ns2__Who *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_string(soap, &a->CA);
-	soap_serialize_string(soap, &a->DN);
-	soap_serialize_string(soap, &a->name);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__Who(struct soap *soap, const char *tag, int id, const struct ns2__Who *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__Who), type))
-		return soap->error;
-	if (soap_out_string(soap, "CA", -1, &a->CA, ""))
-		return soap->error;
-	if (soap_out_string(soap, "DN", -1, &a->DN, ""))
-		return soap->error;
-	if (soap_out_string(soap, "name", -1, &a->name, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__Who * SOAP_FMAC4 soap_in_ns2__Who(struct soap *soap, const char *tag, struct ns2__Who *a, const char *type)
-{
-	size_t soap_flag_CA = 1;
-	size_t soap_flag_DN = 1;
-	size_t soap_flag_name = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__Who *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__Who, sizeof(struct ns2__Who), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__Who(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_CA && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "CA", &a->CA, "xsd:string"))
-				{	soap_flag_CA--;
-					continue;
-				}
-			if (soap_flag_DN && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "DN", &a->DN, "xsd:string"))
-				{	soap_flag_DN--;
-					continue;
-				}
-			if (soap_flag_name && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "name", &a->name, "xsd:string"))
-				{	soap_flag_name--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__Who *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__Who, 0, sizeof(struct ns2__Who), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__Who(struct soap *soap, const struct ns2__Who *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__Who);
-	if (soap_out_ns2__Who(soap, tag?tag:"ns2:Who", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__Who * SOAP_FMAC4 soap_get_ns2__Who(struct soap *soap, struct ns2__Who *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__Who(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__Bandwidth(struct soap *soap, struct ns2__Bandwidth *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_LONG64(soap, &a->bandwidth);
-	soap_default_string(soap, &a->className);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__Bandwidth(struct soap *soap, const struct ns2__Bandwidth *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_string(soap, &a->className);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__Bandwidth(struct soap *soap, const char *tag, int id, const struct ns2__Bandwidth *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__Bandwidth), type))
-		return soap->error;
-	if (soap_out_LONG64(soap, "bandwidth", -1, &a->bandwidth, ""))
-		return soap->error;
-	if (soap_out_string(soap, "className", -1, &a->className, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__Bandwidth * SOAP_FMAC4 soap_in_ns2__Bandwidth(struct soap *soap, const char *tag, struct ns2__Bandwidth *a, const char *type)
-{
-	size_t soap_flag_bandwidth = 1;
-	size_t soap_flag_className = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__Bandwidth *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__Bandwidth, sizeof(struct ns2__Bandwidth), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__Bandwidth(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_bandwidth && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_LONG64(soap, "bandwidth", &a->bandwidth, "xsd:long"))
-				{	soap_flag_bandwidth--;
-					continue;
-				}
-			if (soap_flag_className && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "className", &a->className, "xsd:string"))
-				{	soap_flag_className--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__Bandwidth *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__Bandwidth, 0, sizeof(struct ns2__Bandwidth), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_bandwidth > 0))
-	{	soap->error = SOAP_OCCURS;
-		return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__Bandwidth(struct soap *soap, const struct ns2__Bandwidth *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__Bandwidth);
-	if (soap_out_ns2__Bandwidth(soap, tag?tag:"ns2:Bandwidth", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__Bandwidth * SOAP_FMAC4 soap_get_ns2__Bandwidth(struct soap *soap, struct ns2__Bandwidth *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__Bandwidth(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__ReservationData(struct soap *soap, struct ns2__ReservationData *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_default_LONG64(soap, &a->DTMinus);
-	soap_default_LONG64(soap, &a->DTPlus);
-	a->bandwidth = NULL;
-	soap_default_string(soap, &a->destIp);
-	soap_default_string(soap, &a->destMapping);
-	soap_default_string(soap, &a->destName);
-	soap_default_string(soap, &a->destPortMax);
-	soap_default_string(soap, &a->destPortMin);
-	soap_default_string(soap, &a->destPorts);
-	soap_default_string(soap, &a->direction);
-	soap_default_LONG64(soap, &a->duration);
-	soap_default_string(soap, &a->id);
-	soap_default_string(soap, &a->mapping);
-	soap_default_int(soap, &a->modifyReservation);
-	soap_default_string(soap, &a->protocol);
-	soap_default_string(soap, &a->relatedReservationIds);
-	soap_default_string(soap, &a->srcIp);
-	soap_default_string(soap, &a->srcMapping);
-	soap_default_string(soap, &a->srcName);
-	soap_default_string(soap, &a->srcPortMax);
-	soap_default_string(soap, &a->srcPortMin);
-	soap_default_string(soap, &a->srcPorts);
-	soap_default_LONG64(soap, &a->startTime);
-	soap_default_LONG64(soap, &a->startTimeMax);
-	soap_default_LONG64(soap, &a->startTimeMin);
-	soap_default_string(soap, &a->status);
-	soap_default_LONG64(soap, &a->timeout);
-	soap_default_string(soap, &a->userName);
-	a->who = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__ReservationData(struct soap *soap, const struct ns2__ReservationData *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__Bandwidth(soap, &a->bandwidth);
-	soap_serialize_string(soap, &a->destIp);
-	soap_serialize_string(soap, &a->destMapping);
-	soap_serialize_string(soap, &a->destName);
-	soap_serialize_string(soap, &a->destPortMax);
-	soap_serialize_string(soap, &a->destPortMin);
-	soap_serialize_string(soap, &a->destPorts);
-	soap_serialize_string(soap, &a->direction);
-	soap_serialize_string(soap, &a->id);
-	soap_serialize_string(soap, &a->mapping);
-	soap_serialize_string(soap, &a->protocol);
-	soap_serialize_string(soap, &a->relatedReservationIds);
-	soap_serialize_string(soap, &a->srcIp);
-	soap_serialize_string(soap, &a->srcMapping);
-	soap_serialize_string(soap, &a->srcName);
-	soap_serialize_string(soap, &a->srcPortMax);
-	soap_serialize_string(soap, &a->srcPortMin);
-	soap_serialize_string(soap, &a->srcPorts);
-	soap_serialize_string(soap, &a->status);
-	soap_serialize_string(soap, &a->userName);
-	soap_serialize_PointerTons2__Who(soap, &a->who);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__ReservationData(struct soap *soap, const char *tag, int id, const struct ns2__ReservationData *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__ReservationData), type))
-		return soap->error;
-	if (soap_out_LONG64(soap, "DTMinus", -1, &a->DTMinus, ""))
-		return soap->error;
-	if (soap_out_LONG64(soap, "DTPlus", -1, &a->DTPlus, ""))
-		return soap->error;
-	if (soap_out_PointerTons2__Bandwidth(soap, "bandwidth", -1, &a->bandwidth, ""))
-		return soap->error;
-	if (soap_out_string(soap, "destIp", -1, &a->destIp, ""))
-		return soap->error;
-	if (soap_out_string(soap, "destMapping", -1, &a->destMapping, ""))
-		return soap->error;
-	if (soap_out_string(soap, "destName", -1, &a->destName, ""))
-		return soap->error;
-	if (soap_out_string(soap, "destPortMax", -1, &a->destPortMax, ""))
-		return soap->error;
-	if (soap_out_string(soap, "destPortMin", -1, &a->destPortMin, ""))
-		return soap->error;
-	if (soap_out_string(soap, "destPorts", -1, &a->destPorts, ""))
-		return soap->error;
-	if (soap_out_string(soap, "direction", -1, &a->direction, ""))
-		return soap->error;
-	if (soap_out_LONG64(soap, "duration", -1, &a->duration, ""))
-		return soap->error;
-	if (soap_out_string(soap, "id", -1, &a->id, ""))
-		return soap->error;
-	if (soap_out_string(soap, "mapping", -1, &a->mapping, ""))
-		return soap->error;
-	if (soap_out_int(soap, "modifyReservation", -1, &a->modifyReservation, ""))
-		return soap->error;
-	if (soap_out_string(soap, "protocol", -1, &a->protocol, ""))
-		return soap->error;
-	if (soap_out_string(soap, "relatedReservationIds", -1, &a->relatedReservationIds, ""))
-		return soap->error;
-	if (soap_out_string(soap, "srcIp", -1, &a->srcIp, ""))
-		return soap->error;
-	if (soap_out_string(soap, "srcMapping", -1, &a->srcMapping, ""))
-		return soap->error;
-	if (soap_out_string(soap, "srcName", -1, &a->srcName, ""))
-		return soap->error;
-	if (soap_out_string(soap, "srcPortMax", -1, &a->srcPortMax, ""))
-		return soap->error;
-	if (soap_out_string(soap, "srcPortMin", -1, &a->srcPortMin, ""))
-		return soap->error;
-	if (soap_out_string(soap, "srcPorts", -1, &a->srcPorts, ""))
-		return soap->error;
-	if (soap_out_LONG64(soap, "startTime", -1, &a->startTime, ""))
-		return soap->error;
-	if (soap_out_LONG64(soap, "startTimeMax", -1, &a->startTimeMax, ""))
-		return soap->error;
-	if (soap_out_LONG64(soap, "startTimeMin", -1, &a->startTimeMin, ""))
-		return soap->error;
-	if (soap_out_string(soap, "status", -1, &a->status, ""))
-		return soap->error;
-	if (soap_out_LONG64(soap, "timeout", -1, &a->timeout, ""))
-		return soap->error;
-	if (soap_out_string(soap, "userName", -1, &a->userName, ""))
-		return soap->error;
-	if (soap_out_PointerTons2__Who(soap, "who", -1, &a->who, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__ReservationData * SOAP_FMAC4 soap_in_ns2__ReservationData(struct soap *soap, const char *tag, struct ns2__ReservationData *a, const char *type)
-{
-	size_t soap_flag_DTMinus = 1;
-	size_t soap_flag_DTPlus = 1;
-	size_t soap_flag_bandwidth = 1;
-	size_t soap_flag_destIp = 1;
-	size_t soap_flag_destMapping = 1;
-	size_t soap_flag_destName = 1;
-	size_t soap_flag_destPortMax = 1;
-	size_t soap_flag_destPortMin = 1;
-	size_t soap_flag_destPorts = 1;
-	size_t soap_flag_direction = 1;
-	size_t soap_flag_duration = 1;
-	size_t soap_flag_id = 1;
-	size_t soap_flag_mapping = 1;
-	size_t soap_flag_modifyReservation = 1;
-	size_t soap_flag_protocol = 1;
-	size_t soap_flag_relatedReservationIds = 1;
-	size_t soap_flag_srcIp = 1;
-	size_t soap_flag_srcMapping = 1;
-	size_t soap_flag_srcName = 1;
-	size_t soap_flag_srcPortMax = 1;
-	size_t soap_flag_srcPortMin = 1;
-	size_t soap_flag_srcPorts = 1;
-	size_t soap_flag_startTime = 1;
-	size_t soap_flag_startTimeMax = 1;
-	size_t soap_flag_startTimeMin = 1;
-	size_t soap_flag_status = 1;
-	size_t soap_flag_timeout = 1;
-	size_t soap_flag_userName = 1;
-	size_t soap_flag_who = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__ReservationData *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__ReservationData, sizeof(struct ns2__ReservationData), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__ReservationData(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_DTMinus && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_LONG64(soap, "DTMinus", &a->DTMinus, "xsd:long"))
-				{	soap_flag_DTMinus--;
-					continue;
-				}
-			if (soap_flag_DTPlus && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_LONG64(soap, "DTPlus", &a->DTPlus, "xsd:long"))
-				{	soap_flag_DTPlus--;
-					continue;
-				}
-			if (soap_flag_bandwidth && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__Bandwidth(soap, "bandwidth", &a->bandwidth, "ns2:Bandwidth"))
-				{	soap_flag_bandwidth--;
-					continue;
-				}
-			if (soap_flag_destIp && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "destIp", &a->destIp, "xsd:string"))
-				{	soap_flag_destIp--;
-					continue;
-				}
-			if (soap_flag_destMapping && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "destMapping", &a->destMapping, "xsd:string"))
-				{	soap_flag_destMapping--;
-					continue;
-				}
-			if (soap_flag_destName && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "destName", &a->destName, "xsd:string"))
-				{	soap_flag_destName--;
-					continue;
-				}
-			if (soap_flag_destPortMax && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "destPortMax", &a->destPortMax, "xsd:string"))
-				{	soap_flag_destPortMax--;
-					continue;
-				}
-			if (soap_flag_destPortMin && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "destPortMin", &a->destPortMin, "xsd:string"))
-				{	soap_flag_destPortMin--;
-					continue;
-				}
-			if (soap_flag_destPorts && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "destPorts", &a->destPorts, "xsd:string"))
-				{	soap_flag_destPorts--;
-					continue;
-				}
-			if (soap_flag_direction && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "direction", &a->direction, "xsd:string"))
-				{	soap_flag_direction--;
-					continue;
-				}
-			if (soap_flag_duration && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_LONG64(soap, "duration", &a->duration, "xsd:long"))
-				{	soap_flag_duration--;
-					continue;
-				}
-			if (soap_flag_id && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "id", &a->id, "xsd:string"))
-				{	soap_flag_id--;
-					continue;
-				}
-			if (soap_flag_mapping && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "mapping", &a->mapping, "xsd:string"))
-				{	soap_flag_mapping--;
-					continue;
-				}
-			if (soap_flag_modifyReservation && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_int(soap, "modifyReservation", &a->modifyReservation, "xsd:int"))
-				{	soap_flag_modifyReservation--;
-					continue;
-				}
-			if (soap_flag_protocol && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "protocol", &a->protocol, "xsd:string"))
-				{	soap_flag_protocol--;
-					continue;
-				}
-			if (soap_flag_relatedReservationIds && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "relatedReservationIds", &a->relatedReservationIds, "xsd:string"))
-				{	soap_flag_relatedReservationIds--;
-					continue;
-				}
-			if (soap_flag_srcIp && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "srcIp", &a->srcIp, "xsd:string"))
-				{	soap_flag_srcIp--;
-					continue;
-				}
-			if (soap_flag_srcMapping && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "srcMapping", &a->srcMapping, "xsd:string"))
-				{	soap_flag_srcMapping--;
-					continue;
-				}
-			if (soap_flag_srcName && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "srcName", &a->srcName, "xsd:string"))
-				{	soap_flag_srcName--;
-					continue;
-				}
-			if (soap_flag_srcPortMax && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "srcPortMax", &a->srcPortMax, "xsd:string"))
-				{	soap_flag_srcPortMax--;
-					continue;
-				}
-			if (soap_flag_srcPortMin && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "srcPortMin", &a->srcPortMin, "xsd:string"))
-				{	soap_flag_srcPortMin--;
-					continue;
-				}
-			if (soap_flag_srcPorts && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "srcPorts", &a->srcPorts, "xsd:string"))
-				{	soap_flag_srcPorts--;
-					continue;
-				}
-			if (soap_flag_startTime && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_LONG64(soap, "startTime", &a->startTime, "xsd:long"))
-				{	soap_flag_startTime--;
-					continue;
-				}
-			if (soap_flag_startTimeMax && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_LONG64(soap, "startTimeMax", &a->startTimeMax, "xsd:long"))
-				{	soap_flag_startTimeMax--;
-					continue;
-				}
-			if (soap_flag_startTimeMin && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_LONG64(soap, "startTimeMin", &a->startTimeMin, "xsd:long"))
-				{	soap_flag_startTimeMin--;
-					continue;
-				}
-			if (soap_flag_status && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "status", &a->status, "xsd:string"))
-				{	soap_flag_status--;
-					continue;
-				}
-			if (soap_flag_timeout && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_LONG64(soap, "timeout", &a->timeout, "xsd:long"))
-				{	soap_flag_timeout--;
-					continue;
-				}
-			if (soap_flag_userName && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_string(soap, "userName", &a->userName, "xsd:string"))
-				{	soap_flag_userName--;
-					continue;
-				}
-			if (soap_flag_who && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__Who(soap, "who", &a->who, "ns2:Who"))
-				{	soap_flag_who--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__ReservationData *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__ReservationData, 0, sizeof(struct ns2__ReservationData), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_DTMinus > 0 || soap_flag_DTPlus > 0 || soap_flag_duration > 0 || soap_flag_modifyReservation > 0 || soap_flag_startTime > 0 || soap_flag_startTimeMax > 0 || soap_flag_startTimeMin > 0 || soap_flag_timeout > 0))
-	{	soap->error = SOAP_OCCURS;
-		return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__ReservationData(struct soap *soap, const struct ns2__ReservationData *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__ReservationData);
-	if (soap_out_ns2__ReservationData(soap, tag?tag:"ns2:ReservationData", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__ReservationData * SOAP_FMAC4 soap_get_ns2__ReservationData(struct soap *soap, struct ns2__ReservationData *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__ReservationData(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__getAllReservationsForClass(struct soap *soap, struct ns2__getAllReservationsForClass *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	a->ReservationData_USCORE1 = NULL;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__getAllReservationsForClass(struct soap *soap, const struct ns2__getAllReservationsForClass *a)
-{
-	(void)soap; (void)a; /* appease -Wall -Werror */
-	soap_serialize_PointerTons2__ReservationData(soap, &a->ReservationData_USCORE1);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__getAllReservationsForClass(struct soap *soap, const char *tag, int id, const struct ns2__getAllReservationsForClass *a, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__getAllReservationsForClass), type))
-		return soap->error;
-	if (soap_out_PointerTons2__ReservationData(soap, "ReservationData_1", -1, &a->ReservationData_USCORE1, ""))
-		return soap->error;
-	return soap_element_end_out(soap, tag);
-}
-
-SOAP_FMAC3 struct ns2__getAllReservationsForClass * SOAP_FMAC4 soap_in_ns2__getAllReservationsForClass(struct soap *soap, const char *tag, struct ns2__getAllReservationsForClass *a, const char *type)
-{
-	size_t soap_flag_ReservationData_USCORE1 = 1;
-	if (soap_element_begin_in(soap, tag, 0, type))
-		return NULL;
-	a = (struct ns2__getAllReservationsForClass *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__getAllReservationsForClass, sizeof(struct ns2__getAllReservationsForClass), 0, NULL, NULL, NULL);
-	if (!a)
-		return NULL;
-	soap_default_ns2__getAllReservationsForClass(soap, a);
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_ReservationData_USCORE1 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTons2__ReservationData(soap, "ReservationData_1", &a->ReservationData_USCORE1, "ns2:ReservationData"))
-				{	soap_flag_ReservationData_USCORE1--;
-					continue;
-				}
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__getAllReservationsForClass *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__getAllReservationsForClass, 0, sizeof(struct ns2__getAllReservationsForClass), 0, NULL);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__getAllReservationsForClass(struct soap *soap, const struct ns2__getAllReservationsForClass *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__getAllReservationsForClass);
-	if (soap_out_ns2__getAllReservationsForClass(soap, tag?tag:"ns2:getAllReservationsForClass", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__getAllReservationsForClass * SOAP_FMAC4 soap_get_ns2__getAllReservationsForClass(struct soap *soap, struct ns2__getAllReservationsForClass *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ns2__getAllReservationsForClass(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCOREreserve(struct soap *soap, struct __ns1__tpsAPI_USCOREreserve *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ns2__tpsAPI_USCOREreserve = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCOREreserve(struct soap *soap, const struct __ns1__tpsAPI_USCOREreserve *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__tpsAPI_USCOREreserve(soap, &a->ns2__tpsAPI_USCOREreserve);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCOREreserve(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCOREreserve *a, const char *type) {
+  if (soap_out_PointerTons2__tpsAPI_USCOREreserve(soap, "ns2:tpsAPI_reserve", -1, &a->ns2__tpsAPI_USCOREreserve, ""))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCOREreserve * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCOREreserve(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCOREreserve *a, const char *type) {
+  size_t soap_flag_ns2__tpsAPI_USCOREreserve = 1;
+  short soap_flag;
+  a = (struct __ns1__tpsAPI_USCOREreserve *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCOREreserve, sizeof(struct __ns1__tpsAPI_USCOREreserve), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default___ns1__tpsAPI_USCOREreserve(soap, a);
+  for (soap_flag = 0;; soap_flag = 1) {
+    soap->error = SOAP_TAG_MISMATCH;
+    if (soap_flag_ns2__tpsAPI_USCOREreserve && soap->error == SOAP_TAG_MISMATCH)
+      if (soap_in_PointerTons2__tpsAPI_USCOREreserve(soap, "ns2:tpsAPI_reserve", &a->ns2__tpsAPI_USCOREreserve, "ns2:tpsAPI_reserve")) {
+        soap_flag_ns2__tpsAPI_USCOREreserve--;
+        continue;
+      }
+    if (soap->error == SOAP_TAG_MISMATCH)
+      if (soap_flag) {
+        soap->error = SOAP_OK;
+        break;
+      }
+    if (soap_flag && soap->error == SOAP_NO_TAG)
+      break;
+    if (soap->error)
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCOREreserve(struct soap *soap, const struct __ns1__tpsAPI_USCOREreserve *a, const char *tag, const char *type) {
+  register int id = 0;
+  if (soap_out___ns1__tpsAPI_USCOREreserve(soap, tag?tag:"-ns1:tpsAPI_reserve", id, a, type))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCOREreserve * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCOREreserve(struct soap *soap, struct __ns1__tpsAPI_USCOREreserve *p, const char *tag, const char *type) {
+  if ((p = soap_in___ns1__tpsAPI_USCOREreserve(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCORElookupUser(struct soap *soap, struct __ns1__tpsAPI_USCORElookupUser *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ns2__tpsAPI_USCORElookupUser = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCORElookupUser(struct soap *soap, const struct __ns1__tpsAPI_USCORElookupUser *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__tpsAPI_USCORElookupUser(soap, &a->ns2__tpsAPI_USCORElookupUser);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCORElookupUser(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCORElookupUser *a, const char *type) {
+  if (soap_out_PointerTons2__tpsAPI_USCORElookupUser(soap, "ns2:tpsAPI_lookupUser", -1, &a->ns2__tpsAPI_USCORElookupUser, ""))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCORElookupUser * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCORElookupUser(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCORElookupUser *a, const char *type) {
+  size_t soap_flag_ns2__tpsAPI_USCORElookupUser = 1;
+  short soap_flag;
+  a = (struct __ns1__tpsAPI_USCORElookupUser *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCORElookupUser, sizeof(struct __ns1__tpsAPI_USCORElookupUser), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default___ns1__tpsAPI_USCORElookupUser(soap, a);
+  for (soap_flag = 0;; soap_flag = 1) {
+    soap->error = SOAP_TAG_MISMATCH;
+    if (soap_flag_ns2__tpsAPI_USCORElookupUser && soap->error == SOAP_TAG_MISMATCH)
+      if (soap_in_PointerTons2__tpsAPI_USCORElookupUser(soap, "ns2:tpsAPI_lookupUser", &a->ns2__tpsAPI_USCORElookupUser, "ns2:tpsAPI_lookupUser")) {
+        soap_flag_ns2__tpsAPI_USCORElookupUser--;
+        continue;
+      }
+    if (soap->error == SOAP_TAG_MISMATCH)
+      if (soap_flag) {
+        soap->error = SOAP_OK;
+        break;
+      }
+    if (soap_flag && soap->error == SOAP_NO_TAG)
+      break;
+    if (soap->error)
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCORElookupUser(struct soap *soap, const struct __ns1__tpsAPI_USCORElookupUser *a, const char *tag, const char *type) {
+  register int id = 0;
+  if (soap_out___ns1__tpsAPI_USCORElookupUser(soap, tag?tag:"-ns1:tpsAPI_lookupUser", id, a, type))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCORElookupUser * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCORElookupUser(struct soap *soap, struct __ns1__tpsAPI_USCORElookupUser *p, const char *tag, const char *type) {
+  if ((p = soap_in___ns1__tpsAPI_USCORElookupUser(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCOREgetReservationData(struct soap *soap, struct __ns1__tpsAPI_USCOREgetReservationData *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ns2__tpsAPI_USCOREgetReservationData = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCOREgetReservationData(struct soap *soap, const struct __ns1__tpsAPI_USCOREgetReservationData *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__tpsAPI_USCOREgetReservationData(soap, &a->ns2__tpsAPI_USCOREgetReservationData);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCOREgetReservationData(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCOREgetReservationData *a, const char *type) {
+  if (soap_out_PointerTons2__tpsAPI_USCOREgetReservationData(soap, "ns2:tpsAPI_getReservationData", -1, &a->ns2__tpsAPI_USCOREgetReservationData, ""))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCOREgetReservationData * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCOREgetReservationData(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCOREgetReservationData *a, const char *type) {
+  size_t soap_flag_ns2__tpsAPI_USCOREgetReservationData = 1;
+  short soap_flag;
+  a = (struct __ns1__tpsAPI_USCOREgetReservationData *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCOREgetReservationData, sizeof(struct __ns1__tpsAPI_USCOREgetReservationData), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default___ns1__tpsAPI_USCOREgetReservationData(soap, a);
+  for (soap_flag = 0;; soap_flag = 1) {
+    soap->error = SOAP_TAG_MISMATCH;
+    if (soap_flag_ns2__tpsAPI_USCOREgetReservationData && soap->error == SOAP_TAG_MISMATCH)
+      if (soap_in_PointerTons2__tpsAPI_USCOREgetReservationData(soap, "ns2:tpsAPI_getReservationData", &a->ns2__tpsAPI_USCOREgetReservationData, "ns2:tpsAPI_getReservationData")) {
+        soap_flag_ns2__tpsAPI_USCOREgetReservationData--;
+        continue;
+      }
+    if (soap->error == SOAP_TAG_MISMATCH)
+      if (soap_flag) {
+        soap->error = SOAP_OK;
+        break;
+      }
+    if (soap_flag && soap->error == SOAP_NO_TAG)
+      break;
+    if (soap->error)
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCOREgetReservationData(struct soap *soap, const struct __ns1__tpsAPI_USCOREgetReservationData *a, const char *tag, const char *type) {
+  register int id = 0;
+  if (soap_out___ns1__tpsAPI_USCOREgetReservationData(soap, tag?tag:"-ns1:tpsAPI_getReservationData", id, a, type))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCOREgetReservationData * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCOREgetReservationData(struct soap *soap, struct __ns1__tpsAPI_USCOREgetReservationData *p, const char *tag, const char *type) {
+  if ((p = soap_in___ns1__tpsAPI_USCOREgetReservationData(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, struct __ns1__tpsAPI_USCOREgetRelatedReservationIds *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ns2__tpsAPI_USCOREgetRelatedReservationIds = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const struct __ns1__tpsAPI_USCOREgetRelatedReservationIds *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(soap, &a->ns2__tpsAPI_USCOREgetRelatedReservationIds);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCOREgetRelatedReservationIds *a, const char *type) {
+  if (soap_out_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(soap, "ns2:tpsAPI_getRelatedReservationIds", -1, &a->ns2__tpsAPI_USCOREgetRelatedReservationIds, ""))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCOREgetRelatedReservationIds * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCOREgetRelatedReservationIds *a, const char *type) {
+  size_t soap_flag_ns2__tpsAPI_USCOREgetRelatedReservationIds = 1;
+  short soap_flag;
+  a = (struct __ns1__tpsAPI_USCOREgetRelatedReservationIds *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCOREgetRelatedReservationIds, sizeof(struct __ns1__tpsAPI_USCOREgetRelatedReservationIds), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default___ns1__tpsAPI_USCOREgetRelatedReservationIds(soap, a);
+  for (soap_flag = 0;; soap_flag = 1) {
+    soap->error = SOAP_TAG_MISMATCH;
+    if (soap_flag_ns2__tpsAPI_USCOREgetRelatedReservationIds && soap->error == SOAP_TAG_MISMATCH)
+      if (soap_in_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(soap, "ns2:tpsAPI_getRelatedReservationIds", &a->ns2__tpsAPI_USCOREgetRelatedReservationIds, "ns2:tpsAPI_getRelatedReservationIds")) {
+        soap_flag_ns2__tpsAPI_USCOREgetRelatedReservationIds--;
+        continue;
+      }
+    if (soap->error == SOAP_TAG_MISMATCH)
+      if (soap_flag) {
+        soap->error = SOAP_OK;
+        break;
+      }
+    if (soap_flag && soap->error == SOAP_NO_TAG)
+      break;
+    if (soap->error)
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const struct __ns1__tpsAPI_USCOREgetRelatedReservationIds *a, const char *tag, const char *type) {
+  register int id = 0;
+  if (soap_out___ns1__tpsAPI_USCOREgetRelatedReservationIds(soap, tag?tag:"-ns1:tpsAPI_getRelatedReservationIds", id, a, type))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCOREgetRelatedReservationIds * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, struct __ns1__tpsAPI_USCOREgetRelatedReservationIds *p, const char *tag, const char *type) {
+  if ((p = soap_in___ns1__tpsAPI_USCOREgetRelatedReservationIds(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCOREgetPath(struct soap *soap, struct __ns1__tpsAPI_USCOREgetPath *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ns2__tpsAPI_USCOREgetPath = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCOREgetPath(struct soap *soap, const struct __ns1__tpsAPI_USCOREgetPath *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__tpsAPI_USCOREgetPath(soap, &a->ns2__tpsAPI_USCOREgetPath);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCOREgetPath(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCOREgetPath *a, const char *type) {
+  if (soap_out_PointerTons2__tpsAPI_USCOREgetPath(soap, "ns2:tpsAPI_getPath", -1, &a->ns2__tpsAPI_USCOREgetPath, ""))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCOREgetPath * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCOREgetPath(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCOREgetPath *a, const char *type) {
+  size_t soap_flag_ns2__tpsAPI_USCOREgetPath = 1;
+  short soap_flag;
+  a = (struct __ns1__tpsAPI_USCOREgetPath *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCOREgetPath, sizeof(struct __ns1__tpsAPI_USCOREgetPath), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default___ns1__tpsAPI_USCOREgetPath(soap, a);
+  for (soap_flag = 0;; soap_flag = 1) {
+    soap->error = SOAP_TAG_MISMATCH;
+    if (soap_flag_ns2__tpsAPI_USCOREgetPath && soap->error == SOAP_TAG_MISMATCH)
+      if (soap_in_PointerTons2__tpsAPI_USCOREgetPath(soap, "ns2:tpsAPI_getPath", &a->ns2__tpsAPI_USCOREgetPath, "ns2:tpsAPI_getPath")) {
+        soap_flag_ns2__tpsAPI_USCOREgetPath--;
+        continue;
+      }
+    if (soap->error == SOAP_TAG_MISMATCH)
+      if (soap_flag) {
+        soap->error = SOAP_OK;
+        break;
+      }
+    if (soap_flag && soap->error == SOAP_NO_TAG)
+      break;
+    if (soap->error)
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCOREgetPath(struct soap *soap, const struct __ns1__tpsAPI_USCOREgetPath *a, const char *tag, const char *type) {
+  register int id = 0;
+  if (soap_out___ns1__tpsAPI_USCOREgetPath(soap, tag?tag:"-ns1:tpsAPI_getPath", id, a, type))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCOREgetPath * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCOREgetPath(struct soap *soap, struct __ns1__tpsAPI_USCOREgetPath *p, const char *tag, const char *type) {
+  if ((p = soap_in___ns1__tpsAPI_USCOREgetPath(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, struct __ns1__tpsAPI_USCOREgetLocalBandwidths *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ns2__tpsAPI_USCOREgetLocalBandwidths = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const struct __ns1__tpsAPI_USCOREgetLocalBandwidths *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(soap, &a->ns2__tpsAPI_USCOREgetLocalBandwidths);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCOREgetLocalBandwidths *a, const char *type) {
+  if (soap_out_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(soap, "ns2:tpsAPI_getLocalBandwidths", -1, &a->ns2__tpsAPI_USCOREgetLocalBandwidths, ""))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCOREgetLocalBandwidths * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCOREgetLocalBandwidths *a, const char *type) {
+  size_t soap_flag_ns2__tpsAPI_USCOREgetLocalBandwidths = 1;
+  short soap_flag;
+  a = (struct __ns1__tpsAPI_USCOREgetLocalBandwidths *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCOREgetLocalBandwidths, sizeof(struct __ns1__tpsAPI_USCOREgetLocalBandwidths), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default___ns1__tpsAPI_USCOREgetLocalBandwidths(soap, a);
+  for (soap_flag = 0;; soap_flag = 1) {
+    soap->error = SOAP_TAG_MISMATCH;
+    if (soap_flag_ns2__tpsAPI_USCOREgetLocalBandwidths && soap->error == SOAP_TAG_MISMATCH)
+      if (soap_in_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(soap, "ns2:tpsAPI_getLocalBandwidths", &a->ns2__tpsAPI_USCOREgetLocalBandwidths, "ns2:tpsAPI_getLocalBandwidths")) {
+        soap_flag_ns2__tpsAPI_USCOREgetLocalBandwidths--;
+        continue;
+      }
+    if (soap->error == SOAP_TAG_MISMATCH)
+      if (soap_flag) {
+        soap->error = SOAP_OK;
+        break;
+      }
+    if (soap_flag && soap->error == SOAP_NO_TAG)
+      break;
+    if (soap->error)
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const struct __ns1__tpsAPI_USCOREgetLocalBandwidths *a, const char *tag, const char *type) {
+  register int id = 0;
+  if (soap_out___ns1__tpsAPI_USCOREgetLocalBandwidths(soap, tag?tag:"-ns1:tpsAPI_getLocalBandwidths", id, a, type))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCOREgetLocalBandwidths * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, struct __ns1__tpsAPI_USCOREgetLocalBandwidths *p, const char *tag, const char *type) {
+  if ((p = soap_in___ns1__tpsAPI_USCOREgetLocalBandwidths(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCOREgetBandwidths(struct soap *soap, struct __ns1__tpsAPI_USCOREgetBandwidths *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ns2__tpsAPI_USCOREgetBandwidths = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCOREgetBandwidths(struct soap *soap, const struct __ns1__tpsAPI_USCOREgetBandwidths *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__tpsAPI_USCOREgetBandwidths(soap, &a->ns2__tpsAPI_USCOREgetBandwidths);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCOREgetBandwidths(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCOREgetBandwidths *a, const char *type) {
+  if (soap_out_PointerTons2__tpsAPI_USCOREgetBandwidths(soap, "ns2:tpsAPI_getBandwidths", -1, &a->ns2__tpsAPI_USCOREgetBandwidths, ""))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCOREgetBandwidths * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCOREgetBandwidths(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCOREgetBandwidths *a, const char *type) {
+  size_t soap_flag_ns2__tpsAPI_USCOREgetBandwidths = 1;
+  short soap_flag;
+  a = (struct __ns1__tpsAPI_USCOREgetBandwidths *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCOREgetBandwidths, sizeof(struct __ns1__tpsAPI_USCOREgetBandwidths), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default___ns1__tpsAPI_USCOREgetBandwidths(soap, a);
+  for (soap_flag = 0;; soap_flag = 1) {
+    soap->error = SOAP_TAG_MISMATCH;
+    if (soap_flag_ns2__tpsAPI_USCOREgetBandwidths && soap->error == SOAP_TAG_MISMATCH)
+      if (soap_in_PointerTons2__tpsAPI_USCOREgetBandwidths(soap, "ns2:tpsAPI_getBandwidths", &a->ns2__tpsAPI_USCOREgetBandwidths, "ns2:tpsAPI_getBandwidths")) {
+        soap_flag_ns2__tpsAPI_USCOREgetBandwidths--;
+        continue;
+      }
+    if (soap->error == SOAP_TAG_MISMATCH)
+      if (soap_flag) {
+        soap->error = SOAP_OK;
+        break;
+      }
+    if (soap_flag && soap->error == SOAP_NO_TAG)
+      break;
+    if (soap->error)
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCOREgetBandwidths(struct soap *soap, const struct __ns1__tpsAPI_USCOREgetBandwidths *a, const char *tag, const char *type) {
+  register int id = 0;
+  if (soap_out___ns1__tpsAPI_USCOREgetBandwidths(soap, tag?tag:"-ns1:tpsAPI_getBandwidths", id, a, type))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCOREgetBandwidths * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCOREgetBandwidths(struct soap *soap, struct __ns1__tpsAPI_USCOREgetBandwidths *p, const char *tag, const char *type) {
+  if ((p = soap_in___ns1__tpsAPI_USCOREgetBandwidths(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCOREcommit(struct soap *soap, struct __ns1__tpsAPI_USCOREcommit *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ns2__tpsAPI_USCOREcommit = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCOREcommit(struct soap *soap, const struct __ns1__tpsAPI_USCOREcommit *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__tpsAPI_USCOREcommit(soap, &a->ns2__tpsAPI_USCOREcommit);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCOREcommit(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCOREcommit *a, const char *type) {
+  if (soap_out_PointerTons2__tpsAPI_USCOREcommit(soap, "ns2:tpsAPI_commit", -1, &a->ns2__tpsAPI_USCOREcommit, ""))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCOREcommit * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCOREcommit(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCOREcommit *a, const char *type) {
+  size_t soap_flag_ns2__tpsAPI_USCOREcommit = 1;
+  short soap_flag;
+  a = (struct __ns1__tpsAPI_USCOREcommit *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCOREcommit, sizeof(struct __ns1__tpsAPI_USCOREcommit), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default___ns1__tpsAPI_USCOREcommit(soap, a);
+  for (soap_flag = 0;; soap_flag = 1) {
+    soap->error = SOAP_TAG_MISMATCH;
+    if (soap_flag_ns2__tpsAPI_USCOREcommit && soap->error == SOAP_TAG_MISMATCH)
+      if (soap_in_PointerTons2__tpsAPI_USCOREcommit(soap, "ns2:tpsAPI_commit", &a->ns2__tpsAPI_USCOREcommit, "ns2:tpsAPI_commit")) {
+        soap_flag_ns2__tpsAPI_USCOREcommit--;
+        continue;
+      }
+    if (soap->error == SOAP_TAG_MISMATCH)
+      if (soap_flag) {
+        soap->error = SOAP_OK;
+        break;
+      }
+    if (soap_flag && soap->error == SOAP_NO_TAG)
+      break;
+    if (soap->error)
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCOREcommit(struct soap *soap, const struct __ns1__tpsAPI_USCOREcommit *a, const char *tag, const char *type) {
+  register int id = 0;
+  if (soap_out___ns1__tpsAPI_USCOREcommit(soap, tag?tag:"-ns1:tpsAPI_commit", id, a, type))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCOREcommit * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCOREcommit(struct soap *soap, struct __ns1__tpsAPI_USCOREcommit *p, const char *tag, const char *type) {
+  if ((p = soap_in___ns1__tpsAPI_USCOREcommit(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCOREcancel(struct soap *soap, struct __ns1__tpsAPI_USCOREcancel *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ns2__tpsAPI_USCOREcancel = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCOREcancel(struct soap *soap, const struct __ns1__tpsAPI_USCOREcancel *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__tpsAPI_USCOREcancel(soap, &a->ns2__tpsAPI_USCOREcancel);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCOREcancel(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCOREcancel *a, const char *type) {
+  if (soap_out_PointerTons2__tpsAPI_USCOREcancel(soap, "ns2:tpsAPI_cancel", -1, &a->ns2__tpsAPI_USCOREcancel, ""))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCOREcancel * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCOREcancel(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCOREcancel *a, const char *type) {
+  size_t soap_flag_ns2__tpsAPI_USCOREcancel = 1;
+  short soap_flag;
+  a = (struct __ns1__tpsAPI_USCOREcancel *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCOREcancel, sizeof(struct __ns1__tpsAPI_USCOREcancel), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default___ns1__tpsAPI_USCOREcancel(soap, a);
+  for (soap_flag = 0;; soap_flag = 1) {
+    soap->error = SOAP_TAG_MISMATCH;
+    if (soap_flag_ns2__tpsAPI_USCOREcancel && soap->error == SOAP_TAG_MISMATCH)
+      if (soap_in_PointerTons2__tpsAPI_USCOREcancel(soap, "ns2:tpsAPI_cancel", &a->ns2__tpsAPI_USCOREcancel, "ns2:tpsAPI_cancel")) {
+        soap_flag_ns2__tpsAPI_USCOREcancel--;
+        continue;
+      }
+    if (soap->error == SOAP_TAG_MISMATCH)
+      if (soap_flag) {
+        soap->error = SOAP_OK;
+        break;
+      }
+    if (soap_flag && soap->error == SOAP_NO_TAG)
+      break;
+    if (soap->error)
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCOREcancel(struct soap *soap, const struct __ns1__tpsAPI_USCOREcancel *a, const char *tag, const char *type) {
+  register int id = 0;
+  if (soap_out___ns1__tpsAPI_USCOREcancel(soap, tag?tag:"-ns1:tpsAPI_cancel", id, a, type))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCOREcancel * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCOREcancel(struct soap *soap, struct __ns1__tpsAPI_USCOREcancel *p, const char *tag, const char *type) {
+  if ((p = soap_in___ns1__tpsAPI_USCOREcancel(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, struct __ns1__tpsAPI_USCOREaddRelatedReservationId *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ns2__tpsAPI_USCOREaddRelatedReservationId = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const struct __ns1__tpsAPI_USCOREaddRelatedReservationId *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(soap, &a->ns2__tpsAPI_USCOREaddRelatedReservationId);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCOREaddRelatedReservationId *a, const char *type) {
+  if (soap_out_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(soap, "ns2:tpsAPI_addRelatedReservationId", -1, &a->ns2__tpsAPI_USCOREaddRelatedReservationId, ""))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCOREaddRelatedReservationId * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCOREaddRelatedReservationId *a, const char *type) {
+  size_t soap_flag_ns2__tpsAPI_USCOREaddRelatedReservationId = 1;
+  short soap_flag;
+  a = (struct __ns1__tpsAPI_USCOREaddRelatedReservationId *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCOREaddRelatedReservationId, sizeof(struct __ns1__tpsAPI_USCOREaddRelatedReservationId), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default___ns1__tpsAPI_USCOREaddRelatedReservationId(soap, a);
+  for (soap_flag = 0;; soap_flag = 1) {
+    soap->error = SOAP_TAG_MISMATCH;
+    if (soap_flag_ns2__tpsAPI_USCOREaddRelatedReservationId && soap->error == SOAP_TAG_MISMATCH)
+      if (soap_in_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(soap, "ns2:tpsAPI_addRelatedReservationId", &a->ns2__tpsAPI_USCOREaddRelatedReservationId, "ns2:tpsAPI_addRelatedReservationId")) {
+        soap_flag_ns2__tpsAPI_USCOREaddRelatedReservationId--;
+        continue;
+      }
+    if (soap->error == SOAP_TAG_MISMATCH)
+      if (soap_flag) {
+        soap->error = SOAP_OK;
+        break;
+      }
+    if (soap_flag && soap->error == SOAP_NO_TAG)
+      break;
+    if (soap->error)
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const struct __ns1__tpsAPI_USCOREaddRelatedReservationId *a, const char *tag, const char *type) {
+  register int id = 0;
+  if (soap_out___ns1__tpsAPI_USCOREaddRelatedReservationId(soap, tag?tag:"-ns1:tpsAPI_addRelatedReservationId", id, a, type))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCOREaddRelatedReservationId * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, struct __ns1__tpsAPI_USCOREaddRelatedReservationId *p, const char *tag, const char *type) {
+  if ((p = soap_in___ns1__tpsAPI_USCOREaddRelatedReservationId(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCORELocalStart(struct soap *soap, struct __ns1__tpsAPI_USCORELocalStart *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ns2__tpsAPI_USCORELocalStart = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCORELocalStart(struct soap *soap, const struct __ns1__tpsAPI_USCORELocalStart *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__tpsAPI_USCORELocalStart(soap, &a->ns2__tpsAPI_USCORELocalStart);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCORELocalStart(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCORELocalStart *a, const char *type) {
+  if (soap_out_PointerTons2__tpsAPI_USCORELocalStart(soap, "ns2:tpsAPI_LocalStart", -1, &a->ns2__tpsAPI_USCORELocalStart, ""))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCORELocalStart * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCORELocalStart(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCORELocalStart *a, const char *type) {
+  size_t soap_flag_ns2__tpsAPI_USCORELocalStart = 1;
+  short soap_flag;
+  a = (struct __ns1__tpsAPI_USCORELocalStart *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCORELocalStart, sizeof(struct __ns1__tpsAPI_USCORELocalStart), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default___ns1__tpsAPI_USCORELocalStart(soap, a);
+  for (soap_flag = 0;; soap_flag = 1) {
+    soap->error = SOAP_TAG_MISMATCH;
+    if (soap_flag_ns2__tpsAPI_USCORELocalStart && soap->error == SOAP_TAG_MISMATCH)
+      if (soap_in_PointerTons2__tpsAPI_USCORELocalStart(soap, "ns2:tpsAPI_LocalStart", &a->ns2__tpsAPI_USCORELocalStart, "ns2:tpsAPI_LocalStart")) {
+        soap_flag_ns2__tpsAPI_USCORELocalStart--;
+        continue;
+      }
+    if (soap->error == SOAP_TAG_MISMATCH)
+      if (soap_flag) {
+        soap->error = SOAP_OK;
+        break;
+      }
+    if (soap_flag && soap->error == SOAP_NO_TAG)
+      break;
+    if (soap->error)
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCORELocalStart(struct soap *soap, const struct __ns1__tpsAPI_USCORELocalStart *a, const char *tag, const char *type) {
+  register int id = 0;
+  if (soap_out___ns1__tpsAPI_USCORELocalStart(soap, tag?tag:"-ns1:tpsAPI_LocalStart", id, a, type))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCORELocalStart * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCORELocalStart(struct soap *soap, struct __ns1__tpsAPI_USCORELocalStart *p, const char *tag, const char *type) {
+  if ((p = soap_in___ns1__tpsAPI_USCORELocalStart(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCORELocalReserve(struct soap *soap, struct __ns1__tpsAPI_USCORELocalReserve *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ns2__tpsAPI_USCORELocalReserve = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCORELocalReserve(struct soap *soap, const struct __ns1__tpsAPI_USCORELocalReserve *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__tpsAPI_USCORELocalReserve(soap, &a->ns2__tpsAPI_USCORELocalReserve);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCORELocalReserve(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCORELocalReserve *a, const char *type) {
+  if (soap_out_PointerTons2__tpsAPI_USCORELocalReserve(soap, "ns2:tpsAPI_LocalReserve", -1, &a->ns2__tpsAPI_USCORELocalReserve, ""))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCORELocalReserve * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCORELocalReserve(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCORELocalReserve *a, const char *type) {
+  size_t soap_flag_ns2__tpsAPI_USCORELocalReserve = 1;
+  short soap_flag;
+  a = (struct __ns1__tpsAPI_USCORELocalReserve *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCORELocalReserve, sizeof(struct __ns1__tpsAPI_USCORELocalReserve), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default___ns1__tpsAPI_USCORELocalReserve(soap, a);
+  for (soap_flag = 0;; soap_flag = 1) {
+    soap->error = SOAP_TAG_MISMATCH;
+    if (soap_flag_ns2__tpsAPI_USCORELocalReserve && soap->error == SOAP_TAG_MISMATCH)
+      if (soap_in_PointerTons2__tpsAPI_USCORELocalReserve(soap, "ns2:tpsAPI_LocalReserve", &a->ns2__tpsAPI_USCORELocalReserve, "ns2:tpsAPI_LocalReserve")) {
+        soap_flag_ns2__tpsAPI_USCORELocalReserve--;
+        continue;
+      }
+    if (soap->error == SOAP_TAG_MISMATCH)
+      if (soap_flag) {
+        soap->error = SOAP_OK;
+        break;
+      }
+    if (soap_flag && soap->error == SOAP_NO_TAG)
+      break;
+    if (soap->error)
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCORELocalReserve(struct soap *soap, const struct __ns1__tpsAPI_USCORELocalReserve *a, const char *tag, const char *type) {
+  register int id = 0;
+  if (soap_out___ns1__tpsAPI_USCORELocalReserve(soap, tag?tag:"-ns1:tpsAPI_LocalReserve", id, a, type))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCORELocalReserve * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCORELocalReserve(struct soap *soap, struct __ns1__tpsAPI_USCORELocalReserve *p, const char *tag, const char *type) {
+  if ((p = soap_in___ns1__tpsAPI_USCORELocalReserve(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCORELocalRemove(struct soap *soap, struct __ns1__tpsAPI_USCORELocalRemove *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ns2__tpsAPI_USCORELocalRemove = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCORELocalRemove(struct soap *soap, const struct __ns1__tpsAPI_USCORELocalRemove *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__tpsAPI_USCORELocalRemove(soap, &a->ns2__tpsAPI_USCORELocalRemove);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCORELocalRemove(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCORELocalRemove *a, const char *type) {
+  if (soap_out_PointerTons2__tpsAPI_USCORELocalRemove(soap, "ns2:tpsAPI_LocalRemove", -1, &a->ns2__tpsAPI_USCORELocalRemove, ""))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCORELocalRemove * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCORELocalRemove(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCORELocalRemove *a, const char *type) {
+  size_t soap_flag_ns2__tpsAPI_USCORELocalRemove = 1;
+  short soap_flag;
+  a = (struct __ns1__tpsAPI_USCORELocalRemove *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCORELocalRemove, sizeof(struct __ns1__tpsAPI_USCORELocalRemove), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default___ns1__tpsAPI_USCORELocalRemove(soap, a);
+  for (soap_flag = 0;; soap_flag = 1) {
+    soap->error = SOAP_TAG_MISMATCH;
+    if (soap_flag_ns2__tpsAPI_USCORELocalRemove && soap->error == SOAP_TAG_MISMATCH)
+      if (soap_in_PointerTons2__tpsAPI_USCORELocalRemove(soap, "ns2:tpsAPI_LocalRemove", &a->ns2__tpsAPI_USCORELocalRemove, "ns2:tpsAPI_LocalRemove")) {
+        soap_flag_ns2__tpsAPI_USCORELocalRemove--;
+        continue;
+      }
+    if (soap->error == SOAP_TAG_MISMATCH)
+      if (soap_flag) {
+        soap->error = SOAP_OK;
+        break;
+      }
+    if (soap_flag && soap->error == SOAP_NO_TAG)
+      break;
+    if (soap->error)
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCORELocalRemove(struct soap *soap, const struct __ns1__tpsAPI_USCORELocalRemove *a, const char *tag, const char *type) {
+  register int id = 0;
+  if (soap_out___ns1__tpsAPI_USCORELocalRemove(soap, tag?tag:"-ns1:tpsAPI_LocalRemove", id, a, type))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCORELocalRemove * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCORELocalRemove(struct soap *soap, struct __ns1__tpsAPI_USCORELocalRemove *p, const char *tag, const char *type) {
+  if ((p = soap_in___ns1__tpsAPI_USCORELocalRemove(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCORELocalCommit(struct soap *soap, struct __ns1__tpsAPI_USCORELocalCommit *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ns2__tpsAPI_USCORELocalCommit = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCORELocalCommit(struct soap *soap, const struct __ns1__tpsAPI_USCORELocalCommit *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__tpsAPI_USCORELocalCommit(soap, &a->ns2__tpsAPI_USCORELocalCommit);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCORELocalCommit(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCORELocalCommit *a, const char *type) {
+  if (soap_out_PointerTons2__tpsAPI_USCORELocalCommit(soap, "ns2:tpsAPI_LocalCommit", -1, &a->ns2__tpsAPI_USCORELocalCommit, ""))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCORELocalCommit * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCORELocalCommit(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCORELocalCommit *a, const char *type) {
+  size_t soap_flag_ns2__tpsAPI_USCORELocalCommit = 1;
+  short soap_flag;
+  a = (struct __ns1__tpsAPI_USCORELocalCommit *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCORELocalCommit, sizeof(struct __ns1__tpsAPI_USCORELocalCommit), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default___ns1__tpsAPI_USCORELocalCommit(soap, a);
+  for (soap_flag = 0;; soap_flag = 1) {
+    soap->error = SOAP_TAG_MISMATCH;
+    if (soap_flag_ns2__tpsAPI_USCORELocalCommit && soap->error == SOAP_TAG_MISMATCH)
+      if (soap_in_PointerTons2__tpsAPI_USCORELocalCommit(soap, "ns2:tpsAPI_LocalCommit", &a->ns2__tpsAPI_USCORELocalCommit, "ns2:tpsAPI_LocalCommit")) {
+        soap_flag_ns2__tpsAPI_USCORELocalCommit--;
+        continue;
+      }
+    if (soap->error == SOAP_TAG_MISMATCH)
+      if (soap_flag) {
+        soap->error = SOAP_OK;
+        break;
+      }
+    if (soap_flag && soap->error == SOAP_NO_TAG)
+      break;
+    if (soap->error)
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCORELocalCommit(struct soap *soap, const struct __ns1__tpsAPI_USCORELocalCommit *a, const char *tag, const char *type) {
+  register int id = 0;
+  if (soap_out___ns1__tpsAPI_USCORELocalCommit(soap, tag?tag:"-ns1:tpsAPI_LocalCommit", id, a, type))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCORELocalCommit * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCORELocalCommit(struct soap *soap, struct __ns1__tpsAPI_USCORELocalCommit *p, const char *tag, const char *type) {
+  if ((p = soap_in___ns1__tpsAPI_USCORELocalCommit(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__tpsAPI_USCORELocalCancel(struct soap *soap, struct __ns1__tpsAPI_USCORELocalCancel *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ns2__tpsAPI_USCORELocalCancel = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__tpsAPI_USCORELocalCancel(struct soap *soap, const struct __ns1__tpsAPI_USCORELocalCancel *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__tpsAPI_USCORELocalCancel(soap, &a->ns2__tpsAPI_USCORELocalCancel);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__tpsAPI_USCORELocalCancel(struct soap *soap, const char *tag, int id, const struct __ns1__tpsAPI_USCORELocalCancel *a, const char *type) {
+  if (soap_out_PointerTons2__tpsAPI_USCORELocalCancel(soap, "ns2:tpsAPI_LocalCancel", -1, &a->ns2__tpsAPI_USCORELocalCancel, ""))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCORELocalCancel * SOAP_FMAC4 soap_in___ns1__tpsAPI_USCORELocalCancel(struct soap *soap, const char *tag, struct __ns1__tpsAPI_USCORELocalCancel *a, const char *type) {
+  size_t soap_flag_ns2__tpsAPI_USCORELocalCancel = 1;
+  short soap_flag;
+  a = (struct __ns1__tpsAPI_USCORELocalCancel *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__tpsAPI_USCORELocalCancel, sizeof(struct __ns1__tpsAPI_USCORELocalCancel), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default___ns1__tpsAPI_USCORELocalCancel(soap, a);
+  for (soap_flag = 0;; soap_flag = 1) {
+    soap->error = SOAP_TAG_MISMATCH;
+    if (soap_flag_ns2__tpsAPI_USCORELocalCancel && soap->error == SOAP_TAG_MISMATCH)
+      if (soap_in_PointerTons2__tpsAPI_USCORELocalCancel(soap, "ns2:tpsAPI_LocalCancel", &a->ns2__tpsAPI_USCORELocalCancel, "ns2:tpsAPI_LocalCancel")) {
+        soap_flag_ns2__tpsAPI_USCORELocalCancel--;
+        continue;
+      }
+    if (soap->error == SOAP_TAG_MISMATCH)
+      if (soap_flag) {
+        soap->error = SOAP_OK;
+        break;
+      }
+    if (soap_flag && soap->error == SOAP_NO_TAG)
+      break;
+    if (soap->error)
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__tpsAPI_USCORELocalCancel(struct soap *soap, const struct __ns1__tpsAPI_USCORELocalCancel *a, const char *tag, const char *type) {
+  register int id = 0;
+  if (soap_out___ns1__tpsAPI_USCORELocalCancel(soap, tag?tag:"-ns1:tpsAPI_LocalCancel", id, a, type))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__tpsAPI_USCORELocalCancel * SOAP_FMAC4 soap_get___ns1__tpsAPI_USCORELocalCancel(struct soap *soap, struct __ns1__tpsAPI_USCORELocalCancel *p, const char *tag, const char *type) {
+  if ((p = soap_in___ns1__tpsAPI_USCORELocalCancel(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ns1__getAllReservationsForClass(struct soap *soap, struct __ns1__getAllReservationsForClass *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ns2__getAllReservationsForClass = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ns1__getAllReservationsForClass(struct soap *soap, const struct __ns1__getAllReservationsForClass *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__getAllReservationsForClass(soap, &a->ns2__getAllReservationsForClass);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ns1__getAllReservationsForClass(struct soap *soap, const char *tag, int id, const struct __ns1__getAllReservationsForClass *a, const char *type) {
+  if (soap_out_PointerTons2__getAllReservationsForClass(soap, "ns2:getAllReservationsForClass", -1, &a->ns2__getAllReservationsForClass, ""))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__getAllReservationsForClass * SOAP_FMAC4 soap_in___ns1__getAllReservationsForClass(struct soap *soap, const char *tag, struct __ns1__getAllReservationsForClass *a, const char *type) {
+  size_t soap_flag_ns2__getAllReservationsForClass = 1;
+  short soap_flag;
+  a = (struct __ns1__getAllReservationsForClass *)soap_id_enter(soap, "", a, SOAP_TYPE___ns1__getAllReservationsForClass, sizeof(struct __ns1__getAllReservationsForClass), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default___ns1__getAllReservationsForClass(soap, a);
+  for (soap_flag = 0;; soap_flag = 1) {
+    soap->error = SOAP_TAG_MISMATCH;
+    if (soap_flag_ns2__getAllReservationsForClass && soap->error == SOAP_TAG_MISMATCH)
+      if (soap_in_PointerTons2__getAllReservationsForClass(soap, "ns2:getAllReservationsForClass", &a->ns2__getAllReservationsForClass, "ns2:getAllReservationsForClass")) {
+        soap_flag_ns2__getAllReservationsForClass--;
+        continue;
+      }
+    if (soap->error == SOAP_TAG_MISMATCH)
+      if (soap_flag) {
+        soap->error = SOAP_OK;
+        break;
+      }
+    if (soap_flag && soap->error == SOAP_NO_TAG)
+      break;
+    if (soap->error)
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ns1__getAllReservationsForClass(struct soap *soap, const struct __ns1__getAllReservationsForClass *a, const char *tag, const char *type) {
+  register int id = 0;
+  if (soap_out___ns1__getAllReservationsForClass(soap, tag?tag:"-ns1:getAllReservationsForClass", id, a, type))
+    return soap->error;
+  return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ns1__getAllReservationsForClass * SOAP_FMAC4 soap_get___ns1__getAllReservationsForClass(struct soap *soap, struct __ns1__getAllReservationsForClass *p, const char *tag, const char *type) {
+  if ((p = soap_in___ns1__getAllReservationsForClass(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREreserveResponse(struct soap *soap, struct ns2__tpsAPI_USCOREreserveResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->result = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREreserveResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREreserveResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__ReservationData(soap, &a->result);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREreserveResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREreserveResponse *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse), type))
+    return soap->error;
+  if (soap_out_PointerTons2__ReservationData(soap, "result", -1, &a->result, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREreserveResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREreserveResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREreserveResponse *a, const char *type) {
+  size_t soap_flag_result = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCOREreserveResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse, sizeof(struct ns2__tpsAPI_USCOREreserveResponse), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCOREreserveResponse(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_PointerTons2__ReservationData(soap, "result", &a->result, "ns2:ReservationData")) {
+          soap_flag_result--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREreserveResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse, 0, sizeof(struct ns2__tpsAPI_USCOREreserveResponse), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREreserveResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREreserveResponse *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse);
+  if (soap_out_ns2__tpsAPI_USCOREreserveResponse(soap, tag?tag:"ns2:tpsAPI_reserveResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREreserveResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREreserveResponse(struct soap *soap, struct ns2__tpsAPI_USCOREreserveResponse *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCOREreserveResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREreserve(struct soap *soap, struct ns2__tpsAPI_USCOREreserve *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ReservationData_USCORE1 = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREreserve(struct soap *soap, const struct ns2__tpsAPI_USCOREreserve *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__ReservationData(soap, &a->ReservationData_USCORE1);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREreserve(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREreserve *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREreserve), type))
+    return soap->error;
+  if (soap_out_PointerTons2__ReservationData(soap, "ReservationData_1", -1, &a->ReservationData_USCORE1, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREreserve * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREreserve(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREreserve *a, const char *type) {
+  size_t soap_flag_ReservationData_USCORE1 = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCOREreserve *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREreserve, sizeof(struct ns2__tpsAPI_USCOREreserve), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCOREreserve(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_ReservationData_USCORE1 && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_PointerTons2__ReservationData(soap, "ReservationData_1", &a->ReservationData_USCORE1, "ns2:ReservationData")) {
+          soap_flag_ReservationData_USCORE1--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREreserve *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREreserve, 0, sizeof(struct ns2__tpsAPI_USCOREreserve), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREreserve(struct soap *soap, const struct ns2__tpsAPI_USCOREreserve *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREreserve);
+  if (soap_out_ns2__tpsAPI_USCOREreserve(soap, tag?tag:"ns2:tpsAPI_reserve", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREreserve * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREreserve(struct soap *soap, struct ns2__tpsAPI_USCOREreserve *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCOREreserve(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__UserData(struct soap *soap, struct ns2__UserData *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_LONG64(soap, &a->id);
+  soap_default_string(soap, &a->info);
+  soap_default_string(soap, &a->passWord);
+  soap_default_string(soap, &a->type);
+  soap_default_string(soap, &a->userName);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__UserData(struct soap *soap, const struct ns2__UserData *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_string(soap, &a->info);
+  soap_serialize_string(soap, &a->passWord);
+  soap_serialize_string(soap, &a->type);
+  soap_serialize_string(soap, &a->userName);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__UserData(struct soap *soap, const char *tag, int id, const struct ns2__UserData *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__UserData), type))
+    return soap->error;
+  if (soap_out_LONG64(soap, "id", -1, &a->id, ""))
+    return soap->error;
+  if (soap_out_string(soap, "info", -1, &a->info, ""))
+    return soap->error;
+  if (soap_out_string(soap, "passWord", -1, &a->passWord, ""))
+    return soap->error;
+  if (soap_out_string(soap, "type", -1, &a->type, ""))
+    return soap->error;
+  if (soap_out_string(soap, "userName", -1, &a->userName, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__UserData * SOAP_FMAC4 soap_in_ns2__UserData(struct soap *soap, const char *tag, struct ns2__UserData *a, const char *type) {
+  size_t soap_flag_id = 1;
+  size_t soap_flag_info = 1;
+  size_t soap_flag_passWord = 1;
+  size_t soap_flag_type = 1;
+  size_t soap_flag_userName = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__UserData *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__UserData, sizeof(struct ns2__UserData), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__UserData(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_id && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_LONG64(soap, "id", &a->id, "xsd:long")) {
+          soap_flag_id--;
+          continue;
+        }
+      if (soap_flag_info && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "info", &a->info, "xsd:string")) {
+          soap_flag_info--;
+          continue;
+        }
+      if (soap_flag_passWord && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "passWord", &a->passWord, "xsd:string")) {
+          soap_flag_passWord--;
+          continue;
+        }
+      if (soap_flag_type && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "type", &a->type, "xsd:string")) {
+          soap_flag_type--;
+          continue;
+        }
+      if (soap_flag_userName && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "userName", &a->userName, "xsd:string")) {
+          soap_flag_userName--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__UserData *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__UserData, 0, sizeof(struct ns2__UserData), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_id > 0)) {
+    soap->error = SOAP_OCCURS;
+    return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__UserData(struct soap *soap, const struct ns2__UserData *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__UserData);
+  if (soap_out_ns2__UserData(soap, tag?tag:"ns2:UserData", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__UserData * SOAP_FMAC4 soap_get_ns2__UserData(struct soap *soap, struct ns2__UserData *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__UserData(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORElookupUserResponse(struct soap *soap, struct ns2__tpsAPI_USCORElookupUserResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->result = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORElookupUserResponse(struct soap *soap, const struct ns2__tpsAPI_USCORElookupUserResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__UserData(soap, &a->result);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORElookupUserResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORElookupUserResponse *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse), type))
+    return soap->error;
+  if (soap_out_PointerTons2__UserData(soap, "result", -1, &a->result, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORElookupUserResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORElookupUserResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORElookupUserResponse *a, const char *type) {
+  size_t soap_flag_result = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCORElookupUserResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse, sizeof(struct ns2__tpsAPI_USCORElookupUserResponse), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCORElookupUserResponse(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_PointerTons2__UserData(soap, "result", &a->result, "ns2:UserData")) {
+          soap_flag_result--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORElookupUserResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse, 0, sizeof(struct ns2__tpsAPI_USCORElookupUserResponse), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORElookupUserResponse(struct soap *soap, const struct ns2__tpsAPI_USCORElookupUserResponse *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse);
+  if (soap_out_ns2__tpsAPI_USCORElookupUserResponse(soap, tag?tag:"ns2:tpsAPI_lookupUserResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORElookupUserResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORElookupUserResponse(struct soap *soap, struct ns2__tpsAPI_USCORElookupUserResponse *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCORElookupUserResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORElookupUser(struct soap *soap, struct ns2__tpsAPI_USCORElookupUser *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_string(soap, &a->String_USCORE1);
+  soap_default_string(soap, &a->String_USCORE2);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORElookupUser(struct soap *soap, const struct ns2__tpsAPI_USCORElookupUser *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_string(soap, &a->String_USCORE1);
+  soap_serialize_string(soap, &a->String_USCORE2);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORElookupUser(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORElookupUser *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORElookupUser), type))
+    return soap->error;
+  if (soap_out_string(soap, "String_1", -1, &a->String_USCORE1, ""))
+    return soap->error;
+  if (soap_out_string(soap, "String_2", -1, &a->String_USCORE2, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORElookupUser * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORElookupUser(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORElookupUser *a, const char *type) {
+  size_t soap_flag_String_USCORE1 = 1;
+  size_t soap_flag_String_USCORE2 = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCORElookupUser *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORElookupUser, sizeof(struct ns2__tpsAPI_USCORElookupUser), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCORElookupUser(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_String_USCORE1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_1", &a->String_USCORE1, "xsd:string")) {
+          soap_flag_String_USCORE1--;
+          continue;
+        }
+      if (soap_flag_String_USCORE2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_2", &a->String_USCORE2, "xsd:string")) {
+          soap_flag_String_USCORE2--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORElookupUser *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORElookupUser, 0, sizeof(struct ns2__tpsAPI_USCORElookupUser), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORElookupUser(struct soap *soap, const struct ns2__tpsAPI_USCORElookupUser *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORElookupUser);
+  if (soap_out_ns2__tpsAPI_USCORElookupUser(soap, tag?tag:"ns2:tpsAPI_lookupUser", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORElookupUser * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORElookupUser(struct soap *soap, struct ns2__tpsAPI_USCORElookupUser *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCORElookupUser(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetReservationDataResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->result = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREgetReservationDataResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__ReservationData(soap, &a->result);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREgetReservationDataResponse *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse), type))
+    return soap->error;
+  if (soap_out_PointerTons2__ReservationData(soap, "result", -1, &a->result, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetReservationDataResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetReservationDataResponse *a, const char *type) {
+  size_t soap_flag_result = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCOREgetReservationDataResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse, sizeof(struct ns2__tpsAPI_USCOREgetReservationDataResponse), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_PointerTons2__ReservationData(soap, "result", &a->result, "ns2:ReservationData")) {
+          soap_flag_result--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREgetReservationDataResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse, 0, sizeof(struct ns2__tpsAPI_USCOREgetReservationDataResponse), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREgetReservationDataResponse *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse);
+  if (soap_out_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, tag?tag:"ns2:tpsAPI_getReservationDataResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetReservationDataResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetReservationDataResponse *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREgetReservationData(struct soap *soap, struct ns2__tpsAPI_USCOREgetReservationData *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_string(soap, &a->String_USCORE1);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREgetReservationData(struct soap *soap, const struct ns2__tpsAPI_USCOREgetReservationData *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_string(soap, &a->String_USCORE1);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREgetReservationData(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREgetReservationData *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData), type))
+    return soap->error;
+  if (soap_out_string(soap, "String_1", -1, &a->String_USCORE1, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetReservationData * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREgetReservationData(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetReservationData *a, const char *type) {
+  size_t soap_flag_String_USCORE1 = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCOREgetReservationData *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData, sizeof(struct ns2__tpsAPI_USCOREgetReservationData), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCOREgetReservationData(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_String_USCORE1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_1", &a->String_USCORE1, "xsd:string")) {
+          soap_flag_String_USCORE1--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREgetReservationData *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData, 0, sizeof(struct ns2__tpsAPI_USCOREgetReservationData), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREgetReservationData(struct soap *soap, const struct ns2__tpsAPI_USCOREgetReservationData *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData);
+  if (soap_out_ns2__tpsAPI_USCOREgetReservationData(soap, tag?tag:"ns2:tpsAPI_getReservationData", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetReservationData * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREgetReservationData(struct soap *soap, struct ns2__tpsAPI_USCOREgetReservationData *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCOREgetReservationData(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_string(soap, &a->result);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_string(soap, &a->result);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse), type))
+    return soap->error;
+  if (soap_out_string(soap, "result", -1, &a->result, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *a, const char *type) {
+  size_t soap_flag_result = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse, sizeof(struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_result && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "result", &a->result, "xsd:string")) {
+          soap_flag_result--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse, 0, sizeof(struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse);
+  if (soap_out_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, tag?tag:"ns2:tpsAPI_getRelatedReservationIdsResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, struct ns2__tpsAPI_USCOREgetRelatedReservationIds *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_string(soap, &a->String_USCORE1);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const struct ns2__tpsAPI_USCOREgetRelatedReservationIds *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_string(soap, &a->String_USCORE1);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREgetRelatedReservationIds *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds), type))
+    return soap->error;
+  if (soap_out_string(soap, "String_1", -1, &a->String_USCORE1, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetRelatedReservationIds * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetRelatedReservationIds *a, const char *type) {
+  size_t soap_flag_String_USCORE1 = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCOREgetRelatedReservationIds *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds, sizeof(struct ns2__tpsAPI_USCOREgetRelatedReservationIds), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCOREgetRelatedReservationIds(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_String_USCORE1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_1", &a->String_USCORE1, "xsd:string")) {
+          soap_flag_String_USCORE1--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREgetRelatedReservationIds *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds, 0, sizeof(struct ns2__tpsAPI_USCOREgetRelatedReservationIds), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const struct ns2__tpsAPI_USCOREgetRelatedReservationIds *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds);
+  if (soap_out_ns2__tpsAPI_USCOREgetRelatedReservationIds(soap, tag?tag:"ns2:tpsAPI_getRelatedReservationIds", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetRelatedReservationIds * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, struct ns2__tpsAPI_USCOREgetRelatedReservationIds *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCOREgetRelatedReservationIds(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREgetPathResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetPathResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->__sizeresult = 0;
+  a->result = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREgetPathResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREgetPathResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  if (a->result) {
+    int i;
+    for (i = 0; i < a->__sizeresult; i++) {
+      soap_serialize_string(soap, a->result + i);
+    }
+  }
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREgetPathResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREgetPathResponse *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse), type))
+    return soap->error;
+  if (a->result) {
+    int i;
+    for (i = 0; i < a->__sizeresult; i++)
+      if (soap_out_string(soap, "result", -1, a->result + i, ""))
+        return soap->error;
+  }
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetPathResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREgetPathResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetPathResponse *a, const char *type) {
+  struct soap_blist *soap_blist_result = NULL;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCOREgetPathResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse, sizeof(struct ns2__tpsAPI_USCOREgetPathResponse), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCOREgetPathResponse(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap->error == SOAP_TAG_MISMATCH && !soap_element_begin_in(soap, "result", 1, NULL)) {
+        if (a->result == NULL) {
+          if (soap_blist_result == NULL)
+            soap_blist_result = soap_new_block(soap);
+          a->result = (char **)soap_push_block(soap, soap_blist_result, sizeof(char *));
+          if (a->result == NULL)
+            return NULL;
+          *a->result = NULL;
+        }
+        soap_revert(soap);
+        if (soap_in_string(soap, "result", a->result, "xsd:string")) {
+          a->__sizeresult++;
+          a->result = NULL;
+          continue;
+        }
+      }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (a->result)
+      soap_pop_block(soap, soap_blist_result);
+    if (a->__sizeresult)
+      a->result = (char **)soap_save_block(soap, soap_blist_result, NULL, 1);
+    else {
+      a->result = NULL;
+      if (soap_blist_result)
+        soap_end_block(soap, soap_blist_result);
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREgetPathResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse, 0, sizeof(struct ns2__tpsAPI_USCOREgetPathResponse), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREgetPathResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREgetPathResponse *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse);
+  if (soap_out_ns2__tpsAPI_USCOREgetPathResponse(soap, tag?tag:"ns2:tpsAPI_getPathResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetPathResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREgetPathResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetPathResponse *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCOREgetPathResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREgetPath(struct soap *soap, struct ns2__tpsAPI_USCOREgetPath *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_string(soap, &a->String_USCORE1);
+  soap_default_string(soap, &a->String_USCORE2);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREgetPath(struct soap *soap, const struct ns2__tpsAPI_USCOREgetPath *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_string(soap, &a->String_USCORE1);
+  soap_serialize_string(soap, &a->String_USCORE2);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREgetPath(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREgetPath *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetPath), type))
+    return soap->error;
+  if (soap_out_string(soap, "String_1", -1, &a->String_USCORE1, ""))
+    return soap->error;
+  if (soap_out_string(soap, "String_2", -1, &a->String_USCORE2, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetPath * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREgetPath(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetPath *a, const char *type) {
+  size_t soap_flag_String_USCORE1 = 1;
+  size_t soap_flag_String_USCORE2 = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCOREgetPath *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetPath, sizeof(struct ns2__tpsAPI_USCOREgetPath), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCOREgetPath(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_String_USCORE1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_1", &a->String_USCORE1, "xsd:string")) {
+          soap_flag_String_USCORE1--;
+          continue;
+        }
+      if (soap_flag_String_USCORE2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_2", &a->String_USCORE2, "xsd:string")) {
+          soap_flag_String_USCORE2--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREgetPath *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREgetPath, 0, sizeof(struct ns2__tpsAPI_USCOREgetPath), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREgetPath(struct soap *soap, const struct ns2__tpsAPI_USCOREgetPath *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREgetPath);
+  if (soap_out_ns2__tpsAPI_USCOREgetPath(soap, tag?tag:"ns2:tpsAPI_getPath", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetPath * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREgetPath(struct soap *soap, struct ns2__tpsAPI_USCOREgetPath *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCOREgetPath(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->__sizeresult = 0;
+  a->result = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  if (a->result) {
+    int i;
+    for (i = 0; i < a->__sizeresult; i++) {
+      soap_serialize_PointerTons2__Bandwidth(soap, a->result + i);
+    }
+  }
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse), type))
+    return soap->error;
+  if (a->result) {
+    int i;
+    for (i = 0; i < a->__sizeresult; i++)
+      if (soap_out_PointerTons2__Bandwidth(soap, "result", -1, a->result + i, ""))
+        return soap->error;
+  }
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *a, const char *type) {
+  struct soap_blist *soap_blist_result = NULL;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse, sizeof(struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap->error == SOAP_TAG_MISMATCH && !soap_element_begin_in(soap, "result", 1, NULL)) {
+        if (a->result == NULL) {
+          if (soap_blist_result == NULL)
+            soap_blist_result = soap_new_block(soap);
+          a->result = (struct ns2__Bandwidth **)soap_push_block(soap, soap_blist_result, sizeof(struct ns2__Bandwidth *));
+          if (a->result == NULL)
+            return NULL;
+          *a->result = NULL;
+        }
+        soap_revert(soap);
+        if (soap_in_PointerTons2__Bandwidth(soap, "result", a->result, "ns2:Bandwidth")) {
+          a->__sizeresult++;
+          a->result = NULL;
+          continue;
+        }
+      }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (a->result)
+      soap_pop_block(soap, soap_blist_result);
+    if (a->__sizeresult)
+      a->result = (struct ns2__Bandwidth **)soap_save_block(soap, soap_blist_result, NULL, 1);
+    else {
+      a->result = NULL;
+      if (soap_blist_result)
+        soap_end_block(soap, soap_blist_result);
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse, 0, sizeof(struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse);
+  if (soap_out_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, tag?tag:"ns2:tpsAPI_getLocalBandwidthsResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, struct ns2__tpsAPI_USCOREgetLocalBandwidths *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const struct ns2__tpsAPI_USCOREgetLocalBandwidths *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREgetLocalBandwidths *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths), type))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetLocalBandwidths * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetLocalBandwidths *a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCOREgetLocalBandwidths *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths, sizeof(struct ns2__tpsAPI_USCOREgetLocalBandwidths), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCOREgetLocalBandwidths(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREgetLocalBandwidths *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths, 0, sizeof(struct ns2__tpsAPI_USCOREgetLocalBandwidths), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const struct ns2__tpsAPI_USCOREgetLocalBandwidths *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths);
+  if (soap_out_ns2__tpsAPI_USCOREgetLocalBandwidths(soap, tag?tag:"ns2:tpsAPI_getLocalBandwidths", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetLocalBandwidths * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, struct ns2__tpsAPI_USCOREgetLocalBandwidths *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCOREgetLocalBandwidths(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__Bandwidths(struct soap *soap, struct ns2__Bandwidths *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->__sizebw = 0;
+  a->bw = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__Bandwidths(struct soap *soap, const struct ns2__Bandwidths *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  if (a->bw) {
+    int i;
+    for (i = 0; i < a->__sizebw; i++) {
+      soap_serialize_PointerTons2__Bandwidth(soap, a->bw + i);
+    }
+  }
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__Bandwidths(struct soap *soap, const char *tag, int id, const struct ns2__Bandwidths *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__Bandwidths), type))
+    return soap->error;
+  if (a->bw) {
+    int i;
+    for (i = 0; i < a->__sizebw; i++)
+      if (soap_out_PointerTons2__Bandwidth(soap, "bw", -1, a->bw + i, ""))
+        return soap->error;
+  }
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__Bandwidths * SOAP_FMAC4 soap_in_ns2__Bandwidths(struct soap *soap, const char *tag, struct ns2__Bandwidths *a, const char *type) {
+  struct soap_blist *soap_blist_bw = NULL;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__Bandwidths *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__Bandwidths, sizeof(struct ns2__Bandwidths), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__Bandwidths(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap->error == SOAP_TAG_MISMATCH && !soap_element_begin_in(soap, "bw", 1, NULL)) {
+        if (a->bw == NULL) {
+          if (soap_blist_bw == NULL)
+            soap_blist_bw = soap_new_block(soap);
+          a->bw = (struct ns2__Bandwidth **)soap_push_block(soap, soap_blist_bw, sizeof(struct ns2__Bandwidth *));
+          if (a->bw == NULL)
+            return NULL;
+          *a->bw = NULL;
+        }
+        soap_revert(soap);
+        if (soap_in_PointerTons2__Bandwidth(soap, "bw", a->bw, "ns2:Bandwidth")) {
+          a->__sizebw++;
+          a->bw = NULL;
+          continue;
+        }
+      }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (a->bw)
+      soap_pop_block(soap, soap_blist_bw);
+    if (a->__sizebw)
+      a->bw = (struct ns2__Bandwidth **)soap_save_block(soap, soap_blist_bw, NULL, 1);
+    else {
+      a->bw = NULL;
+      if (soap_blist_bw)
+        soap_end_block(soap, soap_blist_bw);
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__Bandwidths *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__Bandwidths, 0, sizeof(struct ns2__Bandwidths), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__Bandwidths(struct soap *soap, const struct ns2__Bandwidths *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__Bandwidths);
+  if (soap_out_ns2__Bandwidths(soap, tag?tag:"ns2:Bandwidths", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__Bandwidths * SOAP_FMAC4 soap_get_ns2__Bandwidths(struct soap *soap, struct ns2__Bandwidths *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__Bandwidths(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetBandwidthsResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->__sizeresult = 0;
+  a->result = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREgetBandwidthsResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  if (a->result) {
+    int i;
+    for (i = 0; i < a->__sizeresult; i++) {
+      soap_serialize_PointerTons2__Bandwidths(soap, a->result + i);
+    }
+  }
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREgetBandwidthsResponse *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse), type))
+    return soap->error;
+  if (a->result) {
+    int i;
+    for (i = 0; i < a->__sizeresult; i++)
+      if (soap_out_PointerTons2__Bandwidths(soap, "result", -1, a->result + i, ""))
+        return soap->error;
+  }
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetBandwidthsResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetBandwidthsResponse *a, const char *type) {
+  struct soap_blist *soap_blist_result = NULL;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCOREgetBandwidthsResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse, sizeof(struct ns2__tpsAPI_USCOREgetBandwidthsResponse), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap->error == SOAP_TAG_MISMATCH && !soap_element_begin_in(soap, "result", 1, NULL)) {
+        if (a->result == NULL) {
+          if (soap_blist_result == NULL)
+            soap_blist_result = soap_new_block(soap);
+          a->result = (struct ns2__Bandwidths **)soap_push_block(soap, soap_blist_result, sizeof(struct ns2__Bandwidths *));
+          if (a->result == NULL)
+            return NULL;
+          *a->result = NULL;
+        }
+        soap_revert(soap);
+        if (soap_in_PointerTons2__Bandwidths(soap, "result", a->result, "ns2:Bandwidths")) {
+          a->__sizeresult++;
+          a->result = NULL;
+          continue;
+        }
+      }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (a->result)
+      soap_pop_block(soap, soap_blist_result);
+    if (a->__sizeresult)
+      a->result = (struct ns2__Bandwidths **)soap_save_block(soap, soap_blist_result, NULL, 1);
+    else {
+      a->result = NULL;
+      if (soap_blist_result)
+        soap_end_block(soap, soap_blist_result);
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREgetBandwidthsResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse, 0, sizeof(struct ns2__tpsAPI_USCOREgetBandwidthsResponse), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREgetBandwidthsResponse *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse);
+  if (soap_out_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, tag?tag:"ns2:tpsAPI_getBandwidthsResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetBandwidthsResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetBandwidthsResponse *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREgetBandwidths(struct soap *soap, struct ns2__tpsAPI_USCOREgetBandwidths *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_string(soap, &a->String_USCORE1);
+  soap_default_string(soap, &a->String_USCORE2);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREgetBandwidths(struct soap *soap, const struct ns2__tpsAPI_USCOREgetBandwidths *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_string(soap, &a->String_USCORE1);
+  soap_serialize_string(soap, &a->String_USCORE2);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREgetBandwidths(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREgetBandwidths *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths), type))
+    return soap->error;
+  if (soap_out_string(soap, "String_1", -1, &a->String_USCORE1, ""))
+    return soap->error;
+  if (soap_out_string(soap, "String_2", -1, &a->String_USCORE2, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetBandwidths * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREgetBandwidths(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetBandwidths *a, const char *type) {
+  size_t soap_flag_String_USCORE1 = 1;
+  size_t soap_flag_String_USCORE2 = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCOREgetBandwidths *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths, sizeof(struct ns2__tpsAPI_USCOREgetBandwidths), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCOREgetBandwidths(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_String_USCORE1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_1", &a->String_USCORE1, "xsd:string")) {
+          soap_flag_String_USCORE1--;
+          continue;
+        }
+      if (soap_flag_String_USCORE2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_2", &a->String_USCORE2, "xsd:string")) {
+          soap_flag_String_USCORE2--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREgetBandwidths *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths, 0, sizeof(struct ns2__tpsAPI_USCOREgetBandwidths), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREgetBandwidths(struct soap *soap, const struct ns2__tpsAPI_USCOREgetBandwidths *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths);
+  if (soap_out_ns2__tpsAPI_USCOREgetBandwidths(soap, tag?tag:"ns2:tpsAPI_getBandwidths", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetBandwidths * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREgetBandwidths(struct soap *soap, struct ns2__tpsAPI_USCOREgetBandwidths *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCOREgetBandwidths(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREcommitResponse(struct soap *soap, struct ns2__tpsAPI_USCOREcommitResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_xsd__boolean(soap, &a->result);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREcommitResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREcommitResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREcommitResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREcommitResponse *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse), type))
+    return soap->error;
+  if (soap_out_xsd__boolean(soap, "result", -1, &a->result, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREcommitResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREcommitResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREcommitResponse *a, const char *type) {
+  size_t soap_flag_result = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCOREcommitResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse, sizeof(struct ns2__tpsAPI_USCOREcommitResponse), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCOREcommitResponse(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_xsd__boolean(soap, "result", &a->result, "xsd:boolean")) {
+          soap_flag_result--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREcommitResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse, 0, sizeof(struct ns2__tpsAPI_USCOREcommitResponse), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_result > 0)) {
+    soap->error = SOAP_OCCURS;
+    return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREcommitResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREcommitResponse *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse);
+  if (soap_out_ns2__tpsAPI_USCOREcommitResponse(soap, tag?tag:"ns2:tpsAPI_commitResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREcommitResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREcommitResponse(struct soap *soap, struct ns2__tpsAPI_USCOREcommitResponse *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCOREcommitResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREcommit(struct soap *soap, struct ns2__tpsAPI_USCOREcommit *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ReservationData_USCORE1 = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREcommit(struct soap *soap, const struct ns2__tpsAPI_USCOREcommit *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__ReservationData(soap, &a->ReservationData_USCORE1);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREcommit(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREcommit *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREcommit), type))
+    return soap->error;
+  if (soap_out_PointerTons2__ReservationData(soap, "ReservationData_1", -1, &a->ReservationData_USCORE1, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREcommit * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREcommit(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREcommit *a, const char *type) {
+  size_t soap_flag_ReservationData_USCORE1 = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCOREcommit *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREcommit, sizeof(struct ns2__tpsAPI_USCOREcommit), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCOREcommit(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_ReservationData_USCORE1 && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_PointerTons2__ReservationData(soap, "ReservationData_1", &a->ReservationData_USCORE1, "ns2:ReservationData")) {
+          soap_flag_ReservationData_USCORE1--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREcommit *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREcommit, 0, sizeof(struct ns2__tpsAPI_USCOREcommit), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREcommit(struct soap *soap, const struct ns2__tpsAPI_USCOREcommit *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREcommit);
+  if (soap_out_ns2__tpsAPI_USCOREcommit(soap, tag?tag:"ns2:tpsAPI_commit", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREcommit * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREcommit(struct soap *soap, struct ns2__tpsAPI_USCOREcommit *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCOREcommit(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREcancelResponse(struct soap *soap, struct ns2__tpsAPI_USCOREcancelResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_xsd__boolean(soap, &a->result);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREcancelResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREcancelResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREcancelResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREcancelResponse *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse), type))
+    return soap->error;
+  if (soap_out_xsd__boolean(soap, "result", -1, &a->result, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREcancelResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREcancelResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREcancelResponse *a, const char *type) {
+  size_t soap_flag_result = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCOREcancelResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse, sizeof(struct ns2__tpsAPI_USCOREcancelResponse), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCOREcancelResponse(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_xsd__boolean(soap, "result", &a->result, "xsd:boolean")) {
+          soap_flag_result--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREcancelResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse, 0, sizeof(struct ns2__tpsAPI_USCOREcancelResponse), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_result > 0)) {
+    soap->error = SOAP_OCCURS;
+    return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREcancelResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREcancelResponse *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse);
+  if (soap_out_ns2__tpsAPI_USCOREcancelResponse(soap, tag?tag:"ns2:tpsAPI_cancelResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREcancelResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREcancelResponse(struct soap *soap, struct ns2__tpsAPI_USCOREcancelResponse *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCOREcancelResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREcancel(struct soap *soap, struct ns2__tpsAPI_USCOREcancel *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ReservationData_USCORE1 = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREcancel(struct soap *soap, const struct ns2__tpsAPI_USCOREcancel *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__ReservationData(soap, &a->ReservationData_USCORE1);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREcancel(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREcancel *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREcancel), type))
+    return soap->error;
+  if (soap_out_PointerTons2__ReservationData(soap, "ReservationData_1", -1, &a->ReservationData_USCORE1, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREcancel * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREcancel(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREcancel *a, const char *type) {
+  size_t soap_flag_ReservationData_USCORE1 = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCOREcancel *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREcancel, sizeof(struct ns2__tpsAPI_USCOREcancel), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCOREcancel(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_ReservationData_USCORE1 && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_PointerTons2__ReservationData(soap, "ReservationData_1", &a->ReservationData_USCORE1, "ns2:ReservationData")) {
+          soap_flag_ReservationData_USCORE1--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREcancel *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREcancel, 0, sizeof(struct ns2__tpsAPI_USCOREcancel), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREcancel(struct soap *soap, const struct ns2__tpsAPI_USCOREcancel *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREcancel);
+  if (soap_out_ns2__tpsAPI_USCOREcancel(soap, tag?tag:"ns2:tpsAPI_cancel", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREcancel * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREcancel(struct soap *soap, struct ns2__tpsAPI_USCOREcancel *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCOREcancel(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_xsd__boolean(soap, &a->result);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse), type))
+    return soap->error;
+  if (soap_out_xsd__boolean(soap, "result", -1, &a->result, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *a, const char *type) {
+  size_t soap_flag_result = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse, sizeof(struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_xsd__boolean(soap, "result", &a->result, "xsd:boolean")) {
+          soap_flag_result--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse, 0, sizeof(struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_result > 0)) {
+    soap->error = SOAP_OCCURS;
+    return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, const struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse);
+  if (soap_out_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, tag?tag:"ns2:tpsAPI_addRelatedReservationIdResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, struct ns2__tpsAPI_USCOREaddRelatedReservationId *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_string(soap, &a->String_USCORE1);
+  soap_default_string(soap, &a->String_USCORE2);
+  soap_default_xsd__boolean(soap, &a->boolean_USCORE3);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const struct ns2__tpsAPI_USCOREaddRelatedReservationId *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_string(soap, &a->String_USCORE1);
+  soap_serialize_string(soap, &a->String_USCORE2);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCOREaddRelatedReservationId *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId), type))
+    return soap->error;
+  if (soap_out_string(soap, "String_1", -1, &a->String_USCORE1, ""))
+    return soap->error;
+  if (soap_out_string(soap, "String_2", -1, &a->String_USCORE2, ""))
+    return soap->error;
+  if (soap_out_xsd__boolean(soap, "boolean_3", -1, &a->boolean_USCORE3, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREaddRelatedReservationId * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREaddRelatedReservationId *a, const char *type) {
+  size_t soap_flag_String_USCORE1 = 1;
+  size_t soap_flag_String_USCORE2 = 1;
+  size_t soap_flag_boolean_USCORE3 = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCOREaddRelatedReservationId *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId, sizeof(struct ns2__tpsAPI_USCOREaddRelatedReservationId), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCOREaddRelatedReservationId(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_String_USCORE1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_1", &a->String_USCORE1, "xsd:string")) {
+          soap_flag_String_USCORE1--;
+          continue;
+        }
+      if (soap_flag_String_USCORE2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_2", &a->String_USCORE2, "xsd:string")) {
+          soap_flag_String_USCORE2--;
+          continue;
+        }
+      if (soap_flag_boolean_USCORE3 && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_xsd__boolean(soap, "boolean_3", &a->boolean_USCORE3, "xsd:boolean")) {
+          soap_flag_boolean_USCORE3--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREaddRelatedReservationId *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId, 0, sizeof(struct ns2__tpsAPI_USCOREaddRelatedReservationId), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_boolean_USCORE3 > 0)) {
+    soap->error = SOAP_OCCURS;
+    return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const struct ns2__tpsAPI_USCOREaddRelatedReservationId *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId);
+  if (soap_out_ns2__tpsAPI_USCOREaddRelatedReservationId(soap, tag?tag:"ns2:tpsAPI_addRelatedReservationId", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREaddRelatedReservationId * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, struct ns2__tpsAPI_USCOREaddRelatedReservationId *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCOREaddRelatedReservationId(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORELocalStartResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalStartResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_xsd__boolean(soap, &a->result);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORELocalStartResponse(struct soap *soap, const struct ns2__tpsAPI_USCORELocalStartResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORELocalStartResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORELocalStartResponse *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse), type))
+    return soap->error;
+  if (soap_out_xsd__boolean(soap, "result", -1, &a->result, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalStartResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORELocalStartResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalStartResponse *a, const char *type) {
+  size_t soap_flag_result = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCORELocalStartResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse, sizeof(struct ns2__tpsAPI_USCORELocalStartResponse), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCORELocalStartResponse(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_xsd__boolean(soap, "result", &a->result, "xsd:boolean")) {
+          soap_flag_result--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORELocalStartResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse, 0, sizeof(struct ns2__tpsAPI_USCORELocalStartResponse), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_result > 0)) {
+    soap->error = SOAP_OCCURS;
+    return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORELocalStartResponse(struct soap *soap, const struct ns2__tpsAPI_USCORELocalStartResponse *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse);
+  if (soap_out_ns2__tpsAPI_USCORELocalStartResponse(soap, tag?tag:"ns2:tpsAPI_LocalStartResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalStartResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORELocalStartResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalStartResponse *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCORELocalStartResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORELocalStart(struct soap *soap, struct ns2__tpsAPI_USCORELocalStart *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_string(soap, &a->String_USCORE1);
+  soap_default_string(soap, &a->String_USCORE2);
+  soap_default_string(soap, &a->String_USCORE3);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORELocalStart(struct soap *soap, const struct ns2__tpsAPI_USCORELocalStart *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_string(soap, &a->String_USCORE1);
+  soap_serialize_string(soap, &a->String_USCORE2);
+  soap_serialize_string(soap, &a->String_USCORE3);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORELocalStart(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORELocalStart *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalStart), type))
+    return soap->error;
+  if (soap_out_string(soap, "String_1", -1, &a->String_USCORE1, ""))
+    return soap->error;
+  if (soap_out_string(soap, "String_2", -1, &a->String_USCORE2, ""))
+    return soap->error;
+  if (soap_out_string(soap, "String_3", -1, &a->String_USCORE3, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalStart * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORELocalStart(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalStart *a, const char *type) {
+  size_t soap_flag_String_USCORE1 = 1;
+  size_t soap_flag_String_USCORE2 = 1;
+  size_t soap_flag_String_USCORE3 = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCORELocalStart *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalStart, sizeof(struct ns2__tpsAPI_USCORELocalStart), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCORELocalStart(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_String_USCORE1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_1", &a->String_USCORE1, "xsd:string")) {
+          soap_flag_String_USCORE1--;
+          continue;
+        }
+      if (soap_flag_String_USCORE2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_2", &a->String_USCORE2, "xsd:string")) {
+          soap_flag_String_USCORE2--;
+          continue;
+        }
+      if (soap_flag_String_USCORE3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_3", &a->String_USCORE3, "xsd:string")) {
+          soap_flag_String_USCORE3--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORELocalStart *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORELocalStart, 0, sizeof(struct ns2__tpsAPI_USCORELocalStart), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORELocalStart(struct soap *soap, const struct ns2__tpsAPI_USCORELocalStart *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORELocalStart);
+  if (soap_out_ns2__tpsAPI_USCORELocalStart(soap, tag?tag:"ns2:tpsAPI_LocalStart", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalStart * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORELocalStart(struct soap *soap, struct ns2__tpsAPI_USCORELocalStart *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCORELocalStart(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalReserveResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->result = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, const struct ns2__tpsAPI_USCORELocalReserveResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__ReservationData(soap, &a->result);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORELocalReserveResponse *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse), type))
+    return soap->error;
+  if (soap_out_PointerTons2__ReservationData(soap, "result", -1, &a->result, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalReserveResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalReserveResponse *a, const char *type) {
+  size_t soap_flag_result = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCORELocalReserveResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse, sizeof(struct ns2__tpsAPI_USCORELocalReserveResponse), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCORELocalReserveResponse(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_PointerTons2__ReservationData(soap, "result", &a->result, "ns2:ReservationData")) {
+          soap_flag_result--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORELocalReserveResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse, 0, sizeof(struct ns2__tpsAPI_USCORELocalReserveResponse), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, const struct ns2__tpsAPI_USCORELocalReserveResponse *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse);
+  if (soap_out_ns2__tpsAPI_USCORELocalReserveResponse(soap, tag?tag:"ns2:tpsAPI_LocalReserveResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalReserveResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalReserveResponse *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCORELocalReserveResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORELocalReserve(struct soap *soap, struct ns2__tpsAPI_USCORELocalReserve *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ReservationData_USCORE1 = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORELocalReserve(struct soap *soap, const struct ns2__tpsAPI_USCORELocalReserve *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__ReservationData(soap, &a->ReservationData_USCORE1);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORELocalReserve(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORELocalReserve *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve), type))
+    return soap->error;
+  if (soap_out_PointerTons2__ReservationData(soap, "ReservationData_1", -1, &a->ReservationData_USCORE1, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalReserve * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORELocalReserve(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalReserve *a, const char *type) {
+  size_t soap_flag_ReservationData_USCORE1 = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCORELocalReserve *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve, sizeof(struct ns2__tpsAPI_USCORELocalReserve), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCORELocalReserve(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_ReservationData_USCORE1 && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_PointerTons2__ReservationData(soap, "ReservationData_1", &a->ReservationData_USCORE1, "ns2:ReservationData")) {
+          soap_flag_ReservationData_USCORE1--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORELocalReserve *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve, 0, sizeof(struct ns2__tpsAPI_USCORELocalReserve), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORELocalReserve(struct soap *soap, const struct ns2__tpsAPI_USCORELocalReserve *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve);
+  if (soap_out_ns2__tpsAPI_USCORELocalReserve(soap, tag?tag:"ns2:tpsAPI_LocalReserve", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalReserve * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORELocalReserve(struct soap *soap, struct ns2__tpsAPI_USCORELocalReserve *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCORELocalReserve(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalRemoveResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_xsd__boolean(soap, &a->result);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, const struct ns2__tpsAPI_USCORELocalRemoveResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORELocalRemoveResponse *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse), type))
+    return soap->error;
+  if (soap_out_xsd__boolean(soap, "result", -1, &a->result, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalRemoveResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalRemoveResponse *a, const char *type) {
+  size_t soap_flag_result = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCORELocalRemoveResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse, sizeof(struct ns2__tpsAPI_USCORELocalRemoveResponse), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCORELocalRemoveResponse(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_xsd__boolean(soap, "result", &a->result, "xsd:boolean")) {
+          soap_flag_result--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORELocalRemoveResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse, 0, sizeof(struct ns2__tpsAPI_USCORELocalRemoveResponse), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_result > 0)) {
+    soap->error = SOAP_OCCURS;
+    return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, const struct ns2__tpsAPI_USCORELocalRemoveResponse *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse);
+  if (soap_out_ns2__tpsAPI_USCORELocalRemoveResponse(soap, tag?tag:"ns2:tpsAPI_LocalRemoveResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalRemoveResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalRemoveResponse *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCORELocalRemoveResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORELocalRemove(struct soap *soap, struct ns2__tpsAPI_USCORELocalRemove *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_string(soap, &a->String_USCORE1);
+  soap_default_string(soap, &a->String_USCORE2);
+  soap_default_string(soap, &a->String_USCORE3);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORELocalRemove(struct soap *soap, const struct ns2__tpsAPI_USCORELocalRemove *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_string(soap, &a->String_USCORE1);
+  soap_serialize_string(soap, &a->String_USCORE2);
+  soap_serialize_string(soap, &a->String_USCORE3);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORELocalRemove(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORELocalRemove *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove), type))
+    return soap->error;
+  if (soap_out_string(soap, "String_1", -1, &a->String_USCORE1, ""))
+    return soap->error;
+  if (soap_out_string(soap, "String_2", -1, &a->String_USCORE2, ""))
+    return soap->error;
+  if (soap_out_string(soap, "String_3", -1, &a->String_USCORE3, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalRemove * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORELocalRemove(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalRemove *a, const char *type) {
+  size_t soap_flag_String_USCORE1 = 1;
+  size_t soap_flag_String_USCORE2 = 1;
+  size_t soap_flag_String_USCORE3 = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCORELocalRemove *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove, sizeof(struct ns2__tpsAPI_USCORELocalRemove), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCORELocalRemove(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_String_USCORE1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_1", &a->String_USCORE1, "xsd:string")) {
+          soap_flag_String_USCORE1--;
+          continue;
+        }
+      if (soap_flag_String_USCORE2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_2", &a->String_USCORE2, "xsd:string")) {
+          soap_flag_String_USCORE2--;
+          continue;
+        }
+      if (soap_flag_String_USCORE3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_3", &a->String_USCORE3, "xsd:string")) {
+          soap_flag_String_USCORE3--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORELocalRemove *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove, 0, sizeof(struct ns2__tpsAPI_USCORELocalRemove), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORELocalRemove(struct soap *soap, const struct ns2__tpsAPI_USCORELocalRemove *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove);
+  if (soap_out_ns2__tpsAPI_USCORELocalRemove(soap, tag?tag:"ns2:tpsAPI_LocalRemove", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalRemove * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORELocalRemove(struct soap *soap, struct ns2__tpsAPI_USCORELocalRemove *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCORELocalRemove(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalCommitResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_xsd__boolean(soap, &a->result);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, const struct ns2__tpsAPI_USCORELocalCommitResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORELocalCommitResponse *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse), type))
+    return soap->error;
+  if (soap_out_xsd__boolean(soap, "result", -1, &a->result, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCommitResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalCommitResponse *a, const char *type) {
+  size_t soap_flag_result = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCORELocalCommitResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse, sizeof(struct ns2__tpsAPI_USCORELocalCommitResponse), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCORELocalCommitResponse(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_xsd__boolean(soap, "result", &a->result, "xsd:boolean")) {
+          soap_flag_result--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORELocalCommitResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse, 0, sizeof(struct ns2__tpsAPI_USCORELocalCommitResponse), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_result > 0)) {
+    soap->error = SOAP_OCCURS;
+    return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, const struct ns2__tpsAPI_USCORELocalCommitResponse *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse);
+  if (soap_out_ns2__tpsAPI_USCORELocalCommitResponse(soap, tag?tag:"ns2:tpsAPI_LocalCommitResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCommitResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalCommitResponse *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCORELocalCommitResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORELocalCommit(struct soap *soap, struct ns2__tpsAPI_USCORELocalCommit *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_string(soap, &a->String_USCORE1);
+  soap_default_string(soap, &a->String_USCORE2);
+  soap_default_string(soap, &a->String_USCORE3);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORELocalCommit(struct soap *soap, const struct ns2__tpsAPI_USCORELocalCommit *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_string(soap, &a->String_USCORE1);
+  soap_serialize_string(soap, &a->String_USCORE2);
+  soap_serialize_string(soap, &a->String_USCORE3);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORELocalCommit(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORELocalCommit *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit), type))
+    return soap->error;
+  if (soap_out_string(soap, "String_1", -1, &a->String_USCORE1, ""))
+    return soap->error;
+  if (soap_out_string(soap, "String_2", -1, &a->String_USCORE2, ""))
+    return soap->error;
+  if (soap_out_string(soap, "String_3", -1, &a->String_USCORE3, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCommit * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORELocalCommit(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalCommit *a, const char *type) {
+  size_t soap_flag_String_USCORE1 = 1;
+  size_t soap_flag_String_USCORE2 = 1;
+  size_t soap_flag_String_USCORE3 = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCORELocalCommit *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit, sizeof(struct ns2__tpsAPI_USCORELocalCommit), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCORELocalCommit(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_String_USCORE1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_1", &a->String_USCORE1, "xsd:string")) {
+          soap_flag_String_USCORE1--;
+          continue;
+        }
+      if (soap_flag_String_USCORE2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_2", &a->String_USCORE2, "xsd:string")) {
+          soap_flag_String_USCORE2--;
+          continue;
+        }
+      if (soap_flag_String_USCORE3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_3", &a->String_USCORE3, "xsd:string")) {
+          soap_flag_String_USCORE3--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORELocalCommit *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit, 0, sizeof(struct ns2__tpsAPI_USCORELocalCommit), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORELocalCommit(struct soap *soap, const struct ns2__tpsAPI_USCORELocalCommit *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit);
+  if (soap_out_ns2__tpsAPI_USCORELocalCommit(soap, tag?tag:"ns2:tpsAPI_LocalCommit", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCommit * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORELocalCommit(struct soap *soap, struct ns2__tpsAPI_USCORELocalCommit *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCORELocalCommit(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalCancelResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_xsd__boolean(soap, &a->result);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, const struct ns2__tpsAPI_USCORELocalCancelResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORELocalCancelResponse *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse), type))
+    return soap->error;
+  if (soap_out_xsd__boolean(soap, "result", -1, &a->result, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCancelResponse * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalCancelResponse *a, const char *type) {
+  size_t soap_flag_result = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCORELocalCancelResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse, sizeof(struct ns2__tpsAPI_USCORELocalCancelResponse), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCORELocalCancelResponse(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_result && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_xsd__boolean(soap, "result", &a->result, "xsd:boolean")) {
+          soap_flag_result--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORELocalCancelResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse, 0, sizeof(struct ns2__tpsAPI_USCORELocalCancelResponse), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_result > 0)) {
+    soap->error = SOAP_OCCURS;
+    return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, const struct ns2__tpsAPI_USCORELocalCancelResponse *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse);
+  if (soap_out_ns2__tpsAPI_USCORELocalCancelResponse(soap, tag?tag:"ns2:tpsAPI_LocalCancelResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCancelResponse * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalCancelResponse *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCORELocalCancelResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__tpsAPI_USCORELocalCancel(struct soap *soap, struct ns2__tpsAPI_USCORELocalCancel *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_string(soap, &a->String_USCORE1);
+  soap_default_string(soap, &a->String_USCORE2);
+  soap_default_string(soap, &a->String_USCORE3);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__tpsAPI_USCORELocalCancel(struct soap *soap, const struct ns2__tpsAPI_USCORELocalCancel *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_string(soap, &a->String_USCORE1);
+  soap_serialize_string(soap, &a->String_USCORE2);
+  soap_serialize_string(soap, &a->String_USCORE3);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__tpsAPI_USCORELocalCancel(struct soap *soap, const char *tag, int id, const struct ns2__tpsAPI_USCORELocalCancel *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel), type))
+    return soap->error;
+  if (soap_out_string(soap, "String_1", -1, &a->String_USCORE1, ""))
+    return soap->error;
+  if (soap_out_string(soap, "String_2", -1, &a->String_USCORE2, ""))
+    return soap->error;
+  if (soap_out_string(soap, "String_3", -1, &a->String_USCORE3, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCancel * SOAP_FMAC4 soap_in_ns2__tpsAPI_USCORELocalCancel(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalCancel *a, const char *type) {
+  size_t soap_flag_String_USCORE1 = 1;
+  size_t soap_flag_String_USCORE2 = 1;
+  size_t soap_flag_String_USCORE3 = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__tpsAPI_USCORELocalCancel *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel, sizeof(struct ns2__tpsAPI_USCORELocalCancel), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__tpsAPI_USCORELocalCancel(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_String_USCORE1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_1", &a->String_USCORE1, "xsd:string")) {
+          soap_flag_String_USCORE1--;
+          continue;
+        }
+      if (soap_flag_String_USCORE2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_2", &a->String_USCORE2, "xsd:string")) {
+          soap_flag_String_USCORE2--;
+          continue;
+        }
+      if (soap_flag_String_USCORE3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "String_3", &a->String_USCORE3, "xsd:string")) {
+          soap_flag_String_USCORE3--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORELocalCancel *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel, 0, sizeof(struct ns2__tpsAPI_USCORELocalCancel), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__tpsAPI_USCORELocalCancel(struct soap *soap, const struct ns2__tpsAPI_USCORELocalCancel *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel);
+  if (soap_out_ns2__tpsAPI_USCORELocalCancel(soap, tag?tag:"ns2:tpsAPI_LocalCancel", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCancel * SOAP_FMAC4 soap_get_ns2__tpsAPI_USCORELocalCancel(struct soap *soap, struct ns2__tpsAPI_USCORELocalCancel *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__tpsAPI_USCORELocalCancel(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__getAllReservationsForClassResponse(struct soap *soap, struct ns2__getAllReservationsForClassResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->__sizeresult = 0;
+  a->result = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__getAllReservationsForClassResponse(struct soap *soap, const struct ns2__getAllReservationsForClassResponse *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  if (a->result) {
+    int i;
+    for (i = 0; i < a->__sizeresult; i++) {
+      soap_serialize_PointerTons2__ReservationData(soap, a->result + i);
+    }
+  }
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__getAllReservationsForClassResponse(struct soap *soap, const char *tag, int id, const struct ns2__getAllReservationsForClassResponse *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__getAllReservationsForClassResponse), type))
+    return soap->error;
+  if (a->result) {
+    int i;
+    for (i = 0; i < a->__sizeresult; i++)
+      if (soap_out_PointerTons2__ReservationData(soap, "result", -1, a->result + i, ""))
+        return soap->error;
+  }
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__getAllReservationsForClassResponse * SOAP_FMAC4 soap_in_ns2__getAllReservationsForClassResponse(struct soap *soap, const char *tag, struct ns2__getAllReservationsForClassResponse *a, const char *type) {
+  struct soap_blist *soap_blist_result = NULL;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__getAllReservationsForClassResponse *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__getAllReservationsForClassResponse, sizeof(struct ns2__getAllReservationsForClassResponse), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__getAllReservationsForClassResponse(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap->error == SOAP_TAG_MISMATCH && !soap_element_begin_in(soap, "result", 1, NULL)) {
+        if (a->result == NULL) {
+          if (soap_blist_result == NULL)
+            soap_blist_result = soap_new_block(soap);
+          a->result = (struct ns2__ReservationData **)soap_push_block(soap, soap_blist_result, sizeof(struct ns2__ReservationData *));
+          if (a->result == NULL)
+            return NULL;
+          *a->result = NULL;
+        }
+        soap_revert(soap);
+        if (soap_in_PointerTons2__ReservationData(soap, "result", a->result, "ns2:ReservationData")) {
+          a->__sizeresult++;
+          a->result = NULL;
+          continue;
+        }
+      }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (a->result)
+      soap_pop_block(soap, soap_blist_result);
+    if (a->__sizeresult)
+      a->result = (struct ns2__ReservationData **)soap_save_block(soap, soap_blist_result, NULL, 1);
+    else {
+      a->result = NULL;
+      if (soap_blist_result)
+        soap_end_block(soap, soap_blist_result);
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__getAllReservationsForClassResponse *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__getAllReservationsForClassResponse, 0, sizeof(struct ns2__getAllReservationsForClassResponse), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__getAllReservationsForClassResponse(struct soap *soap, const struct ns2__getAllReservationsForClassResponse *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__getAllReservationsForClassResponse);
+  if (soap_out_ns2__getAllReservationsForClassResponse(soap, tag?tag:"ns2:getAllReservationsForClassResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__getAllReservationsForClassResponse * SOAP_FMAC4 soap_get_ns2__getAllReservationsForClassResponse(struct soap *soap, struct ns2__getAllReservationsForClassResponse *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__getAllReservationsForClassResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__Who(struct soap *soap, struct ns2__Who *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_string(soap, &a->CA);
+  soap_default_string(soap, &a->DN);
+  soap_default_string(soap, &a->name);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__Who(struct soap *soap, const struct ns2__Who *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_string(soap, &a->CA);
+  soap_serialize_string(soap, &a->DN);
+  soap_serialize_string(soap, &a->name);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__Who(struct soap *soap, const char *tag, int id, const struct ns2__Who *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__Who), type))
+    return soap->error;
+  if (soap_out_string(soap, "CA", -1, &a->CA, ""))
+    return soap->error;
+  if (soap_out_string(soap, "DN", -1, &a->DN, ""))
+    return soap->error;
+  if (soap_out_string(soap, "name", -1, &a->name, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__Who * SOAP_FMAC4 soap_in_ns2__Who(struct soap *soap, const char *tag, struct ns2__Who *a, const char *type) {
+  size_t soap_flag_CA = 1;
+  size_t soap_flag_DN = 1;
+  size_t soap_flag_name = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__Who *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__Who, sizeof(struct ns2__Who), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__Who(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_CA && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "CA", &a->CA, "xsd:string")) {
+          soap_flag_CA--;
+          continue;
+        }
+      if (soap_flag_DN && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "DN", &a->DN, "xsd:string")) {
+          soap_flag_DN--;
+          continue;
+        }
+      if (soap_flag_name && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "name", &a->name, "xsd:string")) {
+          soap_flag_name--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__Who *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__Who, 0, sizeof(struct ns2__Who), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__Who(struct soap *soap, const struct ns2__Who *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__Who);
+  if (soap_out_ns2__Who(soap, tag?tag:"ns2:Who", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__Who * SOAP_FMAC4 soap_get_ns2__Who(struct soap *soap, struct ns2__Who *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__Who(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__Bandwidth(struct soap *soap, struct ns2__Bandwidth *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_LONG64(soap, &a->bandwidth);
+  soap_default_string(soap, &a->className);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__Bandwidth(struct soap *soap, const struct ns2__Bandwidth *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_string(soap, &a->className);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__Bandwidth(struct soap *soap, const char *tag, int id, const struct ns2__Bandwidth *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__Bandwidth), type))
+    return soap->error;
+  if (soap_out_LONG64(soap, "bandwidth", -1, &a->bandwidth, ""))
+    return soap->error;
+  if (soap_out_string(soap, "className", -1, &a->className, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__Bandwidth * SOAP_FMAC4 soap_in_ns2__Bandwidth(struct soap *soap, const char *tag, struct ns2__Bandwidth *a, const char *type) {
+  size_t soap_flag_bandwidth = 1;
+  size_t soap_flag_className = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__Bandwidth *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__Bandwidth, sizeof(struct ns2__Bandwidth), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__Bandwidth(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_bandwidth && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_LONG64(soap, "bandwidth", &a->bandwidth, "xsd:long")) {
+          soap_flag_bandwidth--;
+          continue;
+        }
+      if (soap_flag_className && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "className", &a->className, "xsd:string")) {
+          soap_flag_className--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__Bandwidth *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__Bandwidth, 0, sizeof(struct ns2__Bandwidth), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_bandwidth > 0)) {
+    soap->error = SOAP_OCCURS;
+    return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__Bandwidth(struct soap *soap, const struct ns2__Bandwidth *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__Bandwidth);
+  if (soap_out_ns2__Bandwidth(soap, tag?tag:"ns2:Bandwidth", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__Bandwidth * SOAP_FMAC4 soap_get_ns2__Bandwidth(struct soap *soap, struct ns2__Bandwidth *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__Bandwidth(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__ReservationData(struct soap *soap, struct ns2__ReservationData *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_default_LONG64(soap, &a->DTMinus);
+  soap_default_LONG64(soap, &a->DTPlus);
+  a->bandwidth = NULL;
+  soap_default_string(soap, &a->destIp);
+  soap_default_string(soap, &a->destMapping);
+  soap_default_string(soap, &a->destName);
+  soap_default_string(soap, &a->destPortMax);
+  soap_default_string(soap, &a->destPortMin);
+  soap_default_string(soap, &a->destPorts);
+  soap_default_string(soap, &a->direction);
+  soap_default_LONG64(soap, &a->duration);
+  soap_default_string(soap, &a->id);
+  soap_default_string(soap, &a->mapping);
+  soap_default_int(soap, &a->modifyReservation);
+  soap_default_string(soap, &a->protocol);
+  soap_default_string(soap, &a->relatedReservationIds);
+  soap_default_string(soap, &a->srcIp);
+  soap_default_string(soap, &a->srcMapping);
+  soap_default_string(soap, &a->srcName);
+  soap_default_string(soap, &a->srcPortMax);
+  soap_default_string(soap, &a->srcPortMin);
+  soap_default_string(soap, &a->srcPorts);
+  soap_default_LONG64(soap, &a->startTime);
+  soap_default_LONG64(soap, &a->startTimeMax);
+  soap_default_LONG64(soap, &a->startTimeMin);
+  soap_default_string(soap, &a->status);
+  soap_default_LONG64(soap, &a->timeout);
+  soap_default_string(soap, &a->userName);
+  a->who = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__ReservationData(struct soap *soap, const struct ns2__ReservationData *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__Bandwidth(soap, &a->bandwidth);
+  soap_serialize_string(soap, &a->destIp);
+  soap_serialize_string(soap, &a->destMapping);
+  soap_serialize_string(soap, &a->destName);
+  soap_serialize_string(soap, &a->destPortMax);
+  soap_serialize_string(soap, &a->destPortMin);
+  soap_serialize_string(soap, &a->destPorts);
+  soap_serialize_string(soap, &a->direction);
+  soap_serialize_string(soap, &a->id);
+  soap_serialize_string(soap, &a->mapping);
+  soap_serialize_string(soap, &a->protocol);
+  soap_serialize_string(soap, &a->relatedReservationIds);
+  soap_serialize_string(soap, &a->srcIp);
+  soap_serialize_string(soap, &a->srcMapping);
+  soap_serialize_string(soap, &a->srcName);
+  soap_serialize_string(soap, &a->srcPortMax);
+  soap_serialize_string(soap, &a->srcPortMin);
+  soap_serialize_string(soap, &a->srcPorts);
+  soap_serialize_string(soap, &a->status);
+  soap_serialize_string(soap, &a->userName);
+  soap_serialize_PointerTons2__Who(soap, &a->who);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__ReservationData(struct soap *soap, const char *tag, int id, const struct ns2__ReservationData *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__ReservationData), type))
+    return soap->error;
+  if (soap_out_LONG64(soap, "DTMinus", -1, &a->DTMinus, ""))
+    return soap->error;
+  if (soap_out_LONG64(soap, "DTPlus", -1, &a->DTPlus, ""))
+    return soap->error;
+  if (soap_out_PointerTons2__Bandwidth(soap, "bandwidth", -1, &a->bandwidth, ""))
+    return soap->error;
+  if (soap_out_string(soap, "destIp", -1, &a->destIp, ""))
+    return soap->error;
+  if (soap_out_string(soap, "destMapping", -1, &a->destMapping, ""))
+    return soap->error;
+  if (soap_out_string(soap, "destName", -1, &a->destName, ""))
+    return soap->error;
+  if (soap_out_string(soap, "destPortMax", -1, &a->destPortMax, ""))
+    return soap->error;
+  if (soap_out_string(soap, "destPortMin", -1, &a->destPortMin, ""))
+    return soap->error;
+  if (soap_out_string(soap, "destPorts", -1, &a->destPorts, ""))
+    return soap->error;
+  if (soap_out_string(soap, "direction", -1, &a->direction, ""))
+    return soap->error;
+  if (soap_out_LONG64(soap, "duration", -1, &a->duration, ""))
+    return soap->error;
+  if (soap_out_string(soap, "id", -1, &a->id, ""))
+    return soap->error;
+  if (soap_out_string(soap, "mapping", -1, &a->mapping, ""))
+    return soap->error;
+  if (soap_out_int(soap, "modifyReservation", -1, &a->modifyReservation, ""))
+    return soap->error;
+  if (soap_out_string(soap, "protocol", -1, &a->protocol, ""))
+    return soap->error;
+  if (soap_out_string(soap, "relatedReservationIds", -1, &a->relatedReservationIds, ""))
+    return soap->error;
+  if (soap_out_string(soap, "srcIp", -1, &a->srcIp, ""))
+    return soap->error;
+  if (soap_out_string(soap, "srcMapping", -1, &a->srcMapping, ""))
+    return soap->error;
+  if (soap_out_string(soap, "srcName", -1, &a->srcName, ""))
+    return soap->error;
+  if (soap_out_string(soap, "srcPortMax", -1, &a->srcPortMax, ""))
+    return soap->error;
+  if (soap_out_string(soap, "srcPortMin", -1, &a->srcPortMin, ""))
+    return soap->error;
+  if (soap_out_string(soap, "srcPorts", -1, &a->srcPorts, ""))
+    return soap->error;
+  if (soap_out_LONG64(soap, "startTime", -1, &a->startTime, ""))
+    return soap->error;
+  if (soap_out_LONG64(soap, "startTimeMax", -1, &a->startTimeMax, ""))
+    return soap->error;
+  if (soap_out_LONG64(soap, "startTimeMin", -1, &a->startTimeMin, ""))
+    return soap->error;
+  if (soap_out_string(soap, "status", -1, &a->status, ""))
+    return soap->error;
+  if (soap_out_LONG64(soap, "timeout", -1, &a->timeout, ""))
+    return soap->error;
+  if (soap_out_string(soap, "userName", -1, &a->userName, ""))
+    return soap->error;
+  if (soap_out_PointerTons2__Who(soap, "who", -1, &a->who, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__ReservationData * SOAP_FMAC4 soap_in_ns2__ReservationData(struct soap *soap, const char *tag, struct ns2__ReservationData *a, const char *type) {
+  size_t soap_flag_DTMinus = 1;
+  size_t soap_flag_DTPlus = 1;
+  size_t soap_flag_bandwidth = 1;
+  size_t soap_flag_destIp = 1;
+  size_t soap_flag_destMapping = 1;
+  size_t soap_flag_destName = 1;
+  size_t soap_flag_destPortMax = 1;
+  size_t soap_flag_destPortMin = 1;
+  size_t soap_flag_destPorts = 1;
+  size_t soap_flag_direction = 1;
+  size_t soap_flag_duration = 1;
+  size_t soap_flag_id = 1;
+  size_t soap_flag_mapping = 1;
+  size_t soap_flag_modifyReservation = 1;
+  size_t soap_flag_protocol = 1;
+  size_t soap_flag_relatedReservationIds = 1;
+  size_t soap_flag_srcIp = 1;
+  size_t soap_flag_srcMapping = 1;
+  size_t soap_flag_srcName = 1;
+  size_t soap_flag_srcPortMax = 1;
+  size_t soap_flag_srcPortMin = 1;
+  size_t soap_flag_srcPorts = 1;
+  size_t soap_flag_startTime = 1;
+  size_t soap_flag_startTimeMax = 1;
+  size_t soap_flag_startTimeMin = 1;
+  size_t soap_flag_status = 1;
+  size_t soap_flag_timeout = 1;
+  size_t soap_flag_userName = 1;
+  size_t soap_flag_who = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__ReservationData *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__ReservationData, sizeof(struct ns2__ReservationData), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__ReservationData(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_DTMinus && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_LONG64(soap, "DTMinus", &a->DTMinus, "xsd:long")) {
+          soap_flag_DTMinus--;
+          continue;
+        }
+      if (soap_flag_DTPlus && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_LONG64(soap, "DTPlus", &a->DTPlus, "xsd:long")) {
+          soap_flag_DTPlus--;
+          continue;
+        }
+      if (soap_flag_bandwidth && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_PointerTons2__Bandwidth(soap, "bandwidth", &a->bandwidth, "ns2:Bandwidth")) {
+          soap_flag_bandwidth--;
+          continue;
+        }
+      if (soap_flag_destIp && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "destIp", &a->destIp, "xsd:string")) {
+          soap_flag_destIp--;
+          continue;
+        }
+      if (soap_flag_destMapping && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "destMapping", &a->destMapping, "xsd:string")) {
+          soap_flag_destMapping--;
+          continue;
+        }
+      if (soap_flag_destName && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "destName", &a->destName, "xsd:string")) {
+          soap_flag_destName--;
+          continue;
+        }
+      if (soap_flag_destPortMax && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "destPortMax", &a->destPortMax, "xsd:string")) {
+          soap_flag_destPortMax--;
+          continue;
+        }
+      if (soap_flag_destPortMin && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "destPortMin", &a->destPortMin, "xsd:string")) {
+          soap_flag_destPortMin--;
+          continue;
+        }
+      if (soap_flag_destPorts && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "destPorts", &a->destPorts, "xsd:string")) {
+          soap_flag_destPorts--;
+          continue;
+        }
+      if (soap_flag_direction && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "direction", &a->direction, "xsd:string")) {
+          soap_flag_direction--;
+          continue;
+        }
+      if (soap_flag_duration && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_LONG64(soap, "duration", &a->duration, "xsd:long")) {
+          soap_flag_duration--;
+          continue;
+        }
+      if (soap_flag_id && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "id", &a->id, "xsd:string")) {
+          soap_flag_id--;
+          continue;
+        }
+      if (soap_flag_mapping && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "mapping", &a->mapping, "xsd:string")) {
+          soap_flag_mapping--;
+          continue;
+        }
+      if (soap_flag_modifyReservation && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_int(soap, "modifyReservation", &a->modifyReservation, "xsd:int")) {
+          soap_flag_modifyReservation--;
+          continue;
+        }
+      if (soap_flag_protocol && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "protocol", &a->protocol, "xsd:string")) {
+          soap_flag_protocol--;
+          continue;
+        }
+      if (soap_flag_relatedReservationIds && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "relatedReservationIds", &a->relatedReservationIds, "xsd:string")) {
+          soap_flag_relatedReservationIds--;
+          continue;
+        }
+      if (soap_flag_srcIp && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "srcIp", &a->srcIp, "xsd:string")) {
+          soap_flag_srcIp--;
+          continue;
+        }
+      if (soap_flag_srcMapping && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "srcMapping", &a->srcMapping, "xsd:string")) {
+          soap_flag_srcMapping--;
+          continue;
+        }
+      if (soap_flag_srcName && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "srcName", &a->srcName, "xsd:string")) {
+          soap_flag_srcName--;
+          continue;
+        }
+      if (soap_flag_srcPortMax && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "srcPortMax", &a->srcPortMax, "xsd:string")) {
+          soap_flag_srcPortMax--;
+          continue;
+        }
+      if (soap_flag_srcPortMin && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "srcPortMin", &a->srcPortMin, "xsd:string")) {
+          soap_flag_srcPortMin--;
+          continue;
+        }
+      if (soap_flag_srcPorts && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "srcPorts", &a->srcPorts, "xsd:string")) {
+          soap_flag_srcPorts--;
+          continue;
+        }
+      if (soap_flag_startTime && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_LONG64(soap, "startTime", &a->startTime, "xsd:long")) {
+          soap_flag_startTime--;
+          continue;
+        }
+      if (soap_flag_startTimeMax && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_LONG64(soap, "startTimeMax", &a->startTimeMax, "xsd:long")) {
+          soap_flag_startTimeMax--;
+          continue;
+        }
+      if (soap_flag_startTimeMin && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_LONG64(soap, "startTimeMin", &a->startTimeMin, "xsd:long")) {
+          soap_flag_startTimeMin--;
+          continue;
+        }
+      if (soap_flag_status && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "status", &a->status, "xsd:string")) {
+          soap_flag_status--;
+          continue;
+        }
+      if (soap_flag_timeout && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_LONG64(soap, "timeout", &a->timeout, "xsd:long")) {
+          soap_flag_timeout--;
+          continue;
+        }
+      if (soap_flag_userName && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+        if (soap_in_string(soap, "userName", &a->userName, "xsd:string")) {
+          soap_flag_userName--;
+          continue;
+        }
+      if (soap_flag_who && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_PointerTons2__Who(soap, "who", &a->who, "ns2:Who")) {
+          soap_flag_who--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__ReservationData *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__ReservationData, 0, sizeof(struct ns2__ReservationData), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_DTMinus > 0 || soap_flag_DTPlus > 0 || soap_flag_duration > 0 || soap_flag_modifyReservation > 0 || soap_flag_startTime > 0 || soap_flag_startTimeMax > 0 || soap_flag_startTimeMin > 0 || soap_flag_timeout > 0)) {
+    soap->error = SOAP_OCCURS;
+    return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__ReservationData(struct soap *soap, const struct ns2__ReservationData *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__ReservationData);
+  if (soap_out_ns2__ReservationData(soap, tag?tag:"ns2:ReservationData", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__ReservationData * SOAP_FMAC4 soap_get_ns2__ReservationData(struct soap *soap, struct ns2__ReservationData *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__ReservationData(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ns2__getAllReservationsForClass(struct soap *soap, struct ns2__getAllReservationsForClass *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  a->ReservationData_USCORE1 = NULL;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ns2__getAllReservationsForClass(struct soap *soap, const struct ns2__getAllReservationsForClass *a) {
+  (void)soap;
+  (void)a; /* appease -Wall -Werror */
+  soap_serialize_PointerTons2__ReservationData(soap, &a->ReservationData_USCORE1);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns2__getAllReservationsForClass(struct soap *soap, const char *tag, int id, const struct ns2__getAllReservationsForClass *a, const char *type) {
+  if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns2__getAllReservationsForClass), type))
+    return soap->error;
+  if (soap_out_PointerTons2__ReservationData(soap, "ReservationData_1", -1, &a->ReservationData_USCORE1, ""))
+    return soap->error;
+  return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 struct ns2__getAllReservationsForClass * SOAP_FMAC4 soap_in_ns2__getAllReservationsForClass(struct soap *soap, const char *tag, struct ns2__getAllReservationsForClass *a, const char *type) {
+  size_t soap_flag_ReservationData_USCORE1 = 1;
+  if (soap_element_begin_in(soap, tag, 0, type))
+    return NULL;
+  a = (struct ns2__getAllReservationsForClass *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ns2__getAllReservationsForClass, sizeof(struct ns2__getAllReservationsForClass), 0, NULL, NULL, NULL);
+  if (!a)
+    return NULL;
+  soap_default_ns2__getAllReservationsForClass(soap, a);
+  if (soap->body && !*soap->href) {
+    for (;;) {
+      soap->error = SOAP_TAG_MISMATCH;
+      if (soap_flag_ReservationData_USCORE1 && soap->error == SOAP_TAG_MISMATCH)
+        if (soap_in_PointerTons2__ReservationData(soap, "ReservationData_1", &a->ReservationData_USCORE1, "ns2:ReservationData")) {
+          soap_flag_ReservationData_USCORE1--;
+          continue;
+        }
+      if (soap->error == SOAP_TAG_MISMATCH)
+        soap->error = soap_ignore_element(soap);
+      if (soap->error == SOAP_NO_TAG)
+        break;
+      if (soap->error)
+        return NULL;
+    }
+    if (soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__getAllReservationsForClass *)soap_id_forward(soap, soap->href, (void*)a, 0, SOAP_TYPE_ns2__getAllReservationsForClass, 0, sizeof(struct ns2__getAllReservationsForClass), 0, NULL);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ns2__getAllReservationsForClass(struct soap *soap, const struct ns2__getAllReservationsForClass *a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ns2__getAllReservationsForClass);
+  if (soap_out_ns2__getAllReservationsForClass(soap, tag?tag:"ns2:getAllReservationsForClass", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__getAllReservationsForClass * SOAP_FMAC4 soap_get_ns2__getAllReservationsForClass(struct soap *soap, struct ns2__getAllReservationsForClass *p, const char *tag, const char *type) {
+  if ((p = soap_in_ns2__getAllReservationsForClass(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
 }
 
 #ifndef WITH_NOGLOBAL
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToSOAP_ENV__Reason(struct soap *soap, struct SOAP_ENV__Reason *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_SOAP_ENV__Reason))
-		soap_serialize_SOAP_ENV__Reason(soap, *a);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToSOAP_ENV__Reason(struct soap *soap, struct SOAP_ENV__Reason *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_SOAP_ENV__Reason))
+    soap_serialize_SOAP_ENV__Reason(soap, *a);
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToSOAP_ENV__Reason(struct soap *soap, const char *tag, int id, struct SOAP_ENV__Reason *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_SOAP_ENV__Reason);
-	if (id < 0)
-		return soap->error;
-	return soap_out_SOAP_ENV__Reason(soap, tag, id, *a, type);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToSOAP_ENV__Reason(struct soap *soap, const char *tag, int id, struct SOAP_ENV__Reason *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_SOAP_ENV__Reason);
+  if (id < 0)
+    return soap->error;
+  return soap_out_SOAP_ENV__Reason(soap, tag, id, *a, type);
 }
 
-SOAP_FMAC3 struct SOAP_ENV__Reason ** SOAP_FMAC4 soap_in_PointerToSOAP_ENV__Reason(struct soap *soap, const char *tag, struct SOAP_ENV__Reason **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct SOAP_ENV__Reason **)soap_malloc(soap, sizeof(struct SOAP_ENV__Reason *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_SOAP_ENV__Reason(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct SOAP_ENV__Reason **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_SOAP_ENV__Reason, sizeof(struct SOAP_ENV__Reason), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
+SOAP_FMAC3 struct SOAP_ENV__Reason ** SOAP_FMAC4 soap_in_PointerToSOAP_ENV__Reason(struct soap *soap, const char *tag, struct SOAP_ENV__Reason **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct SOAP_ENV__Reason **)soap_malloc(soap, sizeof(struct SOAP_ENV__Reason *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_SOAP_ENV__Reason(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct SOAP_ENV__Reason **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_SOAP_ENV__Reason, sizeof(struct SOAP_ENV__Reason), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToSOAP_ENV__Reason(struct soap *soap, struct SOAP_ENV__Reason *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToSOAP_ENV__Reason);
-	if (soap_out_PointerToSOAP_ENV__Reason(soap, tag?tag:"SOAP-ENV:Reason", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToSOAP_ENV__Reason(struct soap *soap, struct SOAP_ENV__Reason *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToSOAP_ENV__Reason);
+  if (soap_out_PointerToSOAP_ENV__Reason(soap, tag?tag:"SOAP-ENV:Reason", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
 }
 
-SOAP_FMAC3 struct SOAP_ENV__Reason ** SOAP_FMAC4 soap_get_PointerToSOAP_ENV__Reason(struct soap *soap, struct SOAP_ENV__Reason **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerToSOAP_ENV__Reason(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
+SOAP_FMAC3 struct SOAP_ENV__Reason ** SOAP_FMAC4 soap_get_PointerToSOAP_ENV__Reason(struct soap *soap, struct SOAP_ENV__Reason **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerToSOAP_ENV__Reason(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
 }
 
 #endif
 
 #ifndef WITH_NOGLOBAL
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToSOAP_ENV__Detail(struct soap *soap, struct SOAP_ENV__Detail *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_SOAP_ENV__Detail))
-		soap_serialize_SOAP_ENV__Detail(soap, *a);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToSOAP_ENV__Detail(struct soap *soap, struct SOAP_ENV__Detail *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_SOAP_ENV__Detail))
+    soap_serialize_SOAP_ENV__Detail(soap, *a);
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToSOAP_ENV__Detail(struct soap *soap, const char *tag, int id, struct SOAP_ENV__Detail *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_SOAP_ENV__Detail);
-	if (id < 0)
-		return soap->error;
-	return soap_out_SOAP_ENV__Detail(soap, tag, id, *a, type);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToSOAP_ENV__Detail(struct soap *soap, const char *tag, int id, struct SOAP_ENV__Detail *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_SOAP_ENV__Detail);
+  if (id < 0)
+    return soap->error;
+  return soap_out_SOAP_ENV__Detail(soap, tag, id, *a, type);
 }
 
-SOAP_FMAC3 struct SOAP_ENV__Detail ** SOAP_FMAC4 soap_in_PointerToSOAP_ENV__Detail(struct soap *soap, const char *tag, struct SOAP_ENV__Detail **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct SOAP_ENV__Detail **)soap_malloc(soap, sizeof(struct SOAP_ENV__Detail *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_SOAP_ENV__Detail(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct SOAP_ENV__Detail **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_SOAP_ENV__Detail, sizeof(struct SOAP_ENV__Detail), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
+SOAP_FMAC3 struct SOAP_ENV__Detail ** SOAP_FMAC4 soap_in_PointerToSOAP_ENV__Detail(struct soap *soap, const char *tag, struct SOAP_ENV__Detail **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct SOAP_ENV__Detail **)soap_malloc(soap, sizeof(struct SOAP_ENV__Detail *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_SOAP_ENV__Detail(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct SOAP_ENV__Detail **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_SOAP_ENV__Detail, sizeof(struct SOAP_ENV__Detail), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToSOAP_ENV__Detail(struct soap *soap, struct SOAP_ENV__Detail *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToSOAP_ENV__Detail);
-	if (soap_out_PointerToSOAP_ENV__Detail(soap, tag?tag:"SOAP-ENV:Detail", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToSOAP_ENV__Detail(struct soap *soap, struct SOAP_ENV__Detail *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToSOAP_ENV__Detail);
+  if (soap_out_PointerToSOAP_ENV__Detail(soap, tag?tag:"SOAP-ENV:Detail", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
 }
 
-SOAP_FMAC3 struct SOAP_ENV__Detail ** SOAP_FMAC4 soap_get_PointerToSOAP_ENV__Detail(struct soap *soap, struct SOAP_ENV__Detail **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerToSOAP_ENV__Detail(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
+SOAP_FMAC3 struct SOAP_ENV__Detail ** SOAP_FMAC4 soap_get_PointerToSOAP_ENV__Detail(struct soap *soap, struct SOAP_ENV__Detail **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerToSOAP_ENV__Detail(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
 }
 
 #endif
 
 #ifndef WITH_NOGLOBAL
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToSOAP_ENV__Code(struct soap *soap, struct SOAP_ENV__Code *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_SOAP_ENV__Code))
-		soap_serialize_SOAP_ENV__Code(soap, *a);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToSOAP_ENV__Code(struct soap *soap, struct SOAP_ENV__Code *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_SOAP_ENV__Code))
+    soap_serialize_SOAP_ENV__Code(soap, *a);
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToSOAP_ENV__Code(struct soap *soap, const char *tag, int id, struct SOAP_ENV__Code *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_SOAP_ENV__Code);
-	if (id < 0)
-		return soap->error;
-	return soap_out_SOAP_ENV__Code(soap, tag, id, *a, type);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToSOAP_ENV__Code(struct soap *soap, const char *tag, int id, struct SOAP_ENV__Code *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_SOAP_ENV__Code);
+  if (id < 0)
+    return soap->error;
+  return soap_out_SOAP_ENV__Code(soap, tag, id, *a, type);
 }
 
-SOAP_FMAC3 struct SOAP_ENV__Code ** SOAP_FMAC4 soap_in_PointerToSOAP_ENV__Code(struct soap *soap, const char *tag, struct SOAP_ENV__Code **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct SOAP_ENV__Code **)soap_malloc(soap, sizeof(struct SOAP_ENV__Code *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_SOAP_ENV__Code(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct SOAP_ENV__Code **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_SOAP_ENV__Code, sizeof(struct SOAP_ENV__Code), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
+SOAP_FMAC3 struct SOAP_ENV__Code ** SOAP_FMAC4 soap_in_PointerToSOAP_ENV__Code(struct soap *soap, const char *tag, struct SOAP_ENV__Code **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct SOAP_ENV__Code **)soap_malloc(soap, sizeof(struct SOAP_ENV__Code *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_SOAP_ENV__Code(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct SOAP_ENV__Code **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_SOAP_ENV__Code, sizeof(struct SOAP_ENV__Code), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToSOAP_ENV__Code(struct soap *soap, struct SOAP_ENV__Code *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToSOAP_ENV__Code);
-	if (soap_out_PointerToSOAP_ENV__Code(soap, tag?tag:"SOAP-ENV:Code", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToSOAP_ENV__Code(struct soap *soap, struct SOAP_ENV__Code *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToSOAP_ENV__Code);
+  if (soap_out_PointerToSOAP_ENV__Code(soap, tag?tag:"SOAP-ENV:Code", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
 }
 
-SOAP_FMAC3 struct SOAP_ENV__Code ** SOAP_FMAC4 soap_get_PointerToSOAP_ENV__Code(struct soap *soap, struct SOAP_ENV__Code **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerToSOAP_ENV__Code(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
+SOAP_FMAC3 struct SOAP_ENV__Code ** SOAP_FMAC4 soap_get_PointerToSOAP_ENV__Code(struct soap *soap, struct SOAP_ENV__Code **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerToSOAP_ENV__Code(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
 }
 
 #endif
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREreserveResponse(struct soap *soap, struct ns2__tpsAPI_USCOREreserveResponse *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse))
-		soap_serialize_ns2__tpsAPI_USCOREreserveResponse(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREreserveResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREreserveResponse *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCOREreserveResponse(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREreserveResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREreserveResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREreserveResponse **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCOREreserveResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREreserveResponse *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCOREreserveResponse(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREreserveResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse, sizeof(struct ns2__tpsAPI_USCOREreserveResponse), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREreserveResponse(struct soap *soap, struct ns2__tpsAPI_USCOREreserveResponse *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREreserveResponse);
-	if (soap_out_PointerTons2__tpsAPI_USCOREreserveResponse(soap, tag?tag:"ns2:tpsAPI_reserveResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREreserveResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREreserveResponse(struct soap *soap, struct ns2__tpsAPI_USCOREreserveResponse **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCOREreserveResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREreserve(struct soap *soap, struct ns2__tpsAPI_USCOREreserve *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREreserve))
-		soap_serialize_ns2__tpsAPI_USCOREreserve(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREreserve(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREreserve *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREreserve);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCOREreserve(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREreserve ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREreserve(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREreserve **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCOREreserve **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREreserve *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCOREreserve(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREreserve **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREreserve, sizeof(struct ns2__tpsAPI_USCOREreserve), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREreserve(struct soap *soap, struct ns2__tpsAPI_USCOREreserve *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREreserve);
-	if (soap_out_PointerTons2__tpsAPI_USCOREreserve(soap, tag?tag:"ns2:tpsAPI_reserve", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREreserve ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREreserve(struct soap *soap, struct ns2__tpsAPI_USCOREreserve **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCOREreserve(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORElookupUserResponse(struct soap *soap, struct ns2__tpsAPI_USCORElookupUserResponse *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse))
-		soap_serialize_ns2__tpsAPI_USCORElookupUserResponse(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORElookupUserResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORElookupUserResponse *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCORElookupUserResponse(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORElookupUserResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORElookupUserResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORElookupUserResponse **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCORElookupUserResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORElookupUserResponse *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCORElookupUserResponse(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORElookupUserResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse, sizeof(struct ns2__tpsAPI_USCORElookupUserResponse), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORElookupUserResponse(struct soap *soap, struct ns2__tpsAPI_USCORElookupUserResponse *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORElookupUserResponse);
-	if (soap_out_PointerTons2__tpsAPI_USCORElookupUserResponse(soap, tag?tag:"ns2:tpsAPI_lookupUserResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORElookupUserResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORElookupUserResponse(struct soap *soap, struct ns2__tpsAPI_USCORElookupUserResponse **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCORElookupUserResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORElookupUser(struct soap *soap, struct ns2__tpsAPI_USCORElookupUser *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORElookupUser))
-		soap_serialize_ns2__tpsAPI_USCORElookupUser(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORElookupUser(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORElookupUser *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORElookupUser);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCORElookupUser(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORElookupUser ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORElookupUser(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORElookupUser **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCORElookupUser **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORElookupUser *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCORElookupUser(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORElookupUser **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORElookupUser, sizeof(struct ns2__tpsAPI_USCORElookupUser), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORElookupUser(struct soap *soap, struct ns2__tpsAPI_USCORElookupUser *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORElookupUser);
-	if (soap_out_PointerTons2__tpsAPI_USCORElookupUser(soap, tag?tag:"ns2:tpsAPI_lookupUser", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORElookupUser ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORElookupUser(struct soap *soap, struct ns2__tpsAPI_USCORElookupUser **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCORElookupUser(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetReservationDataResponse *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse))
-		soap_serialize_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREgetReservationDataResponse *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetReservationDataResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetReservationDataResponse **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCOREgetReservationDataResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREgetReservationDataResponse *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREgetReservationDataResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse, sizeof(struct ns2__tpsAPI_USCOREgetReservationDataResponse), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetReservationDataResponse *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetReservationDataResponse);
-	if (soap_out_PointerTons2__tpsAPI_USCOREgetReservationDataResponse(soap, tag?tag:"ns2:tpsAPI_getReservationDataResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetReservationDataResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetReservationDataResponse **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCOREgetReservationDataResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREgetReservationData(struct soap *soap, struct ns2__tpsAPI_USCOREgetReservationData *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData))
-		soap_serialize_ns2__tpsAPI_USCOREgetReservationData(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREgetReservationData(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREgetReservationData *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCOREgetReservationData(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetReservationData ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREgetReservationData(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetReservationData **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCOREgetReservationData **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREgetReservationData *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCOREgetReservationData(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREgetReservationData **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData, sizeof(struct ns2__tpsAPI_USCOREgetReservationData), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREgetReservationData(struct soap *soap, struct ns2__tpsAPI_USCOREgetReservationData *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetReservationData);
-	if (soap_out_PointerTons2__tpsAPI_USCOREgetReservationData(soap, tag?tag:"ns2:tpsAPI_getReservationData", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetReservationData ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREgetReservationData(struct soap *soap, struct ns2__tpsAPI_USCOREgetReservationData **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCOREgetReservationData(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse))
-		soap_serialize_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse, sizeof(struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse);
-	if (soap_out_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, tag?tag:"ns2:tpsAPI_getRelatedReservationIdsResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, struct ns2__tpsAPI_USCOREgetRelatedReservationIds *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds))
-		soap_serialize_ns2__tpsAPI_USCOREgetRelatedReservationIds(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREgetRelatedReservationIds *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCOREgetRelatedReservationIds(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetRelatedReservationIds ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetRelatedReservationIds **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCOREgetRelatedReservationIds **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREgetRelatedReservationIds *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCOREgetRelatedReservationIds(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREgetRelatedReservationIds **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds, sizeof(struct ns2__tpsAPI_USCOREgetRelatedReservationIds), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, struct ns2__tpsAPI_USCOREgetRelatedReservationIds *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds);
-	if (soap_out_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(soap, tag?tag:"ns2:tpsAPI_getRelatedReservationIds", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetRelatedReservationIds ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, struct ns2__tpsAPI_USCOREgetRelatedReservationIds **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREgetPathResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetPathResponse *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse))
-		soap_serialize_ns2__tpsAPI_USCOREgetPathResponse(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREgetPathResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREgetPathResponse *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCOREgetPathResponse(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetPathResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREgetPathResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetPathResponse **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCOREgetPathResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREgetPathResponse *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCOREgetPathResponse(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREgetPathResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse, sizeof(struct ns2__tpsAPI_USCOREgetPathResponse), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREgetPathResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetPathResponse *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetPathResponse);
-	if (soap_out_PointerTons2__tpsAPI_USCOREgetPathResponse(soap, tag?tag:"ns2:tpsAPI_getPathResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetPathResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREgetPathResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetPathResponse **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCOREgetPathResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREgetPath(struct soap *soap, struct ns2__tpsAPI_USCOREgetPath *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREgetPath))
-		soap_serialize_ns2__tpsAPI_USCOREgetPath(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREgetPath(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREgetPath *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREgetPath);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCOREgetPath(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetPath ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREgetPath(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetPath **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCOREgetPath **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREgetPath *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCOREgetPath(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREgetPath **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREgetPath, sizeof(struct ns2__tpsAPI_USCOREgetPath), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREgetPath(struct soap *soap, struct ns2__tpsAPI_USCOREgetPath *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetPath);
-	if (soap_out_PointerTons2__tpsAPI_USCOREgetPath(soap, tag?tag:"ns2:tpsAPI_getPath", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetPath ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREgetPath(struct soap *soap, struct ns2__tpsAPI_USCOREgetPath **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCOREgetPath(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse))
-		soap_serialize_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse, sizeof(struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse);
-	if (soap_out_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, tag?tag:"ns2:tpsAPI_getLocalBandwidthsResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, struct ns2__tpsAPI_USCOREgetLocalBandwidths *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths))
-		soap_serialize_ns2__tpsAPI_USCOREgetLocalBandwidths(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREgetLocalBandwidths *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCOREgetLocalBandwidths(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetLocalBandwidths ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetLocalBandwidths **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCOREgetLocalBandwidths **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREgetLocalBandwidths *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCOREgetLocalBandwidths(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREgetLocalBandwidths **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths, sizeof(struct ns2__tpsAPI_USCOREgetLocalBandwidths), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, struct ns2__tpsAPI_USCOREgetLocalBandwidths *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetLocalBandwidths);
-	if (soap_out_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(soap, tag?tag:"ns2:tpsAPI_getLocalBandwidths", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetLocalBandwidths ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, struct ns2__tpsAPI_USCOREgetLocalBandwidths **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetBandwidthsResponse *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse))
-		soap_serialize_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREgetBandwidthsResponse *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetBandwidthsResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetBandwidthsResponse **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCOREgetBandwidthsResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREgetBandwidthsResponse *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREgetBandwidthsResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse, sizeof(struct ns2__tpsAPI_USCOREgetBandwidthsResponse), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetBandwidthsResponse *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse);
-	if (soap_out_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse(soap, tag?tag:"ns2:tpsAPI_getBandwidthsResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetBandwidthsResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetBandwidthsResponse **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREgetBandwidths(struct soap *soap, struct ns2__tpsAPI_USCOREgetBandwidths *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths))
-		soap_serialize_ns2__tpsAPI_USCOREgetBandwidths(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREgetBandwidths(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREgetBandwidths *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCOREgetBandwidths(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetBandwidths ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREgetBandwidths(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetBandwidths **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCOREgetBandwidths **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREgetBandwidths *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCOREgetBandwidths(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREgetBandwidths **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths, sizeof(struct ns2__tpsAPI_USCOREgetBandwidths), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREgetBandwidths(struct soap *soap, struct ns2__tpsAPI_USCOREgetBandwidths *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetBandwidths);
-	if (soap_out_PointerTons2__tpsAPI_USCOREgetBandwidths(soap, tag?tag:"ns2:tpsAPI_getBandwidths", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetBandwidths ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREgetBandwidths(struct soap *soap, struct ns2__tpsAPI_USCOREgetBandwidths **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCOREgetBandwidths(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREcommitResponse(struct soap *soap, struct ns2__tpsAPI_USCOREcommitResponse *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse))
-		soap_serialize_ns2__tpsAPI_USCOREcommitResponse(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREcommitResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREcommitResponse *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCOREcommitResponse(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREcommitResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREcommitResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREcommitResponse **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCOREcommitResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREcommitResponse *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCOREcommitResponse(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREcommitResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse, sizeof(struct ns2__tpsAPI_USCOREcommitResponse), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREcommitResponse(struct soap *soap, struct ns2__tpsAPI_USCOREcommitResponse *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREcommitResponse);
-	if (soap_out_PointerTons2__tpsAPI_USCOREcommitResponse(soap, tag?tag:"ns2:tpsAPI_commitResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREcommitResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREcommitResponse(struct soap *soap, struct ns2__tpsAPI_USCOREcommitResponse **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCOREcommitResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREcommit(struct soap *soap, struct ns2__tpsAPI_USCOREcommit *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREcommit))
-		soap_serialize_ns2__tpsAPI_USCOREcommit(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREcommit(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREcommit *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREcommit);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCOREcommit(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREcommit ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREcommit(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREcommit **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCOREcommit **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREcommit *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCOREcommit(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREcommit **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREcommit, sizeof(struct ns2__tpsAPI_USCOREcommit), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREcommit(struct soap *soap, struct ns2__tpsAPI_USCOREcommit *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREcommit);
-	if (soap_out_PointerTons2__tpsAPI_USCOREcommit(soap, tag?tag:"ns2:tpsAPI_commit", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREcommit ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREcommit(struct soap *soap, struct ns2__tpsAPI_USCOREcommit **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCOREcommit(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREcancelResponse(struct soap *soap, struct ns2__tpsAPI_USCOREcancelResponse *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse))
-		soap_serialize_ns2__tpsAPI_USCOREcancelResponse(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREcancelResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREcancelResponse *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCOREcancelResponse(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREcancelResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREcancelResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREcancelResponse **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCOREcancelResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREcancelResponse *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCOREcancelResponse(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREcancelResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse, sizeof(struct ns2__tpsAPI_USCOREcancelResponse), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREcancelResponse(struct soap *soap, struct ns2__tpsAPI_USCOREcancelResponse *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREcancelResponse);
-	if (soap_out_PointerTons2__tpsAPI_USCOREcancelResponse(soap, tag?tag:"ns2:tpsAPI_cancelResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREcancelResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREcancelResponse(struct soap *soap, struct ns2__tpsAPI_USCOREcancelResponse **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCOREcancelResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREcancel(struct soap *soap, struct ns2__tpsAPI_USCOREcancel *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREcancel))
-		soap_serialize_ns2__tpsAPI_USCOREcancel(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREcancel(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREcancel *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREcancel);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCOREcancel(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREcancel ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREcancel(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREcancel **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCOREcancel **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREcancel *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCOREcancel(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREcancel **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREcancel, sizeof(struct ns2__tpsAPI_USCOREcancel), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREcancel(struct soap *soap, struct ns2__tpsAPI_USCOREcancel *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREcancel);
-	if (soap_out_PointerTons2__tpsAPI_USCOREcancel(soap, tag?tag:"ns2:tpsAPI_cancel", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREcancel ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREcancel(struct soap *soap, struct ns2__tpsAPI_USCOREcancel **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCOREcancel(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse))
-		soap_serialize_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse, sizeof(struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse);
-	if (soap_out_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, tag?tag:"ns2:tpsAPI_addRelatedReservationIdResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, struct ns2__tpsAPI_USCOREaddRelatedReservationId *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId))
-		soap_serialize_ns2__tpsAPI_USCOREaddRelatedReservationId(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREaddRelatedReservationId *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCOREaddRelatedReservationId(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREaddRelatedReservationId ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREaddRelatedReservationId **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCOREaddRelatedReservationId **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREaddRelatedReservationId *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCOREaddRelatedReservationId(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCOREaddRelatedReservationId **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId, sizeof(struct ns2__tpsAPI_USCOREaddRelatedReservationId), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, struct ns2__tpsAPI_USCOREaddRelatedReservationId *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREaddRelatedReservationId);
-	if (soap_out_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(soap, tag?tag:"ns2:tpsAPI_addRelatedReservationId", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCOREaddRelatedReservationId ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, struct ns2__tpsAPI_USCOREaddRelatedReservationId **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORELocalStartResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalStartResponse *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse))
-		soap_serialize_ns2__tpsAPI_USCORELocalStartResponse(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORELocalStartResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORELocalStartResponse *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCORELocalStartResponse(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalStartResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORELocalStartResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalStartResponse **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCORELocalStartResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORELocalStartResponse *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCORELocalStartResponse(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORELocalStartResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse, sizeof(struct ns2__tpsAPI_USCORELocalStartResponse), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORELocalStartResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalStartResponse *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalStartResponse);
-	if (soap_out_PointerTons2__tpsAPI_USCORELocalStartResponse(soap, tag?tag:"ns2:tpsAPI_LocalStartResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalStartResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORELocalStartResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalStartResponse **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCORELocalStartResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORELocalStart(struct soap *soap, struct ns2__tpsAPI_USCORELocalStart *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORELocalStart))
-		soap_serialize_ns2__tpsAPI_USCORELocalStart(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORELocalStart(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORELocalStart *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORELocalStart);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCORELocalStart(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalStart ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORELocalStart(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalStart **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCORELocalStart **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORELocalStart *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCORELocalStart(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORELocalStart **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORELocalStart, sizeof(struct ns2__tpsAPI_USCORELocalStart), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORELocalStart(struct soap *soap, struct ns2__tpsAPI_USCORELocalStart *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalStart);
-	if (soap_out_PointerTons2__tpsAPI_USCORELocalStart(soap, tag?tag:"ns2:tpsAPI_LocalStart", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalStart ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORELocalStart(struct soap *soap, struct ns2__tpsAPI_USCORELocalStart **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCORELocalStart(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalReserveResponse *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse))
-		soap_serialize_ns2__tpsAPI_USCORELocalReserveResponse(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORELocalReserveResponse *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCORELocalReserveResponse(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalReserveResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalReserveResponse **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCORELocalReserveResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORELocalReserveResponse *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCORELocalReserveResponse(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORELocalReserveResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse, sizeof(struct ns2__tpsAPI_USCORELocalReserveResponse), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalReserveResponse *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalReserveResponse);
-	if (soap_out_PointerTons2__tpsAPI_USCORELocalReserveResponse(soap, tag?tag:"ns2:tpsAPI_LocalReserveResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalReserveResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalReserveResponse **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCORELocalReserveResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORELocalReserve(struct soap *soap, struct ns2__tpsAPI_USCORELocalReserve *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve))
-		soap_serialize_ns2__tpsAPI_USCORELocalReserve(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORELocalReserve(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORELocalReserve *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCORELocalReserve(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalReserve ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORELocalReserve(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalReserve **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCORELocalReserve **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORELocalReserve *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCORELocalReserve(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORELocalReserve **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve, sizeof(struct ns2__tpsAPI_USCORELocalReserve), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORELocalReserve(struct soap *soap, struct ns2__tpsAPI_USCORELocalReserve *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalReserve);
-	if (soap_out_PointerTons2__tpsAPI_USCORELocalReserve(soap, tag?tag:"ns2:tpsAPI_LocalReserve", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalReserve ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORELocalReserve(struct soap *soap, struct ns2__tpsAPI_USCORELocalReserve **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCORELocalReserve(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalRemoveResponse *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse))
-		soap_serialize_ns2__tpsAPI_USCORELocalRemoveResponse(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORELocalRemoveResponse *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCORELocalRemoveResponse(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalRemoveResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalRemoveResponse **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCORELocalRemoveResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORELocalRemoveResponse *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCORELocalRemoveResponse(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORELocalRemoveResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse, sizeof(struct ns2__tpsAPI_USCORELocalRemoveResponse), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalRemoveResponse *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalRemoveResponse);
-	if (soap_out_PointerTons2__tpsAPI_USCORELocalRemoveResponse(soap, tag?tag:"ns2:tpsAPI_LocalRemoveResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalRemoveResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalRemoveResponse **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCORELocalRemoveResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORELocalRemove(struct soap *soap, struct ns2__tpsAPI_USCORELocalRemove *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove))
-		soap_serialize_ns2__tpsAPI_USCORELocalRemove(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORELocalRemove(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORELocalRemove *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCORELocalRemove(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalRemove ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORELocalRemove(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalRemove **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCORELocalRemove **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORELocalRemove *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCORELocalRemove(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORELocalRemove **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove, sizeof(struct ns2__tpsAPI_USCORELocalRemove), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORELocalRemove(struct soap *soap, struct ns2__tpsAPI_USCORELocalRemove *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalRemove);
-	if (soap_out_PointerTons2__tpsAPI_USCORELocalRemove(soap, tag?tag:"ns2:tpsAPI_LocalRemove", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalRemove ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORELocalRemove(struct soap *soap, struct ns2__tpsAPI_USCORELocalRemove **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCORELocalRemove(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalCommitResponse *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse))
-		soap_serialize_ns2__tpsAPI_USCORELocalCommitResponse(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORELocalCommitResponse *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCORELocalCommitResponse(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCommitResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalCommitResponse **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCORELocalCommitResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORELocalCommitResponse *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCORELocalCommitResponse(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORELocalCommitResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse, sizeof(struct ns2__tpsAPI_USCORELocalCommitResponse), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalCommitResponse *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCommitResponse);
-	if (soap_out_PointerTons2__tpsAPI_USCORELocalCommitResponse(soap, tag?tag:"ns2:tpsAPI_LocalCommitResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCommitResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalCommitResponse **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCORELocalCommitResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORELocalCommit(struct soap *soap, struct ns2__tpsAPI_USCORELocalCommit *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit))
-		soap_serialize_ns2__tpsAPI_USCORELocalCommit(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORELocalCommit(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORELocalCommit *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCORELocalCommit(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCommit ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORELocalCommit(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalCommit **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCORELocalCommit **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORELocalCommit *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCORELocalCommit(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORELocalCommit **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit, sizeof(struct ns2__tpsAPI_USCORELocalCommit), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORELocalCommit(struct soap *soap, struct ns2__tpsAPI_USCORELocalCommit *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCommit);
-	if (soap_out_PointerTons2__tpsAPI_USCORELocalCommit(soap, tag?tag:"ns2:tpsAPI_LocalCommit", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCommit ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORELocalCommit(struct soap *soap, struct ns2__tpsAPI_USCORELocalCommit **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCORELocalCommit(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalCancelResponse *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse))
-		soap_serialize_ns2__tpsAPI_USCORELocalCancelResponse(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORELocalCancelResponse *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCORELocalCancelResponse(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCancelResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalCancelResponse **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCORELocalCancelResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORELocalCancelResponse *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCORELocalCancelResponse(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORELocalCancelResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse, sizeof(struct ns2__tpsAPI_USCORELocalCancelResponse), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalCancelResponse *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCancelResponse);
-	if (soap_out_PointerTons2__tpsAPI_USCORELocalCancelResponse(soap, tag?tag:"ns2:tpsAPI_LocalCancelResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCancelResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalCancelResponse **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCORELocalCancelResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORELocalCancel(struct soap *soap, struct ns2__tpsAPI_USCORELocalCancel *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel))
-		soap_serialize_ns2__tpsAPI_USCORELocalCancel(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORELocalCancel(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORELocalCancel *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__tpsAPI_USCORELocalCancel(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCancel ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORELocalCancel(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalCancel **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__tpsAPI_USCORELocalCancel **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORELocalCancel *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__tpsAPI_USCORELocalCancel(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__tpsAPI_USCORELocalCancel **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel, sizeof(struct ns2__tpsAPI_USCORELocalCancel), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORELocalCancel(struct soap *soap, struct ns2__tpsAPI_USCORELocalCancel *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCancel);
-	if (soap_out_PointerTons2__tpsAPI_USCORELocalCancel(soap, tag?tag:"ns2:tpsAPI_LocalCancel", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCancel ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORELocalCancel(struct soap *soap, struct ns2__tpsAPI_USCORELocalCancel **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__tpsAPI_USCORELocalCancel(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__getAllReservationsForClassResponse(struct soap *soap, struct ns2__getAllReservationsForClassResponse *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__getAllReservationsForClassResponse))
-		soap_serialize_ns2__getAllReservationsForClassResponse(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__getAllReservationsForClassResponse(struct soap *soap, const char *tag, int id, struct ns2__getAllReservationsForClassResponse *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__getAllReservationsForClassResponse);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__getAllReservationsForClassResponse(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__getAllReservationsForClassResponse ** SOAP_FMAC4 soap_in_PointerTons2__getAllReservationsForClassResponse(struct soap *soap, const char *tag, struct ns2__getAllReservationsForClassResponse **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__getAllReservationsForClassResponse **)soap_malloc(soap, sizeof(struct ns2__getAllReservationsForClassResponse *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__getAllReservationsForClassResponse(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__getAllReservationsForClassResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__getAllReservationsForClassResponse, sizeof(struct ns2__getAllReservationsForClassResponse), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__getAllReservationsForClassResponse(struct soap *soap, struct ns2__getAllReservationsForClassResponse *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__getAllReservationsForClassResponse);
-	if (soap_out_PointerTons2__getAllReservationsForClassResponse(soap, tag?tag:"ns2:getAllReservationsForClassResponse", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__getAllReservationsForClassResponse ** SOAP_FMAC4 soap_get_PointerTons2__getAllReservationsForClassResponse(struct soap *soap, struct ns2__getAllReservationsForClassResponse **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__getAllReservationsForClassResponse(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__getAllReservationsForClass(struct soap *soap, struct ns2__getAllReservationsForClass *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__getAllReservationsForClass))
-		soap_serialize_ns2__getAllReservationsForClass(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__getAllReservationsForClass(struct soap *soap, const char *tag, int id, struct ns2__getAllReservationsForClass *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__getAllReservationsForClass);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__getAllReservationsForClass(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__getAllReservationsForClass ** SOAP_FMAC4 soap_in_PointerTons2__getAllReservationsForClass(struct soap *soap, const char *tag, struct ns2__getAllReservationsForClass **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__getAllReservationsForClass **)soap_malloc(soap, sizeof(struct ns2__getAllReservationsForClass *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__getAllReservationsForClass(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__getAllReservationsForClass **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__getAllReservationsForClass, sizeof(struct ns2__getAllReservationsForClass), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__getAllReservationsForClass(struct soap *soap, struct ns2__getAllReservationsForClass *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__getAllReservationsForClass);
-	if (soap_out_PointerTons2__getAllReservationsForClass(soap, tag?tag:"ns2:getAllReservationsForClass", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__getAllReservationsForClass ** SOAP_FMAC4 soap_get_PointerTons2__getAllReservationsForClass(struct soap *soap, struct ns2__getAllReservationsForClass **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__getAllReservationsForClass(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__UserData(struct soap *soap, struct ns2__UserData *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__UserData))
-		soap_serialize_ns2__UserData(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__UserData(struct soap *soap, const char *tag, int id, struct ns2__UserData *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__UserData);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__UserData(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__UserData ** SOAP_FMAC4 soap_in_PointerTons2__UserData(struct soap *soap, const char *tag, struct ns2__UserData **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__UserData **)soap_malloc(soap, sizeof(struct ns2__UserData *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__UserData(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__UserData **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__UserData, sizeof(struct ns2__UserData), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__UserData(struct soap *soap, struct ns2__UserData *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__UserData);
-	if (soap_out_PointerTons2__UserData(soap, tag?tag:"ns2:UserData", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__UserData ** SOAP_FMAC4 soap_get_PointerTons2__UserData(struct soap *soap, struct ns2__UserData **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__UserData(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTostring(struct soap *soap, char **const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_string))
-		soap_serialize_string(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTostring(struct soap *soap, const char *tag, int id, char **const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_string);
-	if (id < 0)
-		return soap->error;
-	return soap_out_string(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 char *** SOAP_FMAC4 soap_in_PointerTostring(struct soap *soap, const char *tag, char ***a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (char ***)soap_malloc(soap, sizeof(char **))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_string(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (char ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_string, sizeof(char *), 1);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTostring(struct soap *soap, char **const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTostring);
-	if (soap_out_PointerTostring(soap, tag?tag:"byte", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 char *** SOAP_FMAC4 soap_get_PointerTostring(struct soap *soap, char ***p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTostring(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons2__Bandwidth(struct soap *soap, struct ns2__Bandwidth **const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons2__Bandwidth))
-		soap_serialize_PointerTons2__Bandwidth(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons2__Bandwidth(struct soap *soap, const char *tag, int id, struct ns2__Bandwidth **const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons2__Bandwidth);
-	if (id < 0)
-		return soap->error;
-	return soap_out_PointerTons2__Bandwidth(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__Bandwidth *** SOAP_FMAC4 soap_in_PointerToPointerTons2__Bandwidth(struct soap *soap, const char *tag, struct ns2__Bandwidth ***a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__Bandwidth ***)soap_malloc(soap, sizeof(struct ns2__Bandwidth **))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_PointerTons2__Bandwidth(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__Bandwidth ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons2__Bandwidth, sizeof(struct ns2__Bandwidth *), 1);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons2__Bandwidth(struct soap *soap, struct ns2__Bandwidth **const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons2__Bandwidth);
-	if (soap_out_PointerToPointerTons2__Bandwidth(soap, tag?tag:"ns2:Bandwidth", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__Bandwidth *** SOAP_FMAC4 soap_get_PointerToPointerTons2__Bandwidth(struct soap *soap, struct ns2__Bandwidth ***p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerToPointerTons2__Bandwidth(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons2__Bandwidths(struct soap *soap, struct ns2__Bandwidths **const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons2__Bandwidths))
-		soap_serialize_PointerTons2__Bandwidths(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons2__Bandwidths(struct soap *soap, const char *tag, int id, struct ns2__Bandwidths **const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons2__Bandwidths);
-	if (id < 0)
-		return soap->error;
-	return soap_out_PointerTons2__Bandwidths(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__Bandwidths *** SOAP_FMAC4 soap_in_PointerToPointerTons2__Bandwidths(struct soap *soap, const char *tag, struct ns2__Bandwidths ***a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__Bandwidths ***)soap_malloc(soap, sizeof(struct ns2__Bandwidths **))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_PointerTons2__Bandwidths(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__Bandwidths ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons2__Bandwidths, sizeof(struct ns2__Bandwidths *), 1);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons2__Bandwidths(struct soap *soap, struct ns2__Bandwidths **const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons2__Bandwidths);
-	if (soap_out_PointerToPointerTons2__Bandwidths(soap, tag?tag:"ns2:Bandwidths", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__Bandwidths *** SOAP_FMAC4 soap_get_PointerToPointerTons2__Bandwidths(struct soap *soap, struct ns2__Bandwidths ***p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerToPointerTons2__Bandwidths(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__Bandwidths(struct soap *soap, struct ns2__Bandwidths *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__Bandwidths))
-		soap_serialize_ns2__Bandwidths(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__Bandwidths(struct soap *soap, const char *tag, int id, struct ns2__Bandwidths *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__Bandwidths);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__Bandwidths(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__Bandwidths ** SOAP_FMAC4 soap_in_PointerTons2__Bandwidths(struct soap *soap, const char *tag, struct ns2__Bandwidths **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__Bandwidths **)soap_malloc(soap, sizeof(struct ns2__Bandwidths *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__Bandwidths(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__Bandwidths **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__Bandwidths, sizeof(struct ns2__Bandwidths), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__Bandwidths(struct soap *soap, struct ns2__Bandwidths *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__Bandwidths);
-	if (soap_out_PointerTons2__Bandwidths(soap, tag?tag:"ns2:Bandwidths", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__Bandwidths ** SOAP_FMAC4 soap_get_PointerTons2__Bandwidths(struct soap *soap, struct ns2__Bandwidths **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__Bandwidths(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons2__ReservationData(struct soap *soap, struct ns2__ReservationData **const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons2__ReservationData))
-		soap_serialize_PointerTons2__ReservationData(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons2__ReservationData(struct soap *soap, const char *tag, int id, struct ns2__ReservationData **const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons2__ReservationData);
-	if (id < 0)
-		return soap->error;
-	return soap_out_PointerTons2__ReservationData(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__ReservationData *** SOAP_FMAC4 soap_in_PointerToPointerTons2__ReservationData(struct soap *soap, const char *tag, struct ns2__ReservationData ***a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__ReservationData ***)soap_malloc(soap, sizeof(struct ns2__ReservationData **))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_PointerTons2__ReservationData(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__ReservationData ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons2__ReservationData, sizeof(struct ns2__ReservationData *), 1);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons2__ReservationData(struct soap *soap, struct ns2__ReservationData **const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons2__ReservationData);
-	if (soap_out_PointerToPointerTons2__ReservationData(soap, tag?tag:"ns2:ReservationData", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__ReservationData *** SOAP_FMAC4 soap_get_PointerToPointerTons2__ReservationData(struct soap *soap, struct ns2__ReservationData ***p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerToPointerTons2__ReservationData(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__Who(struct soap *soap, struct ns2__Who *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__Who))
-		soap_serialize_ns2__Who(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__Who(struct soap *soap, const char *tag, int id, struct ns2__Who *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__Who);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__Who(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__Who ** SOAP_FMAC4 soap_in_PointerTons2__Who(struct soap *soap, const char *tag, struct ns2__Who **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__Who **)soap_malloc(soap, sizeof(struct ns2__Who *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__Who(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__Who **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__Who, sizeof(struct ns2__Who), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__Who(struct soap *soap, struct ns2__Who *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__Who);
-	if (soap_out_PointerTons2__Who(soap, tag?tag:"ns2:Who", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__Who ** SOAP_FMAC4 soap_get_PointerTons2__Who(struct soap *soap, struct ns2__Who **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__Who(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__Bandwidth(struct soap *soap, struct ns2__Bandwidth *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__Bandwidth))
-		soap_serialize_ns2__Bandwidth(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__Bandwidth(struct soap *soap, const char *tag, int id, struct ns2__Bandwidth *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__Bandwidth);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__Bandwidth(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__Bandwidth ** SOAP_FMAC4 soap_in_PointerTons2__Bandwidth(struct soap *soap, const char *tag, struct ns2__Bandwidth **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__Bandwidth **)soap_malloc(soap, sizeof(struct ns2__Bandwidth *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__Bandwidth(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__Bandwidth **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__Bandwidth, sizeof(struct ns2__Bandwidth), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__Bandwidth(struct soap *soap, struct ns2__Bandwidth *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__Bandwidth);
-	if (soap_out_PointerTons2__Bandwidth(soap, tag?tag:"ns2:Bandwidth", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__Bandwidth ** SOAP_FMAC4 soap_get_PointerTons2__Bandwidth(struct soap *soap, struct ns2__Bandwidth **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__Bandwidth(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__ReservationData(struct soap *soap, struct ns2__ReservationData *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ns2__ReservationData))
-		soap_serialize_ns2__ReservationData(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__ReservationData(struct soap *soap, const char *tag, int id, struct ns2__ReservationData *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__ReservationData);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ns2__ReservationData(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 struct ns2__ReservationData ** SOAP_FMAC4 soap_in_PointerTons2__ReservationData(struct soap *soap, const char *tag, struct ns2__ReservationData **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1, NULL))
-		return NULL;
-	if (!a)
-		if (!(a = (struct ns2__ReservationData **)soap_malloc(soap, sizeof(struct ns2__ReservationData *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ns2__ReservationData(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (struct ns2__ReservationData **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__ReservationData, sizeof(struct ns2__ReservationData), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__ReservationData(struct soap *soap, struct ns2__ReservationData *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__ReservationData);
-	if (soap_out_PointerTons2__ReservationData(soap, tag?tag:"ns2:ReservationData", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 struct ns2__ReservationData ** SOAP_FMAC4 soap_get_PointerTons2__ReservationData(struct soap *soap, struct ns2__ReservationData **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTons2__ReservationData(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out__QName(struct soap *soap, const char *tag, int id, char *const*a, const char *type)
-{
-	return soap_outstring(soap, tag, id, a, type, SOAP_TYPE__QName);
-}
-
-SOAP_FMAC3 char * * SOAP_FMAC4 soap_in__QName(struct soap *soap, const char *tag, char **a, const char *type)
-{	char **p;
-	p = soap_instring(soap, tag, a, type, SOAP_TYPE__QName, 2, -1, -1);
-	return p;
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put__QName(struct soap *soap, char *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE__QName);
-	if (soap_out__QName(soap, tag?tag:"byte", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 char ** SOAP_FMAC4 soap_get__QName(struct soap *soap, char **p, const char *tag, const char *type)
-{
-	if ((p = soap_in__QName(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_string(struct soap *soap, char **a)
-{
-	(void)soap; /* appease -Wall -Werror */
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREreserveResponse(struct soap *soap, struct ns2__tpsAPI_USCOREreserveResponse *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse))
+    soap_serialize_ns2__tpsAPI_USCOREreserveResponse(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREreserveResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREreserveResponse *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCOREreserveResponse(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREreserveResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREreserveResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREreserveResponse **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCOREreserveResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREreserveResponse *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCOREreserveResponse(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREreserveResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREreserveResponse, sizeof(struct ns2__tpsAPI_USCOREreserveResponse), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREreserveResponse(struct soap *soap, struct ns2__tpsAPI_USCOREreserveResponse *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREreserveResponse);
+  if (soap_out_PointerTons2__tpsAPI_USCOREreserveResponse(soap, tag?tag:"ns2:tpsAPI_reserveResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREreserveResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREreserveResponse(struct soap *soap, struct ns2__tpsAPI_USCOREreserveResponse **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCOREreserveResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREreserve(struct soap *soap, struct ns2__tpsAPI_USCOREreserve *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREreserve))
+    soap_serialize_ns2__tpsAPI_USCOREreserve(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREreserve(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREreserve *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREreserve);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCOREreserve(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREreserve ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREreserve(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREreserve **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCOREreserve **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREreserve *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCOREreserve(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREreserve **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREreserve, sizeof(struct ns2__tpsAPI_USCOREreserve), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREreserve(struct soap *soap, struct ns2__tpsAPI_USCOREreserve *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREreserve);
+  if (soap_out_PointerTons2__tpsAPI_USCOREreserve(soap, tag?tag:"ns2:tpsAPI_reserve", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREreserve ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREreserve(struct soap *soap, struct ns2__tpsAPI_USCOREreserve **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCOREreserve(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORElookupUserResponse(struct soap *soap, struct ns2__tpsAPI_USCORElookupUserResponse *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse))
+    soap_serialize_ns2__tpsAPI_USCORElookupUserResponse(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORElookupUserResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORElookupUserResponse *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCORElookupUserResponse(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORElookupUserResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORElookupUserResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORElookupUserResponse **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCORElookupUserResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORElookupUserResponse *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCORElookupUserResponse(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORElookupUserResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORElookupUserResponse, sizeof(struct ns2__tpsAPI_USCORElookupUserResponse), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORElookupUserResponse(struct soap *soap, struct ns2__tpsAPI_USCORElookupUserResponse *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORElookupUserResponse);
+  if (soap_out_PointerTons2__tpsAPI_USCORElookupUserResponse(soap, tag?tag:"ns2:tpsAPI_lookupUserResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORElookupUserResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORElookupUserResponse(struct soap *soap, struct ns2__tpsAPI_USCORElookupUserResponse **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCORElookupUserResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORElookupUser(struct soap *soap, struct ns2__tpsAPI_USCORElookupUser *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORElookupUser))
+    soap_serialize_ns2__tpsAPI_USCORElookupUser(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORElookupUser(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORElookupUser *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORElookupUser);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCORElookupUser(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORElookupUser ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORElookupUser(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORElookupUser **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCORElookupUser **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORElookupUser *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCORElookupUser(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORElookupUser **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORElookupUser, sizeof(struct ns2__tpsAPI_USCORElookupUser), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORElookupUser(struct soap *soap, struct ns2__tpsAPI_USCORElookupUser *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORElookupUser);
+  if (soap_out_PointerTons2__tpsAPI_USCORElookupUser(soap, tag?tag:"ns2:tpsAPI_lookupUser", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORElookupUser ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORElookupUser(struct soap *soap, struct ns2__tpsAPI_USCORElookupUser **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCORElookupUser(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetReservationDataResponse *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse))
+    soap_serialize_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREgetReservationDataResponse *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetReservationDataResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetReservationDataResponse **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCOREgetReservationDataResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREgetReservationDataResponse *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCOREgetReservationDataResponse(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREgetReservationDataResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationDataResponse, sizeof(struct ns2__tpsAPI_USCOREgetReservationDataResponse), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetReservationDataResponse *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetReservationDataResponse);
+  if (soap_out_PointerTons2__tpsAPI_USCOREgetReservationDataResponse(soap, tag?tag:"ns2:tpsAPI_getReservationDataResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetReservationDataResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREgetReservationDataResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetReservationDataResponse **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCOREgetReservationDataResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREgetReservationData(struct soap *soap, struct ns2__tpsAPI_USCOREgetReservationData *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData))
+    soap_serialize_ns2__tpsAPI_USCOREgetReservationData(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREgetReservationData(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREgetReservationData *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCOREgetReservationData(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetReservationData ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREgetReservationData(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetReservationData **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCOREgetReservationData **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREgetReservationData *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCOREgetReservationData(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREgetReservationData **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREgetReservationData, sizeof(struct ns2__tpsAPI_USCOREgetReservationData), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREgetReservationData(struct soap *soap, struct ns2__tpsAPI_USCOREgetReservationData *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetReservationData);
+  if (soap_out_PointerTons2__tpsAPI_USCOREgetReservationData(soap, tag?tag:"ns2:tpsAPI_getReservationData", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetReservationData ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREgetReservationData(struct soap *soap, struct ns2__tpsAPI_USCOREgetReservationData **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCOREgetReservationData(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse))
+    soap_serialize_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse, sizeof(struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse);
+  if (soap_out_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, tag?tag:"ns2:tpsAPI_getRelatedReservationIdsResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetRelatedReservationIdsResponse **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCOREgetRelatedReservationIdsResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, struct ns2__tpsAPI_USCOREgetRelatedReservationIds *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds))
+    soap_serialize_ns2__tpsAPI_USCOREgetRelatedReservationIds(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREgetRelatedReservationIds *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCOREgetRelatedReservationIds(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetRelatedReservationIds ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetRelatedReservationIds **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCOREgetRelatedReservationIds **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREgetRelatedReservationIds *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCOREgetRelatedReservationIds(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREgetRelatedReservationIds **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREgetRelatedReservationIds, sizeof(struct ns2__tpsAPI_USCOREgetRelatedReservationIds), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, struct ns2__tpsAPI_USCOREgetRelatedReservationIds *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds);
+  if (soap_out_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(soap, tag?tag:"ns2:tpsAPI_getRelatedReservationIds", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetRelatedReservationIds ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(struct soap *soap, struct ns2__tpsAPI_USCOREgetRelatedReservationIds **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCOREgetRelatedReservationIds(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREgetPathResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetPathResponse *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse))
+    soap_serialize_ns2__tpsAPI_USCOREgetPathResponse(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREgetPathResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREgetPathResponse *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCOREgetPathResponse(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetPathResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREgetPathResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetPathResponse **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCOREgetPathResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREgetPathResponse *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCOREgetPathResponse(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREgetPathResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREgetPathResponse, sizeof(struct ns2__tpsAPI_USCOREgetPathResponse), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREgetPathResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetPathResponse *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetPathResponse);
+  if (soap_out_PointerTons2__tpsAPI_USCOREgetPathResponse(soap, tag?tag:"ns2:tpsAPI_getPathResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetPathResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREgetPathResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetPathResponse **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCOREgetPathResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREgetPath(struct soap *soap, struct ns2__tpsAPI_USCOREgetPath *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREgetPath))
+    soap_serialize_ns2__tpsAPI_USCOREgetPath(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREgetPath(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREgetPath *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREgetPath);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCOREgetPath(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetPath ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREgetPath(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetPath **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCOREgetPath **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREgetPath *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCOREgetPath(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREgetPath **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREgetPath, sizeof(struct ns2__tpsAPI_USCOREgetPath), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREgetPath(struct soap *soap, struct ns2__tpsAPI_USCOREgetPath *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetPath);
+  if (soap_out_PointerTons2__tpsAPI_USCOREgetPath(soap, tag?tag:"ns2:tpsAPI_getPath", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetPath ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREgetPath(struct soap *soap, struct ns2__tpsAPI_USCOREgetPath **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCOREgetPath(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse))
+    soap_serialize_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidthsResponse, sizeof(struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse);
+  if (soap_out_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, tag?tag:"ns2:tpsAPI_getLocalBandwidthsResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetLocalBandwidthsResponse **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCOREgetLocalBandwidthsResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, struct ns2__tpsAPI_USCOREgetLocalBandwidths *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths))
+    soap_serialize_ns2__tpsAPI_USCOREgetLocalBandwidths(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREgetLocalBandwidths *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCOREgetLocalBandwidths(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetLocalBandwidths ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetLocalBandwidths **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCOREgetLocalBandwidths **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREgetLocalBandwidths *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCOREgetLocalBandwidths(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREgetLocalBandwidths **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREgetLocalBandwidths, sizeof(struct ns2__tpsAPI_USCOREgetLocalBandwidths), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, struct ns2__tpsAPI_USCOREgetLocalBandwidths *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetLocalBandwidths);
+  if (soap_out_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(soap, tag?tag:"ns2:tpsAPI_getLocalBandwidths", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetLocalBandwidths ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(struct soap *soap, struct ns2__tpsAPI_USCOREgetLocalBandwidths **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCOREgetLocalBandwidths(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetBandwidthsResponse *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse))
+    soap_serialize_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREgetBandwidthsResponse *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetBandwidthsResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetBandwidthsResponse **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCOREgetBandwidthsResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREgetBandwidthsResponse *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCOREgetBandwidthsResponse(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREgetBandwidthsResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidthsResponse, sizeof(struct ns2__tpsAPI_USCOREgetBandwidthsResponse), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetBandwidthsResponse *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse);
+  if (soap_out_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse(soap, tag?tag:"ns2:tpsAPI_getBandwidthsResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetBandwidthsResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse(struct soap *soap, struct ns2__tpsAPI_USCOREgetBandwidthsResponse **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCOREgetBandwidthsResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREgetBandwidths(struct soap *soap, struct ns2__tpsAPI_USCOREgetBandwidths *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths))
+    soap_serialize_ns2__tpsAPI_USCOREgetBandwidths(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREgetBandwidths(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREgetBandwidths *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCOREgetBandwidths(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetBandwidths ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREgetBandwidths(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREgetBandwidths **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCOREgetBandwidths **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREgetBandwidths *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCOREgetBandwidths(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREgetBandwidths **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREgetBandwidths, sizeof(struct ns2__tpsAPI_USCOREgetBandwidths), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREgetBandwidths(struct soap *soap, struct ns2__tpsAPI_USCOREgetBandwidths *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREgetBandwidths);
+  if (soap_out_PointerTons2__tpsAPI_USCOREgetBandwidths(soap, tag?tag:"ns2:tpsAPI_getBandwidths", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREgetBandwidths ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREgetBandwidths(struct soap *soap, struct ns2__tpsAPI_USCOREgetBandwidths **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCOREgetBandwidths(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREcommitResponse(struct soap *soap, struct ns2__tpsAPI_USCOREcommitResponse *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse))
+    soap_serialize_ns2__tpsAPI_USCOREcommitResponse(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREcommitResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREcommitResponse *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCOREcommitResponse(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREcommitResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREcommitResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREcommitResponse **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCOREcommitResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREcommitResponse *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCOREcommitResponse(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREcommitResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREcommitResponse, sizeof(struct ns2__tpsAPI_USCOREcommitResponse), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREcommitResponse(struct soap *soap, struct ns2__tpsAPI_USCOREcommitResponse *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREcommitResponse);
+  if (soap_out_PointerTons2__tpsAPI_USCOREcommitResponse(soap, tag?tag:"ns2:tpsAPI_commitResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREcommitResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREcommitResponse(struct soap *soap, struct ns2__tpsAPI_USCOREcommitResponse **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCOREcommitResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREcommit(struct soap *soap, struct ns2__tpsAPI_USCOREcommit *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREcommit))
+    soap_serialize_ns2__tpsAPI_USCOREcommit(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREcommit(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREcommit *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREcommit);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCOREcommit(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREcommit ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREcommit(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREcommit **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCOREcommit **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREcommit *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCOREcommit(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREcommit **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREcommit, sizeof(struct ns2__tpsAPI_USCOREcommit), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREcommit(struct soap *soap, struct ns2__tpsAPI_USCOREcommit *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREcommit);
+  if (soap_out_PointerTons2__tpsAPI_USCOREcommit(soap, tag?tag:"ns2:tpsAPI_commit", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREcommit ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREcommit(struct soap *soap, struct ns2__tpsAPI_USCOREcommit **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCOREcommit(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREcancelResponse(struct soap *soap, struct ns2__tpsAPI_USCOREcancelResponse *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse))
+    soap_serialize_ns2__tpsAPI_USCOREcancelResponse(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREcancelResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREcancelResponse *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCOREcancelResponse(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREcancelResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREcancelResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREcancelResponse **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCOREcancelResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREcancelResponse *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCOREcancelResponse(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREcancelResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREcancelResponse, sizeof(struct ns2__tpsAPI_USCOREcancelResponse), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREcancelResponse(struct soap *soap, struct ns2__tpsAPI_USCOREcancelResponse *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREcancelResponse);
+  if (soap_out_PointerTons2__tpsAPI_USCOREcancelResponse(soap, tag?tag:"ns2:tpsAPI_cancelResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREcancelResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREcancelResponse(struct soap *soap, struct ns2__tpsAPI_USCOREcancelResponse **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCOREcancelResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREcancel(struct soap *soap, struct ns2__tpsAPI_USCOREcancel *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREcancel))
+    soap_serialize_ns2__tpsAPI_USCOREcancel(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREcancel(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREcancel *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREcancel);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCOREcancel(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREcancel ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREcancel(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREcancel **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCOREcancel **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREcancel *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCOREcancel(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREcancel **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREcancel, sizeof(struct ns2__tpsAPI_USCOREcancel), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREcancel(struct soap *soap, struct ns2__tpsAPI_USCOREcancel *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREcancel);
+  if (soap_out_PointerTons2__tpsAPI_USCOREcancel(soap, tag?tag:"ns2:tpsAPI_cancel", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREcancel ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREcancel(struct soap *soap, struct ns2__tpsAPI_USCOREcancel **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCOREcancel(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse))
+    soap_serialize_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationIdResponse, sizeof(struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse);
+  if (soap_out_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, tag?tag:"ns2:tpsAPI_addRelatedReservationIdResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse(struct soap *soap, struct ns2__tpsAPI_USCOREaddRelatedReservationIdResponse **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCOREaddRelatedReservationIdResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, struct ns2__tpsAPI_USCOREaddRelatedReservationId *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId))
+    soap_serialize_ns2__tpsAPI_USCOREaddRelatedReservationId(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCOREaddRelatedReservationId *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCOREaddRelatedReservationId(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREaddRelatedReservationId ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCOREaddRelatedReservationId **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCOREaddRelatedReservationId **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCOREaddRelatedReservationId *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCOREaddRelatedReservationId(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCOREaddRelatedReservationId **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCOREaddRelatedReservationId, sizeof(struct ns2__tpsAPI_USCOREaddRelatedReservationId), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, struct ns2__tpsAPI_USCOREaddRelatedReservationId *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCOREaddRelatedReservationId);
+  if (soap_out_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(soap, tag?tag:"ns2:tpsAPI_addRelatedReservationId", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCOREaddRelatedReservationId ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(struct soap *soap, struct ns2__tpsAPI_USCOREaddRelatedReservationId **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCOREaddRelatedReservationId(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORELocalStartResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalStartResponse *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse))
+    soap_serialize_ns2__tpsAPI_USCORELocalStartResponse(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORELocalStartResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORELocalStartResponse *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCORELocalStartResponse(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalStartResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORELocalStartResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalStartResponse **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCORELocalStartResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORELocalStartResponse *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCORELocalStartResponse(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORELocalStartResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORELocalStartResponse, sizeof(struct ns2__tpsAPI_USCORELocalStartResponse), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORELocalStartResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalStartResponse *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalStartResponse);
+  if (soap_out_PointerTons2__tpsAPI_USCORELocalStartResponse(soap, tag?tag:"ns2:tpsAPI_LocalStartResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalStartResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORELocalStartResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalStartResponse **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCORELocalStartResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORELocalStart(struct soap *soap, struct ns2__tpsAPI_USCORELocalStart *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORELocalStart))
+    soap_serialize_ns2__tpsAPI_USCORELocalStart(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORELocalStart(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORELocalStart *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORELocalStart);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCORELocalStart(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalStart ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORELocalStart(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalStart **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCORELocalStart **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORELocalStart *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCORELocalStart(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORELocalStart **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORELocalStart, sizeof(struct ns2__tpsAPI_USCORELocalStart), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORELocalStart(struct soap *soap, struct ns2__tpsAPI_USCORELocalStart *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalStart);
+  if (soap_out_PointerTons2__tpsAPI_USCORELocalStart(soap, tag?tag:"ns2:tpsAPI_LocalStart", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalStart ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORELocalStart(struct soap *soap, struct ns2__tpsAPI_USCORELocalStart **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCORELocalStart(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalReserveResponse *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse))
+    soap_serialize_ns2__tpsAPI_USCORELocalReserveResponse(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORELocalReserveResponse *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCORELocalReserveResponse(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalReserveResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalReserveResponse **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCORELocalReserveResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORELocalReserveResponse *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCORELocalReserveResponse(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORELocalReserveResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserveResponse, sizeof(struct ns2__tpsAPI_USCORELocalReserveResponse), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalReserveResponse *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalReserveResponse);
+  if (soap_out_PointerTons2__tpsAPI_USCORELocalReserveResponse(soap, tag?tag:"ns2:tpsAPI_LocalReserveResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalReserveResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORELocalReserveResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalReserveResponse **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCORELocalReserveResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORELocalReserve(struct soap *soap, struct ns2__tpsAPI_USCORELocalReserve *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve))
+    soap_serialize_ns2__tpsAPI_USCORELocalReserve(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORELocalReserve(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORELocalReserve *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCORELocalReserve(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalReserve ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORELocalReserve(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalReserve **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCORELocalReserve **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORELocalReserve *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCORELocalReserve(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORELocalReserve **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORELocalReserve, sizeof(struct ns2__tpsAPI_USCORELocalReserve), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORELocalReserve(struct soap *soap, struct ns2__tpsAPI_USCORELocalReserve *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalReserve);
+  if (soap_out_PointerTons2__tpsAPI_USCORELocalReserve(soap, tag?tag:"ns2:tpsAPI_LocalReserve", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalReserve ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORELocalReserve(struct soap *soap, struct ns2__tpsAPI_USCORELocalReserve **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCORELocalReserve(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalRemoveResponse *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse))
+    soap_serialize_ns2__tpsAPI_USCORELocalRemoveResponse(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORELocalRemoveResponse *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCORELocalRemoveResponse(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalRemoveResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalRemoveResponse **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCORELocalRemoveResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORELocalRemoveResponse *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCORELocalRemoveResponse(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORELocalRemoveResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemoveResponse, sizeof(struct ns2__tpsAPI_USCORELocalRemoveResponse), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalRemoveResponse *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalRemoveResponse);
+  if (soap_out_PointerTons2__tpsAPI_USCORELocalRemoveResponse(soap, tag?tag:"ns2:tpsAPI_LocalRemoveResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalRemoveResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORELocalRemoveResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalRemoveResponse **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCORELocalRemoveResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORELocalRemove(struct soap *soap, struct ns2__tpsAPI_USCORELocalRemove *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove))
+    soap_serialize_ns2__tpsAPI_USCORELocalRemove(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORELocalRemove(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORELocalRemove *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCORELocalRemove(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalRemove ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORELocalRemove(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalRemove **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCORELocalRemove **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORELocalRemove *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCORELocalRemove(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORELocalRemove **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORELocalRemove, sizeof(struct ns2__tpsAPI_USCORELocalRemove), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORELocalRemove(struct soap *soap, struct ns2__tpsAPI_USCORELocalRemove *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalRemove);
+  if (soap_out_PointerTons2__tpsAPI_USCORELocalRemove(soap, tag?tag:"ns2:tpsAPI_LocalRemove", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalRemove ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORELocalRemove(struct soap *soap, struct ns2__tpsAPI_USCORELocalRemove **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCORELocalRemove(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalCommitResponse *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse))
+    soap_serialize_ns2__tpsAPI_USCORELocalCommitResponse(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORELocalCommitResponse *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCORELocalCommitResponse(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCommitResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalCommitResponse **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCORELocalCommitResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORELocalCommitResponse *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCORELocalCommitResponse(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORELocalCommitResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommitResponse, sizeof(struct ns2__tpsAPI_USCORELocalCommitResponse), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalCommitResponse *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCommitResponse);
+  if (soap_out_PointerTons2__tpsAPI_USCORELocalCommitResponse(soap, tag?tag:"ns2:tpsAPI_LocalCommitResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCommitResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORELocalCommitResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalCommitResponse **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCORELocalCommitResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORELocalCommit(struct soap *soap, struct ns2__tpsAPI_USCORELocalCommit *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit))
+    soap_serialize_ns2__tpsAPI_USCORELocalCommit(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORELocalCommit(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORELocalCommit *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCORELocalCommit(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCommit ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORELocalCommit(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalCommit **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCORELocalCommit **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORELocalCommit *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCORELocalCommit(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORELocalCommit **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCommit, sizeof(struct ns2__tpsAPI_USCORELocalCommit), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORELocalCommit(struct soap *soap, struct ns2__tpsAPI_USCORELocalCommit *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCommit);
+  if (soap_out_PointerTons2__tpsAPI_USCORELocalCommit(soap, tag?tag:"ns2:tpsAPI_LocalCommit", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCommit ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORELocalCommit(struct soap *soap, struct ns2__tpsAPI_USCORELocalCommit **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCORELocalCommit(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalCancelResponse *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse))
+    soap_serialize_ns2__tpsAPI_USCORELocalCancelResponse(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORELocalCancelResponse *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCORELocalCancelResponse(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCancelResponse ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalCancelResponse **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCORELocalCancelResponse **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORELocalCancelResponse *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCORELocalCancelResponse(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORELocalCancelResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancelResponse, sizeof(struct ns2__tpsAPI_USCORELocalCancelResponse), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalCancelResponse *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCancelResponse);
+  if (soap_out_PointerTons2__tpsAPI_USCORELocalCancelResponse(soap, tag?tag:"ns2:tpsAPI_LocalCancelResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCancelResponse ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORELocalCancelResponse(struct soap *soap, struct ns2__tpsAPI_USCORELocalCancelResponse **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCORELocalCancelResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__tpsAPI_USCORELocalCancel(struct soap *soap, struct ns2__tpsAPI_USCORELocalCancel *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel))
+    soap_serialize_ns2__tpsAPI_USCORELocalCancel(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__tpsAPI_USCORELocalCancel(struct soap *soap, const char *tag, int id, struct ns2__tpsAPI_USCORELocalCancel *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__tpsAPI_USCORELocalCancel(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCancel ** SOAP_FMAC4 soap_in_PointerTons2__tpsAPI_USCORELocalCancel(struct soap *soap, const char *tag, struct ns2__tpsAPI_USCORELocalCancel **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__tpsAPI_USCORELocalCancel **)soap_malloc(soap, sizeof(struct ns2__tpsAPI_USCORELocalCancel *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__tpsAPI_USCORELocalCancel(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__tpsAPI_USCORELocalCancel **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__tpsAPI_USCORELocalCancel, sizeof(struct ns2__tpsAPI_USCORELocalCancel), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__tpsAPI_USCORELocalCancel(struct soap *soap, struct ns2__tpsAPI_USCORELocalCancel *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__tpsAPI_USCORELocalCancel);
+  if (soap_out_PointerTons2__tpsAPI_USCORELocalCancel(soap, tag?tag:"ns2:tpsAPI_LocalCancel", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__tpsAPI_USCORELocalCancel ** SOAP_FMAC4 soap_get_PointerTons2__tpsAPI_USCORELocalCancel(struct soap *soap, struct ns2__tpsAPI_USCORELocalCancel **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__tpsAPI_USCORELocalCancel(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__getAllReservationsForClassResponse(struct soap *soap, struct ns2__getAllReservationsForClassResponse *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__getAllReservationsForClassResponse))
+    soap_serialize_ns2__getAllReservationsForClassResponse(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__getAllReservationsForClassResponse(struct soap *soap, const char *tag, int id, struct ns2__getAllReservationsForClassResponse *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__getAllReservationsForClassResponse);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__getAllReservationsForClassResponse(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__getAllReservationsForClassResponse ** SOAP_FMAC4 soap_in_PointerTons2__getAllReservationsForClassResponse(struct soap *soap, const char *tag, struct ns2__getAllReservationsForClassResponse **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__getAllReservationsForClassResponse **)soap_malloc(soap, sizeof(struct ns2__getAllReservationsForClassResponse *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__getAllReservationsForClassResponse(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__getAllReservationsForClassResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__getAllReservationsForClassResponse, sizeof(struct ns2__getAllReservationsForClassResponse), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__getAllReservationsForClassResponse(struct soap *soap, struct ns2__getAllReservationsForClassResponse *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__getAllReservationsForClassResponse);
+  if (soap_out_PointerTons2__getAllReservationsForClassResponse(soap, tag?tag:"ns2:getAllReservationsForClassResponse", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__getAllReservationsForClassResponse ** SOAP_FMAC4 soap_get_PointerTons2__getAllReservationsForClassResponse(struct soap *soap, struct ns2__getAllReservationsForClassResponse **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__getAllReservationsForClassResponse(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__getAllReservationsForClass(struct soap *soap, struct ns2__getAllReservationsForClass *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__getAllReservationsForClass))
+    soap_serialize_ns2__getAllReservationsForClass(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__getAllReservationsForClass(struct soap *soap, const char *tag, int id, struct ns2__getAllReservationsForClass *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__getAllReservationsForClass);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__getAllReservationsForClass(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__getAllReservationsForClass ** SOAP_FMAC4 soap_in_PointerTons2__getAllReservationsForClass(struct soap *soap, const char *tag, struct ns2__getAllReservationsForClass **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__getAllReservationsForClass **)soap_malloc(soap, sizeof(struct ns2__getAllReservationsForClass *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__getAllReservationsForClass(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__getAllReservationsForClass **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__getAllReservationsForClass, sizeof(struct ns2__getAllReservationsForClass), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__getAllReservationsForClass(struct soap *soap, struct ns2__getAllReservationsForClass *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__getAllReservationsForClass);
+  if (soap_out_PointerTons2__getAllReservationsForClass(soap, tag?tag:"ns2:getAllReservationsForClass", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__getAllReservationsForClass ** SOAP_FMAC4 soap_get_PointerTons2__getAllReservationsForClass(struct soap *soap, struct ns2__getAllReservationsForClass **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__getAllReservationsForClass(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__UserData(struct soap *soap, struct ns2__UserData *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__UserData))
+    soap_serialize_ns2__UserData(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__UserData(struct soap *soap, const char *tag, int id, struct ns2__UserData *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__UserData);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__UserData(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__UserData ** SOAP_FMAC4 soap_in_PointerTons2__UserData(struct soap *soap, const char *tag, struct ns2__UserData **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__UserData **)soap_malloc(soap, sizeof(struct ns2__UserData *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__UserData(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__UserData **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__UserData, sizeof(struct ns2__UserData), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__UserData(struct soap *soap, struct ns2__UserData *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__UserData);
+  if (soap_out_PointerTons2__UserData(soap, tag?tag:"ns2:UserData", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__UserData ** SOAP_FMAC4 soap_get_PointerTons2__UserData(struct soap *soap, struct ns2__UserData **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__UserData(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTostring(struct soap *soap, char **const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_string))
+    soap_serialize_string(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTostring(struct soap *soap, const char *tag, int id, char **const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_string);
+  if (id < 0)
+    return soap->error;
+  return soap_out_string(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 char *** SOAP_FMAC4 soap_in_PointerTostring(struct soap *soap, const char *tag, char ***a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (char ***)soap_malloc(soap, sizeof(char **))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_string(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (char ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_string, sizeof(char *), 1);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTostring(struct soap *soap, char **const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTostring);
+  if (soap_out_PointerTostring(soap, tag?tag:"byte", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 char *** SOAP_FMAC4 soap_get_PointerTostring(struct soap *soap, char ***p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTostring(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons2__Bandwidth(struct soap *soap, struct ns2__Bandwidth **const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons2__Bandwidth))
+    soap_serialize_PointerTons2__Bandwidth(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons2__Bandwidth(struct soap *soap, const char *tag, int id, struct ns2__Bandwidth **const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons2__Bandwidth);
+  if (id < 0)
+    return soap->error;
+  return soap_out_PointerTons2__Bandwidth(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__Bandwidth *** SOAP_FMAC4 soap_in_PointerToPointerTons2__Bandwidth(struct soap *soap, const char *tag, struct ns2__Bandwidth ***a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__Bandwidth ***)soap_malloc(soap, sizeof(struct ns2__Bandwidth **))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_PointerTons2__Bandwidth(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__Bandwidth ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons2__Bandwidth, sizeof(struct ns2__Bandwidth *), 1);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons2__Bandwidth(struct soap *soap, struct ns2__Bandwidth **const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons2__Bandwidth);
+  if (soap_out_PointerToPointerTons2__Bandwidth(soap, tag?tag:"ns2:Bandwidth", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__Bandwidth *** SOAP_FMAC4 soap_get_PointerToPointerTons2__Bandwidth(struct soap *soap, struct ns2__Bandwidth ***p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerToPointerTons2__Bandwidth(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons2__Bandwidths(struct soap *soap, struct ns2__Bandwidths **const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons2__Bandwidths))
+    soap_serialize_PointerTons2__Bandwidths(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons2__Bandwidths(struct soap *soap, const char *tag, int id, struct ns2__Bandwidths **const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons2__Bandwidths);
+  if (id < 0)
+    return soap->error;
+  return soap_out_PointerTons2__Bandwidths(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__Bandwidths *** SOAP_FMAC4 soap_in_PointerToPointerTons2__Bandwidths(struct soap *soap, const char *tag, struct ns2__Bandwidths ***a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__Bandwidths ***)soap_malloc(soap, sizeof(struct ns2__Bandwidths **))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_PointerTons2__Bandwidths(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__Bandwidths ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons2__Bandwidths, sizeof(struct ns2__Bandwidths *), 1);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons2__Bandwidths(struct soap *soap, struct ns2__Bandwidths **const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons2__Bandwidths);
+  if (soap_out_PointerToPointerTons2__Bandwidths(soap, tag?tag:"ns2:Bandwidths", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__Bandwidths *** SOAP_FMAC4 soap_get_PointerToPointerTons2__Bandwidths(struct soap *soap, struct ns2__Bandwidths ***p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerToPointerTons2__Bandwidths(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__Bandwidths(struct soap *soap, struct ns2__Bandwidths *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__Bandwidths))
+    soap_serialize_ns2__Bandwidths(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__Bandwidths(struct soap *soap, const char *tag, int id, struct ns2__Bandwidths *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__Bandwidths);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__Bandwidths(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__Bandwidths ** SOAP_FMAC4 soap_in_PointerTons2__Bandwidths(struct soap *soap, const char *tag, struct ns2__Bandwidths **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__Bandwidths **)soap_malloc(soap, sizeof(struct ns2__Bandwidths *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__Bandwidths(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__Bandwidths **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__Bandwidths, sizeof(struct ns2__Bandwidths), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__Bandwidths(struct soap *soap, struct ns2__Bandwidths *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__Bandwidths);
+  if (soap_out_PointerTons2__Bandwidths(soap, tag?tag:"ns2:Bandwidths", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__Bandwidths ** SOAP_FMAC4 soap_get_PointerTons2__Bandwidths(struct soap *soap, struct ns2__Bandwidths **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__Bandwidths(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToPointerTons2__ReservationData(struct soap *soap, struct ns2__ReservationData **const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_PointerTons2__ReservationData))
+    soap_serialize_PointerTons2__ReservationData(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToPointerTons2__ReservationData(struct soap *soap, const char *tag, int id, struct ns2__ReservationData **const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_PointerTons2__ReservationData);
+  if (id < 0)
+    return soap->error;
+  return soap_out_PointerTons2__ReservationData(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__ReservationData *** SOAP_FMAC4 soap_in_PointerToPointerTons2__ReservationData(struct soap *soap, const char *tag, struct ns2__ReservationData ***a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__ReservationData ***)soap_malloc(soap, sizeof(struct ns2__ReservationData **))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_PointerTons2__ReservationData(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__ReservationData ***)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_PointerTons2__ReservationData, sizeof(struct ns2__ReservationData *), 1);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToPointerTons2__ReservationData(struct soap *soap, struct ns2__ReservationData **const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToPointerTons2__ReservationData);
+  if (soap_out_PointerToPointerTons2__ReservationData(soap, tag?tag:"ns2:ReservationData", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__ReservationData *** SOAP_FMAC4 soap_get_PointerToPointerTons2__ReservationData(struct soap *soap, struct ns2__ReservationData ***p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerToPointerTons2__ReservationData(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__Who(struct soap *soap, struct ns2__Who *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__Who))
+    soap_serialize_ns2__Who(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__Who(struct soap *soap, const char *tag, int id, struct ns2__Who *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__Who);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__Who(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__Who ** SOAP_FMAC4 soap_in_PointerTons2__Who(struct soap *soap, const char *tag, struct ns2__Who **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__Who **)soap_malloc(soap, sizeof(struct ns2__Who *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__Who(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__Who **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__Who, sizeof(struct ns2__Who), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__Who(struct soap *soap, struct ns2__Who *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__Who);
+  if (soap_out_PointerTons2__Who(soap, tag?tag:"ns2:Who", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__Who ** SOAP_FMAC4 soap_get_PointerTons2__Who(struct soap *soap, struct ns2__Who **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__Who(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__Bandwidth(struct soap *soap, struct ns2__Bandwidth *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__Bandwidth))
+    soap_serialize_ns2__Bandwidth(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__Bandwidth(struct soap *soap, const char *tag, int id, struct ns2__Bandwidth *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__Bandwidth);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__Bandwidth(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__Bandwidth ** SOAP_FMAC4 soap_in_PointerTons2__Bandwidth(struct soap *soap, const char *tag, struct ns2__Bandwidth **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__Bandwidth **)soap_malloc(soap, sizeof(struct ns2__Bandwidth *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__Bandwidth(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__Bandwidth **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__Bandwidth, sizeof(struct ns2__Bandwidth), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__Bandwidth(struct soap *soap, struct ns2__Bandwidth *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__Bandwidth);
+  if (soap_out_PointerTons2__Bandwidth(soap, tag?tag:"ns2:Bandwidth", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__Bandwidth ** SOAP_FMAC4 soap_get_PointerTons2__Bandwidth(struct soap *soap, struct ns2__Bandwidth **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__Bandwidth(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTons2__ReservationData(struct soap *soap, struct ns2__ReservationData *const*a) {
+  if (!soap_reference(soap, *a, SOAP_TYPE_ns2__ReservationData))
+    soap_serialize_ns2__ReservationData(soap, *a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTons2__ReservationData(struct soap *soap, const char *tag, int id, struct ns2__ReservationData *const*a, const char *type) {
+  id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ns2__ReservationData);
+  if (id < 0)
+    return soap->error;
+  return soap_out_ns2__ReservationData(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 struct ns2__ReservationData ** SOAP_FMAC4 soap_in_PointerTons2__ReservationData(struct soap *soap, const char *tag, struct ns2__ReservationData **a, const char *type) {
+  if (soap_element_begin_in(soap, tag, 1, NULL))
+    return NULL;
+  if (!a)
+    if (!(a = (struct ns2__ReservationData **)soap_malloc(soap, sizeof(struct ns2__ReservationData *))))
+      return NULL;
+  *a = NULL;
+  if (!soap->null && *soap->href != '#') {
+    soap_revert(soap);
+    if (!(*a = soap_in_ns2__ReservationData(soap, tag, *a, type)))
+      return NULL;
+  }
+  else {
+    a = (struct ns2__ReservationData **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ns2__ReservationData, sizeof(struct ns2__ReservationData), 0);
+    if (soap->body && soap_element_end_in(soap, tag))
+      return NULL;
+  }
+  return a;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTons2__ReservationData(struct soap *soap, struct ns2__ReservationData *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTons2__ReservationData);
+  if (soap_out_PointerTons2__ReservationData(soap, tag?tag:"ns2:ReservationData", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 struct ns2__ReservationData ** SOAP_FMAC4 soap_get_PointerTons2__ReservationData(struct soap *soap, struct ns2__ReservationData **p, const char *tag, const char *type) {
+  if ((p = soap_in_PointerTons2__ReservationData(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__QName(struct soap *soap, const char *tag, int id, char *const*a, const char *type) {
+  return soap_outstring(soap, tag, id, a, type, SOAP_TYPE__QName);
+}
+
+SOAP_FMAC3 char ** SOAP_FMAC4 soap_in__QName(struct soap *soap, const char *tag, char **a, const char *type) {
+  char **p;
+  p = soap_instring(soap, tag, a, type, SOAP_TYPE__QName, 2, -1, -1);
+  return p;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put__QName(struct soap *soap, char *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE__QName);
+  if (soap_out__QName(soap, tag?tag:"byte", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 char ** SOAP_FMAC4 soap_get__QName(struct soap *soap, char **p, const char *tag, const char *type) {
+  if ((p = soap_in__QName(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_string(struct soap *soap, char **a) {
+  (void)soap; /* appease -Wall -Werror */
 #ifdef SOAP_DEFAULT_string
-	*a = SOAP_DEFAULT_string;
+  *a = SOAP_DEFAULT_string;
 #else
-	*a = (char *)0;
+  *a = (char *)0;
 #endif
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_string(struct soap *soap, char *const*a)
-{
-	soap_reference(soap, *a, SOAP_TYPE_string);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_string(struct soap *soap, char *const*a) {
+  soap_reference(soap, *a, SOAP_TYPE_string);
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_string(struct soap *soap, const char *tag, int id, char *const*a, const char *type)
-{
-	return soap_outstring(soap, tag, id, a, type, SOAP_TYPE_string);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_string(struct soap *soap, const char *tag, int id, char *const*a, const char *type) {
+  return soap_outstring(soap, tag, id, a, type, SOAP_TYPE_string);
 }
 
-SOAP_FMAC3 char * * SOAP_FMAC4 soap_in_string(struct soap *soap, const char *tag, char **a, const char *type)
-{	char **p;
-	p = soap_instring(soap, tag, a, type, SOAP_TYPE_string, 1, -1, -1);
-	return p;
+SOAP_FMAC3 char ** SOAP_FMAC4 soap_in_string(struct soap *soap, const char *tag, char **a, const char *type) {
+  char **p;
+  p = soap_instring(soap, tag, a, type, SOAP_TYPE_string, 1, -1, -1);
+  return p;
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_string(struct soap *soap, char *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_string);
-	if (soap_out_string(soap, tag?tag:"byte", id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_string(struct soap *soap, char *const*a, const char *tag, const char *type) {
+  register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_string);
+  if (soap_out_string(soap, tag?tag:"byte", id, a, type))
+    return soap->error;
+  return soap_putindependent(soap);
 }
 
-SOAP_FMAC3 char ** SOAP_FMAC4 soap_get_string(struct soap *soap, char **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_string(soap, tag, p, type)))
-		if (soap_getindependent(soap))
-			return NULL;
-	return p;
+SOAP_FMAC3 char ** SOAP_FMAC4 soap_get_string(struct soap *soap, char **p, const char *tag, const char *type) {
+  if ((p = soap_in_string(soap, tag, p, type)))
+    if (soap_getindependent(soap))
+      return NULL;
+  return p;
 }
 
 #ifdef __cplusplus

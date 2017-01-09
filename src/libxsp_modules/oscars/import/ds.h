@@ -55,11 +55,11 @@ wsdl2h -cuxy -o ds.h -t WS/WS-typemap.dat WS/ds.xsd
 
 
 /// Imported complexType "http://www.w3.org/2000/09/xmldsig#":SignatureType from typemap WS/WS-typemap.dat.
-typedef struct ds__SignatureType
-{	struct ds__SignedInfoType*		SignedInfo;
-	char*					SignatureValue;
-	struct ds__KeyInfoType*			KeyInfo;
-	@char*					Id;
+typedef struct ds__SignatureType {
+  struct ds__SignedInfoType*		SignedInfo;
+  char*					SignatureValue;
+  struct ds__KeyInfoType*			KeyInfo;
+  @char*					Id;
 } ds__SignatureType, _ds__Signature;
 
 /// Imported complexType "http://www.w3.org/2000/09/xmldsig#":SignatureValueType from typemap WS/WS-typemap.dat.
@@ -82,23 +82,23 @@ typedef struct ds__TransformsType ds__TransformsType;
 
 /// Imported complexType "http://www.w3.org/2000/09/xmldsig#":TransformType from typemap WS/WS-typemap.dat.
 #import "c14n.h"
-typedef struct ds__TransformType
-{	_c14n__InclusiveNamespaces*             c14n__InclusiveNamespaces;
-	_XML					__any;
-	@char*					Algorithm;
+typedef struct ds__TransformType {
+  _c14n__InclusiveNamespaces*             c14n__InclusiveNamespaces;
+  _XML					__any;
+  @char*					Algorithm;
 } ds__TransformType, _ds__Transform;
 
 /// Typedef synonym for struct ds__DigestMethodType.
 typedef struct ds__DigestMethodType ds__DigestMethodType;
 
 /// Imported complexType "http://www.w3.org/2000/09/xmldsig#":KeyInfoType from typemap WS/WS-typemap.dat.
-typedef struct ds__KeyInfoType
-{	char*					KeyName;
-	struct ds__KeyValueType*		KeyValue;
-	struct ds__RetrievalMethodType*		RetrievalMethod;
-	struct ds__X509DataType*		X509Data;
-	struct _wsse__SecurityTokenReference*	wsse__SecurityTokenReference;
-	@char*					Id;
+typedef struct ds__KeyInfoType {
+  char*					KeyName;
+  struct ds__KeyValueType*		KeyValue;
+  struct ds__RetrievalMethodType*		RetrievalMethod;
+  struct ds__X509DataType*		X509Data;
+  struct _wsse__SecurityTokenReference*	wsse__SecurityTokenReference;
+  @char*					Id;
 } ds__KeyInfoType, _ds__KeyInfo;
 
 /// Typedef synonym for struct ds__KeyValueType.
@@ -147,91 +147,84 @@ typedef struct ds__RSAKeyValueType ds__RSAKeyValueType;
 /// simpleType definition intentionally left blank.
 
 /// "http://www.w3.org/2000/09/xmldsig#":SignedInfoType is a complexType.
-struct ds__SignedInfoType
-{
+struct ds__SignedInfoType {
 /// Element reference "http://www.w3.org/2000/09/xmldsig#":CanonicalizationMethod.
-    struct ds__CanonicalizationMethodType*  CanonicalizationMethod         1;	///< Required element.
+  struct ds__CanonicalizationMethodType*  CanonicalizationMethod         1;	///< Required element.
 /// Element reference "http://www.w3.org/2000/09/xmldsig#":SignatureMethod.
-    struct ds__SignatureMethodType*      SignatureMethod                1;	///< Required element.
+  struct ds__SignatureMethodType*      SignatureMethod                1;	///< Required element.
 /// Size of the dynamic array of struct ds__ReferenceType* is 0..unbounded
-    int                                  __sizeReference               ;
+  int                                  __sizeReference               ;
 /// Pointer to array of struct ds__ReferenceType*.
-    struct ds__ReferenceType*           *Reference                      1;
+  struct ds__ReferenceType**Reference                      1;
 /// Attribute Id of type xs:ID.
-   @char* /*ID*/                         Id                             0;	///< Optional attribute.
+  @char* /*ID*/                         Id                             0;	///< Optional attribute.
 };
 
 /// "http://www.w3.org/2000/09/xmldsig#":CanonicalizationMethodType is a complexType.
-struct ds__CanonicalizationMethodType
-{
+struct ds__CanonicalizationMethodType {
 /// TODO: <any namespace="##any" minOccurs="0" maxOccurs="unbounded">
 ///       Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change and/or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 /// Attribute Algorithm of type xs:anyURI.
-   @char* /*URI*/                        Algorithm                      1;	///< Required attribute.
+  @char* /*URI*/                        Algorithm                      1;	///< Required attribute.
 /// Member declared in WS/WS-typemap.dat
-   _c14n__InclusiveNamespaces*		c14n__InclusiveNamespaces;
+  _c14n__InclusiveNamespaces*		c14n__InclusiveNamespaces;
 };
 
 /// "http://www.w3.org/2000/09/xmldsig#":SignatureMethodType is a complexType.
-struct ds__SignatureMethodType
-{
+struct ds__SignatureMethodType {
 /// Element HMACOutputLength of type "http://www.w3.org/2000/09/xmldsig#":HMACOutputLengthType.
-    int*                                 HMACOutputLength               0;	///< Optional element.
+  int*                                 HMACOutputLength               0;	///< Optional element.
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 ///       Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change and/or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 /// Attribute Algorithm of type xs:anyURI.
-   @char* /*URI*/                        Algorithm                      1;	///< Required attribute.
+  @char* /*URI*/                        Algorithm                      1;	///< Required attribute.
 };
 
 /// "http://www.w3.org/2000/09/xmldsig#":ReferenceType is a complexType.
-struct ds__ReferenceType
-{
+struct ds__ReferenceType {
 /// Element reference "http://www.w3.org/2000/09/xmldsig#":Transforms.
-    struct ds__TransformsType*           Transforms                     0;	///< Optional element.
+  struct ds__TransformsType*           Transforms                     0;	///< Optional element.
 /// Element reference "http://www.w3.org/2000/09/xmldsig#":DigestMethod.
-    struct ds__DigestMethodType*         DigestMethod                   1;	///< Required element.
+  struct ds__DigestMethodType*         DigestMethod                   1;	///< Required element.
 /// Element reference "http://www.w3.org/2000/09/xmldsig#":DigestValue.
-    char* /*base64*/                     DigestValue                    1;	///< Required element.
+  char* /*base64*/                     DigestValue                    1;	///< Required element.
 /// Attribute Id of type xs:ID.
-   @char* /*ID*/                         Id                             0;	///< Optional attribute.
+  @char* /*ID*/                         Id                             0;	///< Optional attribute.
 /// Attribute URI of type xs:anyURI.
-   @char* /*URI*/                        URI                            0;	///< Optional attribute.
+  @char* /*URI*/                        URI                            0;	///< Optional attribute.
 /// Attribute Type of type xs:anyURI.
-   @char* /*URI*/                        Type                           0;	///< Optional attribute.
+  @char* /*URI*/                        Type                           0;	///< Optional attribute.
 };
 
 /// "http://www.w3.org/2000/09/xmldsig#":TransformsType is a complexType.
-struct ds__TransformsType
-{
+struct ds__TransformsType {
 /// Size of the dynamic array of ds__TransformType is 0..unbounded
-    int                                  __sizeTransform               ;
+  int                                  __sizeTransform               ;
 /// Pointer to array of ds__TransformType.
-    ds__TransformType                   *Transform                      1;
+  ds__TransformType                   *Transform                      1;
 };
 
 /// "http://www.w3.org/2000/09/xmldsig#":DigestMethodType is a complexType.
-struct ds__DigestMethodType
-{
+struct ds__DigestMethodType {
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 ///       Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change and/or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 /// Attribute Algorithm of type xs:anyURI.
-   @char* /*URI*/                        Algorithm                      1;	///< Required attribute.
+  @char* /*URI*/                        Algorithm                      1;	///< Required attribute.
 };
 
 /// "http://www.w3.org/2000/09/xmldsig#":KeyValueType is a complexType.
-struct ds__KeyValueType
-{
+struct ds__KeyValueType {
 /// CHOICE OF ELEMENTS <choice>
 /// Element reference "http://www.w3.org/2000/09/xmldsig#":DSAKeyValue.
-    struct ds__DSAKeyValueType*          DSAKeyValue                    1;	///< Required element.
+  struct ds__DSAKeyValueType*          DSAKeyValue                    1;	///< Required element.
 /// Element reference "http://www.w3.org/2000/09/xmldsig#":RSAKeyValue.
-    struct ds__RSAKeyValueType*          RSAKeyValue                    1;	///< Required element.
+  struct ds__RSAKeyValueType*          RSAKeyValue                    1;	///< Required element.
 /// TODO: <any namespace="##other">
 ///       Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change and/or insert declarations.
@@ -241,30 +234,28 @@ struct ds__KeyValueType
 };
 
 /// "http://www.w3.org/2000/09/xmldsig#":RetrievalMethodType is a complexType.
-struct ds__RetrievalMethodType
-{
+struct ds__RetrievalMethodType {
 /// Element reference "http://www.w3.org/2000/09/xmldsig#":Transforms.
-    struct ds__TransformsType*           Transforms                     0;	///< Optional element.
+  struct ds__TransformsType*           Transforms                     0;	///< Optional element.
 /// Attribute URI of type xs:anyURI.
-   @char* /*URI*/                        URI                            0;	///< Optional attribute.
+  @char* /*URI*/                        URI                            0;	///< Optional attribute.
 /// Attribute Type of type xs:anyURI.
-   @char* /*URI*/                        Type                           0;	///< Optional attribute.
+  @char* /*URI*/                        Type                           0;	///< Optional attribute.
 };
 
 /// "http://www.w3.org/2000/09/xmldsig#":X509DataType is a complexType.
-struct ds__X509DataType
-{
+struct ds__X509DataType {
 /// CHOICE OF ELEMENTS <choice>
 /// Element X509IssuerSerial of type "http://www.w3.org/2000/09/xmldsig#":X509IssuerSerialType.
-    struct ds__X509IssuerSerialType*     X509IssuerSerial               1;	///< Required element.
+  struct ds__X509IssuerSerialType*     X509IssuerSerial               1;	///< Required element.
 /// Element X509SKI of type xs:base64Binary.
-    char* /*base64*/                     X509SKI                        1;	///< Required element.
+  char* /*base64*/                     X509SKI                        1;	///< Required element.
 /// Element X509SubjectName of type xs:string.
-    char*                                X509SubjectName                1;	///< Required element.
+  char*                                X509SubjectName                1;	///< Required element.
 /// Element X509Certificate of type xs:base64Binary.
-    char* /*base64*/                     X509Certificate                1;	///< Required element.
+  char* /*base64*/                     X509Certificate                1;	///< Required element.
 /// Element X509CRL of type xs:base64Binary.
-    char* /*base64*/                     X509CRL                        1;	///< Required element.
+  char* /*base64*/                     X509CRL                        1;	///< Required element.
 /// TODO: <any namespace="##other">
 ///       Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change and/or insert declarations.
@@ -274,40 +265,37 @@ struct ds__X509DataType
 };
 
 /// "http://www.w3.org/2000/09/xmldsig#":X509IssuerSerialType is a complexType.
-struct ds__X509IssuerSerialType
-{
+struct ds__X509IssuerSerialType {
 /// Element X509IssuerName of type xs:string.
-    char*                                X509IssuerName                 1;	///< Required element.
+  char*                                X509IssuerName                 1;	///< Required element.
 /// Element X509SerialNumber of type xs:integer.
-    int                                  X509SerialNumber               1;	///< Required element.
+  int                                  X509SerialNumber               1;	///< Required element.
 };
 
 /// "http://www.w3.org/2000/09/xmldsig#":DSAKeyValueType is a complexType.
-struct ds__DSAKeyValueType
-{
+struct ds__DSAKeyValueType {
 /// Element G of type "http://www.w3.org/2000/09/xmldsig#":CryptoBinary.
-    char* /*base64*/                     G                              0;	///< Optional element.
+  char* /*base64*/                     G                              0;	///< Optional element.
 /// Element Y of type "http://www.w3.org/2000/09/xmldsig#":CryptoBinary.
-    char* /*base64*/                     Y                              1;	///< Required element.
+  char* /*base64*/                     Y                              1;	///< Required element.
 /// Element J of type "http://www.w3.org/2000/09/xmldsig#":CryptoBinary.
-    char* /*base64*/                     J                              0;	///< Optional element.
+  char* /*base64*/                     J                              0;	///< Optional element.
 /// Element P of type "http://www.w3.org/2000/09/xmldsig#":CryptoBinary.
-    char* /*base64*/                     P                              1;	///< Required element.
+  char* /*base64*/                     P                              1;	///< Required element.
 /// Element Q of type "http://www.w3.org/2000/09/xmldsig#":CryptoBinary.
-    char* /*base64*/                     Q                              1;	///< Required element.
+  char* /*base64*/                     Q                              1;	///< Required element.
 /// Element Seed of type "http://www.w3.org/2000/09/xmldsig#":CryptoBinary.
-    char* /*base64*/                     Seed                           1;	///< Required element.
+  char* /*base64*/                     Seed                           1;	///< Required element.
 /// Element PgenCounter of type "http://www.w3.org/2000/09/xmldsig#":CryptoBinary.
-    char* /*base64*/                     PgenCounter                    1;	///< Required element.
+  char* /*base64*/                     PgenCounter                    1;	///< Required element.
 };
 
 /// "http://www.w3.org/2000/09/xmldsig#":RSAKeyValueType is a complexType.
-struct ds__RSAKeyValueType
-{
+struct ds__RSAKeyValueType {
 /// Element Modulus of type "http://www.w3.org/2000/09/xmldsig#":CryptoBinary.
-    char* /*base64*/                     Modulus                        1;	///< Required element.
+  char* /*base64*/                     Modulus                        1;	///< Required element.
 /// Element Exponent of type "http://www.w3.org/2000/09/xmldsig#":CryptoBinary.
-    char* /*base64*/                     Exponent                       1;	///< Required element.
+  char* /*base64*/                     Exponent                       1;	///< Required element.
 };
 
 /// Element "http://www.w3.org/2000/09/xmldsig#":Signature of complexType "http://www.w3.org/2000/09/xmldsig#":SignatureType.

@@ -18,42 +18,42 @@
 #endif
 
 int xsp_globus_send_token(void *arg, void *token, size_t token_length) {
-	int sd = *((int *) arg);
-	xspGlobusToken xsp_token;
+  int sd = *((int *) arg);
+  xspGlobusToken xsp_token;
 
-	xsp_token.token_length = token_length;
-	xsp_token.token = token;
+  xsp_token.token_length = token_length;
+  xsp_token.token = token;
 
-	xsp_put_msg(sd, 0, XSP_MSG_GLOBUS_TOKEN, NULL, &xsp_token);
+  xsp_put_msg(sd, 0, XSP_MSG_GLOBUS_TOKEN, NULL, &xsp_token);
 
-	return 0;
+  return 0;
 }
 
 int xsp_globus_get_token(void *arg, void **token, size_t *token_length) {
-	int sd = *((int *) arg);
-	xspGlobusToken *xsp_token;
-	xspMsg *msg;
+  int sd = *((int *) arg);
+  xspGlobusToken *xsp_token;
+  xspMsg *msg;
 
-	msg = xsp_get_msg(sd, 0);
-	if (!msg)
-		goto error_exit;
+  msg = xsp_get_msg(sd, 0);
+  if (!msg)
+    goto error_exit;
 
-	if (msg->type != XSP_MSG_GLOBUS_TOKEN)
-		goto error_exit2;
+  if (msg->type != XSP_MSG_GLOBUS_TOKEN)
+    goto error_exit2;
 
-	xsp_token = msg->msg_body;
+  xsp_token = msg->msg_body;
 
-	*token_length = xsp_token->token_length;
+  *token_length = xsp_token->token_length;
 
-	*token = xsp_token->token;
+  *token = xsp_token->token;
 
-	free(xsp_token);
-	free(msg);
+  free(xsp_token);
+  free(msg);
 
-	return 0;
+  return 0;
 
 error_exit2:
-	xsp_free_msg(msg);
+  xsp_free_msg(msg);
 error_exit:
-	return -1;
+  return -1;
 }

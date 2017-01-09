@@ -42,9 +42,9 @@
 #define TRUE 1
 #define FALSE 0
 
-// Signed variables are for wimps 
-#define uchar unsigned char 
-#define uint unsigned int 
+// Signed variables are for wimps
+#define uchar unsigned char
+#define uint unsigned int
 #define u_char unsigned char
 #define u_int unsigned int
 
@@ -66,14 +66,12 @@ size_t	strlcat (char *dst, const char *src, size_t siz);
 
 #ifndef ntohll
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-static inline uint64_t ntohll(uint64_t x)
-{
-	return bswap_64(x);
+static inline uint64_t ntohll(uint64_t x) {
+  return bswap_64(x);
 }
 #elif __BYTE_ORDER == __BIG_ENDIAN
-static inline uint64_t ntohll(uint64_t x)
-{
-	return x;
+static inline uint64_t ntohll(uint64_t x) {
+  return x;
 }
 #endif
 #endif
@@ -102,13 +100,13 @@ int *listen_port_iface(char **interfaces, int interface_count, int protocol, int
 
 #define SHA_DIGEST_LENGTH		20
 
-typedef struct { 
-   uchar data[64]; 
-   uint datalen; 
-   uint bitlen[2]; 
-   uint state[5]; 
-   uint k[4]; 
-} SHA1_CTX; 
+typedef struct {
+  uchar data[64];
+  uint datalen;
+  uint bitlen[2];
+  uint state[5];
+  uint k[4];
+} SHA1_CTX;
 
 void sha1_init(SHA1_CTX *ctx);
 void sha1_update(SHA1_CTX *ctx, const uchar data[], uint len);

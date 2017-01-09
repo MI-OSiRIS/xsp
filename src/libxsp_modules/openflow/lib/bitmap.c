@@ -52,34 +52,32 @@
  * to 'value'. */
 void
 bitmap_set_multiple(unsigned long *bitmap, size_t start, size_t count,
-                    bool value)
-{
-    for (; count && start % BITMAP_ULONG_BITS; count--) {
-        bitmap_set(bitmap, start++, value);
-    }
-    for (; count >= BITMAP_ULONG_BITS; count -= BITMAP_ULONG_BITS) {
-        *bitmap_unit__(bitmap, start) = -(unsigned long) value;
-        start += BITMAP_ULONG_BITS;
-    }
-    for (; count; count--) {
-        bitmap_set(bitmap, start++, value);
-    }
+                    bool value) {
+  for (; count && start % BITMAP_ULONG_BITS; count--) {
+    bitmap_set(bitmap, start++, value);
+  }
+  for (; count >= BITMAP_ULONG_BITS; count -= BITMAP_ULONG_BITS) {
+    *bitmap_unit__(bitmap, start) = -(unsigned long) value;
+    start += BITMAP_ULONG_BITS;
+  }
+  for (; count; count--) {
+    bitmap_set(bitmap, start++, value);
+  }
 }
 
 /* Compares the 'n' bits in bitmaps 'a' and 'b'.  Returns true if all bits are
  * equal, false otherwise. */
 bool
-bitmap_equal(const unsigned long *a, const unsigned long *b, size_t n)
-{
-    size_t i;
+bitmap_equal(const unsigned long *a, const unsigned long *b, size_t n) {
+  size_t i;
 
-    if (memcmp(a, b, n / BITMAP_ULONG_BITS * sizeof(unsigned long))) {
-        return false;
+  if (memcmp(a, b, n / BITMAP_ULONG_BITS * sizeof(unsigned long))) {
+    return false;
+  }
+  for (i = ROUND_DOWN(n, BITMAP_ULONG_BITS); i < n; i++) {
+    if (bitmap_is_set(a, i) != bitmap_is_set(b, i)) {
+      return false;
     }
-    for (i = ROUND_DOWN(n, BITMAP_ULONG_BITS); i < n; i++) {
-        if (bitmap_is_set(a, i) != bitmap_is_set(b, i)) {
-            return false;
-        }
-    }
-    return true;
+  }
+  return true;
 }

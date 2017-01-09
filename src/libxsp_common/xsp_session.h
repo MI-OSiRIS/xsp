@@ -32,55 +32,55 @@
 #define XSP_COMM_CHILD_HOPS_DEFER 0x01
 
 typedef struct common_session_t {
-	char id[2*XSP_SESSIONID_LEN + 1];
+  char id[2*XSP_SESSIONID_LEN + 1];
 
-        struct xsp_addr src_eid;
-        struct xsp_addr dst_eid;
+  struct xsp_addr src_eid;
+  struct xsp_addr dst_eid;
 
-	xspHop **child;
-	int child_count;
-	
-	uint8_t version;
-	
-	char *user;
-	
-	xspSettings *requested_settings;
+  xspHop **child;
+  int child_count;
 
-	xspHop *next_hop_info;
+  uint8_t version;
 
-	LIST_HEAD(sess_pc_listhead, xsp_connection_t) parent_conns;
-	LIST_HEAD(sess_cc_listhead, xsp_connection_t) child_conns;
-	
-	LIST_HEAD(sess_pdc_listhead, xsp_connection_t) parent_data_conns;
-        LIST_HEAD(sess_cdc_listhead, xsp_connection_t) child_data_conns;
+  char *user;
 
-	int connected;
-	int state;
-	
-	struct xsp_connection_t *cntl_conn;
-	struct xsp_credentials_t *credentials;
-	
-	struct timeval start_time, end_time;
-	
-	int references;
-	pthread_mutex_t references_lock;
-	
-	void *(*proto_cb) (struct common_session_t *, xspMsg*);
-	void *(*close_cb) (struct common_session_t *);
+  xspSettings *requested_settings;
 
-	void *private;
+  xspHop *next_hop_info;
 
-	LIST_ENTRY(common_session_t) sess_list;
+  LIST_HEAD(sess_pc_listhead, xsp_connection_t) parent_conns;
+  LIST_HEAD(sess_cc_listhead, xsp_connection_t) child_conns;
+
+  LIST_HEAD(sess_pdc_listhead, xsp_connection_t) parent_data_conns;
+  LIST_HEAD(sess_cdc_listhead, xsp_connection_t) child_data_conns;
+
+  int connected;
+  int state;
+
+  struct xsp_connection_t *cntl_conn;
+  struct xsp_credentials_t *credentials;
+
+  struct timeval start_time, end_time;
+
+  int references;
+  pthread_mutex_t references_lock;
+
+  void *(*proto_cb) (struct common_session_t *, xspMsg*);
+  void *(*close_cb) (struct common_session_t *);
+
+  void *private;
+
+  LIST_ENTRY(common_session_t) sess_list;
 
 #ifdef NETLOGGER
-        int nl_id;
+  int nl_id;
 #endif
 } comSess;
 
 typedef struct xsp_cb_map_t {
-	int (*pre_child_cb) (struct common_session_t *);
-	int (*post_child_cb) (struct common_session_t *);
-        void *(*close_cb) (struct common_session_t *);
+  int (*pre_child_cb) (struct common_session_t *);
+  int (*post_child_cb) (struct common_session_t *);
+  void *(*close_cb) (struct common_session_t *);
 } xspCBMap;
 
 int xsp_sessions_init();
@@ -100,15 +100,15 @@ comSess **xsp_get_sessions(int *count);
 int xsp_session_get_blocks(const xspMsg *msg, int opt_type, xspBlock ***ret_blocks, int *count);
 
 inline char *xsp_session_get_user(comSess *sess) {
-        return sess->user;
+  return sess->user;
 }
 
 inline void xsp_session_set_user(comSess *sess, char *user) {
-	sess->user = user;
+  sess->user = user;
 }
 
 inline char *xsp_session_get_id(comSess *sess) {
-	return sess->id;
+  return sess->id;
 }
 
 void xsp_session_close_connections(comSess *sess);

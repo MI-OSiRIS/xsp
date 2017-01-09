@@ -149,74 +149,67 @@ ns1 = "http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/"
 
 
 /// "http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/":remove_pathResponse is a complexType.
-struct ns1__remove_USCOREpathResponse
-{
+struct ns1__remove_USCOREpathResponse {
 /// Element remove_pathResult of type xs:string.
-    char*                                remove_USCOREpathResult        1;	///< Required element.
+  char*                                remove_USCOREpathResult        1;	///< Required element.
 };
 
 /// "http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/":new_path is a complexType.
-struct ns1__new_USCOREpath
-{
+struct ns1__new_USCOREpath {
 /// Element newpath of type "http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/":PathData.
-    struct ns1__PathData*                newpath                        1;	///< Required element.
+  struct ns1__PathData*                newpath                        1;	///< Required element.
 };
 
 /// "http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/":status_pathResponse is a complexType.
-struct ns1__status_USCOREpathResponse
-{
+struct ns1__status_USCOREpathResponse {
 /// Element status_pathResult of type xs:string.
-    char*                                status_USCOREpathResult        1;	///< Required element.
+  char*                                status_USCOREpathResult        1;	///< Required element.
 };
 
 /// "http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/":status_path is a complexType.
-struct ns1__status_USCOREpath
-{
+struct ns1__status_USCOREpath {
 /// Element path of type "http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/":PathData.
-    struct ns1__PathData*                path                           1;	///< Required element.
+  struct ns1__PathData*                path                           1;	///< Required element.
 };
 
 /// "http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/":PathData is a complexType.
-struct ns1__PathData
-{
+struct ns1__PathData {
 /// Element status of type xs:string.
-    char*                                status                         0;	///< Optional element.
+  char*                                status                         0;	///< Optional element.
 /// Element src of type xs:string.
-    char*                                src                            0;	///< Optional element.
+  char*                                src                            0;	///< Optional element.
 /// Element direction of type xs:string.
-    char*                                direction                      0;	///< Optional element.
+  char*                                direction                      0;	///< Optional element.
 /// Element src_port_range of type xs:string.
-    char*                                src_USCOREport_USCORErange     0;	///< Optional element.
+  char*                                src_USCOREport_USCORErange     0;	///< Optional element.
 /// Element start_time of type xs:int.
-    int*                                 start_USCOREtime               0;	///< Optional element.
+  int*                                 start_USCOREtime               0;	///< Optional element.
 /// Element path_id of type xs:string.
-    char*                                path_USCOREid                  0;	///< Optional element.
+  char*                                path_USCOREid                  0;	///< Optional element.
 /// Element dst_port_range of type xs:string.
-    char*                                dst_USCOREport_USCORErange     0;	///< Optional element.
+  char*                                dst_USCOREport_USCORErange     0;	///< Optional element.
 /// Element bandwidth of type xs:int.
-    int*                                 bandwidth                      0;	///< Optional element.
+  int*                                 bandwidth                      0;	///< Optional element.
 /// Element duration of type xs:int.
-    int*                                 duration                       0;	///< Optional element.
+  int*                                 duration                       0;	///< Optional element.
 /// Element bw_class of type xs:string.
-    char*                                bw_USCOREclass                 0;	///< Optional element.
+  char*                                bw_USCOREclass                 0;	///< Optional element.
 /// Element dst of type xs:string.
-    char*                                dst                            0;	///< Optional element.
+  char*                                dst                            0;	///< Optional element.
 /// Element vlan_id of type xs:string.
-    char*                                vlan_USCOREid                  0;	///< Optional element.
+  char*                                vlan_USCOREid                  0;	///< Optional element.
 };
 
 /// "http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/":new_pathResponse is a complexType.
-struct ns1__new_USCOREpathResponse
-{
+struct ns1__new_USCOREpathResponse {
 /// Element new_pathResult of type xs:string.
-    char*                                new_USCOREpathResult           1;	///< Required element.
+  char*                                new_USCOREpathResult           1;	///< Required element.
 };
 
 /// "http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/":remove_path is a complexType.
-struct ns1__remove_USCOREpath
-{
+struct ns1__remove_USCOREpath {
 /// Element pathid of type xs:string.
-    char*                                pathid                         1;	///< Required element.
+  char*                                pathid                         1;	///< Required element.
 };
 
 /******************************************************************************\
@@ -263,11 +256,11 @@ struct ns1__remove_USCOREpath
 \******************************************************************************/
 
 
-//gsoap ns1  service name:	MonitoringApp 
-//gsoap ns1  service type:	MonitoringApp 
-//gsoap ns1  service port:	http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/?wsdl 
-//gsoap ns1  service namespace:	http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/ 
-//gsoap ns1  service transport:	http://schemas.xmlsoap.org/soap/http 
+//gsoap ns1  service name:	MonitoringApp
+//gsoap ns1  service type:	MonitoringApp
+//gsoap ns1  service port:	http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/?wsdl
+//gsoap ns1  service namespace:	http://blackseal.damsl.cis.udel.edu/escpscope/monitor-service/
+//gsoap ns1  service transport:	http://schemas.xmlsoap.org/soap/http
 
 /** @mainpage MonitoringApp Definitions
 
@@ -365,8 +358,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-encoding:	new_USCOREpath literal
 //gsoap ns1  service method-action:	new_USCOREpath new_path
 int __ns1__new_USCOREpath(
-    struct ns1__new_USCOREpath*         ns1__new_USCOREpath,	///< Request parameter
-    struct ns1__new_USCOREpathResponse* ns1__new_USCOREpathResponse	///< Response parameter
+  struct ns1__new_USCOREpath*         ns1__new_USCOREpath,	///< Request parameter
+  struct ns1__new_USCOREpathResponse* ns1__new_USCOREpathResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -418,8 +411,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-encoding:	remove_USCOREpath literal
 //gsoap ns1  service method-action:	remove_USCOREpath remove_path
 int __ns1__remove_USCOREpath(
-    struct ns1__remove_USCOREpath*      ns1__remove_USCOREpath,	///< Request parameter
-    struct ns1__remove_USCOREpathResponse* ns1__remove_USCOREpathResponse	///< Response parameter
+  struct ns1__remove_USCOREpath*      ns1__remove_USCOREpath,	///< Request parameter
+  struct ns1__remove_USCOREpathResponse* ns1__remove_USCOREpathResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -471,8 +464,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-encoding:	status_USCOREpath literal
 //gsoap ns1  service method-action:	status_USCOREpath status_path
 int __ns1__status_USCOREpath(
-    struct ns1__status_USCOREpath*      ns1__status_USCOREpath,	///< Request parameter
-    struct ns1__status_USCOREpathResponse* ns1__status_USCOREpathResponse	///< Response parameter
+  struct ns1__status_USCOREpath*      ns1__status_USCOREpath,	///< Request parameter
+  struct ns1__status_USCOREpathResponse* ns1__status_USCOREpathResponse	///< Response parameter
 );
 
 /******************************************************************************\

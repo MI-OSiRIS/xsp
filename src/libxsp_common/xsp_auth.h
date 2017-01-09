@@ -24,16 +24,16 @@
 
 
 typedef struct xsp_credentials_t {
-	char *type;
-	void *private;
-	const char *(*get_user) (struct xsp_credentials_t *credentials);
-	const char *(*get_email) (struct xsp_credentials_t *credentials);
-	const char *(*get_institution) (struct xsp_credentials_t *credentials);
-	void (*free) (struct xsp_credentials_t *credentials);
+  char *type;
+  void *private;
+  const char *(*get_user) (struct xsp_credentials_t *credentials);
+  const char *(*get_email) (struct xsp_credentials_t *credentials);
+  const char *(*get_institution) (struct xsp_credentials_t *credentials);
+  void (*free) (struct xsp_credentials_t *credentials);
 #ifdef HAVE_OPENSSL
-	SSL_CTX *ctx;
-	BIO *sbio;
-	SSL *ssl;
+  SSL_CTX *ctx;
+  BIO *sbio;
+  SSL *ssl;
 #endif
 } xspCreds;
 
@@ -57,11 +57,11 @@ int xsp_authentication_init();
  *                          non-zero otherwise.
  */
 typedef struct xsp_authentication_handler_t {
-	char name[XSP_AUTH_NAME_LEN + 1];
-	int (*authenticate) (xspConn *conn, xspCreds **ret_creds);
-	int (*request_authentication) (comSess *sess, xspConn *conn);
-	int (*authenticate_interactive) (xspCreds *creds, const char *input, char **output);
-	void *(*get_auth_context) (void);
+  char name[XSP_AUTH_NAME_LEN + 1];
+  int (*authenticate) (xspConn *conn, xspCreds **ret_creds);
+  int (*request_authentication) (comSess *sess, xspConn *conn);
+  int (*authenticate_interactive) (xspCreds *creds, const char *input, char **output);
+  void *(*get_auth_context) (void);
 } xspAuthenticationHandler;
 
 /*

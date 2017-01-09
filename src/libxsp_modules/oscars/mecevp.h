@@ -116,8 +116,8 @@ enum SOAP_MEC_STATE { SOAP_MEC_STATE_NONE, SOAP_MEC_STATE_INIT, SOAP_MEC_STATE_I
 @struct soap_mec_data
 @brief The mecevp engine context data
 */
-struct soap_mec_data
-{ int alg;			/**< The algorithm used */
+struct soap_mec_data {
+  int alg;			/**< The algorithm used */
   enum SOAP_MEC_STATE state;	/**< Decryption state */
   EVP_CIPHER_CTX *ctx;		/**< EVP_CIPHER_CTX context */
   const EVP_CIPHER *type;	/**< type for OpenInit/DecryptInit */

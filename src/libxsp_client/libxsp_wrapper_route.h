@@ -46,11 +46,11 @@ int libxsp_wrapper_route_add(const char *addr_mask, const char **path, int path_
 int libxsp_wrapper_route_remove(const char *addr_mask);
 
 struct libxsp_route_path_info {
-	int *ports;
-	int port_count;
+  int *ports;
+  int port_count;
 
-	char **path;
-	int path_count;
+  char **path;
+  int path_count;
 };
 
 const struct libxsp_route_path_info *libxsp_wrapper_route_lookup_sa(const struct sockaddr *sa);

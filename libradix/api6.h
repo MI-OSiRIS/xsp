@@ -23,7 +23,7 @@
 #ifndef NT
 #include <netinet/in.h>
 #include <arpa/inet.h> /* inet_ntop defined there */
-#endif /* NT */ 
+#endif /* NT */
 #ifdef HAVE_NETINET_IP6_H
 #include <netinet/ip6.h>
 #endif /* HAVE_NETINET_IP6_H */
@@ -45,17 +45,17 @@
 
 #ifndef RFC2292
 struct ip6_hdr {
-        union {
-                struct ip6_hdrctl {
-                        u_long  ip6_un1_flow; /* 20 bits of flow-ID */
-                        u_short ip6_un1_plen; /* payload length */
-                        u_char  ip6_un1_nxt;  /* next header */
-                        u_char  ip6_un1_hlim; /* hop limit */
-                } ip6_un1;
-                u_char ip6_un2_vfc;   /* 4 bits version, 4 bits class */
-        } ip6_ctlun;
-        struct in6_addr ip6_src;        /* source address */
-        struct in6_addr ip6_dst;        /* destination address */
+  union {
+    struct ip6_hdrctl {
+      u_long  ip6_un1_flow; /* 20 bits of flow-ID */
+      u_short ip6_un1_plen; /* payload length */
+      u_char  ip6_un1_nxt;  /* next header */
+      u_char  ip6_un1_hlim; /* hop limit */
+    } ip6_un1;
+    u_char ip6_un2_vfc;   /* 4 bits version, 4 bits class */
+  } ip6_ctlun;
+  struct in6_addr ip6_src;        /* source address */
+  struct in6_addr ip6_dst;        /* destination address */
 };
 
 #define ip6_vfc         ip6_ctlun.ip6_un2_vfc
@@ -75,7 +75,7 @@ struct ip6_hdr {
  * Many implementations provide 32-bit access but the field name may vary.
  */
 struct _in6_addr32 {
-    u_long _s6_addr32[4];
+  u_long _s6_addr32[4];
 };
 
 /*
@@ -120,16 +120,14 @@ extern const struct in6_addr in6addr_any;
 #define IN6_IS_ADDR_MULTICAST(a) ((a)->s6_addr[0] == 0xff)
 
 #ifdef notdef
-extern __inline__ IN6_IS_ADDR_LINKLOCAL (struct in6_addr *a)
-{
-    return ((a->s6_addr32[0] & __constant_htonl (0xFFC00000)) == 
-	    __constant_htonl(0xFE800000));
+extern __inline__ IN6_IS_ADDR_LINKLOCAL (struct in6_addr *a) {
+  return ((a->s6_addr32[0] & __constant_htonl (0xFFC00000)) ==
+          __constant_htonl(0xFE800000));
 }
 
-extern __inline__ IN6_IS_ADDR_V4MAPPED (struct in6_addr *a)
-{
-    return ((a->s6_addr32[0] | a->s6_addr32[1] | a->s6_addr32[2]) == 0
-            && (a->s6_addr32[3] & __constant_htonl (0xFF000000)));
+extern __inline__ IN6_IS_ADDR_V4MAPPED (struct in6_addr *a) {
+  return ((a->s6_addr32[0] | a->s6_addr32[1] | a->s6_addr32[2]) == 0
+          && (a->s6_addr32[3] & __constant_htonl (0xFF000000)));
 }
 
 #endif
@@ -157,7 +155,7 @@ extern __inline__ IN6_IS_ADDR_V4MAPPED (struct in6_addr *a)
 #if defined (__linux__) || defined (NRL_IPV6) || (defined (SOLARIS_IPV6) && !defined (RFC2292))
 
 #if defined (__GLIBC__) && __GLIBC__ >= 2 && __GLIBC_MINOR__ >= 1
-  /* nothing */
+/* nothing */
 #else /* __GLIBC__ */
 
 #ifndef _LINUX_ICMPV6_H
@@ -167,14 +165,14 @@ struct icmp6_filter {
 };
 
 struct icmp6_hdr {
-   u_char     icmp6_type;   /* type field */
-   u_char     icmp6_code;   /* code field */
-   u_short    icmp6_cksum;  /* checksum field */
-   union {
-      u_long   icmp6_un_data32[1]; /* type-specific field */
-      u_short  icmp6_un_data16[2]; /* type-specific field */
-      u_char   icmp6_un_data8[4];  /* type-specific field */
-   } icmp6_dataun;
+  u_char     icmp6_type;   /* type field */
+  u_char     icmp6_code;   /* code field */
+  u_short    icmp6_cksum;  /* checksum field */
+  union {
+    u_long   icmp6_un_data32[1]; /* type-specific field */
+    u_short  icmp6_un_data16[2]; /* type-specific field */
+    u_char   icmp6_un_data8[4];  /* type-specific field */
+  } icmp6_dataun;
 };
 
 #define icmp6_data32    icmp6_dataun.icmp6_un_data32

@@ -100,7 +100,7 @@ engelen@genivia.com / engelen@acm.org
         standards. The message is time stamped and includes the X.509
         certificate of the signing entity. The timestamp, certificate
         and message body are all signed. DRAFT V1.0 Nov 2006
-    
+
 */
 
 
@@ -145,11 +145,11 @@ ns6 = "http://docs.oasis-open.org/wsrf/bf-2"
 //gsoap ns1   schema attributeForm:	unqualified
 
 #define SOAP_NAMESPACE_OF_ns2	""
-//gsoap ns2   schema namespace:	
+//gsoap ns2   schema namespace:
 //gsoap ns2   schema form:	unqualified
 
 #define SOAP_NAMESPACE_OF_ns2	""
-//gsoap ns2   schema namespace:	
+//gsoap ns2   schema namespace:
 //gsoap ns2   schema form:	unqualified
 
 /// @brief WARNING: THIS IS NOT THE OFFICIAL SCHEMA DOCUMENT FOR THE NMWG CONTROL PLANE TOPOLOGY SCHEMA. This document is used by OSCARS to generate Java classes with Axis2. Due to some software limitations this version of the schema is used to generate those classes. It assumes all elements are given in the order defined because it uses xsd:sequence elements instead of xsd:choice elements. It also does not yet include the bidirectionalPath element. The Path element is that most heavily used by OSCARS and for XML requests that use more of the topology schema it is recommended a non Axis2 cient is used for best results.
@@ -302,434 +302,403 @@ typedef char* ns4__AbsoluteOrRelativeTimeType;
 
 
 /// "http://oscars.es.net/OSCARS":resCreateContent is a complexType.
-struct ns1__resCreateContent
-{
+struct ns1__resCreateContent {
 /// Element globalReservationId of type xs:string.
-    char*                                globalReservationId            0;	///< Optional element.
+  char*                                globalReservationId            0;	///< Optional element.
 /// Element startTime of type xs:long.
-    LONG64                               startTime                      1;	///< Required element.
+  LONG64                               startTime                      1;	///< Required element.
 /// Element endTime of type xs:long.
-    LONG64                               endTime                        1;	///< Required element.
+  LONG64                               endTime                        1;	///< Required element.
 /// Element bandwidth of type xs:int.
-    int                                  bandwidth                      1;	///< Required element.
+  int                                  bandwidth                      1;	///< Required element.
 /// Element description of type xs:string.
-    char*                                description                    1;	///< Required element.
+  char*                                description                    1;	///< Required element.
 /// Element pathInfo of type "http://oscars.es.net/OSCARS":pathInfo.
-    struct ns1__pathInfo*                pathInfo                       1;	///< Required element.
+  struct ns1__pathInfo*                pathInfo                       1;	///< Required element.
 };
 
 /// "http://oscars.es.net/OSCARS":createReply is a complexType.
-struct ns1__createReply
-{
+struct ns1__createReply {
 /// Element globalReservationId of type xs:string.
-    char*                                globalReservationId            1;	///< Required element.
+  char*                                globalReservationId            1;	///< Required element.
 /// Element token of type xs:string.
-    char*                                token                          0;	///< Optional element.
+  char*                                token                          0;	///< Optional element.
 /// Element status of type xs:string.
-    char*                                status                         1;	///< Required element.
+  char*                                status                         1;	///< Required element.
 /// Element pathInfo of type "http://oscars.es.net/OSCARS":pathInfo.
-    struct ns1__pathInfo*                pathInfo                       0;	///< Optional element.
+  struct ns1__pathInfo*                pathInfo                       0;	///< Optional element.
 };
 
 /// "http://oscars.es.net/OSCARS":modifyResContent is a complexType.
-struct ns1__modifyResContent
-{
+struct ns1__modifyResContent {
 /// Element globalReservationId of type xs:string.
-    char*                                globalReservationId            1;	///< Required element.
+  char*                                globalReservationId            1;	///< Required element.
 /// Element startTime of type xs:long.
-    LONG64                               startTime                      1;	///< Required element.
+  LONG64                               startTime                      1;	///< Required element.
 /// Element endTime of type xs:long.
-    LONG64                               endTime                        1;	///< Required element.
+  LONG64                               endTime                        1;	///< Required element.
 /// Element bandwidth of type xs:int.
-    int                                  bandwidth                      1;	///< Required element.
+  int                                  bandwidth                      1;	///< Required element.
 /// Element description of type xs:string.
-    char*                                description                    1;	///< Required element.
+  char*                                description                    1;	///< Required element.
 /// Element pathInfo of type "http://oscars.es.net/OSCARS":pathInfo.
-    struct ns1__pathInfo*                pathInfo                       0;	///< Optional element.
+  struct ns1__pathInfo*                pathInfo                       0;	///< Optional element.
 };
 
 /// "http://oscars.es.net/OSCARS":modifyResReply is a complexType.
-struct ns1__modifyResReply
-{
+struct ns1__modifyResReply {
 /// Element reservation of type "http://oscars.es.net/OSCARS":resDetails.
-    struct ns1__resDetails*              reservation                    1;	///< Required element.
+  struct ns1__resDetails*              reservation                    1;	///< Required element.
 };
 
 /// "http://oscars.es.net/OSCARS":getTopologyContent is a complexType.
-struct ns1__getTopologyContent
-{
+struct ns1__getTopologyContent {
 /// Element topologyType of type xs:string.
-    char*                                topologyType                   1;	///< Required element.
+  char*                                topologyType                   1;	///< Required element.
 };
 
 /// "http://oscars.es.net/OSCARS":getTopologyResponseContent is a complexType.
-struct ns1__getTopologyResponseContent
-{
+struct ns1__getTopologyResponseContent {
 /// Element reference "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":topology.
-    struct ns3__CtrlPlaneTopologyContent*  ns3__topology                  1;	///< Required element.
+  struct ns3__CtrlPlaneTopologyContent*  ns3__topology                  1;	///< Required element.
 };
 
 /// "http://oscars.es.net/OSCARS":createPathContent is a complexType.
-struct ns1__createPathContent
-{
+struct ns1__createPathContent {
 /// Element token of type xs:string.
-    char*                                token                          0;	///< Optional element.
+  char*                                token                          0;	///< Optional element.
 /// Element globalReservationId of type xs:string.
-    char*                                globalReservationId            1;	///< Required element.
+  char*                                globalReservationId            1;	///< Required element.
 };
 
 /// "http://oscars.es.net/OSCARS":createPathResponseContent is a complexType.
-struct ns1__createPathResponseContent
-{
+struct ns1__createPathResponseContent {
 /// Element globalReservationId of type xs:string.
-    char*                                globalReservationId            1;	///< Required element.
+  char*                                globalReservationId            1;	///< Required element.
 /// Element status of type xs:string.
-    char*                                status                         1;	///< Required element.
+  char*                                status                         1;	///< Required element.
 };
 
 /// "http://oscars.es.net/OSCARS":refreshPathContent is a complexType.
-struct ns1__refreshPathContent
-{
+struct ns1__refreshPathContent {
 /// Element token of type xs:string.
-    char*                                token                          0;	///< Optional element.
+  char*                                token                          0;	///< Optional element.
 /// Element globalReservationId of type xs:string.
-    char*                                globalReservationId            1;	///< Required element.
+  char*                                globalReservationId            1;	///< Required element.
 };
 
 /// "http://oscars.es.net/OSCARS":refreshPathResponseContent is a complexType.
-struct ns1__refreshPathResponseContent
-{
+struct ns1__refreshPathResponseContent {
 /// Element globalReservationId of type xs:string.
-    char*                                globalReservationId            1;	///< Required element.
+  char*                                globalReservationId            1;	///< Required element.
 /// Element status of type xs:string.
-    char*                                status                         1;	///< Required element.
+  char*                                status                         1;	///< Required element.
 };
 
 /// "http://oscars.es.net/OSCARS":teardownPathContent is a complexType.
-struct ns1__teardownPathContent
-{
+struct ns1__teardownPathContent {
 /// Element token of type xs:string.
-    char*                                token                          0;	///< Optional element.
+  char*                                token                          0;	///< Optional element.
 /// Element globalReservationId of type xs:string.
-    char*                                globalReservationId            1;	///< Required element.
+  char*                                globalReservationId            1;	///< Required element.
 };
 
 /// "http://oscars.es.net/OSCARS":teardownPathResponseContent is a complexType.
-struct ns1__teardownPathResponseContent
-{
+struct ns1__teardownPathResponseContent {
 /// Element globalReservationId of type xs:string.
-    char*                                globalReservationId            1;	///< Required element.
+  char*                                globalReservationId            1;	///< Required element.
 /// Element status of type xs:string.
-    char*                                status                         1;	///< Required element.
+  char*                                status                         1;	///< Required element.
 };
 
 /// "http://oscars.es.net/OSCARS":resDetails is a complexType.
-struct ns1__resDetails
-{
+struct ns1__resDetails {
 /// Element globalReservationId of type xs:string.
-    char*                                globalReservationId            1;	///< Required element.
+  char*                                globalReservationId            1;	///< Required element.
 /// Element login of type xs:string.
-    char*                                login                          1;	///< Required element.
+  char*                                login                          1;	///< Required element.
 /// Element status of type xs:string.
-    char*                                status                         1;	///< Required element.
+  char*                                status                         1;	///< Required element.
 /// Element startTime of type xs:long.
-    LONG64                               startTime                      1;	///< Required element.
+  LONG64                               startTime                      1;	///< Required element.
 /// Element endTime of type xs:long.
-    LONG64                               endTime                        1;	///< Required element.
+  LONG64                               endTime                        1;	///< Required element.
 /// Element createTime of type xs:long.
-    LONG64                               createTime                     1;	///< Required element.
+  LONG64                               createTime                     1;	///< Required element.
 /// Element bandwidth of type xs:int.
-    int                                  bandwidth                      1;	///< Required element.
+  int                                  bandwidth                      1;	///< Required element.
 /// Element description of type xs:string.
-    char*                                description                    1;	///< Required element.
+  char*                                description                    1;	///< Required element.
 /// Element pathInfo of type "http://oscars.es.net/OSCARS":pathInfo.
-    struct ns1__pathInfo*                pathInfo                       1;	///< Required element.
+  struct ns1__pathInfo*                pathInfo                       1;	///< Required element.
 };
 
 /// "http://oscars.es.net/OSCARS":listRequest is a complexType.
-struct ns1__listRequest
-{
+struct ns1__listRequest {
 /// Size of array of char* is 0..5
-   $int                                  __sizeresStatus                0:5;
+  $int                                  __sizeresStatus                0:5;
 /// Pointer to array char* of length 0..5
-    char*                               *resStatus                      0:5;
+  char**resStatus                      0:5;
 /// SEQUENCE OF ELEMENTS <xs:sequence minOccurs="0" maxOccurs="1">
-   $int                                  __size_listRequest_sequence    0;
-    struct __ns1__listRequest_sequence
-    {
+  $int                                  __size_listRequest_sequence    0;
+  struct __ns1__listRequest_sequence {
 /// Element startTime of type xs:long.
     LONG64                               startTime                      1;	///< Required element.
 /// Element endTime of type xs:long.
     LONG64                               endTime                        1;	///< Required element.
-    }                                   *__listRequest_sequence        ;
+  }                                   *__listRequest_sequence        ;
 //  END OF SEQUENCE
 /// Element description of type xs:string.
-    char*                                description                    0;	///< Optional element.
+  char*                                description                    0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizelinkId                   0;
+  $int                                  __sizelinkId                   0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *linkId                         0;
+  char**linkId                         0;
 /// Size of array of struct ns1__vlanTag* is 0..unbounded
-   $int                                  __sizevlanTag                  0;
+  $int                                  __sizevlanTag                  0;
 /// Pointer to array struct ns1__vlanTag* of length 0..unbounded
-    struct ns1__vlanTag*                *vlanTag                        0;
+  struct ns1__vlanTag**vlanTag                        0;
 /// Element resRequested of type xs:int.
-    int*                                 resRequested                   0;	///< Optional element.
+  int*                                 resRequested                   0;	///< Optional element.
 /// Element resOffset of type xs:int.
-    int*                                 resOffset                      0;	///< Optional element.
+  int*                                 resOffset                      0;	///< Optional element.
 };
 
 /// "http://oscars.es.net/OSCARS":listReply is a complexType.
-struct ns1__listReply
-{
+struct ns1__listReply {
 /// Size of array of struct ns1__resDetails* is 0..unbounded
-   $int                                  __sizeresDetails               0;
+  $int                                  __sizeresDetails               0;
 /// Pointer to array struct ns1__resDetails* of length 0..unbounded
-    struct ns1__resDetails*             *resDetails                     0;
+  struct ns1__resDetails**resDetails                     0;
 /// Element totalResults of type xs:int.
-    int*                                 totalResults                   0;	///< Optional element.
+  int*                                 totalResults                   0;	///< Optional element.
 };
 
 /// "http://oscars.es.net/OSCARS":forwardPayload is a complexType.
-struct ns1__forwardPayload
-{
+struct ns1__forwardPayload {
 /// Element contentType of type xs:string.
-    char*                                contentType                    1;	///< Required element.
+  char*                                contentType                    1;	///< Required element.
 /// Element createReservation of type "http://oscars.es.net/OSCARS":resCreateContent.
-    struct ns1__resCreateContent*        createReservation              0;	///< Optional element.
+  struct ns1__resCreateContent*        createReservation              0;	///< Optional element.
 /// Element modifyReservation of type "http://oscars.es.net/OSCARS":modifyResContent.
-    struct ns1__modifyResContent*        modifyReservation              0;	///< Optional element.
+  struct ns1__modifyResContent*        modifyReservation              0;	///< Optional element.
 /// Element cancelReservation of type "http://oscars.es.net/OSCARS":globalReservationId.
-    struct ns1__globalReservationId*     cancelReservation              0;	///< Optional element.
+  struct ns1__globalReservationId*     cancelReservation              0;	///< Optional element.
 /// Element queryReservation of type "http://oscars.es.net/OSCARS":globalReservationId.
-    struct ns1__globalReservationId*     queryReservation               0;	///< Optional element.
+  struct ns1__globalReservationId*     queryReservation               0;	///< Optional element.
 /// Element listReservations of type "http://oscars.es.net/OSCARS":listRequest.
-    struct ns1__listRequest*             listReservations               0;	///< Optional element.
+  struct ns1__listRequest*             listReservations               0;	///< Optional element.
 /// Element createPath of type "http://oscars.es.net/OSCARS":createPathContent.
-    struct ns1__createPathContent*       createPath                     0;	///< Optional element.
+  struct ns1__createPathContent*       createPath                     0;	///< Optional element.
 /// Element refreshPath of type "http://oscars.es.net/OSCARS":refreshPathContent.
-    struct ns1__refreshPathContent*      refreshPath                    0;	///< Optional element.
+  struct ns1__refreshPathContent*      refreshPath                    0;	///< Optional element.
 /// Element teardownPath of type "http://oscars.es.net/OSCARS":teardownPathContent.
-    struct ns1__teardownPathContent*     teardownPath                   0;	///< Optional element.
+  struct ns1__teardownPathContent*     teardownPath                   0;	///< Optional element.
 };
 
 /// "http://oscars.es.net/OSCARS":forwardReply is a complexType.
-struct ns1__forwardReply
-{
+struct ns1__forwardReply {
 /// Element contentType of type xs:string.
-    char*                                contentType                    1;	///< Required element.
+  char*                                contentType                    1;	///< Required element.
 /// Element createReservation of type "http://oscars.es.net/OSCARS":createReply.
-    struct ns1__createReply*             createReservation              0;	///< Optional element.
+  struct ns1__createReply*             createReservation              0;	///< Optional element.
 /// Element modifyReservation of type "http://oscars.es.net/OSCARS":modifyResReply.
-    struct ns1__modifyResReply*          modifyReservation              0;	///< Optional element.
+  struct ns1__modifyResReply*          modifyReservation              0;	///< Optional element.
 /// Element cancelReservation of type xs:string.
-    char*                                cancelReservation              0;	///< Optional element.
+  char*                                cancelReservation              0;	///< Optional element.
 /// Element queryReservation of type "http://oscars.es.net/OSCARS":resDetails.
-    struct ns1__resDetails*              queryReservation               0;	///< Optional element.
+  struct ns1__resDetails*              queryReservation               0;	///< Optional element.
 /// Element listReservations of type "http://oscars.es.net/OSCARS":listReply.
-    struct ns1__listReply*               listReservations               0;	///< Optional element.
+  struct ns1__listReply*               listReservations               0;	///< Optional element.
 /// Element createPath of type "http://oscars.es.net/OSCARS":createPathResponseContent.
-    struct ns1__createPathResponseContent*  createPath                     0;	///< Optional element.
+  struct ns1__createPathResponseContent*  createPath                     0;	///< Optional element.
 /// Element refreshPath of type "http://oscars.es.net/OSCARS":refreshPathResponseContent.
-    struct ns1__refreshPathResponseContent*  refreshPath                    0;	///< Optional element.
+  struct ns1__refreshPathResponseContent*  refreshPath                    0;	///< Optional element.
 /// Element teardownPath of type "http://oscars.es.net/OSCARS":teardownPathResponseContent.
-    struct ns1__teardownPathResponseContent*  teardownPath                   0;	///< Optional element.
+  struct ns1__teardownPathResponseContent*  teardownPath                   0;	///< Optional element.
 };
 
 /// "http://oscars.es.net/OSCARS":pathInfo is a complexType.
-struct ns1__pathInfo
-{
+struct ns1__pathInfo {
 /// Element pathSetupMode of type xs:string.
-    char*                                pathSetupMode                  1;	///< Required element.
+  char*                                pathSetupMode                  1;	///< Required element.
 /// Element pathType of type xs:string.
-    char*                                pathType                       0;	///< Optional element.
+  char*                                pathType                       0;	///< Optional element.
 /// Element path of type "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":CtrlPlanePathContent.
-    struct ns3__CtrlPlanePathContent*    path                           0;	///< Optional element.
+  struct ns3__CtrlPlanePathContent*    path                           0;	///< Optional element.
 /// Element layer2Info of type "http://oscars.es.net/OSCARS":layer2Info.
-    struct ns1__layer2Info*              layer2Info                     0;	///< Optional element.
+  struct ns1__layer2Info*              layer2Info                     0;	///< Optional element.
 /// Element layer3Info of type "http://oscars.es.net/OSCARS":layer3Info.
-    struct ns1__layer3Info*              layer3Info                     0;	///< Optional element.
+  struct ns1__layer3Info*              layer3Info                     0;	///< Optional element.
 /// Element mplsInfo of type "http://oscars.es.net/OSCARS":mplsInfo.
-    struct ns1__mplsInfo*                mplsInfo                       0;	///< Optional element.
+  struct ns1__mplsInfo*                mplsInfo                       0;	///< Optional element.
 };
 
 /// "http://oscars.es.net/OSCARS":layer2Info is a complexType.
-struct ns1__layer2Info
-{
+struct ns1__layer2Info {
 /// Element srcVtag of type "http://oscars.es.net/OSCARS":vlanTag.
-    struct ns1__vlanTag*                 srcVtag                        0;	///< Optional element.
+  struct ns1__vlanTag*                 srcVtag                        0;	///< Optional element.
 /// Element destVtag of type "http://oscars.es.net/OSCARS":vlanTag.
-    struct ns1__vlanTag*                 destVtag                       0;	///< Optional element.
+  struct ns1__vlanTag*                 destVtag                       0;	///< Optional element.
 /// Element srcEndpoint of type xs:string.
-    char*                                srcEndpoint                    1;	///< Required element.
+  char*                                srcEndpoint                    1;	///< Required element.
 /// Element destEndpoint of type xs:string.
-    char*                                destEndpoint                   1;	///< Required element.
+  char*                                destEndpoint                   1;	///< Required element.
 };
 
 /// "http://oscars.es.net/OSCARS":layer3Info is a complexType.
-struct ns1__layer3Info
-{
+struct ns1__layer3Info {
 /// Element srcHost of type xs:string.
-    char*                                srcHost                        1;	///< Required element.
+  char*                                srcHost                        1;	///< Required element.
 /// Element destHost of type xs:string.
-    char*                                destHost                       1;	///< Required element.
+  char*                                destHost                       1;	///< Required element.
 /// Element protocol of type xs:string.
-    char*                                protocol                       0;	///< Optional element.
+  char*                                protocol                       0;	///< Optional element.
 /// Element srcIpPort of type xs:int.
-    int*                                 srcIpPort                      0;	///< Optional element.
+  int*                                 srcIpPort                      0;	///< Optional element.
 /// Element destIpPort of type xs:int.
-    int*                                 destIpPort                     0;	///< Optional element.
+  int*                                 destIpPort                     0;	///< Optional element.
 /// Element dscp of type xs:string.
-    char*                                dscp                           0;	///< Optional element.
+  char*                                dscp                           0;	///< Optional element.
 };
 
 /// "http://oscars.es.net/OSCARS":mplsInfo is a complexType.
-struct ns1__mplsInfo
-{
+struct ns1__mplsInfo {
 /// Element burstLimit of type xs:int.
-    int                                  burstLimit                     1;	///< Required element.
+  int                                  burstLimit                     1;	///< Required element.
 /// Element lspClass of type xs:string.
-    char*                                lspClass                       0;	///< Optional element.
+  char*                                lspClass                       0;	///< Optional element.
 };
 
 /// "http://oscars.es.net/OSCARS":eventContent is a complexType.
-struct ns1__eventContent
-{
+struct ns1__eventContent {
 /// Element type of type xs:string.
-    char*                                type                           1;	///< Required element.
+  char*                                type                           1;	///< Required element.
 /// Element timestamp of type xs:long.
-    LONG64                               timestamp                      1;	///< Required element.
+  LONG64                               timestamp                      1;	///< Required element.
 /// Element userLogin of type xs:string.
-    char*                                userLogin                      0;	///< Optional element.
+  char*                                userLogin                      0;	///< Optional element.
 /// Element errorSource of type xs:string.
-    char*                                errorSource                    0;	///< Optional element.
+  char*                                errorSource                    0;	///< Optional element.
 /// Element errorCode of type xs:string.
-    char*                                errorCode                      0;	///< Optional element.
+  char*                                errorCode                      0;	///< Optional element.
 /// Element errorMessage of type xs:string.
-    char*                                errorMessage                   0;	///< Optional element.
+  char*                                errorMessage                   0;	///< Optional element.
 /// Element resDetails of type "http://oscars.es.net/OSCARS":resDetails.
-    struct ns1__resDetails*              resDetails                     0;	///< Optional element.
+  struct ns1__resDetails*              resDetails                     0;	///< Optional element.
 /// Element msgDetails of type "http://oscars.es.net/OSCARS":msgDetails.
-    struct ns1__msgDetails*              msgDetails                     0;	///< Optional element.
+  struct ns1__msgDetails*              msgDetails                     0;	///< Optional element.
 /// Element localDetails of type "http://oscars.es.net/OSCARS":localDetails.
-    struct ns1__localDetails*            localDetails                   0;	///< Optional element.
+  struct ns1__localDetails*            localDetails                   0;	///< Optional element.
 /// Attribute id of type xs:string.
-   @char*                                id                             1;	///< Required attribute.
+  @char*                                id                             1;	///< Required attribute.
 };
 
 /// "http://oscars.es.net/OSCARS":localDetails is a complexType.
-struct ns1__localDetails
-{
+struct ns1__localDetails {
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 /// "http://oscars.es.net/OSCARS":msgDetails is a complexType.
-struct ns1__msgDetails
-{
+struct ns1__msgDetails {
 /// Element contentType of type xs:string.
-    char*                                contentType                    1;	///< Required element.
+  char*                                contentType                    1;	///< Required element.
 /// Element forward of type "http://oscars.es.net/OSCARS":forwardPayload.
-    struct ns1__forwardPayload*          forward                        0;	///< Optional element.
+  struct ns1__forwardPayload*          forward                        0;	///< Optional element.
 /// Element createReservation of type "http://oscars.es.net/OSCARS":resCreateContent.
-    struct ns1__resCreateContent*        createReservation              0;	///< Optional element.
+  struct ns1__resCreateContent*        createReservation              0;	///< Optional element.
 /// Element modifyReservation of type "http://oscars.es.net/OSCARS":modifyResContent.
-    struct ns1__modifyResContent*        modifyReservation              0;	///< Optional element.
+  struct ns1__modifyResContent*        modifyReservation              0;	///< Optional element.
 /// Element cancelReservation of type "http://oscars.es.net/OSCARS":globalReservationId.
-    struct ns1__globalReservationId*     cancelReservation              0;	///< Optional element.
+  struct ns1__globalReservationId*     cancelReservation              0;	///< Optional element.
 /// Element queryReservation of type "http://oscars.es.net/OSCARS":globalReservationId.
-    struct ns1__globalReservationId*     queryReservation               0;	///< Optional element.
+  struct ns1__globalReservationId*     queryReservation               0;	///< Optional element.
 /// Element listReservations of type "http://oscars.es.net/OSCARS":listRequest.
-    struct ns1__listRequest*             listReservations               0;	///< Optional element.
+  struct ns1__listRequest*             listReservations               0;	///< Optional element.
 /// Element createPath of type "http://oscars.es.net/OSCARS":createPathContent.
-    struct ns1__createPathContent*       createPath                     0;	///< Optional element.
+  struct ns1__createPathContent*       createPath                     0;	///< Optional element.
 /// Element refreshPath of type "http://oscars.es.net/OSCARS":refreshPathContent.
-    struct ns1__refreshPathContent*      refreshPath                    0;	///< Optional element.
+  struct ns1__refreshPathContent*      refreshPath                    0;	///< Optional element.
 /// Element teardownPath of type "http://oscars.es.net/OSCARS":teardownPathContent.
-    struct ns1__teardownPathContent*     teardownPath                   0;	///< Optional element.
+  struct ns1__teardownPathContent*     teardownPath                   0;	///< Optional element.
 /// Element forwardResponse of type "http://oscars.es.net/OSCARS":forwardReply.
-    struct ns1__forwardReply*            forwardResponse                0;	///< Optional element.
+  struct ns1__forwardReply*            forwardResponse                0;	///< Optional element.
 /// Element createReservationResponse of type "http://oscars.es.net/OSCARS":createReply.
-    struct ns1__createReply*             createReservationResponse      0;	///< Optional element.
+  struct ns1__createReply*             createReservationResponse      0;	///< Optional element.
 /// Element modifyReservationResponse of type "http://oscars.es.net/OSCARS":modifyResReply.
-    struct ns1__modifyResReply*          modifyReservationResponse      0;	///< Optional element.
+  struct ns1__modifyResReply*          modifyReservationResponse      0;	///< Optional element.
 /// Element cancelReservationResponse of type xs:string.
-    char*                                cancelReservationResponse      0;	///< Optional element.
+  char*                                cancelReservationResponse      0;	///< Optional element.
 /// Element queryReservationResponse of type "http://oscars.es.net/OSCARS":resDetails.
-    struct ns1__resDetails*              queryReservationResponse       0;	///< Optional element.
+  struct ns1__resDetails*              queryReservationResponse       0;	///< Optional element.
 /// Element listReservationsResponse of type "http://oscars.es.net/OSCARS":listReply.
-    struct ns1__listReply*               listReservationsResponse       0;	///< Optional element.
+  struct ns1__listReply*               listReservationsResponse       0;	///< Optional element.
 /// Element createPathResponse of type "http://oscars.es.net/OSCARS":createPathResponseContent.
-    struct ns1__createPathResponseContent*  createPathResponse             0;	///< Optional element.
+  struct ns1__createPathResponseContent*  createPathResponse             0;	///< Optional element.
 /// Element refreshPathResponse of type "http://oscars.es.net/OSCARS":refreshPathResponseContent.
-    struct ns1__refreshPathResponseContent*  refreshPathResponse            0;	///< Optional element.
+  struct ns1__refreshPathResponseContent*  refreshPathResponse            0;	///< Optional element.
 /// Element teardownPathResponse of type "http://oscars.es.net/OSCARS":teardownPathResponseContent.
-    struct ns1__teardownPathResponseContent*  teardownPathResponse           0;	///< Optional element.
+  struct ns1__teardownPathResponseContent*  teardownPathResponse           0;	///< Optional element.
 };
 
 /// "http://oscars.es.net/OSCARS":globalReservationId is a complexType.
-struct ns1__globalReservationId
-{
+struct ns1__globalReservationId {
 /// Element gri of type xs:string.
-    char*                                gri                            1;	///< Required element.
+  char*                                gri                            1;	///< Required element.
 };
 
 
 /// Top-level root element "http://oscars.es.net/OSCARS":forward
 
 /// "http://oscars.es.net/OSCARS":forward is a complexType.
-struct _ns1__forward
-{
+struct _ns1__forward {
 /// Element payload of type "http://oscars.es.net/OSCARS":forwardPayload.
-    struct ns1__forwardPayload*          payload                        1;	///< Required element.
+  struct ns1__forwardPayload*          payload                        1;	///< Required element.
 /// Element payloadSender of type xs:string.
-    char*                                payloadSender                  1;	///< Required element.
+  char*                                payloadSender                  1;	///< Required element.
 };
 
 
 /// Top-level root element "http://oscars.es.net/OSCARS":AAAFault
 
 /// "http://oscars.es.net/OSCARS":AAAFault is a complexType.
-struct _ns1__AAAFault
-{
+struct _ns1__AAAFault {
 /// Element msg of type xs:string.
-    char*                                msg                            1;	///< Required element.
+  char*                                msg                            1;	///< Required element.
 };
 
 
 /// Top-level root element "http://oscars.es.net/OSCARS":BSSFault
 
 /// "http://oscars.es.net/OSCARS":BSSFault is a complexType.
-struct _ns1__BSSFault
-{
+struct _ns1__BSSFault {
 /// Element msg of type xs:string.
-    char*                                msg                            1;	///< Required element.
+  char*                                msg                            1;	///< Required element.
 };
 
 
 /// Top-level root element "http://oscars.es.net/OSCARS":TopologyFault
 
 /// "http://oscars.es.net/OSCARS":TopologyFault is a complexType.
-struct _ns1__TopologyFault
-{
+struct _ns1__TopologyFault {
 /// Element msg of type xs:string.
-    char*                                msg                            1;	///< Required element.
+  char*                                msg                            1;	///< Required element.
 };
 
 
 /// Top-level root element "http://oscars.es.net/OSCARS":SignalFault
 
 /// "http://oscars.es.net/OSCARS":SignalFault is a complexType.
-struct _ns1__SignalFault
-{
+struct _ns1__SignalFault {
 /// Element msg of type xs:string.
-    char*                                msg                            1;	///< Required element.
+  char*                                msg                            1;	///< Required element.
 };
 
 /******************************************************************************\
@@ -757,213 +726,201 @@ struct _ns1__SignalFault
 
 
 /// "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":CtrlPlaneTopologyContent is a complexType.
-struct ns3__CtrlPlaneTopologyContent
-{
+struct ns3__CtrlPlaneTopologyContent {
 /// Element idcId of type xs:string.
-    char*                                idcId                          1;	///< Required element.
+  char*                                idcId                          1;	///< Required element.
 /// Size of the dynamic array of struct ns3__CtrlPlanePathContent* is 0..unbounded
-   $int                                  __sizepath                     0;
+  $int                                  __sizepath                     0;
 /// Pointer to array struct ns3__CtrlPlanePathContent* of length 0..unbounded
-    struct ns3__CtrlPlanePathContent*   *path                           0;
+  struct ns3__CtrlPlanePathContent**path                           0;
 /// Size of the dynamic array of struct ns3__CtrlPlaneDomainContent* is 0..unbounded
-   $int                                  __sizedomain                   0;
+  $int                                  __sizedomain                   0;
 /// Pointer to array struct ns3__CtrlPlaneDomainContent* of length 0..unbounded
-    struct ns3__CtrlPlaneDomainContent* *domain                         0;
+  struct ns3__CtrlPlaneDomainContent**domain                         0;
 /// Size of array of struct ns3__CtrlPlaneDomainSignatureContent* is 0..unbounded
-   $int                                  __sizedomainSignature          0;
+  $int                                  __sizedomainSignature          0;
 /// Pointer to array struct ns3__CtrlPlaneDomainSignatureContent* of length 0..unbounded
-    struct ns3__CtrlPlaneDomainSignatureContent* *domainSignature                0;
+  struct ns3__CtrlPlaneDomainSignatureContent**domainSignature                0;
 /// Attribute id of type xs:string.
-   @char*                                id                             1;	///< Required attribute.
+  @char*                                id                             1;	///< Required attribute.
 };
 
 /// "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":CtrlPlaneDomainContent is a complexType.
-struct ns3__CtrlPlaneDomainContent
-{
+struct ns3__CtrlPlaneDomainContent {
 /// Element lifetime of type "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":Lifetime.
-    struct ns3__Lifetime*                lifetime                       0;	///< Optional element.
+  struct ns3__Lifetime*                lifetime                       0;	///< Optional element.
 /// Size of the dynamic array of struct ns3__CtrlPlaneNodeContent* is 0..unbounded
-   $int                                  __sizenode                     0;
+  $int                                  __sizenode                     0;
 /// Pointer to array struct ns3__CtrlPlaneNodeContent* of length 0..unbounded
-    struct ns3__CtrlPlaneNodeContent*   *node                           0;
+  struct ns3__CtrlPlaneNodeContent**node                           0;
 /// Size of the dynamic array of struct ns3__CtrlPlanePortContent* is 0..unbounded
-   $int                                  __sizeport                     0;
+  $int                                  __sizeport                     0;
 /// Pointer to array struct ns3__CtrlPlanePortContent* of length 0..unbounded
-    struct ns3__CtrlPlanePortContent*   *port                           0;
+  struct ns3__CtrlPlanePortContent**port                           0;
 /// Size of the dynamic array of struct ns3__CtrlPlaneLinkContent* is 0..unbounded
-   $int                                  __sizelink                     0;
+  $int                                  __sizelink                     0;
 /// Pointer to array struct ns3__CtrlPlaneLinkContent* of length 0..unbounded
-    struct ns3__CtrlPlaneLinkContent*   *link                           0;
+  struct ns3__CtrlPlaneLinkContent**link                           0;
 /// Attribute id of type xs:string.
-   @char*                                id                             1;	///< Required attribute.
+  @char*                                id                             1;	///< Required attribute.
 };
 
 /// "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":CtrlPlaneNodeContent is a complexType.
-struct ns3__CtrlPlaneNodeContent
-{
+struct ns3__CtrlPlaneNodeContent {
 /// Element lifetime of type "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":Lifetime.
-    struct ns3__Lifetime*                lifetime                       0;	///< Optional element.
+  struct ns3__Lifetime*                lifetime                       0;	///< Optional element.
 /// Element address of type "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":CtrlPlaneAddressContent.
-    struct ns3__CtrlPlaneAddressContent*  address                        0;	///< Optional element.
+  struct ns3__CtrlPlaneAddressContent*  address                        0;	///< Optional element.
 /// Size of the dynamic array of struct ns3__CtrlPlanePortContent* is 0..unbounded
-   $int                                  __sizeport                     0;
+  $int                                  __sizeport                     0;
 /// Pointer to array struct ns3__CtrlPlanePortContent* of length 0..unbounded
-    struct ns3__CtrlPlanePortContent*   *port                           0;
+  struct ns3__CtrlPlanePortContent**port                           0;
 /// Attribute id of type xs:string.
-   @char*                                id                             1;	///< Required attribute.
+  @char*                                id                             1;	///< Required attribute.
 };
 
 /// "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":CtrlPlanePortContent is a complexType.
-struct ns3__CtrlPlanePortContent
-{
+struct ns3__CtrlPlanePortContent {
 /// Element lifetime of type "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":Lifetime.
-    struct ns3__Lifetime*                lifetime                       0;	///< Optional element.
+  struct ns3__Lifetime*                lifetime                       0;	///< Optional element.
 /// Element capacity of type xs:string.
-    char*                                capacity                       0;	///< Optional element.
+  char*                                capacity                       0;	///< Optional element.
 /// Element maximumReservableCapacity of type xs:string.
-    char*                                maximumReservableCapacity      0;	///< Optional element.
+  char*                                maximumReservableCapacity      0;	///< Optional element.
 /// Element minimumReservableCapacity of type xs:string.
-    char*                                minimumReservableCapacity      0;	///< Optional element.
+  char*                                minimumReservableCapacity      0;	///< Optional element.
 /// Element granularity of type xs:string.
-    char*                                granularity                    0;	///< Optional element.
+  char*                                granularity                    0;	///< Optional element.
 /// Element unreservedCapacity of type xs:string.
-    char*                                unreservedCapacity             0;	///< Optional element.
+  char*                                unreservedCapacity             0;	///< Optional element.
 /// Size of the dynamic array of struct ns3__CtrlPlaneLinkContent* is 0..unbounded
-   $int                                  __sizelink                     0;
+  $int                                  __sizelink                     0;
 /// Pointer to array struct ns3__CtrlPlaneLinkContent* of length 0..unbounded
-    struct ns3__CtrlPlaneLinkContent*   *link                           0;
+  struct ns3__CtrlPlaneLinkContent**link                           0;
 /// Attribute id of type xs:string.
-   @char*                                id                             1;	///< Required attribute.
+  @char*                                id                             1;	///< Required attribute.
 };
 
 /// "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":CtrlPlaneLinkContent is a complexType.
-struct ns3__CtrlPlaneLinkContent
-{
+struct ns3__CtrlPlaneLinkContent {
 /// Element remoteLinkId of type xs:string.
-    char*                                remoteLinkId                   0;	///< Optional element.
+  char*                                remoteLinkId                   0;	///< Optional element.
 /// Element trafficEngineeringMetric of type xs:string.
-    char*                                trafficEngineeringMetric       1;	///< Required element.
+  char*                                trafficEngineeringMetric       1;	///< Required element.
 /// Element capacity of type xs:string.
-    char*                                capacity                       0;	///< Optional element.
+  char*                                capacity                       0;	///< Optional element.
 /// Element maximumReservableCapacity of type xs:string.
-    char*                                maximumReservableCapacity      0;	///< Optional element.
+  char*                                maximumReservableCapacity      0;	///< Optional element.
 /// Element minimumReservableCapacity of type xs:string.
-    char*                                minimumReservableCapacity      0;	///< Optional element.
+  char*                                minimumReservableCapacity      0;	///< Optional element.
 /// Element granularity of type xs:string.
-    char*                                granularity                    0;	///< Optional element.
+  char*                                granularity                    0;	///< Optional element.
 /// Element unreservedCapacity of type xs:string.
-    char*                                unreservedCapacity             0;	///< Optional element.
+  char*                                unreservedCapacity             0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizelinkProtectionTypes      0;
+  $int                                  __sizelinkProtectionTypes      0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *linkProtectionTypes            0;
+  char**linkProtectionTypes            0;
 /// Size of array of struct ns3__CtrlPlaneAdministrativeGroup* is 0..unbounded
-   $int                                  __sizeadministrativeGroups     0;
+  $int                                  __sizeadministrativeGroups     0;
 /// Pointer to array struct ns3__CtrlPlaneAdministrativeGroup* of length 0..unbounded
-    struct ns3__CtrlPlaneAdministrativeGroup* *administrativeGroups           0;
+  struct ns3__CtrlPlaneAdministrativeGroup**administrativeGroups           0;
 /// Element SwitchingCapabilityDescriptors of type "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":CtrlPlaneSwcapContent.
-    struct ns3__CtrlPlaneSwcapContent*   SwitchingCapabilityDescriptors 1;	///< Required element.
+  struct ns3__CtrlPlaneSwcapContent*   SwitchingCapabilityDescriptors 1;	///< Required element.
 /// Attribute id of type xs:string.
-   @char*                                id                             1;	///< Required attribute.
+  @char*                                id                             1;	///< Required attribute.
 };
 
 /// "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":CtrlPlanePathContent is a complexType.
-struct ns3__CtrlPlanePathContent
-{
+struct ns3__CtrlPlanePathContent {
 /// Element lifetime of type "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":Lifetime.
-    struct ns3__Lifetime*                lifetime                       0;	///< Optional element.
+  struct ns3__Lifetime*                lifetime                       0;	///< Optional element.
 /// Size of array of struct ns3__CtrlPlaneHopContent* is 0..unbounded
-   $int                                  __sizehop                      0;
+  $int                                  __sizehop                      0;
 /// Pointer to array struct ns3__CtrlPlaneHopContent* of length 0..unbounded
-    struct ns3__CtrlPlaneHopContent*    *hop                            0;
+  struct ns3__CtrlPlaneHopContent**hop                            0;
 /// Attribute id of type xs:string.
-   @char*                                id                             1;	///< Required attribute.
+  @char*                                id                             1;	///< Required attribute.
 /// Attribute direction of type xs:string.
-   @char*                                direction                      0;	///< Optional attribute.
+  @char*                                direction                      0;	///< Optional attribute.
 };
 
 /// "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":CtrlPlaneHopContent is a complexType.
-struct ns3__CtrlPlaneHopContent
-{
+struct ns3__CtrlPlaneHopContent {
 /// Element domainIdRef of type xs:string.
-    char*                                domainIdRef                    0;	///< Optional element.
+  char*                                domainIdRef                    0;	///< Optional element.
 /// Element nodeIdRef of type xs:string.
-    char*                                nodeIdRef                      0;	///< Optional element.
+  char*                                nodeIdRef                      0;	///< Optional element.
 /// Element portIdRef of type xs:string.
-    char*                                portIdRef                      0;	///< Optional element.
+  char*                                portIdRef                      0;	///< Optional element.
 /// Element linkIdRef of type xs:string.
-    char*                                linkIdRef                      0;	///< Optional element.
+  char*                                linkIdRef                      0;	///< Optional element.
 /// Element reference "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":domain.
-    struct ns3__CtrlPlaneDomainContent*  domain                         0;	///< Optional element.
+  struct ns3__CtrlPlaneDomainContent*  domain                         0;	///< Optional element.
 /// Element reference "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":node.
-    struct ns3__CtrlPlaneNodeContent*    node                           0;	///< Optional element.
+  struct ns3__CtrlPlaneNodeContent*    node                           0;	///< Optional element.
 /// Element reference "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":port.
-    struct ns3__CtrlPlanePortContent*    port                           0;	///< Optional element.
+  struct ns3__CtrlPlanePortContent*    port                           0;	///< Optional element.
 /// Element reference "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":link.
-    struct ns3__CtrlPlaneLinkContent*    link                           0;	///< Optional element.
+  struct ns3__CtrlPlaneLinkContent*    link                           0;	///< Optional element.
 /// Size of array of struct ns3__CtrlPlaneNextHopContent* is 0..unbounded
-   $int                                  __sizenextHop                  0;
+  $int                                  __sizenextHop                  0;
 /// Pointer to array struct ns3__CtrlPlaneNextHopContent* of length 0..unbounded
-    struct ns3__CtrlPlaneNextHopContent* *nextHop                        0;
+  struct ns3__CtrlPlaneNextHopContent**nextHop                        0;
 /// Attribute id of type xs:string.
-   @char*                                id                             1;	///< Required attribute.
+  @char*                                id                             1;	///< Required attribute.
 };
 
 /// "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":Lifetime is a complexType.
-struct ns3__Lifetime
-{
+struct ns3__Lifetime {
 /// Element start of type "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":TimeContent.
-    struct ns3__TimeContent*             start                          0;	///< Optional element.
+  struct ns3__TimeContent*             start                          0;	///< Optional element.
 /// Element end of type "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":TimeContent.
-    struct ns3__TimeContent*             end                            0;	///< Optional element.
+  struct ns3__TimeContent*             end                            0;	///< Optional element.
 /// Element duration of type "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":Duration.
-    struct ns3__Duration*                duration                       0;	///< Optional element.
+  struct ns3__Duration*                duration                       0;	///< Optional element.
 /// Attribute id of type xs:string.
-   @char*                                id                             1;	///< Required attribute.
+  @char*                                id                             1;	///< Required attribute.
 /// Attribute direction of type xs:string.
-   @char*                                direction                      0;	///< Optional attribute.
+  @char*                                direction                      0;	///< Optional attribute.
 };
 
 /// "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":CtrlPlaneDomainSignatureContent is a complexType.
-struct ns3__CtrlPlaneDomainSignatureContent
-{
+struct ns3__CtrlPlaneDomainSignatureContent {
 /// Attribute domainId of type xs:string.
-   @char*                                domainId                       1;	///< Required attribute.
+  @char*                                domainId                       1;	///< Required attribute.
 };
 
 /// "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":CtrlPlaneSwcapContent is a complexType.
-struct ns3__CtrlPlaneSwcapContent
-{
+struct ns3__CtrlPlaneSwcapContent {
 /// Element switchingcapType of type xs:string.
-    char*                                switchingcapType               1;	///< Required element.
+  char*                                switchingcapType               1;	///< Required element.
 /// Element encodingType of type xs:string.
-    char*                                encodingType                   1;	///< Required element.
+  char*                                encodingType                   1;	///< Required element.
 /// Element switchingCapabilitySpecificInfo of type "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":CtrlPlaneSwitchingCapabilitySpecificInfo.
-    struct ns3__CtrlPlaneSwitchingCapabilitySpecificInfo*  switchingCapabilitySpecificInfo 1;	///< Required element.
+  struct ns3__CtrlPlaneSwitchingCapabilitySpecificInfo*  switchingCapabilitySpecificInfo 1;	///< Required element.
 };
 
 /// "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":CtrlPlaneAdministrativeGroup is a complexType.
-struct ns3__CtrlPlaneAdministrativeGroup
-{
+struct ns3__CtrlPlaneAdministrativeGroup {
 /// Element group of type xs:int.
-    int                                  group                          1;	///< Required element.
+  int                                  group                          1;	///< Required element.
 /// Element groupID of type xs:string.
-    char*                                groupID                        0;	///< Optional element.
+  char*                                groupID                        0;	///< Optional element.
 };
 
 /// "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":CtrlPlaneSwitchingCapabilitySpecificInfo is a complexType.
-struct ns3__CtrlPlaneSwitchingCapabilitySpecificInfo
-{
+struct ns3__CtrlPlaneSwitchingCapabilitySpecificInfo {
 /// Element capability of type xs:string.
-    char*                                capability                     0;	///< Optional element.
+  char*                                capability                     0;	///< Optional element.
 /// Element interfaceMTU of type xs:int.
-    int*                                 interfaceMTU                   0;	///< Optional element.
+  int*                                 interfaceMTU                   0;	///< Optional element.
 /// Element vlanRangeAvailability of type xs:string.
-    char*                                vlanRangeAvailability          0;	///< Optional element.
+  char*                                vlanRangeAvailability          0;	///< Optional element.
 /// Element suggestedVLANRange of type xs:string.
-    char*                                suggestedVLANRange             0;	///< Optional element.
+  char*                                suggestedVLANRange             0;	///< Optional element.
 /// Element vlanTranslation of type xs:boolean.
-    enum xsd__boolean_*                  vlanTranslation                0;	///< Optional element.
+  enum xsd__boolean_*                  vlanTranslation                0;	///< Optional element.
 };
 
 /******************************************************************************\
@@ -975,454 +932,428 @@ struct ns3__CtrlPlaneSwitchingCapabilitySpecificInfo
 
 
 /// "http://docs.oasis-open.org/wsn/b-2":FilterType is a complexType.
-struct ns4__FilterType
-{
+struct ns4__FilterType {
 /// Size of the dynamic array of struct ns4__TopicExpressionType* is 0..unbounded
-   $int                                  __sizeTopicExpression          0;
+  $int                                  __sizeTopicExpression          0;
 /// Pointer to array struct ns4__TopicExpressionType* of length 0..unbounded
-    struct ns4__TopicExpressionType*    *TopicExpression                0;
+  struct ns4__TopicExpressionType**TopicExpression                0;
 /// Size of the dynamic array of struct ns4__QueryExpressionType* is 0..unbounded
-   $int                                  __sizeProducerProperties       0;
+  $int                                  __sizeProducerProperties       0;
 /// Pointer to array struct ns4__QueryExpressionType* of length 0..unbounded
-    struct ns4__QueryExpressionType*    *ProducerProperties             0;
+  struct ns4__QueryExpressionType**ProducerProperties             0;
 /// Size of the dynamic array of struct ns4__QueryExpressionType* is 0..unbounded
-   $int                                  __sizeMessageContent           0;
+  $int                                  __sizeMessageContent           0;
 /// Pointer to array struct ns4__QueryExpressionType* of length 0..unbounded
-    struct ns4__QueryExpressionType*    *MessageContent                 0;
+  struct ns4__QueryExpressionType**MessageContent                 0;
 /// TODO: <any namespace="##any" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":SubscriptionPolicyType is a complexType.
-struct ns4__SubscriptionPolicyType
-{
+struct ns4__SubscriptionPolicyType {
 /// TODO: <any namespace="##any" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":NotificationMessageHolderType is a complexType.
-struct ns4__NotificationMessageHolderType
-{
+struct ns4__NotificationMessageHolderType {
 /// Element reference "http://docs.oasis-open.org/wsn/b-2":SubscriptionReference.
-    wsa5__EndpointReferenceType*         SubscriptionReference          0;	///< Optional element.
+  wsa5__EndpointReferenceType*         SubscriptionReference          0;	///< Optional element.
 /// Element reference "http://docs.oasis-open.org/wsn/b-2":Topic.
-    struct ns4__TopicExpressionType*     Topic                          0;	///< Optional element.
+  struct ns4__TopicExpressionType*     Topic                          0;	///< Optional element.
 /// Element reference "http://docs.oasis-open.org/wsn/b-2":ProducerReference.
-    wsa5__EndpointReferenceType*         ProducerReference              0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ProducerReference              0;	///< Optional element.
 /// Element Message of type "http://docs.oasis-open.org/wsn/b-2":MessageType.
-    struct ns4__MessageType*             Message                        1;	///< Required element.
+  struct ns4__MessageType*             Message                        1;	///< Required element.
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":MessageType is a complexType.
-struct ns4__MessageType
-{
+struct ns4__MessageType {
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":SubscriptionManagerRP
 
 /// "http://docs.oasis-open.org/wsn/b-2":SubscriptionManagerRP is a complexType.
-struct _ns4__SubscriptionManagerRP
-{
+struct _ns4__SubscriptionManagerRP {
 /// Element reference "http://docs.oasis-open.org/wsn/b-2":ConsumerReference.
-    wsa5__EndpointReferenceType          ConsumerReference              1;	///< Required element.
+  wsa5__EndpointReferenceType          ConsumerReference              1;	///< Required element.
 /// Element reference "http://docs.oasis-open.org/wsn/b-2":Filter.
-    struct ns4__FilterType*              Filter                         0;	///< Optional element.
+  struct ns4__FilterType*              Filter                         0;	///< Optional element.
 /// Element reference "http://docs.oasis-open.org/wsn/b-2":SubscriptionPolicy.
-    struct ns4__SubscriptionPolicyType*  SubscriptionPolicy             0;	///< Optional element.
+  struct ns4__SubscriptionPolicyType*  SubscriptionPolicy             0;	///< Optional element.
 /// Element reference "http://docs.oasis-open.org/wsn/b-2":CreationTime.
-    time_t*                              CreationTime                   0;	///< Optional element.
+  time_t*                              CreationTime                   0;	///< Optional element.
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":Notify
 
 /// "http://docs.oasis-open.org/wsn/b-2":Notify is a complexType.
-struct _ns4__Notify
-{
+struct _ns4__Notify {
 /// Size of the dynamic array of struct ns4__NotificationMessageHolderType* is 1..unbounded
-   $int                                  __sizeNotificationMessage      1;
+  $int                                  __sizeNotificationMessage      1;
 /// Pointer to array struct ns4__NotificationMessageHolderType* of length 1..unbounded
-    struct ns4__NotificationMessageHolderType* *NotificationMessage            1;
+  struct ns4__NotificationMessageHolderType**NotificationMessage            1;
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":UseRaw
 
 /// "http://docs.oasis-open.org/wsn/b-2":UseRaw is a complexType.
-struct _ns4__UseRaw
-{
+struct _ns4__UseRaw {
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":Subscribe
 
 /// "http://docs.oasis-open.org/wsn/b-2":Subscribe is a complexType.
-struct _ns4__Subscribe
-{
+struct _ns4__Subscribe {
 /// Element ConsumerReference of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType          ConsumerReference              1;	///< Required element.
+  wsa5__EndpointReferenceType          ConsumerReference              1;	///< Required element.
 /// Element Filter of type "http://docs.oasis-open.org/wsn/b-2":FilterType.
-    struct ns4__FilterType*              Filter                         0;	///< Optional element.
+  struct ns4__FilterType*              Filter                         0;	///< Optional element.
 /// Element InitialTerminationTime of type xs:string.
-    char*                                InitialTerminationTime         0;	///< Nullable pointer.
-    struct _ns4__Subscribe_SubscriptionPolicy
-    {
+  char*                                InitialTerminationTime         0;	///< Nullable pointer.
+  struct _ns4__Subscribe_SubscriptionPolicy {
 /// TODO: <any namespace="##any" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
+    $int                                  __size                        0;
     _XML                                *__any                         0;	///< Catch any element content in XML string.
-    }                                   *SubscriptionPolicy             0;	///< Optional element.
+  }                                   *SubscriptionPolicy             0;	///< Optional element.
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":SubscribeResponse
 
 /// "http://docs.oasis-open.org/wsn/b-2":SubscribeResponse is a complexType.
-struct _ns4__SubscribeResponse
-{
+struct _ns4__SubscribeResponse {
 /// Element SubscriptionReference of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType          SubscriptionReference          1;	///< Required element.
+  wsa5__EndpointReferenceType          SubscriptionReference          1;	///< Required element.
 /// Element reference "http://docs.oasis-open.org/wsn/b-2":CurrentTime.
-    time_t*                              CurrentTime                    0;	///< Optional element.
+  time_t*                              CurrentTime                    0;	///< Optional element.
 /// Element reference "http://docs.oasis-open.org/wsn/b-2":TerminationTime.
-    time_t*                              TerminationTime                0;	///< Optional element.
+  time_t*                              TerminationTime                0;	///< Optional element.
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":GetCurrentMessage
 
 /// "http://docs.oasis-open.org/wsn/b-2":GetCurrentMessage is a complexType.
-struct _ns4__GetCurrentMessage
-{
+struct _ns4__GetCurrentMessage {
 /// Element Topic of type "http://docs.oasis-open.org/wsn/b-2":TopicExpressionType.
-    struct ns4__TopicExpressionType*     Topic                          1;	///< Required element.
+  struct ns4__TopicExpressionType*     Topic                          1;	///< Required element.
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":GetCurrentMessageResponse
 
 /// "http://docs.oasis-open.org/wsn/b-2":GetCurrentMessageResponse is a complexType.
-struct _ns4__GetCurrentMessageResponse
-{
+struct _ns4__GetCurrentMessageResponse {
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":GetMessages
 
 /// "http://docs.oasis-open.org/wsn/b-2":GetMessages is a complexType.
-struct _ns4__GetMessages
-{
+struct _ns4__GetMessages {
 /// Element MaximumNumber of type xs:nonNegativeInteger.
-    unsigned int*                        MaximumNumber                  0;	///< Optional element.
+  unsigned int*                        MaximumNumber                  0;	///< Optional element.
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":GetMessagesResponse
 
 /// "http://docs.oasis-open.org/wsn/b-2":GetMessagesResponse is a complexType.
-struct _ns4__GetMessagesResponse
-{
+struct _ns4__GetMessagesResponse {
 /// Size of the dynamic array of struct ns4__NotificationMessageHolderType* is 0..unbounded
-   $int                                  __sizeNotificationMessage      0;
+  $int                                  __sizeNotificationMessage      0;
 /// Pointer to array struct ns4__NotificationMessageHolderType* of length 0..unbounded
-    struct ns4__NotificationMessageHolderType* *NotificationMessage            0;
+  struct ns4__NotificationMessageHolderType**NotificationMessage            0;
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":DestroyPullPoint
 
 /// "http://docs.oasis-open.org/wsn/b-2":DestroyPullPoint is a complexType.
-struct _ns4__DestroyPullPoint
-{
+struct _ns4__DestroyPullPoint {
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":DestroyPullPointResponse
 
 /// "http://docs.oasis-open.org/wsn/b-2":DestroyPullPointResponse is a complexType.
-struct _ns4__DestroyPullPointResponse
-{
+struct _ns4__DestroyPullPointResponse {
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":CreatePullPoint
 
 /// "http://docs.oasis-open.org/wsn/b-2":CreatePullPoint is a complexType.
-struct _ns4__CreatePullPoint
-{
+struct _ns4__CreatePullPoint {
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":CreatePullPointResponse
 
 /// "http://docs.oasis-open.org/wsn/b-2":CreatePullPointResponse is a complexType.
-struct _ns4__CreatePullPointResponse
-{
+struct _ns4__CreatePullPointResponse {
 /// Element PullPoint of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType          PullPoint                      1;	///< Required element.
+  wsa5__EndpointReferenceType          PullPoint                      1;	///< Required element.
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":Renew
 
 /// "http://docs.oasis-open.org/wsn/b-2":Renew is a complexType.
-struct _ns4__Renew
-{
+struct _ns4__Renew {
 /// Element TerminationTime of type xs:string.
-    char*                                TerminationTime                1;	///< Nullable pointer.
+  char*                                TerminationTime                1;	///< Nullable pointer.
 /// Element reference "http://docs.oasis-open.org/wsn/b-2":SubscriptionReference.
-    wsa5__EndpointReferenceType          SubscriptionReference          1;	///< Required element.
+  wsa5__EndpointReferenceType          SubscriptionReference          1;	///< Required element.
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":RenewResponse
 
 /// "http://docs.oasis-open.org/wsn/b-2":RenewResponse is a complexType.
-struct _ns4__RenewResponse
-{
+struct _ns4__RenewResponse {
 /// Element reference "http://docs.oasis-open.org/wsn/b-2":TerminationTime.
-    time_t                               TerminationTime                1;	///< Required element.
+  time_t                               TerminationTime                1;	///< Required element.
 /// Element reference "http://docs.oasis-open.org/wsn/b-2":CurrentTime.
-    time_t*                              CurrentTime                    0;	///< Optional element.
+  time_t*                              CurrentTime                    0;	///< Optional element.
 /// Element reference "http://docs.oasis-open.org/wsn/b-2":SubscriptionReference.
-    wsa5__EndpointReferenceType*         SubscriptionReference          0;	///< Optional element.
+  wsa5__EndpointReferenceType*         SubscriptionReference          0;	///< Optional element.
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":Unsubscribe
 
 /// "http://docs.oasis-open.org/wsn/b-2":Unsubscribe is a complexType.
-struct _ns4__Unsubscribe
-{
+struct _ns4__Unsubscribe {
 /// Element reference "http://docs.oasis-open.org/wsn/b-2":SubscriptionReference.
-    wsa5__EndpointReferenceType          SubscriptionReference          1;	///< Required element.
+  wsa5__EndpointReferenceType          SubscriptionReference          1;	///< Required element.
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":UnsubscribeResponse
 
 /// "http://docs.oasis-open.org/wsn/b-2":UnsubscribeResponse is a complexType.
-struct _ns4__UnsubscribeResponse
-{
+struct _ns4__UnsubscribeResponse {
 /// Element reference "http://docs.oasis-open.org/wsn/b-2":SubscriptionReference.
-    wsa5__EndpointReferenceType*         SubscriptionReference          0;	///< Optional element.
+  wsa5__EndpointReferenceType*         SubscriptionReference          0;	///< Optional element.
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":PauseSubscription
 
 /// "http://docs.oasis-open.org/wsn/b-2":PauseSubscription is a complexType.
-struct _ns4__PauseSubscription
-{
+struct _ns4__PauseSubscription {
 /// Element reference "http://docs.oasis-open.org/wsn/b-2":SubscriptionReference.
-    wsa5__EndpointReferenceType          SubscriptionReference          1;	///< Required element.
+  wsa5__EndpointReferenceType          SubscriptionReference          1;	///< Required element.
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":PauseSubscriptionResponse
 
 /// "http://docs.oasis-open.org/wsn/b-2":PauseSubscriptionResponse is a complexType.
-struct _ns4__PauseSubscriptionResponse
-{
+struct _ns4__PauseSubscriptionResponse {
 /// Element reference "http://docs.oasis-open.org/wsn/b-2":SubscriptionReference.
-    wsa5__EndpointReferenceType*         SubscriptionReference          0;	///< Optional element.
+  wsa5__EndpointReferenceType*         SubscriptionReference          0;	///< Optional element.
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":ResumeSubscription
 
 /// "http://docs.oasis-open.org/wsn/b-2":ResumeSubscription is a complexType.
-struct _ns4__ResumeSubscription
-{
+struct _ns4__ResumeSubscription {
 /// Element reference "http://docs.oasis-open.org/wsn/b-2":SubscriptionReference.
-    wsa5__EndpointReferenceType          SubscriptionReference          1;	///< Required element.
+  wsa5__EndpointReferenceType          SubscriptionReference          1;	///< Required element.
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 
 /// Top-level root element "http://docs.oasis-open.org/wsn/b-2":ResumeSubscriptionResponse
 
 /// "http://docs.oasis-open.org/wsn/b-2":ResumeSubscriptionResponse is a complexType.
-struct _ns4__ResumeSubscriptionResponse
-{
+struct _ns4__ResumeSubscriptionResponse {
 /// Element reference "http://docs.oasis-open.org/wsn/b-2":SubscriptionReference.
-    wsa5__EndpointReferenceType*         SubscriptionReference          0;	///< Optional element.
+  wsa5__EndpointReferenceType*         SubscriptionReference          0;	///< Optional element.
 /// TODO: <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
 /// TODO: Schema extensibility is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -x to remove this element.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
 /// Size of the array of XML or DOM nodes is 0..unbounded
-   $int                                  __size                        0;
-    _XML                                *__any                         0;	///< Catch any element content in XML string.
+  $int                                  __size                        0;
+  _XML                                *__any                         0;	///< Catch any element content in XML string.
 };
 
 /******************************************************************************\
@@ -1442,574 +1373,540 @@ struct _ns4__ResumeSubscriptionResponse
 
 
 /// "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType is a complexType.
-struct ns6__BaseFaultType
-{
+struct ns6__BaseFaultType {
 /// Element Timestamp of type xs:dateTime.
-    time_t                               Timestamp                      1;	///< Required element.
+  time_t                               Timestamp                      1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         Originator                     0;	///< Optional element.
+  wsa5__EndpointReferenceType*         Originator                     0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ErrorCode                      0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ErrorCode                      0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *Description                    0;
+  char**Description                    0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          FaultCause                     0;	///< Optional element.
+  struct ns6__FaultCauseType*          FaultCause                     0;	///< Optional element.
 };
 
 /// "http://oscars.es.net/OSCARS":vlanTag is a complexType with simpleContent.
-struct ns1__vlanTag
-{
+struct ns1__vlanTag {
 /// __item wraps 'xs:string' simpleContent.
-    char*                                __item                        ;
+  char*                                __item                        ;
 /// Attribute tagged of type xs:boolean.
-   @enum xsd__boolean_*                  tagged                         0;	///< Optional attribute.
+  @enum xsd__boolean_*                  tagged                         0;	///< Optional attribute.
 };
 
 /// "http://oscars.es.net/OSCARS":reservationResourceType is a complexType with complexContent extension of "http://oscars.es.net/OSCARS":resCreateContent.
-struct ns1__reservationResourceType
-{
+struct ns1__reservationResourceType {
 /// INHERITED FROM ns1__resCreateContent:
 /// Element globalReservationId of type xs:string.
-    char*                                globalReservationId            0;	///< Optional element.
+  char*                                globalReservationId            0;	///< Optional element.
 /// Element startTime of type xs:long.
-    LONG64                               startTime                      1;	///< Required element.
+  LONG64                               startTime                      1;	///< Required element.
 /// Element endTime of type xs:long.
-    LONG64                               endTime                        1;	///< Required element.
+  LONG64                               endTime                        1;	///< Required element.
 /// Element bandwidth of type xs:int.
-    int                                  bandwidth                      1;	///< Required element.
+  int                                  bandwidth                      1;	///< Required element.
 /// Element description of type xs:string.
-    char*                                description                    1;	///< Required element.
+  char*                                description                    1;	///< Required element.
 /// Element pathInfo of type "http://oscars.es.net/OSCARS":pathInfo.
-    struct ns1__pathInfo*                pathInfo                       1;	///< Required element.
+  struct ns1__pathInfo*                pathInfo                       1;	///< Required element.
 //  END OF INHERITED FROM ns1__resCreateContent
 /// SEQUENCE OF ELEMENTS <xs:sequence minOccurs="0">
-   $int                                  __size_reservationResourceType_sequence 0;
-    struct __ns1__reservationResourceType_sequence
-    {
+  $int                                  __size_reservationResourceType_sequence 0;
+  struct __ns1__reservationResourceType_sequence {
 /// Element localDetails of type "http://oscars.es.net/OSCARS":localDetails.
     struct ns1__localDetails*            localDetails                   0;	///< Optional element.
-    }                                   *__reservationResourceType_sequence;
+  }                                   *__reservationResourceType_sequence;
 //  END OF SEQUENCE
 };
 
 /// "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":CtrlPlaneNextHopContent is a complexType with simpleContent.
-struct ns3__CtrlPlaneNextHopContent
-{
+struct ns3__CtrlPlaneNextHopContent {
 /// __item wraps 'xs:string' simpleContent.
-    char*                                __item                        ;
+  char*                                __item                        ;
 /// Attribute weight of type xs:int.
-   @int*                                 weight                         0;	///< Optional attribute.
+  @int*                                 weight                         0;	///< Optional attribute.
 /// Attribute optional of type xs:boolean.
-   @enum xsd__boolean_*                  optional                       0;	///< Optional attribute.
+  @enum xsd__boolean_*                  optional                       0;	///< Optional attribute.
 };
 
 /// "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":TimeContent is a complexType with simpleContent.
-struct ns3__TimeContent
-{
+struct ns3__TimeContent {
 /// __item wraps 'xs:string' simpleContent.
-    char*                                __item                        ;
+  char*                                __item                        ;
 /// Attribute type of type xs:string.
-   @char*                                type                           1;	///< Required attribute.
+  @char*                                type                           1;	///< Required attribute.
 };
 
 /// "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":Duration is a complexType with simpleContent.
-struct ns3__Duration
-{
+struct ns3__Duration {
 /// __item wraps 'xs:string' simpleContent.
-    char*                                __item                        ;
+  char*                                __item                        ;
 /// Attribute type of type xs:string.
-   @char*                                type                           1;	///< Required attribute.
+  @char*                                type                           1;	///< Required attribute.
 };
 
 /// "http://ogf.org/schema/network/topology/ctrlPlane/20080828/":CtrlPlaneAddressContent is a complexType with simpleContent.
-struct ns3__CtrlPlaneAddressContent
-{
+struct ns3__CtrlPlaneAddressContent {
 /// __item wraps 'xs:string' simpleContent.
-    char*                                __item                        ;
+  char*                                __item                        ;
 /// Attribute value of type xs:string.
-   @char*                                value                          0;	///< Optional attribute.
+  @char*                                value                          0;	///< Optional attribute.
 /// Attribute type of type xs:string.
-   @char*                                type                           0;	///< Optional attribute.
+  @char*                                type                           0;	///< Optional attribute.
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":QueryExpressionType is a complexType with simpleContent.
-struct ns4__QueryExpressionType
-{
+struct ns4__QueryExpressionType {
 /// __item wraps 'xs:string' simpleContent.
-    char*                                __item                        ;
+  char*                                __item                        ;
 /// Attribute Dialect of type xs:anyURI.
-   @char*                                Dialect                        1;	///< Required attribute.
+  @char*                                Dialect                        1;	///< Required attribute.
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":TopicExpressionType is a complexType with simpleContent.
-struct ns4__TopicExpressionType
-{
+struct ns4__TopicExpressionType {
 /// __item wraps 'xs:string' simpleContent.
-    char*                                __item                        ;
+  char*                                __item                        ;
 /// Attribute Dialect of type xs:anyURI.
-   @char*                                Dialect                        1;	///< Required attribute.
+  @char*                                Dialect                        1;	///< Required attribute.
 /// TODO: this mixed complexType is user-definable.
 ///       Consult the protocol documentation to change or insert declarations.
 ///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).
-    _XML                                 __mixed                       0;	///< Catch mixed content in XML string
+  _XML                                 __mixed                       0;	///< Catch mixed content in XML string
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":SubscribeCreationFailedFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns4__SubscribeCreationFailedFaultType
-{
+struct ns4__SubscribeCreationFailedFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":InvalidFilterFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns4__InvalidFilterFaultType
-{
+struct ns4__InvalidFilterFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 /// Size of array of _QName is 1..unbounded
-   $int                                  __sizeUnknownFilter            1;
+  $int                                  __sizeUnknownFilter            1;
 /// Pointer to array _QName of length 1..unbounded
-    _QName                              *UnknownFilter                  1;
+  _QName                              *UnknownFilter                  1;
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":TopicExpressionDialectUnknownFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns4__TopicExpressionDialectUnknownFaultType
-{
+struct ns4__TopicExpressionDialectUnknownFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":InvalidTopicExpressionFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns4__InvalidTopicExpressionFaultType
-{
+struct ns4__InvalidTopicExpressionFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":TopicNotSupportedFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns4__TopicNotSupportedFaultType
-{
+struct ns4__TopicNotSupportedFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":MultipleTopicsSpecifiedFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns4__MultipleTopicsSpecifiedFaultType
-{
+struct ns4__MultipleTopicsSpecifiedFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":InvalidProducerPropertiesExpressionFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns4__InvalidProducerPropertiesExpressionFaultType
-{
+struct ns4__InvalidProducerPropertiesExpressionFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":InvalidMessageContentExpressionFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns4__InvalidMessageContentExpressionFaultType
-{
+struct ns4__InvalidMessageContentExpressionFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":UnrecognizedPolicyRequestFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns4__UnrecognizedPolicyRequestFaultType
-{
+struct ns4__UnrecognizedPolicyRequestFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 /// Size of array of _QName is 0..unbounded
-   $int                                  __sizeUnrecognizedPolicy       0;
+  $int                                  __sizeUnrecognizedPolicy       0;
 /// Pointer to array _QName of length 0..unbounded
-    _QName                              *UnrecognizedPolicy             0;
+  _QName                              *UnrecognizedPolicy             0;
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":UnsupportedPolicyRequestFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns4__UnsupportedPolicyRequestFaultType
-{
+struct ns4__UnsupportedPolicyRequestFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 /// Size of array of _QName is 0..unbounded
-   $int                                  __sizeUnsupportedPolicy        0;
+  $int                                  __sizeUnsupportedPolicy        0;
 /// Pointer to array _QName of length 0..unbounded
-    _QName                              *UnsupportedPolicy              0;
+  _QName                              *UnsupportedPolicy              0;
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":NotifyMessageNotSupportedFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns4__NotifyMessageNotSupportedFaultType
-{
+struct ns4__NotifyMessageNotSupportedFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":UnacceptableInitialTerminationTimeFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns4__UnacceptableInitialTerminationTimeFaultType
-{
+struct ns4__UnacceptableInitialTerminationTimeFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 /// Element MinimumTime of type xs:dateTime.
-    time_t                               MinimumTime                    1;	///< Required element.
+  time_t                               MinimumTime                    1;	///< Required element.
 /// Element MaximumTime of type xs:dateTime.
-    time_t*                              MaximumTime                    0;	///< Optional element.
+  time_t*                              MaximumTime                    0;	///< Optional element.
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":NoCurrentMessageOnTopicFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns4__NoCurrentMessageOnTopicFaultType
-{
+struct ns4__NoCurrentMessageOnTopicFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":UnableToGetMessagesFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns4__UnableToGetMessagesFaultType
-{
+struct ns4__UnableToGetMessagesFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":UnableToDestroyPullPointFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns4__UnableToDestroyPullPointFaultType
-{
+struct ns4__UnableToDestroyPullPointFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":UnableToCreatePullPointFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns4__UnableToCreatePullPointFaultType
-{
+struct ns4__UnableToCreatePullPointFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":UnacceptableTerminationTimeFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns4__UnacceptableTerminationTimeFaultType
-{
+struct ns4__UnacceptableTerminationTimeFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 /// Element MinimumTime of type xs:dateTime.
-    time_t                               MinimumTime                    1;	///< Required element.
+  time_t                               MinimumTime                    1;	///< Required element.
 /// Element MaximumTime of type xs:dateTime.
-    time_t*                              MaximumTime                    0;	///< Optional element.
+  time_t*                              MaximumTime                    0;	///< Optional element.
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":UnableToDestroySubscriptionFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns4__UnableToDestroySubscriptionFaultType
-{
+struct ns4__UnableToDestroySubscriptionFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":PauseFailedFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns4__PauseFailedFaultType
-{
+struct ns4__PauseFailedFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 };
 
 /// "http://docs.oasis-open.org/wsn/b-2":ResumeFailedFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns4__ResumeFailedFaultType
-{
+struct ns4__ResumeFailedFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 };
 
 /// "http://docs.oasis-open.org/wsrf/r-2":ResourceUnknownFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns5__ResourceUnknownFaultType
-{
+struct ns5__ResourceUnknownFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 };
 
 /// "http://docs.oasis-open.org/wsrf/r-2":ResourceUnavailableFaultType is a complexType with complexContent extension of "http://docs.oasis-open.org/wsrf/bf-2":BaseFaultType.
-struct ns5__ResourceUnavailableFaultType
-{
+struct ns5__ResourceUnavailableFaultType {
 /// INHERITED FROM ns6__BaseFaultType:
 /// Element Timestamp of type xs:dateTime.
-    time_t                               ns6__Timestamp                 1;	///< Required element.
+  time_t                               ns6__Timestamp                 1;	///< Required element.
 /// Element Originator of type "http://www.w3.org/2005/08/addressing":EndpointReferenceType.
-    wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
+  wsa5__EndpointReferenceType*         ns6__Originator                0;	///< Optional element.
 /// Element ErrorCode of type "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType.
-    struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
+  struct ns6__ErrorCodeType*           ns6__ErrorCode                 0;	///< Optional element.
 /// Size of array of char* is 0..unbounded
-   $int                                  __sizeDescription              0;
+  $int                                  __sizeDescription              0;
 /// Pointer to array char* of length 0..unbounded
-    char*                               *ns6__Description               0;
+  char**ns6__Description               0;
 /// Element FaultCause of type "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType.
-    struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
+  struct ns6__FaultCauseType*          ns6__FaultCause                0;	///< Optional element.
 //  END OF INHERITED FROM ns6__BaseFaultType
 };
 
 /// "http://docs.oasis-open.org/wsrf/bf-2":ErrorCodeType is a complexType with simpleContent.
-struct ns6__ErrorCodeType
-{
+struct ns6__ErrorCodeType {
 /// __item wraps 'xs:string' simpleContent.
-    char*                                __item                        ;
+  char*                                __item                        ;
 /// Attribute dialect of type xs:anyURI.
-   @char*                                dialect                        1;	///< Required attribute.
+  @char*                                dialect                        1;	///< Required attribute.
 };
 
 /// "http://docs.oasis-open.org/wsrf/bf-2":FaultCauseType is a complexType with simpleContent.
-struct ns6__FaultCauseType
-{
+struct ns6__FaultCauseType {
 /// __item wraps 'xs:string' simpleContent.
-    char*                                __item                        ;
+  char*                                __item                        ;
 /// Attribute dialect of type xs:anyURI.
-   @char*                                dialect                        0;	///< Optional attribute.
+  @char*                                dialect                        0;	///< Optional attribute.
 };
 
 /******************************************************************************\
@@ -2332,10 +2229,10 @@ struct ns6__FaultCauseType
 \******************************************************************************/
 
 
-//gsoap ns1  service name:	OSCARSSOAP 
-//gsoap ns1  service type:	OSCARS 
-//gsoap ns1  service namespace:	http://oscars.es.net/OSCARS 
-//gsoap ns1  service transport:	http://schemas.xmlsoap.org/soap/http 
+//gsoap ns1  service name:	OSCARSSOAP
+//gsoap ns1  service type:	OSCARS
+//gsoap ns1  service namespace:	http://oscars.es.net/OSCARS
+//gsoap ns1  service transport:	http://schemas.xmlsoap.org/soap/http
 
 /** @mainpage OSCARS Definitions
 
@@ -2345,7 +2242,7 @@ struct ns6__FaultCauseType
         standards. The message is time stamped and includes the X.509
         certificate of the signing entity. The timestamp, certificate
         and message body are all signed. DRAFT V1.0 Nov 2006
-    
+
 
 @section OSCARS_bindings Service Bindings
 
@@ -2412,16 +2309,15 @@ soap.fault->SOAP_ENV__Detail variable (SOAP 1.2).
 Use option -j to omit.
 
 */
-struct SOAP_ENV__Detail
-{
+struct SOAP_ENV__Detail {
 // xsd:anyAttribute omitted: to parse attribute content of the Detail element into DOM anyAttribute, use wsdl2h option -d.
-    _XML                                 __any                         ;	///< Catch any element content in XML string.
-    struct _ns1__AAAFault*               ns1__AAAFault                 ;
+  _XML                                 __any                         ;	///< Catch any element content in XML string.
+  struct _ns1__AAAFault*               ns1__AAAFault                 ;
 ///< SOAP Fault element ""http://oscars.es.net/OSCARS":AAAFault" part "fault"
-    struct _ns1__BSSFault*               ns1__BSSFault                 ;
+  struct _ns1__BSSFault*               ns1__BSSFault                 ;
 ///< SOAP Fault element ""http://oscars.es.net/OSCARS":BSSFault" part "fault"
-    int                                  __type                        ;	///< set to SOAP_TYPE_X for a serializable type X
-    void                                *fault                         ;	///< points to serializable object X or NULL
+  int                                  __type                        ;	///< set to SOAP_TYPE_X for a serializable type X
+  void                                *fault                         ;	///< points to serializable object X or NULL
 };
 
 /******************************************************************************\
@@ -2487,8 +2383,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-fault:	createReservation ns1__AAAFault
 //gsoap ns1  service method-fault:	createReservation ns1__BSSFault
 int __ns1__createReservation(
-    struct ns1__resCreateContent*       ns1__createReservation,	///< Request parameter
-    struct ns1__createReply*            ns1__createReservationResponse	///< Response parameter
+  struct ns1__resCreateContent*       ns1__createReservation,	///< Request parameter
+  struct ns1__createReply*            ns1__createReservationResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -2546,8 +2442,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-fault:	queryReservation ns1__AAAFault
 //gsoap ns1  service method-fault:	queryReservation ns1__BSSFault
 int __ns1__queryReservation(
-    struct ns1__globalReservationId*    ns1__queryReservation,	///< Request parameter
-    struct ns1__resDetails*             ns1__queryReservationResponse	///< Response parameter
+  struct ns1__globalReservationId*    ns1__queryReservation,	///< Request parameter
+  struct ns1__resDetails*             ns1__queryReservationResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -2605,8 +2501,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-fault:	listReservations ns1__AAAFault
 //gsoap ns1  service method-fault:	listReservations ns1__BSSFault
 int __ns1__listReservations(
-    struct ns1__listRequest*            ns1__listReservations,	///< Request parameter
-    struct ns1__listReply*              ns1__listReservationsResponse	///< Response parameter
+  struct ns1__listRequest*            ns1__listReservations,	///< Request parameter
+  struct ns1__listReply*              ns1__listReservationsResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -2664,8 +2560,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-fault:	cancelReservation ns1__AAAFault
 //gsoap ns1  service method-fault:	cancelReservation ns1__BSSFault
 int __ns1__cancelReservation(
-    struct ns1__globalReservationId*    ns1__cancelReservation,	///< Request parameter
-    char*                              *ns1__cancelReservationResponse	///< Response parameter
+  struct ns1__globalReservationId*    ns1__cancelReservation,	///< Request parameter
+  char**ns1__cancelReservationResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -2723,8 +2619,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-fault:	modifyReservation ns1__AAAFault
 //gsoap ns1  service method-fault:	modifyReservation ns1__BSSFault
 int __ns1__modifyReservation(
-    struct ns1__modifyResContent*       ns1__modifyReservation,	///< Request parameter
-    struct ns1__modifyResReply*         ns1__modifyReservationResponse	///< Response parameter
+  struct ns1__modifyResContent*       ns1__modifyReservation,	///< Request parameter
+  struct ns1__modifyResReply*         ns1__modifyReservationResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -2782,8 +2678,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-fault:	getNetworkTopology ns1__AAAFault
 //gsoap ns1  service method-fault:	getNetworkTopology ns1__BSSFault
 int __ns1__getNetworkTopology(
-    struct ns1__getTopologyContent*     ns1__getNetworkTopology,	///< Request parameter
-    struct ns1__getTopologyResponseContent* ns1__getNetworkTopologyResponse	///< Response parameter
+  struct ns1__getTopologyContent*     ns1__getNetworkTopology,	///< Request parameter
+  struct ns1__getTopologyResponseContent* ns1__getNetworkTopologyResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -2841,8 +2737,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-fault:	createPath ns1__AAAFault
 //gsoap ns1  service method-fault:	createPath ns1__BSSFault
 int __ns1__createPath(
-    struct ns1__createPathContent*      ns1__createPath,	///< Request parameter
-    struct ns1__createPathResponseContent* ns1__createPathResponse	///< Response parameter
+  struct ns1__createPathContent*      ns1__createPath,	///< Request parameter
+  struct ns1__createPathResponseContent* ns1__createPathResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -2900,8 +2796,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-fault:	refreshPath ns1__AAAFault
 //gsoap ns1  service method-fault:	refreshPath ns1__BSSFault
 int __ns1__refreshPath(
-    struct ns1__refreshPathContent*     ns1__refreshPath,	///< Request parameter
-    struct ns1__refreshPathResponseContent* ns1__refreshPathResponse	///< Response parameter
+  struct ns1__refreshPathContent*     ns1__refreshPath,	///< Request parameter
+  struct ns1__refreshPathResponseContent* ns1__refreshPathResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -2959,8 +2855,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-fault:	teardownPath ns1__AAAFault
 //gsoap ns1  service method-fault:	teardownPath ns1__BSSFault
 int __ns1__teardownPath(
-    struct ns1__teardownPathContent*    ns1__teardownPath,	///< Request parameter
-    struct ns1__teardownPathResponseContent* ns1__teardownPathResponse	///< Response parameter
+  struct ns1__teardownPathContent*    ns1__teardownPath,	///< Request parameter
+  struct ns1__teardownPathResponseContent* ns1__teardownPathResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -3018,8 +2914,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-fault:	forward ns1__AAAFault
 //gsoap ns1  service method-fault:	forward ns1__BSSFault
 int __ns1__forward(
-    struct _ns1__forward*               ns1__forward,	///< Request parameter
-    struct ns1__forwardReply*           ns1__forwardResponse	///< Response parameter
+  struct _ns1__forward*               ns1__forward,	///< Request parameter
+  struct ns1__forwardReply*           ns1__forwardResponse	///< Response parameter
 );
 
 /******************************************************************************\
@@ -3071,8 +2967,8 @@ C server function (called from the service dispatcher defined in soapServer.c[pp
 //gsoap ns1  service method-encoding:	Notify literal
 //gsoap ns1  service method-action:	Notify http://oscars.es.net/OSCARS/Notify
 int __ns1__Notify(
-    struct _ns4__Notify*                ns4__Notify,	///< Request parameter
-    void	///< One-way message: no response parameter
+  struct _ns4__Notify*                ns4__Notify,	///< Request parameter
+  void	///< One-way message: no response parameter
 );
 
 /******************************************************************************\
