@@ -42,7 +42,7 @@ int xsp_sess_set_security(libxspSess *sess, libxspSecInfo *sec, int type);
 
 libxspSecInfo *xsp_sess_new_security(char *username, char *password, char *key1, char *key2, char *keypass);
 libxspNetPath *xsp_sess_new_net_path(int action);
-libxspNetPathRule *xsp_sess_new_net_path_rule(libxspNetPath *path, char *type);
+libxspNetPathRule *xsp_sess_new_net_path_rule(libxspNetPath *path, char *type, void *data, int dsize);
 int xsp_sess_set_net_path_rule_crit(libxspNetPathRule *rule, libxspNetPathRuleCrit *crit);
 int xsp_sess_set_net_path_rule_eid(libxspNetPathRule *rule, void *eid, int type);
 int xsp_sess_set_net_path_rule_op(libxspNetPathRule *rule, int op);

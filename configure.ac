@@ -123,6 +123,13 @@ AC_ARG_ENABLE(floodlight,
 
 AM_CONDITIONAL(ENABLE_FLOODLIGHT, test x$enable_floodlight = xyes)
 
+AC_ARG_ENABLE(flange,
+        AC_HELP_STRING([--enable-flange], [enable Flange module [default=no]]),
+        [enable_flange=$enableval],
+        [enable_flange=no])
+
+AM_CONDITIONAL(ENABLE_FLANGE, test x$enable_flange = xyes)
+
 AC_ARG_ENABLE(oess,
         AC_HELP_STRING([--enable-oess], [enable oess (AL2S) module [default=no]]),
         [enable_oess=$enableval],

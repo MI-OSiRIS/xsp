@@ -27,15 +27,20 @@
 
 static char usage[] = "usage: xsp_pathtest [-Vr] [-e eid]\n"
                       "\t[-s src] [-d dst] [-a dl_src] [-b dl_dst]\n"
-                      "\t[-i in_port] [-o out_port] [-v vlan id] xsp_hops\n";
+                      "\t[-i in_port] [-o out_port] [-v vlan id]\n"
+                      "\t[-f file data] handler xsp_hops\n";
 
 int main(int argc, char *argv[]) {
   extern char *optarg;
   extern int errno;
   extern int optind;
+  
+  FILE *f = NULL;
+  
   int i, c;
   int remove = 0;
 
+  char *handler = NULL;
   char *vlan = NULL;
   char *dlsrc = NULL;
   char *dldst = NULL;
@@ -44,7 +49,8 @@ int main(int argc, char *argv[]) {
   char *inp = NULL;
   char *outp = NULL;
   char *eid = NULL;
-
+  char *fname = NULL;
+  
   libxspSess *sess;
   libxspSecInfo *sec;
   libxspNetPath *path;
@@ -53,7 +59,7 @@ int main(int argc, char *argv[]) {
 
   memset(&crit, 0, sizeof(libxspNetPathRuleCrit));
 
-  while((c = getopt(argc, argv, "v:e:a:b:s:d:i:o:Vr")) != -1) {
+  while((c = getopt(argc, argv, "f:v:e:a:b:s:d:i:o:Vr")) != -1) {
     switch(c) {
     case 'V':
       printf("XSP PATH Tester\n");
@@ -97,6 +103,10 @@ int main(int argc, char *argv[]) {
       remove = 1;
       break;
 
+    case 'f':
+      fname = strdup(optarg);
+      break;
+
     default:
       fprintf(stderr, usage);
       exit(1);
@@ -105,12 +115,29 @@ int main(int argc, char *argv[]) {
 
   (void)dldst;
   (void)dlsrc;
+
+  if (optind == argc) {
+    printf("Must specify an XSP Path handler (e.g. FLANGE)\n");
+    exit(1);
+  }
+  else {
+    handler = strdup(argv[optind]);
+    optind++;
+  }
   
   if (optind == argc) {
     printf("Must specify at least one XSP hop\n");
     exit(1);
   }
 
+  if (fname) {
+    f = fopen(fname, "r");
+    if (!f) {
+      printf("Could not open file %s: %s\n", fname, strerror(errno));
+      exit(1);
+    }
+  }
+  
   if (libxsp_init() < 0) {
     perror("libxsp_init(): failed");
     exit(errno);
@@ -145,8 +172,18 @@ int main(int argc, char *argv[]) {
   else
     path = xsp_sess_new_net_path(XSP_NET_PATH_CREATE);
 
-
-  rule = xsp_sess_new_net_path_rule(path, "FLOODLIGHT");
+  // read file
+  char fbuf[4096]; // up to 4kB
+  int fsize = 0;
+  while (1) {
+    int c = fgetc(f);
+    if (c == EOF || fsize == 4096)
+      break;
+    fbuf[fsize++] = c;
+  }
+  fbuf[fsize] = '\0';
+  
+  rule = xsp_sess_new_net_path_rule(path, handler, fbuf, fsize);
 
   crit.src = src;
   crit.dst = dst;

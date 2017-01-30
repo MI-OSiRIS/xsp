@@ -46,5 +46,7 @@ void xsp_free_pathrule(xspPathRule *rule) {
   pthread_mutex_destroy(&(rule->lock));
   if (rule->description)
     free(rule->description);
+  if (rule->data_size && rule->data)
+    free(rule->data);
   free(rule);
 }

@@ -25,15 +25,15 @@ xspNetPath *xsp_alloc_net_path() {
   memset(new_path, 0, sizeof(xspNetPath));
 
   return new_path;
-
+  
 error_exit:
   return NULL;
 }
 
-xspNetPathRule *xsp_alloc_net_path_rule() {
+xspNetPathRule *xsp_alloc_net_path_rule(int dsize) {
   xspNetPathRule *new_rule;
 
-  new_rule = malloc(sizeof(xspNetPathRule));
+  new_rule = malloc(sizeof(xspNetPathRule) + dsize);
   if (!new_rule)
     goto error_exit;
 

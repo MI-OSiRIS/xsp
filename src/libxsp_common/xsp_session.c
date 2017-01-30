@@ -780,6 +780,12 @@ int xsp_session_setup_path(comSess *sess, const void *arg, char ***error_msgs) {
     if (path) {
       // apply each rule in the path
       for (i = 0; i < path->rule_count; i++) {
+	if (!path->rules[i]->apply) {
+	  xsp_info(5, "apply method is NULL for rule %s, skipping...",
+		   path->rules[i]->description);
+	  continue;
+	}
+	
         if (path->rules[i]->apply(path->rules[i], path_action, &error_msg) != 0) {
           xsp_err(0, "couldn't apply path rule: %s", error_msg);
           // if one or more rules in the path failed, delete the path

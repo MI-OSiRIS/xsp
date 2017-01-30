@@ -158,7 +158,7 @@ int main(int argc, char *argv[]) {
     path = xsp_sess_new_net_path(XSP_NET_PATH_CREATE);
 
   if (iface && vlan) {
-    rule = xsp_sess_new_net_path_rule(path, "LINUXNET");
+    rule = xsp_sess_new_net_path_rule(path, "LINUXNET", NULL, 0);
     xsp_sess_set_net_path_rule_op(rule, XSP_LINUXNET_SET_VLAN);
 
     crit.iface = iface;
@@ -169,7 +169,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (iface && csrc) {
-    rule = xsp_sess_new_net_path_rule(path, "LINUXNET");
+    rule = xsp_sess_new_net_path_rule(path, "LINUXNET", NULL, 0);
     xsp_sess_set_net_path_rule_op(rule, XSP_LINUXNET_SET_IP);
 
     crit.iface = iface;
@@ -184,7 +184,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (dst && cdst) {
-    rule = xsp_sess_new_net_path_rule(path, "LINUXNET");
+    rule = xsp_sess_new_net_path_rule(path, "LINUXNET", NULL, 0);
     xsp_sess_set_net_path_rule_op(rule, XSP_LINUXNET_SET_ROUTE);
 
     crit.iface = NULL;
@@ -198,7 +198,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (do_oscars) {
-    rule = xsp_sess_new_net_path_rule(path, "OSCARS");
+    rule = xsp_sess_new_net_path_rule(path, "OSCARS", NULL, 0);
 
     crit.vlan = atoi(vlan);
     crit.src = NULL;

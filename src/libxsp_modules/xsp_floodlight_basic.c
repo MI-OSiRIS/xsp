@@ -23,7 +23,6 @@
 #endif
 #include <unistd.h>
 
-
 #include <jansson.h>
 #include "curl_context.h"
 
@@ -103,8 +102,8 @@ int xsp_floodlight_init() {
 }
 
 static char *xsp_floodlight_generate_pathrule_id(const xspNetPathRule *rule,
-    const xspSettings *settings,
-    char **ret_error_msg) {
+						 const xspSettings *settings,
+						 char **ret_error_msg) {
 
   char *rule_id;
   char *src_eid;
@@ -150,12 +149,12 @@ error_exit:
 }
 
 static int xsp_floodlight_allocate_pathrule_handler(const xspNetPathRule *net_rule,
-    const xspSettings *settings,
-    xspPathRule **ret_rule,
-    char **ret_error_msg) {
+						    const xspSettings *settings,
+						    xspPathRule **ret_rule,
+						    char **ret_error_msg) {
   char *src_eid;
   char *dst_eid;
-
+  
   xspPathRule *rule;
   rule = xsp_alloc_pathrule();
   if (!rule)

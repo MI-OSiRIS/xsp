@@ -481,16 +481,24 @@ xspNetPath *xsp_sess_new_net_path(int action) {
   return new;
 }
 
-xspNetPathRule *xsp_sess_new_net_path_rule(xspNetPath *path, char *type) {
+xspNetPathRule *xsp_sess_new_net_path_rule(xspNetPath *path, char *type, void *data, int dsize) {
   xspNetPathRule *rule;
 
   if (!path)
     return NULL;
 
-  rule = xsp_alloc_net_path_rule();
+  rule = xsp_alloc_net_path_rule(dsize);
   if (!rule)
     return NULL;
 
+  if (dsize) {
+    memcpy(rule->data, data, dsize);
+    rule->data_size = dsize;
+  }
+  else {
+    rule->data_size = 0;
+  }
+  
   memcpy(rule->type, type, XSP_NET_PATH_LEN);
   xsp_net_path_add_rule(path, rule);
 

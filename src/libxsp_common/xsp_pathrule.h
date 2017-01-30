@@ -33,6 +33,8 @@ typedef struct xsp_pathrule_t {
 
   struct xsp_path_t *path;
   void *private;
+  void *data;
+  int data_size;
 } xspPathRule;
 
 xspPathRule *xsp_alloc_pathrule();

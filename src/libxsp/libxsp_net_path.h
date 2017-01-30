@@ -41,8 +41,8 @@ typedef struct xsp_sess_net_path_rule_crit_t {
   uint32_t mpls_class;
   uint8_t  l3_proto;
   int16_t  l2_type;
-
-  /* reservation specific */
+  
+  // reservation specific
   uint16_t src_vlan;
   uint16_t dst_vlan;
   uint8_t  direction;
@@ -58,11 +58,12 @@ typedef struct xsp_sess_net_path_rule_t {
   struct xsp_addr                      eid;
   struct xsp_sess_net_path_rule_crit_t crit;
   uint8_t                              use_crit;
+  uint32_t                             data_size;
+  char                                 data[];
 } xspNetPathRule;
 
 typedef struct xsp_sess_net_path_t {
   uint16_t action;
-
   struct xsp_sess_net_path_rule_t **rules;
   int rule_count;
 } xspNetPath;

@@ -74,6 +74,12 @@ openflow_la_CFLAGS = $(AM_CFLAGS) -DWITH_NONAMESPACES -DWITH_DOM
 AM_CPPFLAGS += -I$(srcdir)/openflow/include -I$(srcdir)/openflow
 endif
 
+if ENABLE_FLANGE
+modules_LTLIBRARIES += flange.la
+flange_la_SOURCES = xsp_flange.c
+flange_la_LIBADD = $(LIBXSP_LIBS) $(LIBXSP_LIBADD)
+endif
+
 if ENABLE_FLOODLIGHT
 modules_LTLIBRARIES += floodlight.la
 floodlight_la_SOURCES = xsp_floodlight_basic.c xsp_floodlight_basic.h
