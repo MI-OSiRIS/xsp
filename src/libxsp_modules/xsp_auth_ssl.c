@@ -251,7 +251,7 @@ SSL_CTX *initialize_ctx(char *keyfile, char *password) {
   //signal(SIGPIPE,sigpipe_handle);
 
   /* Create our context*/
-  meth = SSLv23_method();
+  meth = (SSL_METHOD*)SSLv23_method();
   ctx = SSL_CTX_new(meth);
 
   /* Load our keys and certificates*/

@@ -52,12 +52,11 @@ xspModule xsp_unis_module = {
 xspModule *module_info() {
   return &xsp_unis_module;
 }
-int xsp_unis_parse_listener_config(const xspSettings *settings,
+int xsp_unis_parse_listener_config(xspSettings *settings,
                                    char **listener_names, int listener_count) {
   int              i = 0;
   int              transparent_port;
   char             *transparent_prot_name;
-  unsigned int     is_disabled;
   service_listener *listener;
   int              is_transparent_port = 0;
 
@@ -75,24 +74,26 @@ int xsp_unis_parse_listener_config(const xspSettings *settings,
      * Hard-coding the transparent protocol name as tcp
      */
   }
+  
   config.listeners = malloc(listener_count*sizeof(service_listener));
   listener = config.listeners;
   config.listener_count = listener_count;
   for (i = 0; i < listener_count-1 ; i++) {
     if (xsp_settings_get_int_3(settings, "listeners", listener_names[i],
-                               "port", &listener->port) != 0) {
+                               "port", (int*)&listener->port) != 0) {
       listener->is_disabled=1;
     }
     if(xsp_settings_get_bool_3(settings, "listeners",
                                listener_names[i], "disabled",
-                               &listener->is_disabled)!=0) {
+                               (int*)&listener->is_disabled)!=0) {
       listener->is_disabled=0;
     }
 
     listener->protocol_name = listener_names[i];
-    realloc(listener->protocol_name, (strlen(listener->protocol_name)+5));
+    void *r = realloc(listener->protocol_name, (strlen(listener->protocol_name)+5));
     strncat(listener->protocol_name, "_xsp", 4);
     listener++;
+    (void)r;
   }
   if (is_transparent_port == 1) {
     listener->protocol_name = transparent_prot_name;
@@ -102,7 +103,7 @@ int xsp_unis_parse_listener_config(const xspSettings *settings,
 
   return 0;
 }
-int xsp_unis_parse_config(const xspSettings *settings) {
+int xsp_unis_parse_config(xspSettings *settings) {
   char **listener_names;
   int listener_count;
 
@@ -135,33 +136,33 @@ int xsp_unis_parse_config(const xspSettings *settings) {
 
   }
   if (xsp_settings_get_int_2(settings, "unis",
-                             "port", &config.port) != 0) {
+                             "port", (int*)&config.port) != 0) {
     xsp_info(0, "No UNIS publicport specfied");
 
   }
   if (xsp_settings_get_bool_2(settings, "unis",
                               "register",
-                              &config.do_register) != 0) {
+                              (int*)&config.do_register) != 0) {
     xsp_info(0, "Unis do_register flag missing");
 
   }
   if (xsp_settings_get_int_2(settings, "unis",
                              "registration_interval",
-                             &config.registration_interval) != 0) {
+                             (int*)&config.registration_interval) != 0) {
     xsp_info(0,
              "Registration interval not specified, using default %d",
              UNIS_REG_INTERVAL);
     config.registration_interval = UNIS_REG_INTERVAL;
   }
   if (xsp_settings_get_int_2(settings, "unis", "refresh",
-                             &config.refresh_timer) != 0) {
+                             (int*)&config.refresh_timer) != 0) {
     xsp_info(0,
              "Refresh time not specified, using default %d",
              UNIS_REFRESH_TO);
     config.refresh_timer = UNIS_REFRESH_TO;
   }
-  if(xsp_settings_get_section_names(settings,
-                                    "listeners", &listener_names)!=0) {
+  if (xsp_settings_get_section_names(settings,
+				     "listeners", &listener_names)!=0) {
     printf("Listeners group not found \n");
     return -1;
   }
@@ -173,7 +174,7 @@ int xsp_unis_parse_config(const xspSettings *settings) {
 
 
 int xsp_unis_init() {
-  const xspSettings *settings;
+  xspSettings *settings;
 
   settings = xsp_main_settings();
   if (xsp_unis_parse_config(settings) == -1) {

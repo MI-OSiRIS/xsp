@@ -221,8 +221,7 @@ error_exit:
 
 int __xsp_settings_getval_group(const xspSettings *settings, xspSettings **ret_settings, int num_fields, ...) {
   config_setting_t *setting;
-  int i, n;
-  char **retval;
+  int i;
   char data[1024];
   va_list ap;
 
@@ -527,7 +526,7 @@ void xsp_settings_print(const xspSettings *settings) {
 }
 
 void xsp_settings_write(const xspSettings *settings, const char *filename) {
-  config_write_file(&(settings->root), filename);
+  config_write_file(&(((xspSettings*)settings)->root), (char*)filename);
 }
 
 int xsp_settings_get(const xspSettings *settings, const char *setting, char **value) {

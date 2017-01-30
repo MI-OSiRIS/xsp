@@ -17,13 +17,15 @@
 #include "libconfig.h"
 
 #include "xsp_settings.h"
+#include "xsp_main_settings.h"
+#include "xsp_default_settings.h"
 #include "xsp_config.h"
 #include "xsp_common.h"
 
 int xsp_config_read(const char *filename, const char *cgroup) {
   config_t root;
-  const config_setting_t *group, *def, *connections;
-  int i, n, j, k;
+  config_setting_t *group, *def, *connections;
+  int j, k;
   xspSettings *settings;
 
   config_init(&root);
@@ -44,7 +46,6 @@ int xsp_config_read(const char *filename, const char *cgroup) {
     settings = xsp_settings_alloc();
     if (settings) {
       settings->root.root = group;
-
       xsp_set_main_settings(settings);
     }
   }
@@ -86,7 +87,6 @@ int xsp_config_read(const char *filename, const char *cgroup) {
         if (settings) {
           config_init(&(settings->root));
           settings->root.root = def;
-
           xsp_set_default_settings(settings, direction);
         }
       }
@@ -139,7 +139,6 @@ int xsp_config_read(const char *filename, const char *cgroup) {
 
   return 0;
 
-error_exit2:
   config_destroy(&root);
 error_exit:
   return -1;

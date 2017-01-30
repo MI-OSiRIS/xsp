@@ -16,6 +16,7 @@
 #include "xsp_modules.h"
 #include "xsp_logger.h"
 #include "xsp_config.h"
+#include "xsp_main_settings.h"
 
 xspModule *module_info();
 static int xsp_logger_file_init();

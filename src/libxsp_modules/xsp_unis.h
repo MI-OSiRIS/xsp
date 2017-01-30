@@ -13,4 +13,6 @@
 #ifndef XSP_UNIS_H
 #define XSP_UNIS_H
 
+#include "unis_registration.h"
+
 #endif

@@ -189,14 +189,13 @@ static int xsp_parse_app_data_block_list(const void *arg, int remainder, void **
   xspBlockList *bl = (xspBlockList*) arg;
   xspBlock *ret_block;
   xspBlock *block;
-  int n;
-
+  
   bl = (xspBlockList *) arg;
   if (!bl)
     goto exit;
 
   for (block = bl->first; block != NULL; block = block->next) {
-    n = xsp_parse_block_msg(block, block->length, (void**)&ret_block);
+    xsp_parse_block_msg(block, block->length, (void**)&ret_block);
   }
 
 exit:
@@ -274,12 +273,10 @@ static int xsp_writeout_app_data_block_list(void *arg, char *buf, int remainder)
 static int xsp_parse_hops(const void *arg, int length, void **msg_body) {
   xspBlock *block = (xspBlock*)arg;
   char *buf = block->data;
-  xspHop *hop;
   xspSess *ret_sess = NULL;
   xspSessOpen_HDR *hdr;
   int remainder;
   xspHop *next_hop;
-  int size = 0;
 
   ret_sess = xsp_alloc_sess();
   if (!ret_sess)
@@ -885,11 +882,11 @@ write_error:
   return -1;
 }
 
+/* TODO
 static int xsp_writeout_path_open_msg(void *arg, char *buf, int remainder) {
-
-
   return 0;
 }
+*/
 
 // some slabs additions
 static int xsp_parse_slab_info(const void *arg, int remainder, void **msg_body) {
@@ -984,7 +981,6 @@ static int xsp_writeout_slab_info(void *arg, char *buf, int remainder) {
   int i;
   int bhdr_size;
   int rec_size;
-  int orig_remainder;
 
   block->length = info->rec_count * sizeof(xspSlabRec_HDR) + sizeof(xspSlabInfo_HDR);
 

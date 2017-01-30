@@ -10,11 +10,11 @@
 //  This software was created at the Indiana University Center for Research in
 //  Extreme Scale Technologies (CREST).
 // =============================================================================
+#define _GNU_SOURCE
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
-#define _GNU_SOURCE
 #include <stdio.h>
 
 #include "queue.h"
@@ -499,10 +499,10 @@ int xsp_session_get_stat(comSess *sess, uint16_t type, void *optval, size_t *opt
 }
 
 void xsp_session_finalize(comSess *sess) {
-  uint64_t bytes_written;
-  size_t bytes_written_size;
-
-  bytes_written_size = sizeof(bytes_written);
+  //uint64_t bytes_written;
+  //size_t bytes_written_size;
+  //bytes_written_size = sizeof(bytes_written);
+  // TODO: something useful here
 }
 
 xspConn *xsp_connect_hop_control(comSess *sess, xspHop *child, char **ret_error_msg) {
@@ -992,7 +992,6 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, xspCBMap *cb_ma
   xspCreds *credentials;
   int authenticated;
   int have_session;
-  int sess_close;
   int version = XSP_v1;
   int i;
 
@@ -1000,7 +999,6 @@ comSess *xsp_wait_for_session(xspConn *conn, comSess **ret_sess, xspCBMap *cb_ma
 
   authenticated = FALSE;
   have_session = FALSE;
-  sess_close = FALSE;
 
   xsp_info(0,"xsp_default_handle_conn");
   do {

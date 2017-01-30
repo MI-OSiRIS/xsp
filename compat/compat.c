@@ -73,6 +73,9 @@
 #include <grp.h>
 #include <pwd.h>
 
+#ifdef HAVE_OPENSSL
+#include <openssl/ssl.h>
+#endif
 
 #ifndef HAVE_STRTOUL
 /*
@@ -539,15 +542,15 @@ int daemonize(char *pid_file, char *user, char *group) {
     gr = getgrnam(group);
     if (gr) {
       gid = gr->gr_gid;
-    }
-
-    if (!gid) {
-      fprintf(stderr, "Invalid group '%s'\n", group);
-      exit(-1);
-    }
-
-    if (setgid(gid) < 0) {
-      fprintf(stderr, "Couldn't change process group to %s", group);
+      
+      if (!gid) {
+	fprintf(stderr, "Invalid group '%s'\n", group);
+	exit(-1);
+      }
+      
+      if (setgid(gid) < 0) {
+	fprintf(stderr, "Couldn't change process group to %s", group);
+      }
     }
   }
 
@@ -555,15 +558,15 @@ int daemonize(char *pid_file, char *user, char *group) {
     pw = getpwnam(user);
     if (pw) {
       uid = pw->pw_uid;
-    }
-
-    if (!uid) {
-      fprintf(stderr, "Invalid user '%s'\n", user);
-      exit(-1);
-    }
-
-    if (setuid(uid) < 0) {
-      fprintf(stderr, "Couldn't change process user to %s", user);
+      
+      if (!uid) {
+	fprintf(stderr, "Invalid user '%s'\n", user);
+	exit(-1);
+      }
+      
+      if (setuid(uid) < 0) {
+	fprintf(stderr, "Couldn't change process user to %s", user);
+      }
     }
   }
 

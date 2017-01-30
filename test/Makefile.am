@@ -3,7 +3,7 @@ sbin_PROGRAMS =
 AM_LDFLAGS = 
 LDADD = $(top_builddir)/compat/libcompat.la                \
 	$(top_builddir)/src/libxsp_client/libxsp_client.la \
-	@DL_LIBS@ @THREAD_LIBS@ @SSL_LIBS@
+	@DL_LIBS@ @THREAD_LIBS@ @SSL_LIBS@ -lm
 
 xsp_client_SOURCES = xsp_client.c
 xsp_linuxnet_SOURCES = xsp_linuxnet.c

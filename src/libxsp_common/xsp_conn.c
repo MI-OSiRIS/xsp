@@ -169,6 +169,7 @@ int xsp_conn_shutdown(xspConn *conn, int side) {
 
   n = conn->shutdown2(conn, side);
 
+  (void)was_connected;
 //	if (conn->status == STATUS_UNCONNECTED && was_connected && conn->session) {
 //		lsd_session_event(conn->session, XSP_CONN_CLOSED, conn->id);
 //	}

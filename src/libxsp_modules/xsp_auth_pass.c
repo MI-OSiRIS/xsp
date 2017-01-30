@@ -19,6 +19,7 @@
 #include <openssl/sha.h>
 #endif
 
+#include "xsp_main_settings.h"
 #include "xsp_modules.h"
 #include "xsp_session.h"
 #include "xsp_conn.h"

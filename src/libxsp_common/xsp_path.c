@@ -10,6 +10,7 @@
 //  This software was created at the Indiana University Center for Research in
 //  Extreme Scale Technologies (CREST).
 // =============================================================================
+#define _GNU_SOURCE
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
@@ -212,4 +213,6 @@ int xsp_delete_path(xspPath *path) {
   void *ret;
   ret = hashtable_remove(path_list, path->description);
   xsp_free_path(path);
+  (void)ret;
+  return 0;
 }

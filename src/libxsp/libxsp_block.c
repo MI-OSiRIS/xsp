@@ -104,10 +104,11 @@ int xsp_block_list_find(xspBlockList *bl, int type, xspBlock ***ret_ary, int *co
     return 0;
   }
 
-  realloc(ba, num * sizeof(xspBlock *));
+  void *r = realloc(ba, num * sizeof(xspBlock *));
   *ret_ary = ba;
   *count = num;
-
+  (void)r;
+  
   return num;
 }
 
@@ -133,7 +134,7 @@ xspBlock *xsp_block_new(int opt_type, int sport, uint64_t len, const void *data)
     new_block->type = opt_type;
     new_block->sport = sport;
     new_block->length = len;
-    new_block->data = data;
+    new_block->data = (void*)data;
   }
 
   return new_block;

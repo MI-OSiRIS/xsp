@@ -111,6 +111,8 @@ int xsp_set_user_settings(char *user, enum xsp_direction_t direction, xspSetting
   }
   pthread_mutex_unlock(&table_lock);
 
+  (void)old_settings;
+  
   return retval;
 }
 

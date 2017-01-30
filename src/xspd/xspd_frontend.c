@@ -18,6 +18,7 @@
 #include "xsp_tpool.h"
 #include "xsp_listener.h"
 #include "xsp_settings.h"
+#include "xsp_main_settings.h"
 #include "xsp_conn.h"
 #include "xsp_logger.h"
 #include "xsp_protocols.h"

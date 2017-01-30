@@ -160,7 +160,6 @@ void *xsp_handle_transparent_conn(void *arg) {
   xspConn_tcpData *tcp_data;
   xspCreds *credentials;
   int child_fd;
-  char **error_msgs = NULL;
 
   sess = xsp_alloc_com_sess();
   if (!sess) {

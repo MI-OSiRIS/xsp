@@ -34,7 +34,6 @@ int main(int argc, char *argv[]) {
   extern int errno;
   extern int optind;
   int i, c;
-  int do_oscars = 0;
   int remove = 0;
 
   char *vlan = NULL;
@@ -104,6 +103,9 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  (void)dldst;
+  (void)dlsrc;
+  
   if (optind == argc) {
     printf("Must specify at least one XSP hop\n");
     exit(1);

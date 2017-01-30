@@ -63,8 +63,6 @@ static xspModule xsp_tcp_module = {
   .init = xsp_proto_tcp_init
 };
 
-static int web100_available;
-
 xspModule *module_info() {
   return &xsp_tcp_module;
 }

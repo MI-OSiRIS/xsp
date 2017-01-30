@@ -10,6 +10,7 @@
 //  This software was created at the Indiana University Center for Research in
 //  Extreme Scale Technologies (CREST).
 // =============================================================================
+#define _GNU_SOURCE
 #include <errno.h>
 #include <string.h>
 #include <stdio.h>
@@ -60,7 +61,6 @@ static int __xsp_floodlight_delete_rule(xspPathRule *rule, char **ret_error_msg)
 static int __xsp_floodlight_modify_rule(xspPathRule *rule, char **ret_error_msg);
 static json_t *__xsp_floodlight_make_entry(xspPathRule *rule);
 static json_t *__xsp_floodlight_push_entry(json_t *entry, int rest_opt);
-static size_t read_callback(void *ptr, size_t size, size_t nmemb, void *userp);
 
 xspModule xsp_floodlight_module = {
   .desc = "FLOODLIGHT Module",
@@ -92,7 +92,7 @@ int xsp_floodlight_init() {
   cc.use_ssl = 0;
   cc.curl_persist = 0;
 
-  if (init_curl(&cc, NULL) != 0) {
+  if (init_curl(&cc, 0) != 0) {
     xsp_info(0, "Could not start CURL context");
     return -1;
   }
@@ -248,7 +248,7 @@ static int __xsp_floodlight_create_rule(xspPathRule *rule, char **ret_error_msg)
 
   // save entry names for delete/modify
   if (!(fle->n_entries)) {
-    fle->entries = (xspFLEntries**)malloc(sizeof(xspFLEntries*));
+    fle->entries = (void**)malloc(sizeof(xspFLEntries*));
     fle->entries[0] = fl_entry;
     fle->n_entries = 1;
   }
@@ -263,9 +263,6 @@ static int __xsp_floodlight_create_rule(xspPathRule *rule, char **ret_error_msg)
   entry_id++;
 
   return 0;
-
-error_exit:
-  return -1;
 }
 
 static int __xsp_floodlight_modify_rule(xspPathRule *rule, char **ret_error_msg) {
@@ -283,8 +280,6 @@ static int __xsp_floodlight_delete_rule(xspPathRule *rule, char **ret_error_msg)
   }
   return 0;
 
-error_exit:
-  return -1;
 }
 
 static void xsp_floodlight_free_rule(xspPathRule *rule) {
@@ -302,10 +297,10 @@ static json_t *__xsp_floodlight_make_entry(xspPathRule *rule) {
     return NULL;
   }
 
-  asprintf(&entry_name, "xsp-fl-%llu", entry_id);
+  asprintf(&entry_name, "xsp-fl-%"PRIu64"", entry_id);
   // more logic needed to determine the correct action
   // assume OUTPUT for now
-  asprintf(&entry_action, "output=%d", rule->crit.dst_port);
+  asprintf(&entry_action, "output=%"PRIu64"", rule->crit.dst_port);
 
   if (rule->eid.type == XSP_EID_DPIDC)
     json_object_set_new(obj, "switch", json_string(rule->eid.x_addrc));
@@ -326,7 +321,7 @@ static json_t *__xsp_floodlight_push_entry(json_t *entry, int rest_opt) {
   json_t *json_ret;;
   json_error_t json_err;
   char *json_str;
-  char *response;
+  curl_response *response;
 
   json_str = json_dumps(entry, JSON_COMPACT);
 
@@ -334,8 +329,8 @@ static json_t *__xsp_floodlight_push_entry(json_t *entry, int rest_opt) {
                         "/wm/staticflowentrypusher/json",
                         json_str,
                         &response);
-
-  json_ret = json_loads(response, 0, &json_err);
+  
+  json_ret = json_loads((char*)response, 0, &json_err);
   if (!json_ret) {
     xsp_info(5, "Could not decode response: %d: %s", json_err.line, json_err.text);
     return NULL;

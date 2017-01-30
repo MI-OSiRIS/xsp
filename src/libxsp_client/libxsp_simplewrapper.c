@@ -49,6 +49,9 @@
 
 FILE *output;
 
+// forward declaration
+int xsp_close2(libxspSess *sess);
+
 static int (*std_socket)(int, int, int);
 static int (*std_connect)(int, const struct sockaddr *, SOCKLEN_T);
 static int (*std_setsockopt)(int, int, int, const void *, SOCKLEN_T);
@@ -190,7 +193,7 @@ void libxsp_wrapper_init() {
     goto error_exit3;
   }
 
-  std_getpeername = (ssize_t (*)(int,const void *,size_t,int)) dlsym(handle, "getpeername");
+  std_getpeername = (int (*)(int, struct sockaddr*, SOCKLEN_T*)) dlsym(handle, "getpeername");
   if ((error = dlerror()) != NULL) {
     d_printf("xsp_init_wrapper(): error loading close symbol: %s\n", error);
     goto error_exit3;
@@ -378,7 +381,6 @@ int connect(int sockfd, const struct sockaddr *serv_addr, SOCKLEN_T addrlen) {
   SOCKLEN_T tos_bits_length = sizeof(tos_bits);
   int retval;
   char dest[XSP_HOPID_LEN];
-  int new_sock;
   const struct libxsp_route_path_info *pi;
   char **path = NULL;
   int path_count = 0;

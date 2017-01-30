@@ -33,10 +33,10 @@
 #include "xsp_modules.h"
 
 /* GLOBALS */
-static struct hashtable *peer_table;
+//static struct hashtable *peer_table;
 static pthread_cond_t ping_cond;
 static pthread_mutex_t ping_lock;
-static pthread_cond_t cntl_cond;
+//static pthread_cond_t cntl_cond;
 static pthread_mutex_t cntl_lock;
 
 static xspPeerConfig config;
@@ -93,7 +93,7 @@ int xsp_peering_init() {
 
   /* invoke external lookup module (UNIS) to find other peers */
   if ((module = xsp_find_module("unis")) != NULL) {
-    xsp_unis_get_service_access_points(service, &unis_peers, &num_peers);
+    unis_get_service_access_points(service, &unis_peers, &num_peers);
     for (i=0; i<num_peers; i++) {
       xsp_info(0, "Also connecting to peer: %s", unis_peers[i]);
     }

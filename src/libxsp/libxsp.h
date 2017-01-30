@@ -77,7 +77,7 @@ typedef struct xsp_message_t {
 } xspMsg;
 
 typedef struct xsp_authorization_type_t {
-  char name[XSP_AUTH_NAME_LEN];
+  char name[XSP_AUTH_NAME_LEN+1];
 } xspAuthType;
 
 typedef struct xsp_auth_token_t {
@@ -87,7 +87,7 @@ typedef struct xsp_auth_token_t {
 
 typedef struct xsp_data_open_header_t {
   uint16_t flags;
-  char hop_id[XSP_HOPID_LEN];
+  char hop_id[XSP_HOPID_LEN+1];
   char proto[XSP_PROTO_NAME_LEN];
 } xspDataOpen;
 

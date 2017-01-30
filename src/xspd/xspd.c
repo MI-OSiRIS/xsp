@@ -106,6 +106,7 @@ int main(int argc, char *argv[]) {
 
     case 's':
       log_syslog = 1;
+      (void)log_syslog;
       break;
 
     case 'd':
@@ -118,6 +119,7 @@ int main(int argc, char *argv[]) {
 
     case 'o':
       logger_file = strdup(optarg);
+      (void)logger_file;
       break;
 
     case 'l':

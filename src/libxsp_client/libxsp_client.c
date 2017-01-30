@@ -53,6 +53,7 @@
 
 #ifdef HAVE_OPENSSL
 #include <openssl/ssl.h>
+#include <openssl/err.h>
 #endif
 
 /* Functions */
@@ -104,7 +105,6 @@ static int (*std_shutdown)(int, int);
 
 #ifdef HAVE_OPENSSL
 static BIO *bio_err = 0;
-static int s_server_session_id_context = 1;
 static char *pass;
 static char *client_pem;
 static char *client_root_pem;
@@ -1862,7 +1862,7 @@ SSL_CTX *initialize_ctx(char *keyfile, char *password) {
   //signal(SIGPIPE,sigpipe_handle);
 
   /* Create our context*/
-  meth=SSLv23_method();
+  meth=(SSL_METHOD*)SSLv23_method();
   ctx=SSL_CTX_new(meth);
 
   /* Load our keys and certificates*/

@@ -21,8 +21,8 @@
 
 #include "compat.h"
 
-static char *default_authentication[] = { "ANON" };
-static int default_authentication_count = 1;
+//static char *default_authentication[] = { "ANON" };
+//static int default_authentication_count = 1;
 
 static xspAuthenticationHandler *auth_handlers[255];
 static char auth_list[255 * (XSP_AUTH_NAME_LEN + 1) + 1];
@@ -105,9 +105,9 @@ int xsp_authenticate_connection(xspConn *conn, xspMsg *msg, xspCreds **ret_creds
   break;
   default:
     xsp_warn(0, "unknown session open msg version");
+    goto error_exit;
     break;
   }
-
 
   num = __xsp_get_authentication_handler_index(auth_type);
   if (num < 0) {

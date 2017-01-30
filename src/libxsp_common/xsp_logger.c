@@ -23,6 +23,7 @@
 #include "xsp_logger.h"
 #include "xsp_config.h"
 #include "xsp_tpool.h"
+#include "xsp_main_settings.h"
 
 #include "compat.h"
 

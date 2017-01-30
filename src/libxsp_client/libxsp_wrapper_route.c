@@ -123,7 +123,7 @@ int libxsp_wrapper_route_read(const char *filename) {
 
     d_printf("libxsp_wrapper_read_file(): Adding path for: %s\n", addr_mask);
 
-    __libxsp_wrapper_route_add(new_routes, addr_mask, path, path_count, ports, port_count);
+    __libxsp_wrapper_route_add(new_routes, addr_mask, (const char**)path, path_count, ports, port_count);
 
     free(addr_mask);
 

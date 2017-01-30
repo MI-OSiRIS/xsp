@@ -20,6 +20,7 @@
 #include "xsp_config.h"
 #include "xsp_modules.h"
 #include "xsp_logger.h"
+#include "xsp_main_settings.h"
 
 #include "compat.h"
 

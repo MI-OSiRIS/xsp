@@ -35,7 +35,7 @@ int xsp_protocol_init() {
 char **xsp_get_protocol_list(int *num_protocols) {
   char **ret_list;
   int num;
-  int i, n;
+  int i;
 
   ret_list = NULL;
   num = 0;

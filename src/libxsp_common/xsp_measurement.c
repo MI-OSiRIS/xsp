@@ -11,6 +11,7 @@
 //  Extreme Scale Technologies (CREST).
 // =============================================================================
 #include <sys/time.h>
+#include <inttypes.h>
 #include <stdio.h>
 
 #include "xsp_logger.h"
@@ -31,7 +32,7 @@ void xsp_log_measurement_dbl(struct timeval time, char *target, char *event, dou
  *      the specified target.
  */
 void xsp_log_measurement_uint(struct timeval time, char *target, char *event, uint64_t value) {
-  xsp_log(XSP_MEAS, 0, "(%lu.%lu, %s, %s, %llu)", time.tv_sec, time.tv_usec, target, event, value);
+  xsp_log(XSP_MEAS, 0, "(%lu.%lu, %s, %s, %"PRIu64")", time.tv_sec, time.tv_usec, target, event, value);
 }
 
 /*

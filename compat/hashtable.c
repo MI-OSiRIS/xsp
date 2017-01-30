@@ -178,7 +178,7 @@ void * /* returns value associated with key */
 hashtable_search(struct hashtable *h, const void *k) {
   struct entry *e;
   unsigned int hashvalue, index;
-  hashvalue = hash(h,k);
+  hashvalue = hash(h, (void*)k);
   index = indexFor(h->tablelength,hashvalue);
   e = h->table[index];
   while (NULL != e) {
@@ -200,8 +200,8 @@ hashtable_remove(struct hashtable *h, const void *k) {
   void *v;
   unsigned int hashvalue, index;
 
-  hashvalue = hash(h,k);
-  index = indexFor(h->tablelength,hash(h,k));
+  hashvalue = hash(h,(void*)k);
+  index = indexFor(h->tablelength,hash(h,(void*)k));
   pE = &(h->table[index]);
   e = *pE;
   while (NULL != e) {

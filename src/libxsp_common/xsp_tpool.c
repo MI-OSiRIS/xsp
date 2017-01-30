@@ -18,6 +18,7 @@
 
 #include "xsp_tpool.h"
 #include "xsp_config.h"
+#include "xsp_main_settings.h"
 
 // Definitions
 struct tpool_entry {
@@ -320,10 +321,7 @@ static void *tpool_thread_run(void *arg) {
  *      function(expanding the number of threads if need be).
  */
 int xsp_tpool_exec(void *(*fn) (void *), void *arg) {
-  int i, j, target;
   struct tpool_entry *entry;
-  int new_pool_size;
-  int n;
 
   entry = alloc_tpool_entry();
 

@@ -30,6 +30,12 @@ int xsp_main_settings_get_bool(const char *section, const char *option, int *val
 int xsp_main_settings_get_list(const char *section, const char *option, char ***value, int *count);
 int xsp_main_settings_get_range(const char *section, const char *option, int *min, int *max);
 
+int xsp_main_settings_get_1(const char *option, char **value);
+int xsp_main_settings_get_int_1(const char *option, int *value);
+int xsp_main_settings_get_bool_1(const char *option, int *value);
+int xsp_main_settings_get_list_1(const char *option, char ***value, int *count);
+int xsp_main_settings_get_range_1(const char *option, int *min, int *max);
+
 int xsp_main_settings_set(const char *section, const char *option, char *value);
 int xsp_main_settings_set_int(const char *section, const char *option, int value);
 int xsp_main_settings_set_bool(const char *section, const char *option, int value);

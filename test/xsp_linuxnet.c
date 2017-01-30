@@ -115,6 +115,9 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  (void)src;
+  (void)dmask;
+  
   if (optind == argc) {
     printf("Must specify at least one XSP hop\n");
     exit(1);

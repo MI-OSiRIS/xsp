@@ -13,6 +13,8 @@
 #ifndef LSD_ROUTE_H
 #define LSD_ROUTE_H
 
+#include "compat.h"
+
 /*
  *  int libxsp_wrapper_route_init():
  *      This function initializes the routing structure
