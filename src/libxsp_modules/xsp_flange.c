@@ -10,6 +10,8 @@
 //  This software was created at the Indiana University Center for Research in
 //  Extreme Scale Technologies (CREST).
 // =============================================================================
+#define _GNU_SOURCE
+#include <stdio.h>
 
 #include <string.h>
 #include <stdlib.h>
@@ -37,6 +39,8 @@
 #include "xsp_pathrule_handler.h"
 #include "libconfig.h"
 
+static struct curl_context_t cc;
+
 int xsp_flange_init();
 static char *xsp_flange_generate_pathrule_id(const xspNetPathRule *rule, const xspSettings *settings,
 					     char **ret_error_msg);
@@ -61,13 +65,57 @@ xspPathRuleHandler xsp_flange_pathrule_handler = {
 
 int xsp_flange_init() {
   const xspSettings *settings;
-  char *controller;
+  char *controller, *user, *pass;
   
   // get and save floodlight host/ip from config here
   settings = xsp_main_settings();
   if (xsp_settings_get_3(settings, "paths", "flange", "controller", &controller) != 0) {
     xsp_info(0, "No Flange controller specified!");
   }
+  if (xsp_settings_get_3(settings, "paths", "flange", "username", &user) != 0) {
+    xsp_info(0, "No Flange controller username specified!");
+  }
+  if (xsp_settings_get_3(settings, "paths", "flange", "password", &pass) != 0) {
+    xsp_info(0, "No Flange controller password specified!");
+  }
+
+  cc.url = controller;
+  cc.username = user;
+  cc.password = pass;
+  cc.use_ssl = 0;
+  cc.curl_persist = 0;
+
+  if (init_curl(&cc, 0) != 0) {
+    xsp_info(0, "Could not start CURL context");
+    return -1;
+  }
+  
+  // now let's get an auth token from flanged
+  char *url;
+  json_t *json_ret;
+  json_error_t json_err;
+  curl_response *response;
+
+  asprintf(&url, "%s/%s", cc.url, "a");
+  curl_post(&cc, url, NULL, NULL, NULL, NULL, &response);
+
+  json_ret = json_loads(response->data, 0, &json_err);
+  if (!json_ret) {
+    xsp_info(5, "Could not decode response: %d: %s", json_err.line, json_err.text);
+    return -1;
+  }
+
+  const char *token;
+  int rc = json_unpack(json_ret, "{s:s}", "Bearer", &token);
+  if (rc) {
+    xsp_info(5, "Could not parse Authentication response: \n%s", response->data);
+    return -1;
+  }
+  
+  xsp_info(9, "flanged Bearer token: %s", token);
+  cc.oauth_token = (char*)token;
+  
+  free(url);
 
   // register this path rule handler
   return xsp_add_pathrule_handler(&xsp_flange_pathrule_handler);
@@ -84,6 +132,11 @@ static int xsp_flange_allocate_pathrule_handler(const xspNetPathRule *net_rule,
 						const xspSettings *settings,
 						xspPathRule **ret_rule,
 						char **ret_error_msg) {
+
+  char *url;
+  json_t *json_ret;
+  json_error_t json_err;
+  curl_response *response;
   
   xspPathRule *rule;
   rule = xsp_alloc_pathrule();
@@ -95,12 +148,25 @@ static int xsp_flange_allocate_pathrule_handler(const xspNetPathRule *net_rule,
 	     net_rule->data_size,
 	     net_rule->data);
   }
+
+  asprintf(&url, "%s/%s", cc.url, "c");
+  curl_post(&cc, url, NULL, NULL, NULL, "{\"program\": \"blah\"}", &response);
+
+  json_ret = json_loads(response->data, 0, &json_err);
+  if (!json_ret) {
+    xsp_info(5, "Could not decode response: %d: %s", json_err.line, json_err.text);
+    return -1;
+  }
+
+  xsp_info(5, "Compiler response: \n%s", response->data);
   
   // define these methods
   rule->apply = NULL;
   rule->free = NULL;
 
   *ret_rule = rule;
+
+  free(url);
   
   return 0;
 

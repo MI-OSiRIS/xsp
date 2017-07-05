@@ -21,7 +21,7 @@ CONTRIB=contrib
 # set the array of tarball deps here
 contrib_tars=("libunis-c-2.1.tar.bz2")
 # set matching md5sums for each tarball
-contrib_md5=("256b4c2b73da8caca357ae7670e6083a")
+contrib_md5=("ad27e5860748ecb35d7e0f065750c677")
 # and matching target contrib directories
 contrib_dirs=("libunis-c")
 

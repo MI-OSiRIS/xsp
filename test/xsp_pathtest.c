@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
 
   memset(&crit, 0, sizeof(libxspNetPathRuleCrit));
 
-  while((c = getopt(argc, argv, "f:v:e:a:b:s:d:i:o:Vr")) != -1) {
+  while((c = getopt(argc, argv, "f:v:e:a:b:s:d:i:o:Vrh")) != -1) {
     switch(c) {
     case 'V':
       printf("XSP PATH Tester\n");
@@ -107,6 +107,7 @@ int main(int argc, char *argv[]) {
       fname = strdup(optarg);
       break;
 
+    case 'h':
     default:
       fprintf(stderr, usage);
       exit(1);
@@ -161,7 +162,7 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "could not set requested xsp security method\n");
     exit(-1);
   }
-
+  
   if (xsp_connect(sess)) {
     perror("xsp_connect() failed");
     exit(errno);
@@ -175,13 +176,16 @@ int main(int argc, char *argv[]) {
   // read file
   char fbuf[4096]; // up to 4kB
   int fsize = 0;
-  while (1) {
-    int c = fgetc(f);
-    if (c == EOF || fsize == 4096)
-      break;
-    fbuf[fsize++] = c;
+  if (f) {
+    while (1) {
+      int c = fgetc(f);
+      if (c == EOF || fsize == 4096)
+	break;
+      fbuf[fsize++] = c;
+    }
+    fbuf[fsize] = '\0';
+    printf("Read file: %s (%d)\n", fname, fsize);
   }
-  fbuf[fsize] = '\0';
   
   rule = xsp_sess_new_net_path_rule(path, handler, fbuf, fsize);
 
@@ -202,10 +206,10 @@ int main(int argc, char *argv[]) {
 
   if (xsp_sess_set_net_path_rule_crit(rule, &crit) != 0)
     fprintf(stderr, "could not set rule criteria\n");
-
+  
   if (xsp_signal_path(sess, path) != 0)
     fprintf(stderr, "signaling path failed\n");
-
+  
   xsp_close2(sess);
 
   return 0;
