@@ -14,14 +14,14 @@
 
 if [ ! -d config ]; then mkdir config; fi
 
-URL="http://stout.crest.iu.edu/xsp"
+URL="http://gin.crest.iu.edu/xsp"
 DIR=$(mktemp -d xsp.XXXXXXX --tmpdir=/tmp)
 CONTRIB=contrib
 
 # set the array of tarball deps here
 contrib_tars=("libunis-c-2.1.tar.bz2")
 # set matching md5sums for each tarball
-contrib_md5=("ad27e5860748ecb35d7e0f065750c677")
+contrib_md5=("49a405fa908d80deaa3503df42f8156c")
 # and matching target contrib directories
 contrib_dirs=("libunis-c")
 
