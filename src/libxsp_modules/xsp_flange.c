@@ -97,7 +97,7 @@ int xsp_flange_init() {
   curl_response *response;
 
   asprintf(&url, "%s/%s", cc.url, "a");
-  curl_post(&cc, url, NULL, NULL, NULL, NULL, &response);
+  curl_get(&cc, url, NULL, &response);
 
   json_ret = json_loads(response->data, 0, &json_err);
   if (!json_ret) {
