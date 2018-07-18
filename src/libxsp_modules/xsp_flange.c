@@ -99,9 +99,20 @@ int xsp_flange_init() {
   asprintf(&url, "%s/%s", cc.url, "a");
   curl_get(&cc, url, NULL, &response);
 
-  json_ret = json_loads(response->data, 0, &json_err);
-  if (!json_ret) {
-    xsp_info(5, "Could not decode response: %d: %s", json_err.line, json_err.text);
+  if (!response) {
+    xsp_err(0, "No response from flanged at %s", url);
+    return -1;
+  }
+  
+  if (response->status == 200) {
+    json_ret = json_loads(response->data, 0, &json_err);
+    if (!json_ret) {
+      xsp_info(5, "Could not decode response: %d: %s", json_err.line, json_err.text);
+      return -1;
+    }
+  }
+  else {
+    xsp_err(0, "Bad response from flanged: %ld", response->status);
     return -1;
   }
 
@@ -152,6 +163,11 @@ static int xsp_flange_allocate_pathrule_handler(const xspNetPathRule *net_rule,
   asprintf(&url, "%s/%s", cc.url, "c");
   curl_post(&cc, url, NULL, NULL, NULL, "{\"program\": \"blah\"}", &response);
 
+  if (!response) {
+    xsp_err(0, "No response from flanged at %s", url);
+    return -1;
+  }
+  
   json_ret = json_loads(response->data, 0, &json_err);
   if (!json_ret) {
     xsp_info(5, "Could not decode response: %d: %s", json_err.line, json_err.text);

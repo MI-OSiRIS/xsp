@@ -548,6 +548,9 @@ fi
 if test "$enable_dragon" = "yes"; then
    xsp_modules+=" dragon"
 fi
+if test "$enable_flange" = "yes"; then
+   xsp_modules+=" flange"
+fi
 
 if test "$have_ssh" = "yes"; then
    ssh_yn="yes"
