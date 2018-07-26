@@ -39,7 +39,7 @@ int xsp_set_eid(struct xsp_addr *eid, void *arg, int eid_type) {
   case XSP_EID_URN:
     break;
   case XSP_EID_HOPID:
-    memcpy(eid->x_addrc, (char *)arg, XSP_HOPID_LEN);
+    strncpy(eid->x_addrc, (char *)arg, XSP_HOPID_LEN);
     break;
   default:
     break;

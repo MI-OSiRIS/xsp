@@ -33,10 +33,10 @@ error_exit:
 
 void xsp_free_block_list(xspBlockList *bl, int free_data) {
   xspBlock *block;
-  if (bl) {
-    for (block = bl->first; block != NULL; block = block->next)
-      xsp_free_block(block, free_data);
-
+  if (bl) {    
+    while (block = xsp_block_list_pop(bl)) {
+      free(block);
+    }
     free(bl);
   }
 }
@@ -87,9 +87,7 @@ int xsp_block_list_find(xspBlockList *bl, int type, xspBlock ***ret_ary, int *co
 
   ba = (xspBlock **)malloc(bl->count * sizeof(xspBlock *));
   if (!ba) {
-    *ret_ary = NULL;
-    *count = 0;
-    return 0;
+    goto error_exit;
   }
 
   for (block = bl->first; block != NULL; block = block->next) {
@@ -99,17 +97,24 @@ int xsp_block_list_find(xspBlockList *bl, int type, xspBlock ***ret_ary, int *co
 
   if (num < 1) {
     free (ba);
-    *ret_ary = NULL;
-    *count = 0;
-    return 0;
+    goto error_exit;
   }
 
   void *r = realloc(ba, num * sizeof(xspBlock *));
-  *ret_ary = ba;
-  *count = num;
-  (void)r;
+  if (!r) {
+    goto error_exit;
+  }
+  else {
+    *ret_ary = r;
+    *count = num;
+  }
   
   return num;
+
+ error_exit:
+  *ret_ary = NULL;
+  *count = 0;
+  return 0;
 }
 
 xspBlock *xsp_alloc_block() {

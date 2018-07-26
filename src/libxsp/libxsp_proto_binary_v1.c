@@ -597,7 +597,7 @@ static int xsp_parse_net_path_msg(const void *arg, int remainder, void **msg_bod
     }
 
     new->rules[i] = rule;
-    buf += sizeof(xspNetPathRule);
+    buf += sizeof(xspNetPathRule) + rhdr->data_size;
   }
 
   block->data = new;

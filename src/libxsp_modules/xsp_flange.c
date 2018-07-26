@@ -145,6 +145,7 @@ static int xsp_flange_allocate_pathrule_handler(const xspNetPathRule *net_rule,
 						char **ret_error_msg) {
 
   char *url;
+  char *pstr;
   json_t *json_ret;
   json_error_t json_err;
   curl_response *response;
@@ -161,7 +162,8 @@ static int xsp_flange_allocate_pathrule_handler(const xspNetPathRule *net_rule,
   }
 
   asprintf(&url, "%s/%s", cc.url, "c");
-  curl_post(&cc, url, NULL, NULL, NULL, "{\"program\": \"blah\"}", &response);
+  asprintf(&pstr, "{\"program\": \"%s\"}", net_rule->data);
+  curl_post(&cc, url, NULL, NULL, NULL, pstr, &response);
 
   if (!response) {
     xsp_err(0, "No response from flanged at %s", url);
@@ -183,6 +185,7 @@ static int xsp_flange_allocate_pathrule_handler(const xspNetPathRule *net_rule,
   *ret_rule = rule;
 
   free(url);
+  free(pstr);
   
   return 0;
 
